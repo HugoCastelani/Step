@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="CardLabel">
+        <item name="android:paddingTop">@dimen/card_label_top_bottom_padding</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">@dimen/card_label_left_right_padding</item>
+        <item name="android:paddingRight">@dimen/card_label_left_right_padding</item>
+        <item name="android:paddingBottom">@dimen/card_label_top_bottom_padding</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/card_label_left_right_padding</item>
+        <item name="android:paddingLeft">@dimen/card_label_left_right_padding</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Card">
+        <item name="android:minHeight">58dp</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+</resources>
