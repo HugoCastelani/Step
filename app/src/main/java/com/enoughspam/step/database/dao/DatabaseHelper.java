@@ -127,6 +127,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "defaultLightAccentColor char(7) not null," +
                 "darkAccentColor char(7) not null," +
                 "defaultDarkAccentColor char(7) not null)");
+
+        sqLiteDatabase.execSQL("insert into tbConfigTheme values(0, '#00BCD4', '#00BCD4', '#CDDC39', '#CDDC39')");
     }
 
     @Override
