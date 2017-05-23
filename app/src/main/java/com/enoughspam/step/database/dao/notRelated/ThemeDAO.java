@@ -7,9 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.enoughspam.step.database.dao.DatabaseHelper;
 import com.enoughspam.step.database.domains.ThemeData;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 public class ThemeDAO {
 
@@ -28,7 +25,6 @@ public class ThemeDAO {
         return sqLiteDatabase;
     }
 
-    @NotNull
     private ThemeData generateThemeData(Cursor cursor) {
         return new ThemeData(
                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.IS_DARK)) == 1,
@@ -44,9 +40,12 @@ public class ThemeDAO {
                 " FROM " + DatabaseHelper.ConfigTheme.TABLE;
 
         Cursor cursor = getSqLiteDatabase().rawQuery(selectQuery, null);
-        ThemeData themeData = generateThemeData(cursor);
-        cursor.close();
 
+        ThemeData themeData = null;
+        while (cursor.moveToNext())
+            themeData = generateThemeData(cursor);
+
+        cursor.close();
         return themeData;
     }
 

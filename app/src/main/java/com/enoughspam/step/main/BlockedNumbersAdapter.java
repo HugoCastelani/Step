@@ -2,6 +2,9 @@ package com.enoughspam.step.main;
 
 // Created by hugo on 01/04/17, 23:05
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +12,21 @@ import android.widget.TextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 
 import java.util.ArrayList;
 
 public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedNumbersAdapter.MyViewHolder> {
 
     private ArrayList<ArrayList<String>> blockedNumbersList;
+    private Context context;
+    private boolean isDark;
 
-    public BlockedNumbersAdapter(ArrayList<ArrayList<String>> blockedNumbersList) {
+    public BlockedNumbersAdapter(ArrayList<ArrayList<String>> blockedNumbersList, Context context) {
         this.blockedNumbersList = blockedNumbersList;
+        this.context = context;
+
+        this.isDark = new ThemeDAO(context).getThemeData().isDark();
     }
 
     @Override
@@ -63,10 +72,12 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
 
     public static class MyViewHolder extends SectionedViewHolder {
         TextView blocker_or_number;
+        CardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             blocker_or_number = (TextView) itemView.findViewById(R.id.blocked_recylerview_blocker_or_number);
+            cardView = (CardView) itemView.findViewById(R.id.item_number_cardview);
         }
     }
 }

@@ -1,17 +1,25 @@
 package com.enoughspam.step.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.NavigationViewMode;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
+import com.enoughspam.step.database.domains.ThemeData;
+import com.enoughspam.step.generalClasses.ScreenInfo;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -20,22 +28,23 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.M;
 
 // Created by Hugo on 01/04/17, 21:30
 
 public class MainActivity extends AestheticActivity {
 
-    int currentSelectedPosition = 1;
-    Toolbar toolbar;
+    private int currentSelectedPosition = 1;
+    private ScreenInfo screenInfo;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // theming everything
-        themeIt();
+        screenInfo = new ScreenInfo(this);
 
         // instancing and setting toolbar as actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,27 +62,69 @@ public class MainActivity extends AestheticActivity {
         // getting navigation drawer ready
         prepareNavDrawer();
 
+        // theming everything
+        themeIt();
     }
 
     private void themeIt() {
-        Aesthetic.get()
-                .primaryColor(ContextCompat.getColor(this, R.color.md_grey_50))
-                .accentColor(ContextCompat.getColor(this, R.color.md_cyan_500))
-                .windowBgColor(ContextCompat.getColor(this, R.color.md_grey_100))
-                .primaryTextColor(ContextCompat.getColor(this, R.color.md_black_1000))
-                .secondaryTextColor(ContextCompat.getColor(this, R.color.md_grey_700))
-                .primaryTextInverseColor(ContextCompat.getColor(this, R.color.md_white_1000))
-                .secondaryTextInverseColor(ContextCompat.getColor(this, R.color.md_grey_400))
-                .iconTitleActiveColorRes(R.color.md_black_1000)
-                .iconTitleInactiveColorRes(R.color.md_black_1000)
-                .navViewMode(NavigationViewMode.SELECTED_ACCENT)
-                .apply();
 
-        if (Build.VERSION.SDK_INT >= M) {
+        ThemeDAO themeDAO = new ThemeDAO(this);
+        ThemeData themeData = themeDAO.getThemeData();
+
+        themeData.setIsDark(false);
+
+        if (themeData.isDark()) {
+
+            int darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
+
             Aesthetic.get()
-                    .statusBarColor(ContextCompat.getColor(this, R.color.md_grey_50))
+                    .isDark(true)
+                    .colorPrimaryRes(R.color.md_grey_900)
+                    .colorAccent(darkAccentColor)
+                    .colorWindowBackgroundRes(R.color.md_grey_900)
+                    .textColorPrimaryRes(R.color.md_white_1000)
+                    .textColorSecondaryRes(R.color.md_grey_400)
+                    .colorIconTitleActiveRes(R.color.md_white_1000)
+                    .colorIconTitleInactiveRes(R.color.md_white_1000)
+                    .colorCardViewBackgroundRes(R.color.md_grey_850)
+                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
                     .apply();
+
+            Aesthetic.get()
+                    .colorStatusBarRes(R.color.md_grey_900)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(0);
+
+        } else {
+
+            int lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
+
+            Aesthetic.get()
+                    .colorPrimaryRes(R.color.md_grey_50)
+                    .colorAccent(lightAccentColor)
+                    .colorWindowBackgroundRes(R.color.md_grey_100)
+                    .textColorPrimaryRes(R.color.md_black_1000)
+                    .textColorSecondaryRes(R.color.md_grey_700)
+                    .colorIconTitleActiveRes(R.color.md_black_1000)
+                    .colorIconTitleInactiveRes(R.color.md_black_1000)
+                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+                toolbar.setElevation(screenInfo.getPixelDensity() * 4);
+
+                if (Build.VERSION.SDK_INT >= M) {
+                    Aesthetic.get()
+                            .colorStatusBar(ContextCompat.getColor(this, R.color.md_grey_50))
+                            .apply();
+                }
+            }
+
+
         }
+
+
     }
 
     private void prepareNavDrawer() {

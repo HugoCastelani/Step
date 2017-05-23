@@ -28,7 +28,7 @@ dependencies {
     /*
     // aidas follestad
     compile 'com.afollestad:sectioned-recyclerview:0.4.1'
-    compile 'com.afollestad:aesthetic:0.0.5'
+    compile 'com.afollestad:aesthetic:0.4.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.4@aar'
     compile 'com.afollestad.material-dialogs:commons:0.9.4.4@aar'
 
@@ -52,7 +52,7 @@ dependencies {
 
     // aidas follestad
     compile 'com.afollestad:sectioned-recyclerview:0.4.1'
-    compile 'com.afollestad:aesthetic:0.0.6'
+    compile 'com.afollestad:aesthetic:0.4.7'
     compile 'com.afollestad.material-dialogs:core:0.9.4.4@aar'
     compile 'com.afollestad.material-dialogs:commons:0.9.4.4@aar'
 
@@ -74,5 +74,4 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     testCompile 'junit:junit:4.12'
-    compile 'org.jetbrains:annotations-java5:15.0'
 }

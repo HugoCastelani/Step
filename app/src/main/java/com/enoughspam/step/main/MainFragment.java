@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class MainFragment extends Fragment {
 
         // getting recycler view ready
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.blocked_recyclerview);
-        BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList());
+        BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList(), getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -110,7 +111,8 @@ public class MainFragment extends Fragment {
             }
         }
 
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration(screenInfo.getBottomSpaceForFab()));
+        // screenInfo.getPixelDensity() * 12 has same size that item_blocker margin's
+        recyclerView.addItemDecoration(new EndOffsetItemDecoration((int) screenInfo.getPixelDensity() * 12));
     }
 
 }

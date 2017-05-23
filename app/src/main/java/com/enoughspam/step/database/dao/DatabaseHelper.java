@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "cdAreaCode integer not null," +
                 "cdUser integer," +
                 "foreign key(cdCountryCode) references tbCountryCode(cdCountryCode)," +
-                "foreign key(cdAreaCode) references tbAreaCode(cdAreaCode))," +
+                "foreign key(cdAreaCode) references tbAreaCode(cdAreaCode)," +
                 "foreign key(cdUser) references tbUser(cdUser))");
 
         // creating notification table
@@ -77,8 +77,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating denunciation/description table
         sqLiteDatabase.execSQL("create table tbDenunciationDescription (" +
-                "cdDenunciation integer primary key not null," +
-                "cdDescription integer primary key not null," +
+                "cdDenunciation integer not null," +
+                "cdDescription integer not null," +
+                "primary key(cdDenunciation, cdDescription)," +
                 "foreign key(cdDenunciation) references tbDenunciation(cdDenunciation)," +
                 "foreign key(cdDescription) references tbDescription(cdDescription))");
 
@@ -89,8 +90,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating treatment configuration table
         sqLiteDatabase.execSQL("create table tbConfigTreatment (" +
-                "cdDescription integer primary key not null," +
-                "cdSuspiciousTreatment integer primary key not null," +
+                "cdDescription integer not null," +
+                "cdSuspiciousTreatment integer not null," +
+                "primary key(cdDescription, cdSuspiciousTreatment)," +
                 "foreign key(cdDescription) references tbDescription(cdDescription)," +
                 "foreign key(cdSuspiciousTreatment) references tbSuspiciousTreatment(cdSuspiciousTreatment))");
 
@@ -128,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "darkAccentColor char(7) not null," +
                 "defaultDarkAccentColor char(7) not null)");
 
-        sqLiteDatabase.execSQL("insert into tbConfigTheme values(0, '#00BCD4', '#00BCD4', '#CDDC39', '#CDDC39')");
+        sqLiteDatabase.execSQL("insert into tbConfigTheme values(0, '#00BCD4', '#00BCD4', '#00BCD4', '#00BCD4')");
     }
 
     @Override
