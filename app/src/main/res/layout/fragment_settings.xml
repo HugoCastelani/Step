@@ -5,7 +5,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:showIn="@layout/activity_settings"
         tools:context="com.enoughspam.step.settings.SettingsFragment">
 
     <LinearLayout
@@ -22,7 +21,7 @@
                 android:text="@string/select_theme_colors"
                 style="@style/CardLabel"/>
 
-        <android.support.v7.widget.CardView
+        <com.afollestad.aesthetic.AestheticCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Card">
@@ -40,26 +39,27 @@
                         android:foreground="?android:attr/selectableItemBackground"
                         android:clickable="true">
 
-                    <Switch
-                            android:id="@+id/settings_switch"
+                    <com.afollestad.aesthetic.AestheticSwitch
+                            android:id="@+id/settings_is_dark_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:checked="false"/>
 
                     <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintRight_toLeftOf="@id/settings_switch"
+                            app:layout_constraintRight_toLeftOf="@id/settings_is_dark_switch"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             android:paddingRight="@dimen/activity_horizontal_margin"
                             android:paddingEnd="@dimen/activity_horizontal_margin"
                             android:orientation="vertical">
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="2dp"
@@ -67,13 +67,12 @@
                                 android:textColor="?android:textColorPrimary"
                                 android:text="@string/set_dark_theme"/>
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
                                 android:textColor="?android:textColorSecondary"
                                 android:text="@string/set_dark_theme_substring"/>
-
 
                     </LinearLayout>
 
@@ -106,7 +105,7 @@
                             android:paddingEnd="@dimen/activity_horizontal_margin"
                             android:orientation="vertical">
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="2dp"
@@ -114,7 +113,7 @@
                                 android:textColor="?android:textColorPrimary"
                                 android:text="@string/select_accent_color"/>
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="14sp"
@@ -134,7 +133,7 @@
                         android:clickable="true"
                         android:orientation="vertical">
 
-                    <TextView
+                    <com.afollestad.aesthetic.AestheticTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="2dp"
@@ -142,7 +141,7 @@
                             android:textColor="?android:textColorPrimary"
                             android:text="@string/restore_default_colors"/>
 
-                    <TextView
+                    <com.afollestad.aesthetic.AestheticTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="4dp"
@@ -154,18 +153,18 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </com.afollestad.aesthetic.AestheticCardView>
 
         <!-- second cardview -->
 
-        <TextView android:id="@+id/settings_textview2"
+        <com.afollestad.aesthetic.AestheticTextView android:id="@+id/settings_textview2"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textColor="?android:textColorPrimary"
                   android:text="@string/select_database_options"
                   style="@style/CardLabel"/>
 
-        <android.support.v7.widget.CardView
+        <com.afollestad.aesthetic.AestheticCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Card">
@@ -179,7 +178,7 @@
                         android:clickable="true"
                         android:orientation="vertical">
 
-                    <TextView
+                    <com.afollestad.aesthetic.AestheticTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="2dp"
@@ -187,7 +186,7 @@
                             android:textColor="?android:textColorPrimary"
                             android:text="@string/select_database_network"/>
 
-                    <TextView
+                    <com.afollestad.aesthetic.AestheticTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="4dp"
@@ -197,18 +196,18 @@
 
                 </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </com.afollestad.aesthetic.AestheticCardView>
 
         <!-- third cardview -->
 
-        <TextView android:id="@+id/settings_textview3"
+        <com.afollestad.aesthetic.AestheticTextView android:id="@+id/settings_textview3"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textColor="?android:textColorPrimary"
                   android:text="@string/select_block_calls_options"
                   style="@style/CardLabel"/>
 
-        <android.support.v7.widget.CardView
+        <com.afollestad.aesthetic.AestheticCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/card_label_top_bottom_padding"
@@ -228,7 +227,7 @@
                             android:clickable="true"
                             android:orientation="vertical">
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="2dp"
@@ -236,7 +235,7 @@
                                 android:textColor="?android:textColorPrimary"
                                 android:text="@string/select_services_block"/>
 
-                        <TextView
+                        <com.afollestad.aesthetic.AestheticTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="4dp"
@@ -274,7 +273,7 @@
                                 android:paddingEnd="@dimen/activity_horizontal_margin"
                                 android:orientation="vertical">
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="2dp"
@@ -282,7 +281,7 @@
                                     android:textColor="?android:textColorPrimary"
                                     android:text="@string/select_suspicious_treatment"/>
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="4dp"
@@ -301,7 +300,7 @@
                             android:foreground="?android:attr/selectableItemBackground"
                             android:clickable="true">
 
-                        <Switch
+                        <com.afollestad.aesthetic.AestheticSwitch
                                 android:id="@+id/settings_switch2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -322,7 +321,7 @@
                                 android:paddingEnd="@dimen/activity_horizontal_margin"
                                 android:orientation="vertical">
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="2dp"
@@ -330,7 +329,7 @@
                                     android:textColor="?android:textColorPrimary"
                                     android:text="@string/select_feedback_options"/>
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="4dp"
@@ -338,7 +337,7 @@
                                     android:textColor="?android:textColorSecondary"
                                     android:text="@string/select_feedback_options_substring"/>
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:visibility="gone"
@@ -379,7 +378,7 @@
                                 android:paddingEnd="@dimen/activity_horizontal_margin"
                                 android:orientation="vertical">
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="2dp"
@@ -387,14 +386,14 @@
                                     android:textSize="16sp"
                                     android:text="@string/select_denunciation_amount"/>
 
-                            <TextView
+                            <com.afollestad.aesthetic.AestheticTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingBottom="8dp"
                                     android:textSize="14sp"
                                     android:text="@string/select_denunciation_amount_substring"/>
 
-                            <com.afollestad.aesthetic.views.AestheticSeekBar
+                            <com.afollestad.aesthetic.AestheticSeekBar
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:paddingLeft="10dp"
@@ -407,13 +406,13 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-                                <TextView
+                                <com.afollestad.aesthetic.AestheticTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         app:layout_constraintLeft_toLeftOf="parent"
                                         android:text="005"/>
 
-                                <TextView
+                                <com.afollestad.aesthetic.AestheticTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         app:layout_constraintRight_toRightOf="parent"
@@ -421,7 +420,7 @@
 
                             </android.support.constraint.ConstraintLayout>
 
-                            <Button android:id="@+id/settings_default_btn"
+                            <com.afollestad.aesthetic.AestheticButton android:id="@+id/settings_default_btn"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     app:layout_constraintLeft_toLeftOf="parent"
@@ -434,7 +433,7 @@
 
                 </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </com.afollestad.aesthetic.AestheticCardView>
 
     </LinearLayout>
 

@@ -1,10 +1,12 @@
 package com.enoughspam.step.main;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
+import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.generalClasses.EndOffsetItemDecoration;
 import com.enoughspam.step.generalClasses.LeftRightOffsetItemDecoration;
 import com.enoughspam.step.generalClasses.ScreenInfo;
@@ -23,6 +27,14 @@ import java.util.ArrayList;
 // Created by Hugo on 01/04/17, 22:00
 
 public class MainFragment extends Fragment {
+
+    // data access objects
+    private ThemeDAO themeDAO;
+    private ThemeData themeData;
+
+    // theme vars
+    private int lightAccentColor;
+    private int darkAccentColor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,11 +50,18 @@ public class MainFragment extends Fragment {
             }
         });
 
+        themeDAO = new ThemeDAO(view.getContext());
+        themeData = themeDAO.getThemeData();
+
+        lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
+        darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
+
         // getting tap target view ready
         TapTargetView.showFor(getActivity(),
                 TapTarget.forView(fab,
                         "O quê esse FAB faz?",
                         "No momento, só chama uma snackbar inútil...")
+                        //.outerCircleColor(themeData.isDark() ? darkAccentColor : lightAccentColor)
                         .outerCircleColor(R.color.md_cyan_500)
                         .textTypeface(Typeface.DEFAULT)
                         .tintTarget(true)
@@ -76,17 +95,50 @@ public class MainFragment extends Fragment {
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de Maria");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(95) 98539-9723");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(38) 99711-4592");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(79) 99871-4874");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
 
         blockedNumbersList.add(new ArrayList<String>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de João Boladão");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(96) 99274-9851");
+
+        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de Septuspxío");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(96) 99274-9851");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(67) 99865-8109");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(82) 98570-7099");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(67) 99865-8109");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(95) 98539-9723");
+
+        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números da comunidade oficial");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(96) 99274-9851");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(67) 99865-8109");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(82) 98570-7099");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(67) 99865-8109");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(95) 98539-9723");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(38) 99711-4592");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(79) 99871-4874");
+        blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
 
         return blockedNumbersList;
     }
@@ -111,8 +163,8 @@ public class MainFragment extends Fragment {
             }
         }
 
-        // screenInfo.getPixelDensity() * 12 has same size that item_blocker margin's
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration((int) screenInfo.getPixelDensity() * 12));
+        // screenInfo.getPixelDensity() * 12 should have same size that item_blocker margin's, but it don't
+        recyclerView.addItemDecoration(new EndOffsetItemDecoration((int) screenInfo.getPixelDensity() * 16));
     }
 
 }

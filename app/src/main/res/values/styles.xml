@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar"/>
 
     <style name="CardLabel">
         <item name="android:paddingTop">@dimen/card_label_top_bottom_padding</item>

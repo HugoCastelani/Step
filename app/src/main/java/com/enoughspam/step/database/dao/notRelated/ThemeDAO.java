@@ -52,15 +52,15 @@ public class ThemeDAO {
     public void setThemeData(ThemeData themeData) {
         String isDarkQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
                 " SET " + DatabaseHelper.ConfigTheme.IS_DARK +
-                " = " + (themeData.isDark() ? 1 : 0);
+                " = '" + (themeData.isDark() ? 1 : 0) + "'";
 
         String lightAccentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
                 " SET " + DatabaseHelper.ConfigTheme.LIGHT_ACCENT_COLOR +
-                " = " + themeData.getLightAccentColor();
+                " = '" + themeData.getLightAccentColor() + "'";
 
         String darkAccentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
                 " SET " + DatabaseHelper.ConfigTheme.DARK_ACCENT_COLOR +
-                " = " + themeData.getDarkAccentColor();
+                " = '" + themeData.getDarkAccentColor() + "'";
 
         getSqLiteDatabase().execSQL(isDarkQuery);
         getSqLiteDatabase().execSQL(lightAccentQuery);

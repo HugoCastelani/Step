@@ -7,12 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.NavigationViewMode;
@@ -39,10 +36,24 @@ public class MainActivity extends AestheticActivity {
     private ScreenInfo screenInfo;
     private Toolbar toolbar;
 
+    // data access objects
+    private ThemeDAO themeDAO;
+    private ThemeData themeData;
+
+    // theme vars
+    private int lightAccentColor;
+    private int darkAccentColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        themeDAO = new ThemeDAO(this);
+        themeData = themeDAO.getThemeData();
+
+        lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
+        darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
 
         screenInfo = new ScreenInfo(this);
 
@@ -55,7 +66,7 @@ public class MainActivity extends AestheticActivity {
         if(mainFragment == null) {
             mainFragment = new MainFragment();
             FragmentTransaction infoFragmentT = getSupportFragmentManager().beginTransaction();
-            infoFragmentT.replace(R.id.fragment_container, mainFragment, "mainFragmentTag");
+            infoFragmentT.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
             infoFragmentT.commit();
         }
 
@@ -66,71 +77,11 @@ public class MainActivity extends AestheticActivity {
         themeIt();
     }
 
-    private void themeIt() {
-
-        ThemeDAO themeDAO = new ThemeDAO(this);
-        ThemeData themeData = themeDAO.getThemeData();
-
-        themeData.setIsDark(false);
-
-        if (themeData.isDark()) {
-
-            int darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
-
-            Aesthetic.get()
-                    .isDark(true)
-                    .colorPrimaryRes(R.color.md_grey_900)
-                    .colorAccent(darkAccentColor)
-                    .colorWindowBackgroundRes(R.color.md_grey_900)
-                    .textColorPrimaryRes(R.color.md_white_1000)
-                    .textColorSecondaryRes(R.color.md_grey_400)
-                    .colorIconTitleActiveRes(R.color.md_white_1000)
-                    .colorIconTitleInactiveRes(R.color.md_white_1000)
-                    .colorCardViewBackgroundRes(R.color.md_grey_850)
-                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
-                    .apply();
-
-            Aesthetic.get()
-                    .colorStatusBarRes(R.color.md_grey_900)
-                    .apply();
-
-            if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(0);
-
-        } else {
-
-            int lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
-
-            Aesthetic.get()
-                    .colorPrimaryRes(R.color.md_grey_50)
-                    .colorAccent(lightAccentColor)
-                    .colorWindowBackgroundRes(R.color.md_grey_100)
-                    .textColorPrimaryRes(R.color.md_black_1000)
-                    .textColorSecondaryRes(R.color.md_grey_700)
-                    .colorIconTitleActiveRes(R.color.md_black_1000)
-                    .colorIconTitleInactiveRes(R.color.md_black_1000)
-                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
-                    .apply();
-
-            if (Build.VERSION.SDK_INT >= LOLLIPOP) {
-                toolbar.setElevation(screenInfo.getPixelDensity() * 4);
-
-                if (Build.VERSION.SDK_INT >= M) {
-                    Aesthetic.get()
-                            .colorStatusBar(ContextCompat.getColor(this, R.color.md_grey_50))
-                            .apply();
-                }
-            }
-
-
-        }
-
-
-    }
-
     private void prepareNavDrawer() {
         // navigation drawer header
         AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
+                //.withHeaderBackground(themeData.isDark() ? darkAccentColor : lightAccentColor)
                 .withHeaderBackground(R.color.md_cyan_500)
                 .build();
 
@@ -138,6 +89,7 @@ public class MainActivity extends AestheticActivity {
         final Drawer navDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                .withSliderBackgroundColorRes(themeData.isDark() ? R.color.md_grey_850 : R.color.md_white_1000)
                 .withAccountHeader(navDrawerHeader)
                 .build();
 
@@ -170,5 +122,56 @@ public class MainActivity extends AestheticActivity {
                 return false;
             }
         });
+    }
+
+    private void themeIt() {
+
+        if (themeData.isDark()) {
+
+            Aesthetic.get()
+                    .activityTheme(R.style.AppThemeDark)
+                    .isDark(true)
+                    .colorPrimaryRes(R.color.md_grey_900)
+                    .colorAccent(darkAccentColor)
+                    .colorWindowBackgroundRes(R.color.md_grey_900)
+                    .textColorPrimaryRes(R.color.md_white_1000)
+                    .textColorSecondaryRes(R.color.md_grey_400)
+                    .colorIconTitleActiveRes(R.color.md_white_1000)
+                    .colorIconTitleInactiveRes(R.color.md_white_1000)
+                    .colorCardViewBackgroundRes(R.color.md_grey_850)
+                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
+                    .apply();
+
+            Aesthetic.get()
+                    .colorStatusBarRes(R.color.md_grey_900)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(0);
+
+        } else {
+
+            Aesthetic.get()
+                    .activityTheme(R.style.AppTheme)
+                    .colorPrimaryRes(R.color.md_grey_50)
+                    .colorAccent(lightAccentColor)
+                    .colorWindowBackgroundRes(R.color.md_grey_100)
+                    .textColorPrimaryRes(R.color.md_black_1000)
+                    .textColorSecondaryRes(R.color.md_grey_700)
+                    .colorIconTitleActiveRes(R.color.md_black_1000)
+                    .colorIconTitleInactiveRes(R.color.md_black_1000)
+                    .colorCardViewBackgroundRes(R.color.md_white_1000)
+                    .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+                toolbar.setElevation(screenInfo.getPixelDensity() * 4);
+
+                if (Build.VERSION.SDK_INT >= M) {
+                    Aesthetic.get()
+                            .colorStatusBar(ContextCompat.getColor(this, R.color.md_grey_50))
+                            .apply();
+                }
+            }
+        }
     }
 }
