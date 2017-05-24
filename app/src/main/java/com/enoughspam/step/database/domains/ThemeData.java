@@ -5,13 +5,11 @@ package com.enoughspam.step.database.domains;
 public class ThemeData {
 
     private boolean isDark;
-    private String lightAccentColor;
-    private String darkAccentColor;
+    private String accentColor;
 
-    public ThemeData(boolean isDark, String lightAccentColor, String darkAccentColor) {
+    public ThemeData(boolean isDark, String accentColor) {
         this.isDark = isDark;
-        this.lightAccentColor = lightAccentColor;
-        this.darkAccentColor = darkAccentColor;
+        this.accentColor = accentColor;
     }
 
     public boolean isDark() {
@@ -22,19 +20,11 @@ public class ThemeData {
         isDark = dark;
     }
 
-    public String getLightAccentColor() {
-        return lightAccentColor;
+    public String getAccentColor() {
+        return accentColor;
     }
 
-    public void setLightAccentColor(String lightAccentColor) {
-        this.lightAccentColor = lightAccentColor;
-    }
-
-    public String getDarkAccentColor() {
-        return darkAccentColor;
-    }
-
-    public void setDarkAccentColor(String darkAccentColor) {
-        this.darkAccentColor = darkAccentColor;
+    public void setAccentColor(String accentColor) {
+        this.accentColor = accentColor;
     }
 }

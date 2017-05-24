@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,8 +31,7 @@ public class MainFragment extends Fragment {
     private ThemeData themeData;
 
     // theme vars
-    private int lightAccentColor;
-    private int darkAccentColor;
+    private int accentColor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,15 +50,14 @@ public class MainFragment extends Fragment {
         themeDAO = new ThemeDAO(view.getContext());
         themeData = themeDAO.getThemeData();
 
-        lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
-        darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
+        accentColor = Color.parseColor(themeData.getAccentColor());
 
         // getting tap target view ready
         TapTargetView.showFor(getActivity(),
                 TapTarget.forView(fab,
                         "O quê esse FAB faz?",
                         "No momento, só chama uma snackbar inútil...")
-                        //.outerCircleColor(themeData.isDark() ? darkAccentColor : lightAccentColor)
+                        //.outerCircleColor(themeData.isDark() ? darkAccentColor : accentColor)
                         .outerCircleColor(R.color.md_cyan_500)
                         .textTypeface(Typeface.DEFAULT)
                         .tintTarget(true)

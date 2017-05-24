@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
@@ -41,8 +40,7 @@ public class MainActivity extends AestheticActivity {
     private ThemeData themeData;
 
     // theme vars
-    private int lightAccentColor;
-    private int darkAccentColor;
+    private int accentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +50,7 @@ public class MainActivity extends AestheticActivity {
         themeDAO = new ThemeDAO(this);
         themeData = themeDAO.getThemeData();
 
-        lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
-        darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
+        accentColor = Color.parseColor(themeData.getAccentColor());
 
         screenInfo = new ScreenInfo(this);
 
@@ -81,7 +78,7 @@ public class MainActivity extends AestheticActivity {
         // navigation drawer header
         AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                //.withHeaderBackground(themeData.isDark() ? darkAccentColor : lightAccentColor)
+                //.withHeaderBackground(themeData.isDark() ? darkAccentColor : accentColor)
                 .withHeaderBackground(R.color.md_cyan_500)
                 .build();
 
@@ -111,7 +108,7 @@ public class MainActivity extends AestheticActivity {
                             @Override
                             public void run() {
                                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                startActivity(intent);
+                                startActivityForResult(intent, 1);
                                 //navDrawer.setSelectionAtPosition(currentSelectedPosition);
                             }
                         }, 250);
@@ -129,10 +126,9 @@ public class MainActivity extends AestheticActivity {
         if (themeData.isDark()) {
 
             Aesthetic.get()
-                    .activityTheme(R.style.AppThemeDark)
                     .isDark(true)
                     .colorPrimaryRes(R.color.md_grey_900)
-                    .colorAccent(darkAccentColor)
+                    .colorAccent(accentColor)
                     .colorWindowBackgroundRes(R.color.md_grey_900)
                     .textColorPrimaryRes(R.color.md_white_1000)
                     .textColorSecondaryRes(R.color.md_grey_400)
@@ -151,9 +147,9 @@ public class MainActivity extends AestheticActivity {
         } else {
 
             Aesthetic.get()
-                    .activityTheme(R.style.AppTheme)
+                    .isDark(false)
                     .colorPrimaryRes(R.color.md_grey_50)
-                    .colorAccent(lightAccentColor)
+                    .colorAccent(accentColor)
                     .colorWindowBackgroundRes(R.color.md_grey_100)
                     .textColorPrimaryRes(R.color.md_black_1000)
                     .textColorSecondaryRes(R.color.md_grey_700)
@@ -173,5 +169,10 @@ public class MainActivity extends AestheticActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        recreate();
     }
 }

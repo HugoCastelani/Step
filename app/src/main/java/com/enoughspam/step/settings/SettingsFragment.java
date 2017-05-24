@@ -1,6 +1,5 @@
 package com.enoughspam.step.settings;
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.NavigationViewMode;
 import com.enoughspam.step.R;
@@ -59,13 +57,11 @@ public class SettingsFragment extends Fragment {
                 if (isChecked) {
                     themeData.setIsDark(true);
                     themeDAO.setThemeData(themeData);
-                    Toast.makeText(getActivity(), "is dark", Toast.LENGTH_SHORT).show();
 
                 } else {
 
                     themeData.setIsDark(false);
                     themeDAO.setThemeData(themeData);
-                    Toast.makeText(getActivity(), "isn't dark", Toast.LENGTH_SHORT).show();
                 }
 
                 themeIt();
@@ -79,10 +75,9 @@ public class SettingsFragment extends Fragment {
 
         if (themeData.isDark()) {
 
-            int darkAccentColor = Color.parseColor(themeData.getDarkAccentColor());
+            int darkAccentColor = Color.parseColor(themeData.getAccentColor());
 
             Aesthetic.get()
-                    .activityTheme(R.style.AppThemeDark)
                     .isDark(true)
                     .colorPrimaryRes(R.color.md_grey_900)
                     .colorAccent(darkAccentColor)
@@ -106,10 +101,10 @@ public class SettingsFragment extends Fragment {
 
         } else {
 
-            int lightAccentColor = Color.parseColor(themeData.getLightAccentColor());
+            int lightAccentColor = Color.parseColor(themeData.getAccentColor());
 
             Aesthetic.get()
-                    .activityTheme(R.style.AppTheme)
+                    .isDark(false)
                     .colorPrimaryRes(R.color.md_grey_50)
                     .colorAccent(lightAccentColor)
                     .colorWindowBackgroundRes(R.color.md_grey_100)
@@ -133,6 +128,8 @@ public class SettingsFragment extends Fragment {
             }
 
         }
+
+        getActivity().recreate();
 
     }
 }

@@ -1,10 +1,12 @@
 package com.enoughspam.step.database.dao;
 
-// created by Hugo on 15/05/17 at 19:09
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+/**
+ * Created by hugo on 24/05/17.
+ */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -125,12 +127,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating theme configuration table
         sqLiteDatabase.execSQL("create table tbConfigTheme (" +
                 "isDark integer primary key not null," +
-                "lightAccentColor char(7) not null," +
-                "defaultLightAccentColor char(7) not null," +
-                "darkAccentColor char(7) not null," +
-                "defaultDarkAccentColor char(7) not null)");
+                "accentColor char(7) not null," +
+                "defaultAccentColor char(7) not null)");
 
-        sqLiteDatabase.execSQL("insert into tbConfigTheme values(0, '#00BCD4', '#00BCD4', '#00BCD4', '#00BCD4')");
+        sqLiteDatabase.execSQL("insert into tbConfigTheme values(0, '#00BCD4', '#00BCD4')");
     }
 
     @Override
@@ -280,12 +280,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static class ConfigTheme {
         public static final String TABLE = "tbConfigTheme";
         public static final String IS_DARK = "isDark";
-        public static final String LIGHT_ACCENT_COLOR = "lightAccentColor";
-        public static final String DEFAULT_LIGHT_ACCENT_COLOR = "defaultLightAccentColor";
-        public static final String DARK_ACCENT_COLOR= "darkAccentColor";
-        public static final String DEFAULT_DARK_ACCENT_COLOR= "defaultDarkAccentColor";
+        public static final String ACCENT_COLOR = "accentColor";
+        public static final String DEFAULT_ACCENT_COLOR = "defaultAccentColor";
 
-        public static final String[] COLUMNS = new String[] {IS_DARK, LIGHT_ACCENT_COLOR, DEFAULT_LIGHT_ACCENT_COLOR,
-                DARK_ACCENT_COLOR, DEFAULT_DARK_ACCENT_COLOR};
+        public static final String[] COLUMNS = new String[] {IS_DARK, ACCENT_COLOR, DEFAULT_ACCENT_COLOR};
     }
 }

@@ -5,6 +5,7 @@ package com.enoughspam.step.database.dao.notRelated;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.enoughspam.step.database.dao.DatabaseHelper;
 import com.enoughspam.step.database.domains.ThemeData;
 
@@ -28,15 +29,13 @@ public class ThemeDAO {
     private ThemeData generateThemeData(Cursor cursor) {
         return new ThemeData(
                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.IS_DARK)) == 1,
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.LIGHT_ACCENT_COLOR)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.DARK_ACCENT_COLOR))
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.ACCENT_COLOR))
         );
     }
 
     public ThemeData getThemeData() {
         String selectQuery = "SELECT " + DatabaseHelper.ConfigTheme.IS_DARK + ", "
-                + DatabaseHelper.ConfigTheme.LIGHT_ACCENT_COLOR + ", "
-                + DatabaseHelper.ConfigTheme.DARK_ACCENT_COLOR +
+                + DatabaseHelper.ConfigTheme.ACCENT_COLOR +
                 " FROM " + DatabaseHelper.ConfigTheme.TABLE;
 
         Cursor cursor = getSqLiteDatabase().rawQuery(selectQuery, null);
@@ -54,17 +53,12 @@ public class ThemeDAO {
                 " SET " + DatabaseHelper.ConfigTheme.IS_DARK +
                 " = '" + (themeData.isDark() ? 1 : 0) + "'";
 
-        String lightAccentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
-                " SET " + DatabaseHelper.ConfigTheme.LIGHT_ACCENT_COLOR +
-                " = '" + themeData.getLightAccentColor() + "'";
-
-        String darkAccentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
-                " SET " + DatabaseHelper.ConfigTheme.DARK_ACCENT_COLOR +
-                " = '" + themeData.getDarkAccentColor() + "'";
+        String accentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
+                " SET " + DatabaseHelper.ConfigTheme.ACCENT_COLOR +
+                " = '" + themeData.getAccentColor() + "'";
 
         getSqLiteDatabase().execSQL(isDarkQuery);
-        getSqLiteDatabase().execSQL(lightAccentQuery);
-        getSqLiteDatabase().execSQL(darkAccentQuery);
+        getSqLiteDatabase().execSQL(accentQuery);
     }
 
 }
