@@ -47,9 +47,9 @@ public class MainFragment extends Fragment {
             }
         });
 
+        // preparing theme
         themeDAO = new ThemeDAO(view.getContext());
         themeData = themeDAO.getThemeData();
-
         accentColor = Color.parseColor(themeData.getAccentColor());
 
         // getting tap target view ready
@@ -60,8 +60,8 @@ public class MainFragment extends Fragment {
                         //.outerCircleColor(themeData.isDark() ? darkAccentColor : accentColor)
                         .outerCircleColor(R.color.md_cyan_500)
                         .textTypeface(Typeface.DEFAULT)
-                        .tintTarget(true)
-                        .transparentTarget(false),
+                        .targetCircleColor(themeData.isDark() ? R.color.colorPrimaryInverse : R.color.colorPrimary)
+                        .transparentTarget(true),
                 null);
 
         // getting recycler view ready

@@ -2,7 +2,9 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar"/>
+    <style name="AppThemeDark" parent="AppTheme">
+        <item name="material_drawer_selected">@color/colorDrawableSelectInverse</item>
+    </style>
 
     <style name="CardLabel">
         <item name="android:paddingTop">@dimen/card_label_top_bottom_padding</item>

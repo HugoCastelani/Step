@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.generalClasses.ScreenInfo;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -21,8 +20,11 @@ public class SettingsActivity extends AestheticActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        // getting toolbar ready
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ScreenInfo screenInfo = new ScreenInfo(this);
+
+        // getting main_toolbar ready
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null)

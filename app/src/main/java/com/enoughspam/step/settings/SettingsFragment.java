@@ -70,63 +70,49 @@ public class SettingsFragment extends Fragment {
     }
 
     private void themeIt() {
-
-        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        int accentColor = Color.parseColor(themeData.getAccentColor());
 
         if (themeData.isDark()) {
 
-            int darkAccentColor = Color.parseColor(themeData.getAccentColor());
-
             Aesthetic.get()
+                    .activityTheme(R.style.AppThemeDark)
                     .isDark(true)
-                    .colorPrimaryRes(R.color.md_grey_900)
-                    .colorAccent(darkAccentColor)
-                    .colorWindowBackgroundRes(R.color.md_grey_900)
-                    .textColorPrimaryRes(R.color.md_white_1000)
-                    .textColorSecondaryRes(R.color.md_grey_400)
-                    .colorIconTitleActiveRes(R.color.md_white_1000)
-                    .colorIconTitleInactiveRes(R.color.md_white_1000)
-                    .colorCardViewBackgroundRes(R.color.md_grey_850)
+                    .colorPrimaryRes(R.color.colorPrimaryInverse)
+                    .colorAccent(accentColor)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
+                    .textColorPrimaryRes(R.color.textColorPrimaryInverse)
+                    .textColorSecondaryRes(R.color.textColorSecondaryInverse)
+                    .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackgoundInverse)
                     .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
                     .apply();
 
             Aesthetic.get()
-                    .colorStatusBarRes(R.color.md_grey_900)
+                    .colorStatusBarRes(R.color.colorPrimaryInverse)
                     .apply();
-
-            if (Build.VERSION.SDK_INT >= LOLLIPOP) {
-                if (actionBar != null)
-                    actionBar.setElevation(0);
-            }
 
         } else {
 
-            int lightAccentColor = Color.parseColor(themeData.getAccentColor());
-
             Aesthetic.get()
+                    .activityTheme(R.style.AppTheme)
                     .isDark(false)
-                    .colorPrimaryRes(R.color.md_grey_50)
-                    .colorAccent(lightAccentColor)
-                    .colorWindowBackgroundRes(R.color.md_grey_100)
-                    .textColorPrimaryRes(R.color.md_black_1000)
-                    .textColorSecondaryRes(R.color.md_grey_700)
-                    .colorIconTitleActiveRes(R.color.md_black_1000)
-                    .colorIconTitleInactiveRes(R.color.md_black_1000)
-                    .colorCardViewBackgroundRes(R.color.md_white_1000)
+                    .colorPrimaryRes(R.color.colorPrimary)
+                    .colorAccent(accentColor)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackground)
+                    .textColorPrimaryRes(R.color.textColorPrimary)
+                    .textColorSecondaryRes(R.color.textColorSecondary)
+                    .colorIconTitleActiveRes(R.color.textColorPrimary)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimary)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackgound)
                     .navigationViewMode(NavigationViewMode.SELECTED_ACCENT)
                     .apply();
 
-            if (Build.VERSION.SDK_INT >= LOLLIPOP) {
-                if (actionBar != null)
-                    actionBar.setElevation(new ScreenInfo(getActivity()).getPixelDensity() * 4);
-
-                if (Build.VERSION.SDK_INT >= M) {
-                    Aesthetic.get()
-                            .colorStatusBar(ContextCompat.getColor(getActivity(), R.color.md_grey_50))
-                            .apply();
-                }
+            if (Build.VERSION.SDK_INT >= M) {
+                Aesthetic.get()
+                        .colorStatusBar(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
+                        .apply();
             }
-
         }
 
         getActivity().recreate();

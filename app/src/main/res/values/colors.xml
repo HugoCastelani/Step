@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">@color/md_grey_50</color>
+    <color name="colorPrimaryInverse">#28282E</color>
+
+    <color name="textColorPrimary">@color/md_black_1000</color>
+    <color name="textColorPrimaryInverse">@color/md_white_1000</color>
+
+    <color name="textColorSecondary">@color/md_grey_700</color>
+    <color name="textColorSecondaryInverse">@color/md_grey_400</color>
+
+    <color name="colorWindowBackground">@color/md_grey_100</color>
+    <!--color name="colorWindowBackgroundInverse">@color/md_grey_900</color-->
+    <color name="colorWindowBackgroundInverse">@color/colorPrimaryInverse</color>
+
+    <color name="colorCardBackgound">@color/md_white_1000</color>
+    <color name="colorCardBackgoundInverse">#37373D</color>
+
+    <color name="colorDrawable">@color/textColorSecondary</color>
+    <color name="colorDrawableInverse">@color/textColorSecondaryInverse</color>
+    <color name="colorDrawableSelectInverse">#1B1B21</color>
+
     <color name="md_grey_850">#2E2E2E</color>
 </resources>

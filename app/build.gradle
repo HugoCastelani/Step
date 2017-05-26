@@ -4,11 +4,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.enoughspam.step"
+        applicationId "com.enoughspam.step.bp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "Build Process"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,6 +35,9 @@ dependencies {
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
+    // miguel catalan
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
         transitive = true
@@ -58,6 +61,9 @@ dependencies {
 
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+
+    // miguel catalan
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
