@@ -23,7 +23,7 @@ public class SettingsActivity extends AestheticActivity {
         ScreenInfo screenInfo = new ScreenInfo(this);
 
         // getting main_toolbar ready
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
         setSupportActionBar(toolbar);
 

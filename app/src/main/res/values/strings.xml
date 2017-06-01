@@ -1,11 +1,17 @@
 <resources>
-    <string name="app_name">Step</string>
+    <!-- main activity -->
+    <string name="main_activity_label">Step</string>
+    <string name="main_fragment_label">Notificações</string>
+    <string name="search_hint">Pesquisar</string>
+    <string name="notifications_hint">Notificações</string>
 
-    <!-- main fragment -->
-    <string name="main_fragment_label">Home</string>
-    <string name="blocked_numbers_fragment">Números bloqueados</string>
-    <string name="notifications_fragment">Notificações</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- intro activity -->
+    <string name="title_1">Spam Reaper: anti-spam application</string>
+    <string name="description_1">Spam Reaper is an incredible network that will decimate phone spammers, such as telephone and bank companies, prisoners, coupist and blackmailers.</string>
+    <string name="title_2">Our network will leave you jaw dropped!</string>
+    <string name="description_2">Once installed, you won\'t live without it. Some of our functions:\nAutomatically block suspicious numbers.\nSync your blacklist with most famous messengers, like WhatsApp and Telegram.\nShare your blocked numbers with your friends to make you blacklist stronger.</string>
+    <string name="title_3">Give us permissions, so we can rock!</string>
+    <string name="description_3">We won\'t use unnecessary data or sell it.</string>
 
     <!-- settings activity -->
     <string name="settings_activity_label">Ajustes</string>
@@ -40,7 +46,6 @@
     <string name="select_denunciation_amount_substring">Selecionar a quantidade de denúncias que um número deve ter para ser considerado suspeito pelo aplicativo</string>
     <string name="select_denunciation_amount_help">Essa informação será usada para otimizar sua experiência com as duas configurações acima. O valor padrão pode mudar conforme o aplicativo for atualizado.</string>
     <string name="restore_default_denunciation">Padrão</string>
-
 
     <!-- Color picker dialog -->
     <string name="custom_button">Personalizar</string>

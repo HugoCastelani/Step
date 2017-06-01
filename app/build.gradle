@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.enoughspam.step.bp"
+        applicationId "com.enoughspam.step.bpb"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 0
@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -34,9 +37,6 @@ dependencies {
 
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-
-    // miguel catalan
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
@@ -59,11 +59,11 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.9.4.4@aar'
     compile 'com.afollestad.material-dialogs:commons:0.9.4.4@aar'
 
+    // hein richreimer
+    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
+
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-
-    // miguel catalan
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {

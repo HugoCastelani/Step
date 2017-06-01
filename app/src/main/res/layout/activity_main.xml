@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.enoughspam.step.main.MainActivity">
 
-    <include layout="@layout/main_toolbar"/>
+    <include layout="@layout/toolbar"/>
 
     <FrameLayout
         android:id="@+id/main_fragment_container"

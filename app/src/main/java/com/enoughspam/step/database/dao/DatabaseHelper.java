@@ -115,6 +115,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "nmView varchar(20) primary key not null," +
                 "showGuide integer not null)");
 
+        // creating intro configuration table
+        sqLiteDatabase.execSQL("create table tbConfigIntro (" +
+                "showIntro integer primary key not null)");
+
+        sqLiteDatabase.execSQL("insert into tbConfigIntro values(1)");
+
         // creating network to download DB configuration table
         sqLiteDatabase.execSQL("create table tbConfigNetworkDownloadDB (" +
                 "nmNetworkDownload varchar(20) primary key not null," +
@@ -260,6 +266,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String SHOW_GUIDE = "showGuide";
 
         public static final String[] COLUMNS = new String[] {VIEW_NAME, SHOW_GUIDE};
+    }
+
+    public static class ConfigIntro {
+        public static final String TABLE = "tbConfigIntro";
+        public static final String SHOW_INTRO = "showIntro";
+
+        public static final String[] COLUMNS = new String[] {SHOW_INTRO};
     }
 
     public static class ConfigNetworkDownloadDB {

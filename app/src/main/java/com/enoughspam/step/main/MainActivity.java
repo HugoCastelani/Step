@@ -8,14 +8,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.notRelated.IntroDAO;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.generalClasses.ScreenInfo;
+import com.enoughspam.step.intro.MainIntroActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -38,27 +45,41 @@ public class MainActivity extends AestheticActivity {
     private ThemeDAO themeDAO;
     private ThemeData themeData;
 
+    private SearchView searchView;
+
     // theme vars
     private int accentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        IntroDAO introDAO = new IntroDAO(this);
+
+        if (introDAO.showIntro()) {
+            Log.e("StepLog", "show intro");
+            Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
+            startActivity(intent);
+        } else {
+            Log.e("StepLog", "dont show intro");
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // theme
         themeDAO = new ThemeDAO(this);
         themeData = themeDAO.getThemeData();
 
         accentColor = Color.parseColor(themeData.getAccentColor());
 
+        // toolbar
         ScreenInfo screenInfo = new ScreenInfo(this);
 
-        // instancing and setting main_toolbar as actionbar
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
         setSupportActionBar(toolbar);
 
-        // setting fragment
+        // fragment
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
         if(mainFragment == null) {
             mainFragment = new MainFragment();
@@ -67,16 +88,40 @@ public class MainActivity extends AestheticActivity {
             infoFragmentT.commit();
         }
 
+        // search view
+        searchView = (SearchView) findViewById(R.id.search_view);
 
+        /* Sets searchable configuration defined in searchable.xml for this SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        // getting navigation drawer ready
-        prepareNavDrawer();
+        setUpSearchView();*/
 
-        // applying theme
-        themeIt();
+        // navigation drawer
+        setUpNavDrawer();
+
+        // theme
+        setUpTheme();
     }
 
-    private void prepareNavDrawer() {
+    private void setUpSearchView() {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getBaseContext(), "Submit", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                Toast.makeText(getBaseContext(), "Change", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+    }
+
+    private void setUpNavDrawer() {
         // navigation drawer header
         AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -135,7 +180,7 @@ public class MainActivity extends AestheticActivity {
         });
     }
 
-    private void themeIt() {
+    private void setUpTheme() {
 
         if (themeData.isDark()) {
 
@@ -182,5 +227,22 @@ public class MainActivity extends AestheticActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         recreate();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        /*if (id == R.id.search_view) {
+            return true;
+        }*/
+
+        return super.onOptionsItemSelected(item);
     }
 }
