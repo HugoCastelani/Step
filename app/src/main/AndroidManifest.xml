@@ -42,7 +42,8 @@
                 android:parentActivityName=".main.MainActivity"/>
         
         <activity android:name=".intro.MainIntroActivity"
-                  android:theme="@style/Theme.Intro"/>
+                  android:theme="@style/Theme.Intro">
+        </activity>
     </application>
 
 </manifest>
