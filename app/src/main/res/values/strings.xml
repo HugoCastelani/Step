@@ -7,14 +7,21 @@
 
     <!-- intro activity -->
     <string name="title_1">Chega de Spam!\nServiço Anti-Spam</string>
-    <string name="description_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de celular, como companhias bancárias, prisioneiros, golpistas e chantagistas.</string>
+    <string name="description_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de
+        celular, como companhias bancárias, prisioneiros, golpistas e chantagistas.
+    </string>
     <string name="title_2">Conceda as permissões</string>
-    <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações desnecessárias ou invasivas.</string>
+    <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações
+        desnecessárias ou invasivas.
+    </string>
     <string name="title_3">Entre com uma rede social:</string>
     <string name="title_4">Registre seu número:</string>
     <string name="description_4">Digite o código recebido por SMS:</string>
     <string name="title_5">Tudo pronto!</string>
-    <string name="description_5">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas funcionam por aqui. Não se esqueça de dar uma passada na tela de ajustes para melhorar a sua experiência por meio de configurações.</string>
+    <string name="description_5">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas
+        funcionam por aqui. Não se esqueça de dar uma passada na tela de ajustes para melhorar a sua experiência por
+        meio de configurações.
+    </string>
 
     <!-- settings activity -->
     <string name="settings_activity_label">Ajustes</string>
@@ -27,27 +34,43 @@
     <string name="select_accent_color_substring">Selecionar a cor de expressão do tema escolhido</string>
 
     <string name="restore_default_colors">Cor padrão</string>
-    <string name="restore_default_colors_substring">Restaurar a cor de expressão definida por padrão do tema escolhido</string>
+    <string name="restore_default_colors_substring">Restaurar a cor de expressão definida por padrão do tema escolhido
+    </string>
     <string name="restore_default_colors_dialog">Tem certeza que quer restaurar a cor padrão?</string>
 
     <string name="select_database_options">Banco de dados</string>
     <string name="select_database_network">Redes para atualizações</string>
-    <string name="select_database_network_substring">Selecionar as redes nas quais o aplicativo fará o download de atualizações do banco de dados</string>
+    <string name="select_database_network_substring">Selecionar as redes nas quais o aplicativo fará o download de
+        atualizações do banco de dados
+    </string>
 
     <string name="select_block_calls_options">Bloqueio e chamadas</string>
     <string name="select_services_block">Serviços que bloquearão</string>
-    <string name="select_services_block_substring">Selecionar os serviços que farão uso da função bloqueio do aplicativo</string>
+    <string name="select_services_block_substring">Selecionar os serviços que farão uso da função bloqueio do
+        aplicativo
+    </string>
 
     <string name="select_suspicious_treatment">Tratamento de números suspeitos</string>
-    <string name="select_suspicious_treatment_substring">Selecionar o que o aplicativo deverá fazer ao receber ligações ou mensagens de números com determinados tipos de denúncia</string>
-    <string name="select_suspicious_treatment_help">Pois bem, além da polícia federal, ninguém gostaria de receber um ligação de falso sequestro, mas algumas pessoas não se importam com ofertas de bancos e operadoras, conseguindo até fazer bom uso delas.</string>
+    <string name="select_suspicious_treatment_substring">Selecionar o que o aplicativo deverá fazer ao receber ligações
+        ou mensagens de números com determinados tipos de denúncia
+    </string>
+    <string name="select_suspicious_treatment_help">Pois bem, além da polícia federal, ninguém gostaria de receber um
+        ligação de falso sequestro, mas algumas pessoas não se importam com ofertas de bancos e operadoras, conseguindo
+        até fazer bom uso delas.
+    </string>
 
     <string name="select_feedback_options">Feedback pós-chamada</string>
-    <string name="select_feedback_options_substring">Selecionar se quer ou não que apareça a tela de feedback pós-chamadas ou em quais situações ela deve aparecer</string>
+    <string name="select_feedback_options_substring">Selecionar se quer ou não que apareça a tela de feedback
+        pós-chamadas ou em quais situações ela deve aparecer
+    </string>
 
     <string name="select_denunciation_amount">Quantidade de denúncias para ser suspeito</string>
-    <string name="select_denunciation_amount_substring">Selecionar a quantidade de denúncias que um número deve ter para ser considerado suspeito pelo aplicativo</string>
-    <string name="select_denunciation_amount_help">Essa informação será usada para otimizar sua experiência com as duas configurações acima. O valor padrão pode mudar conforme o aplicativo for atualizado.</string>
+    <string name="select_denunciation_amount_substring">Selecionar a quantidade de denúncias que um número deve ter para
+        ser considerado suspeito pelo aplicativo
+    </string>
+    <string name="select_denunciation_amount_help">Essa informação será usada para otimizar sua experiência com as duas
+        configurações acima. O valor padrão pode mudar conforme o aplicativo for atualizado.
+    </string>
     <string name="restore_default_denunciation">Padrão</string>
 
     <!-- Color picker dialog -->
@@ -67,4 +90,7 @@
 
     <!-- Accessibility -->
     <string name="help">Help icon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

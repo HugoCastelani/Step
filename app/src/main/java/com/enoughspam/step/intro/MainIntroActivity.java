@@ -1,12 +1,10 @@
 package com.enoughspam.step.intro;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.IntroDAO;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
+import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
 public class MainIntroActivity extends IntroActivity {
@@ -15,24 +13,21 @@ public class MainIntroActivity extends IntroActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(new SimpleSlide.Builder()
-                .title(R.string.title_1)
-                .description(R.string.description_1)
+        addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .scrollable(false)
+                .fragment(R.layout.about_intro_slide)
                 .build());
 
-        addSlide(new SimpleSlide.Builder()
-                .title(R.string.title_2)
-                .description(R.string.description_2)
+        addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .scrollable(false)
+                .fragment(R.layout.permission_intro_slide)
                 .build());
 
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_3)
+                .image(R.drawable.intro_3)
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
                 .scrollable(false)
@@ -40,6 +35,7 @@ public class MainIntroActivity extends IntroActivity {
 
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_4)
+                .image(R.drawable.intro_4)
                 .description(R.string.description_4)
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
@@ -49,6 +45,7 @@ public class MainIntroActivity extends IntroActivity {
 
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_5)
+                .image(R.drawable.intro_5)
                 .description(R.string.description_5)
                 .background(R.color.md_cyan_600)
                 .backgroundDark(R.color.md_cyan_600)

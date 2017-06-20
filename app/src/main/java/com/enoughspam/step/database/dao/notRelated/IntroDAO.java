@@ -44,7 +44,7 @@ public class IntroDAO {
     public void setShowIntro(boolean showIntro) {
         String showIntroQuery = "UPDATE " + DatabaseHelper.ConfigIntro.TABLE +
                 " SET " + DatabaseHelper.ConfigIntro.SHOW_INTRO +
-                " = '" + (showIntro ? 1 : 0) + "'";
+                " = " + (showIntro ? 1 : 0) + "";
 
         getSqLiteDatabase().execSQL(showIntroQuery);
     }

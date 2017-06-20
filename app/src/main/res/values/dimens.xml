@@ -6,4 +6,11 @@
     <dimen name="card_label_top_bottom_padding">12dp</dimen>
     <dimen name="card_label_left_right_padding">@dimen/activity_horizontal_margin</dimen>
     <dimen name="custom_tab_layout_height">72dp</dimen>
+
+    <!-- Material Introduction dimens -->
+    <dimen name="mi_baseline">16dp</dimen>
+    <dimen name="mi_baseline_half">8dp</dimen>
+    <dimen name="mi_margin_bottom_pager_indicator">39dp</dimen>
+    <dimen name="mi_y_offset">144dp</dimen>
+    <dimen name="mi_button_cta_height">48dp</dimen>
 </resources>

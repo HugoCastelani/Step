@@ -20,7 +20,7 @@ public class ScreenInfo {
         return mDisplayMetrics.widthPixels;
     }
 
-    public float getHeight() {
+    public int getHeight() {
         return mDisplayMetrics.heightPixels;
     }
 
