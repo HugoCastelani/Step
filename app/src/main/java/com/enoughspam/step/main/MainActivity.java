@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
+import com.afollestad.aesthetic.AestheticToolbar;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.IntroDAO;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
@@ -39,7 +39,7 @@ import static android.os.Build.VERSION_CODES.M;
 public class MainActivity extends AestheticActivity {
 
     private int currentSelectedPosition = 1;
-    private Toolbar toolbar;
+    private AestheticToolbar toolbar;
 
     // data access objects
     private ThemeDAO themeDAO;
@@ -75,7 +75,7 @@ public class MainActivity extends AestheticActivity {
         // toolbar
         ScreenInfo screenInfo = new ScreenInfo(this);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
         setSupportActionBar(toolbar);
 

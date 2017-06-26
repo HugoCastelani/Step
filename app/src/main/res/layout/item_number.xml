@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_number_cardview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="58dp"
-    app:cardCornerRadius="0dp"
-    app:cardBackgroundColor="@color/md_white_1000"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true">
-
-    <TextView android:id="@+id/blocked_recylerview_blocker_or_number"
+<com.afollestad.aesthetic.AestheticCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/item_number_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="18sp"
-        android:text="+55 31 98682-0544"/>
+        android:minHeight="58dp"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/md_white_1000"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true">
 
-</android.support.v7.widget.CardView>
+    <com.afollestad.aesthetic.AestheticTextView
+            android:id="@+id/blocked_recylerview_blocker_or_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="18sp"/>
+
+</com.afollestad.aesthetic.AestheticCardView>

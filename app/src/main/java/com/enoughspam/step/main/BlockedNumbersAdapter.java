@@ -3,12 +3,11 @@ package com.enoughspam.step.main;
 // Created by hugo on 01/04/17, 23:05
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import com.afollestad.aesthetic.AestheticCardView;
+import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
@@ -71,13 +70,13 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
     }
 
     public static class MyViewHolder extends SectionedViewHolder {
-        TextView blocker_or_number;
-        CardView cardView;
+        AestheticTextView blocker_or_number;
+        AestheticCardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            blocker_or_number = (TextView) itemView.findViewById(R.id.blocked_recylerview_blocker_or_number);
-            cardView = (CardView) itemView.findViewById(R.id.item_number_cardview);
+            blocker_or_number = (AestheticTextView) itemView.findViewById(R.id.blocked_recylerview_blocker_or_number);
+            cardView = (AestheticCardView) itemView.findViewById(R.id.item_number_cardview);
         }
     }
 }

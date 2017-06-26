@@ -14,7 +14,8 @@
 
         <!-- fist cardview -->
 
-        <TextView android:id="@+id/settings_textview1"
+        <com.afollestad.aesthetic.AestheticTextView
+                android:id="@+id/settings_textview1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:textColorPrimary"
@@ -252,7 +253,7 @@
                             android:foreground="?android:attr/selectableItemBackground"
                             android:clickable="true">
 
-                        <ImageView
+                        <com.afollestad.aesthetic.AestheticImageView
                                 android:id="@+id/settings_help"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -357,7 +358,7 @@
                             android:foreground="?android:attr/selectableItemBackground"
                             android:clickable="true">
 
-                        <ImageView
+                        <com.afollestad.aesthetic.AestheticImageView
                                 android:id="@+id/settings_help2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -420,7 +421,8 @@
 
                             </android.support.constraint.ConstraintLayout>
 
-                            <com.afollestad.aesthetic.AestheticButton android:id="@+id/settings_default_btn"
+                            <com.afollestad.aesthetic.AestheticButton
+                                    android:id="@+id/settings_default_btn"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     app:layout_constraintLeft_toLeftOf="parent"

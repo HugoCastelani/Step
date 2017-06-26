@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 import com.enoughspam.step.database.domains.ThemeData;
@@ -65,7 +66,7 @@ public class MainFragment extends Fragment {
                 null);
 
         // getting recycler view ready
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.blocked_recyclerview);
+        AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.blocked_recyclerview);
         BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList(), getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
