@@ -5,7 +5,6 @@ package com.enoughspam.step.database.dao.notRelated;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.enoughspam.step.database.dao.DatabaseHelper;
 import com.enoughspam.step.database.domains.ThemeData;
 

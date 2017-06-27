@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +37,8 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends AestheticActivity {
 
+    private final int REQUEST_CODE_INTRO = -1;
+
     private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
 
@@ -56,11 +57,8 @@ public class MainActivity extends AestheticActivity {
         IntroDAO introDAO = new IntroDAO(this);
 
         if (introDAO.showIntro()) {
-            Log.e("StepLog", "show intro");
             Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
-            startActivity(intent);
-        } else {
-            Log.e("StepLog", "dont show intro");
+            startActivityForResult(intent, REQUEST_CODE_INTRO);
         }
 
         super.onCreate(savedInstanceState);
@@ -220,6 +218,19 @@ public class MainActivity extends AestheticActivity {
                 Aesthetic.get()
                         .colorStatusBar(ContextCompat.getColor(this, R.color.colorPrimary))
                         .apply();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_INTRO) {
+            if (resultCode == RESULT_OK) {
+                IntroDAO introDAO = new IntroDAO(this);
+                introDAO.setShowIntro(false);
+            } else {
+                finish();
             }
         }
     }
