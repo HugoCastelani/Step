@@ -30,6 +30,11 @@
             android:text="@string/title_3"
             android:textColor="?android:textColorPrimary"/>
 
-
+    <com.google.android.gms.common.SignInButton
+            android:id="@+id/intro_google_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"
+            app:layout_parallaxFactor="0.4"/>
 
 </com.heinrichreimersoftware.materialintro.view.parallax.ParallaxLinearLayout>
