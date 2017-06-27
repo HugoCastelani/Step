@@ -26,15 +26,12 @@ public class IntroDAO {
     }
 
     public boolean showIntro() {
-        String selectQuery = "SELECT " + DatabaseHelper.ConfigIntro.SHOW_INTRO +
-                " FROM " + DatabaseHelper.ConfigIntro.TABLE;
-
-        Cursor cursor = getSqLiteDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = getSqLiteDatabase().rawQuery("SELECT showIntro FROM config_intro", null);
 
         boolean showIntro = false;
         while (cursor.moveToNext()) {
-            Log.e("StepLog", "SHOW_INTRO? " + cursor.getColumnIndex(DatabaseHelper.ConfigIntro.SHOW_INTRO));
-            showIntro = (cursor.getColumnIndex(DatabaseHelper.ConfigIntro.SHOW_INTRO)) == 1;
+            Log.e("StepLog", "SHOW_INTRO? " + cursor.getColumnIndex("showIntro"));
+            showIntro = (cursor.getColumnIndex("showIntro")) == 1;
         }
 
         cursor.close();
@@ -42,9 +39,8 @@ public class IntroDAO {
     }
 
     public void setShowIntro(boolean showIntro) {
-        String showIntroQuery = "UPDATE " + DatabaseHelper.ConfigIntro.TABLE +
-                " SET " + DatabaseHelper.ConfigIntro.SHOW_INTRO +
-                " = " + (showIntro ? 1 : 0) + "";
+        String showIntroQuery = "UPDATE config_intro " +
+                " SET showIntro = " + (showIntro ? 1 : 0) + "";
 
         getSqLiteDatabase().execSQL(showIntroQuery);
     }

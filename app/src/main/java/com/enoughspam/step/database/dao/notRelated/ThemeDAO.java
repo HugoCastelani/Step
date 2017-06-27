@@ -27,17 +27,13 @@ public class ThemeDAO {
 
     private ThemeData generateThemeData(Cursor cursor) {
         return new ThemeData(
-                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.IS_DARK)) == 1,
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.ConfigTheme.ACCENT_COLOR))
+                cursor.getInt(cursor.getColumnIndex("isDark")) == 1,
+                cursor.getString(cursor.getColumnIndex("accentColor"))
         );
     }
 
     public ThemeData getThemeData() {
-        String selectQuery = "SELECT " + DatabaseHelper.ConfigTheme.IS_DARK + ", "
-                + DatabaseHelper.ConfigTheme.ACCENT_COLOR +
-                " FROM " + DatabaseHelper.ConfigTheme.TABLE;
-
-        Cursor cursor = getSqLiteDatabase().rawQuery(selectQuery, null);
+        Cursor cursor = getSqLiteDatabase().rawQuery("SELECT isDark, accentColor FROM config_theme", null);
 
         ThemeData themeData = null;
         while (cursor.moveToNext())
@@ -48,16 +44,13 @@ public class ThemeDAO {
     }
 
     public void setThemeData(ThemeData themeData) {
-        String isDarkQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
-                " SET " + DatabaseHelper.ConfigTheme.IS_DARK +
-                " = '" + (themeData.isDark() ? 1 : 0) + "'";
+        String isDarkQuery = "UPDATE config_theme " +
+                " SET isDark = " + (themeData.isDark() ? 1 : 0);
 
-        String accentQuery = "UPDATE " + DatabaseHelper.ConfigTheme.TABLE +
-                " SET " + DatabaseHelper.ConfigTheme.ACCENT_COLOR +
-                " = '" + themeData.getAccentColor() + "'";
+        String accentQuery = "UPDATE config_theme " +
+                "SET accentColor = '" + themeData.getAccentColor() + "'";
 
         getSqLiteDatabase().execSQL(isDarkQuery);
         getSqLiteDatabase().execSQL(accentQuery);
     }
-
 }

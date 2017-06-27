@@ -9,14 +9,14 @@ import com.afollestad.aesthetic.AestheticButton;
 import com.enoughspam.step.R;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
-public class PermissionIntroSlideFragment extends SlideFragment {
+public class PermissionIntroFragment extends SlideFragment {
 
     private AestheticButton button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.permission_intro_slide, container, false);
+        View view = inflater.inflate(R.layout.intro_fragment_permission, container, false);
 
         button = (AestheticButton) view.findViewById(R.id.intro_permission_button);
 
