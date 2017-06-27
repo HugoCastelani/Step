@@ -21,13 +21,13 @@ public class MainIntroActivity extends IntroActivity {
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .fragment(R.layout.intro_fragment_permission)
+                .fragment(new PermissionIntroFragment())
                 .build());
 
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .fragment(R.layout.intro_fragment_login)
+                .fragment(new LoginIntroFragment())
                 .build());
 
         addSlide(new SimpleSlide.Builder()
