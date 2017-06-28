@@ -1,4 +1,4 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,6 +20,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
+        // create personal table
+        sqLiteDatabase.execSQL("create table personal (" +
+                "id integer primary key not null," +
+                "name varchar(50) not null);");
+
         // RELATED TABLES
 
         // create user table
@@ -33,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "idUserAdded integer not null," +
                 "idUserAdding integer not null," +
                 "foreign key(idUserAdded) references user(id)," +
-                "foreign key(idUserAdding) references user(id));");
+                "foreign key(idUserAdding) references personal(id));");
 
         // creating country table
         sqLiteDatabase.execSQL("create table country (" +
@@ -67,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "areaCode varchar(10) not null," +
                 "idUser integer not null," +
                 "foreign key(areaCode) references area_code(code)," +
-                "foreign key(idUser) references user(id));");
+                "foreign key(idUser) references personal(id));");
 
         // creating notification table
         sqLiteDatabase.execSQL("create table notification (" +

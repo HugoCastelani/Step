@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import com.enoughspam.step.database.dao.DatabaseHelper;
+import com.enoughspam.step.database.DatabaseHelper;
 
 public class IntroDAO {
 

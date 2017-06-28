@@ -69,11 +69,14 @@ public class LoginIntroFragment extends SlideFragment implements
 
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                Toast.makeText(getActivity(), acct.getDisplayName(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), acct.getGivenName(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), acct.getEmail(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), acct.getId(), Toast.LENGTH_SHORT).show();
+                GoogleSignInAccount account = result.getSignInAccount();
+
+                
+
+                Toast.makeText(getActivity(), account.getDisplayName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), account.getGivenName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), account.getEmail(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), account.getId(), Toast.LENGTH_SHORT).show();
             }
         }
     }

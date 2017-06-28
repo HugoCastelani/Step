@@ -8,16 +8,16 @@ import com.enoughspam.step.database.domains.User;
 
 /**
  * Created by Hugo Castelani
- * Date: 27/06/17
- * Time: 17:01
+ * Date: 28/06/17
+ * Time: 10:47
  */
 
-public class UserDAO {
+public class PersonalDAO {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqLiteDatabase;
 
-    public UserDAO(Context context) {
+    public PersonalDAO(Context context) {
         databaseHelper = new DatabaseHelper(context);
     }
 
@@ -36,22 +36,8 @@ public class UserDAO {
         );
     }
 
-    public boolean create(User user) {
-        String sql = "insert into user values(" + user.getId() + ", '" + user.getName() + "');" +
-                     "insert into personal values(" + user.getId() + ", '" + user.getName() + "')";
-
-        try {
-            getSqLiteDatabase().execSQL(sql);
-        } catch (Exception e) {
-            return false;
-        }
-
-        return true;
-    }
-
     public boolean delete(long id) {
-        String sql = "delete from user where id = " + id + ";" +
-                     "delete from personal where id = " + id;
+        String sql = "delete from personal where id = " + id;
 
         try {
             getSqLiteDatabase().execSQL(sql);
@@ -62,8 +48,8 @@ public class UserDAO {
         return true;
     }
 
-    public User findById(long id) {
-        String sql = "select * from user where id = " + id;
+    public User get() {
+        String sql = "select * from personal";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
         User user = null;
