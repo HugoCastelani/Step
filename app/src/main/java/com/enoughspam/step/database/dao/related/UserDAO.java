@@ -37,8 +37,7 @@ public class UserDAO {
     }
 
     public boolean create(User user) {
-        String sql = "insert into user values(" + user.getId() + ", '" + user.getName() + "');" +
-                     "insert into personal values(" + user.getId() + ", '" + user.getName() + "')";
+        String sql = "insert into user values(" + user.getId() + ", '" + user.getName() + "')";
 
         try {
             getSqLiteDatabase().execSQL(sql);
@@ -50,8 +49,7 @@ public class UserDAO {
     }
 
     public boolean delete(long id) {
-        String sql = "delete from user where id = " + id + ";" +
-                     "delete from personal where id = " + id;
+        String sql = "delete from user where id = " + id;
 
         try {
             getSqLiteDatabase().execSQL(sql);

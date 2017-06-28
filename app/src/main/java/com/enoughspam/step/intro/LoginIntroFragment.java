@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.related.PersonalDAO;
+import com.enoughspam.step.database.dao.related.UserDAO;
+import com.enoughspam.step.database.domains.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -23,6 +25,10 @@ public class LoginIntroFragment extends SlideFragment implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN = 7;
+    private static final int GOOGLE_CODE = 1;
+
+    private UserDAO userDAO;
+    private PersonalDAO personalDAO;
 
     private SignInButton googleButton;
     private GoogleApiClient googleApiClient;
@@ -31,6 +37,9 @@ public class LoginIntroFragment extends SlideFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.intro_fragment_login, container, false);
+
+        userDAO = new UserDAO(getActivity());
+        personalDAO = new PersonalDAO(getActivity());
 
         googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
 
@@ -71,12 +80,16 @@ public class LoginIntroFragment extends SlideFragment implements
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
 
-                
+                if (account.getId() != null) {
+                    long id = Long.parseLong(account.getId() + GOOGLE_CODE);
+                    User user = new User(id, account.getDisplayName());
 
-                Toast.makeText(getActivity(), account.getDisplayName(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), account.getGivenName(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), account.getEmail(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(), account.getId(), Toast.LENGTH_SHORT).show();
+                    if (userDAO.findById(id) == null) {
+                        userDAO.create(user);
+                    }
+
+                    personalDAO.create(user);
+                }
             }
         }
     }

@@ -36,6 +36,18 @@ public class PersonalDAO {
         );
     }
 
+    public boolean create(User user) {
+        String sql = "insert into personal values(" + user.getId() + ", '" + user.getName() + "')";
+
+        try {
+            getSqLiteDatabase().execSQL(sql);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean delete(long id) {
         String sql = "delete from personal where id = " + id;
 

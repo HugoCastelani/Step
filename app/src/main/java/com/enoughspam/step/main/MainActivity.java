@@ -17,8 +17,8 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.IntroDAO;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
+import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.generalClasses.ScreenInfo;
 import com.enoughspam.step.intro.MainIntroActivity;
@@ -37,7 +37,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends AestheticActivity {
 
-    private final int REQUEST_CODE_INTRO = -1;
+    private final int REQUEST_CODE_INTRO = 6;
 
     private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
@@ -54,9 +54,9 @@ public class MainActivity extends AestheticActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        IntroDAO introDAO = new IntroDAO(this);
+        PersonalDAO personalDAO = new PersonalDAO(this);
 
-        if (introDAO.showIntro()) {
+        if (personalDAO.get() == null) {
             Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
             startActivityForResult(intent, REQUEST_CODE_INTRO);
         }
@@ -226,10 +226,7 @@ public class MainActivity extends AestheticActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_INTRO) {
-            if (resultCode == RESULT_OK) {
-                IntroDAO introDAO = new IntroDAO(this);
-                introDAO.setShowIntro(false);
-            } else {
+            if (resultCode != RESULT_OK) {
                 finish();
             }
         }
