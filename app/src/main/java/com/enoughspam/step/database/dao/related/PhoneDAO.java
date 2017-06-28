@@ -4,21 +4,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.enoughspam.step.database.dao.DatabaseHelper;
-import com.enoughspam.step.database.domains.User;
+import com.enoughspam.step.database.domains.Phone;
 
 /**
  * Created by Hugo Castelani
- * Date: 27/06/17
- * Time: 17:01
+ * Date: 28/06/17
+ * Time: 09:20
  */
 
-public class UserDAO {
+public class PhoneDAO {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqLiteDatabase;
+    private UserDAO userDAO;
 
-    public UserDAO(Context context) {
+    public PhoneDAO(Context context) {
         databaseHelper = new DatabaseHelper(context);
+        userDAO = new UserDAO(context);
     }
 
     private SQLiteDatabase getSqLiteDatabase() {
@@ -29,15 +31,22 @@ public class UserDAO {
         return sqLiteDatabase;
     }
 
-    private User generate(Cursor cursor) {
-        return new User(
+    private Phone generate(Cursor cursor) {
+        return new Phone(
                 cursor.getLong(cursor.getColumnIndex("id")),
-                cursor.getString(cursor.getColumnIndex("name"))
+                cursor.getString(cursor.getColumnIndex("number")),
+                cursor.getString(cursor.getColumnIndex("areaCode")),
+                userDAO.findById(cursor.getLong(cursor.getColumnIndex("idUser")))
         );
     }
 
-    public boolean create(User user) {
-        String sql = "insert into user values(" + user.getId() + ", '" + user.getName() + "')";
+    public boolean create(Phone phone) {
+        String sql = "insert into user values(" +
+                "" + phone.getId() + "," +
+                " '" + phone.getNumber() + "'," +
+                " '" + phone.getAreaCode() + "'," +
+                " " + phone.getUser().getId() +
+                ")";
 
         try {
             getSqLiteDatabase().execSQL(sql);
@@ -49,7 +58,7 @@ public class UserDAO {
     }
 
     public boolean delete(long id) {
-        String sql = "delete from user where id = " + id;
+        String sql = "delete from phone where id = " + id;
 
         try {
             getSqLiteDatabase().execSQL(sql);
@@ -60,15 +69,15 @@ public class UserDAO {
         return true;
     }
 
-    public User findById(long id) {
-        String sql = "select * from user where id = " + id;
+    public Phone findById(long id) {
+        String sql = "select * from phone where id = " + id;
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
-        User user = null;
+        Phone phone = null;
         while (cursor.moveToNext())
-            user = generate(cursor);
+            phone = generate(cursor);
 
         cursor.close();
-        return user;
+        return phone;
     }
 }

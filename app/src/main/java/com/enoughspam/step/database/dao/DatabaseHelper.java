@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "database.db";
+    public static final String DATABASE_NAME = "enough_spam.db";
     public static final int VERSION = 1;
 
     public DatabaseHelper(Context context) {

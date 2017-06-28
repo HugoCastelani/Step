@@ -9,14 +9,12 @@ package com.enoughspam.step.database.domains;
 public class User {
     private long id;
     private String name;
-    private Phone phone;
 
     User() {}
 
-    public User(long id, String name, Phone phone) {
+    public User(long id, String name) {
         this.id = id;
         this.name = name;
-        this.phone = phone;
     }
 
     public long getId() {
@@ -33,13 +31,5 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Phone phone) {
-        this.phone = phone;
     }
 }

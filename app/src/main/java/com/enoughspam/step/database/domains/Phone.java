@@ -10,13 +10,15 @@ public class Phone {
     private long id;
     private String number;
     private String areaCode;
+    private User user;
 
     public Phone() {}
 
-    public Phone(long id, String number, String areaCode) {
+    public Phone(long id, String number, String areaCode, User user) {
         this.id = id;
         this.number = number;
         this.areaCode = areaCode;
+        this.user = user;
     }
 
     public long getId() {
@@ -41,5 +43,13 @@ public class Phone {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

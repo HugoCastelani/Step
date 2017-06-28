@@ -34,7 +34,7 @@
 
     <com.google.android.gms.common.SignInButton
             android:id="@+id/intro_google_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"
             app:layout_parallaxFactor="0.4"/>
