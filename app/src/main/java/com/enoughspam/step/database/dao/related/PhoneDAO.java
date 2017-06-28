@@ -16,11 +16,11 @@ public class PhoneDAO {
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqLiteDatabase;
-    private UserDAO userDAO;
+    private PersonalDAO personalDAO;
 
     public PhoneDAO(Context context) {
         databaseHelper = new DatabaseHelper(context);
-        userDAO = new UserDAO(context);
+        personalDAO = new PersonalDAO(context);
     }
 
     private SQLiteDatabase getSqLiteDatabase() {
@@ -36,7 +36,7 @@ public class PhoneDAO {
                 cursor.getLong(cursor.getColumnIndex("id")),
                 cursor.getString(cursor.getColumnIndex("number")),
                 cursor.getString(cursor.getColumnIndex("areaCode")),
-                userDAO.findById(cursor.getLong(cursor.getColumnIndex("idUser")))
+                personalDAO.get()
         );
     }
 
