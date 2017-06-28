@@ -41,10 +41,9 @@ public class PhoneDAO {
     }
 
     public boolean create(Phone phone) {
-        String sql = "insert into user values(" +
-                "" + phone.getId() + "," +
-                " '" + phone.getNumber() + "'," +
-                " '" + phone.getAreaCode() + "'," +
+        String sql = "insert into phone(number, areaCode, userId) values(" +
+                "'" + phone.getNumber() + "', " +
+                " '" + phone.getAreaCode() + "', " +
                 " " + phone.getUser().getId() +
                 ")";
 

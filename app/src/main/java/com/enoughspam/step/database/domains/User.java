@@ -8,12 +8,24 @@ package com.enoughspam.step.database.domains;
 
 public class User {
     private long id;
+    private String idSocial;
     private String name;
 
-    User() {}
+    public User() {
+    }
 
-    public User(long id, String name) {
+    public User(String name) {
+        this.name = name;
+    }
+
+    public User(String idSocial, String name) {
+        this.idSocial = idSocial;
+        this.name = name;
+    }
+
+    public User(long id, String idSocial, String name) {
         this.id = id;
+        this.idSocial = idSocial;
         this.name = name;
     }
 
@@ -23,6 +35,14 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getIdSocial() {
+        return idSocial;
+    }
+
+    public void setIdSocial(String idSocial) {
+        this.idSocial = idSocial;
     }
 
     public String getName() {

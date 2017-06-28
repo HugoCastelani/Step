@@ -31,13 +31,14 @@ public class PersonalDAO {
 
     private User generate(Cursor cursor) {
         return new User(
-                cursor.getLong(cursor.getColumnIndex("id")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
     }
 
     public boolean create(User user) {
-        String sql = "insert into personal values(" + user.getId() + ", '" + user.getName() + "')";
+        String sql = "insert into personal values("
+                + user.getId() + ", '"
+                + user.getName() + "')";
 
         try {
             getSqLiteDatabase().execSQL(sql);

@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create user table
         sqLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
+                "idSocial varchar not null, " +
                 "name varchar(50) not null);");
 
         // create friendship table
@@ -119,36 +120,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating feedback configuration table
         sqLiteDatabase.execSQL("create table config_feedback (" +
                 "nmCallKind varchar(20) primary key  not null," +
-                "showFeedback integer not null);");
+                "showFeedback tinyint not null);");
 
         // creating service blocking configuration table
         sqLiteDatabase.execSQL("create table config_service_block (" +
                 "nmService varchar(20) primary key not null," +
-                "block integer not null);");
+                "block tinyint not null);");
 
         // creating guide configuration table
         sqLiteDatabase.execSQL("create table config_guide (" +
                 "nmView varchar(20) primary key not null," +
-                "showGuide integer not null);");
-
-        // creating intro configuration table
-        sqLiteDatabase.execSQL("create table config_intro (" +
-                "showIntro integer primary key not null);");
-
-        sqLiteDatabase.execSQL("insert into config_intro values(1);");
+                "showGuide tinyint not null);");
 
         // creating network to download DB configuration table
         sqLiteDatabase.execSQL("create table config_network_download_db (" +
                 "nmNetwork varchar(20) primary key not null," +
-                "downloadIt integer not null);");
+                "downloadIt tinyint not null);");
 
         // creating suspicious denunciations amount configuration table
         sqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
-                "amount integer primary key not null);");
+                "amount tinyint primary key not null);");
 
         // creating theme configuration table
         sqLiteDatabase.execSQL("create table config_theme (" +
-                "isDark integer primary key not null," +
+                "isDark tinyint primary key not null," +
                 "accentColor char(7) not null," +
                 "defaultAccentColor char(7) not null);");
 

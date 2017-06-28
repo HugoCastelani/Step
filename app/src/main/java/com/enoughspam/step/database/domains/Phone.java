@@ -14,6 +14,12 @@ public class Phone {
 
     public Phone() {}
 
+    public Phone(String number, String areaCode, User user) {
+        this.number = number;
+        this.areaCode = areaCode;
+        this.user = user;
+    }
+
     public Phone(long id, String number, String areaCode, User user) {
         this.id = id;
         this.number = number;
