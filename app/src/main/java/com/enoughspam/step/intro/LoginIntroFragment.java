@@ -25,7 +25,7 @@ import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 public class LoginIntroFragment extends SlideFragment implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int RC_SIGN_IN = 7;
+    private static final int RC_SIGN_IN = 3;
     private static final int GOOGLE_CODE = 1;
 
     private View view;
@@ -34,18 +34,16 @@ public class LoginIntroFragment extends SlideFragment implements
     private UserDAO userDAO;
     private PersonalDAO personalDAO;
 
-    private SignInButton googleButton;
     private GoogleApiClient googleApiClient;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_login, container, false);
 
         userDAO = new UserDAO(getActivity());
         personalDAO = new PersonalDAO(getActivity());
 
-        googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
+        SignInButton googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
 
         TextView textView = (TextView) googleButton.getChildAt(0);
         textView.setText(R.string.sign_in_google);
