@@ -37,7 +37,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends AestheticActivity {
 
-    private final int REQUEST_CODE_INTRO = 6;
+    private static final int REQUEST_CODE_INTRO = 2;
 
     private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
