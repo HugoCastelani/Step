@@ -4,6 +4,7 @@ package com.enoughspam.step.intro;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,9 @@ public class LoginIntroFragment extends SlideFragment implements
     private static final int RC_SIGN_IN = 7;
     private static final int GOOGLE_CODE = 1;
 
+    private View view;
+    private boolean canGoForward = false;
+
     private UserDAO userDAO;
     private PersonalDAO personalDAO;
 
@@ -36,7 +40,7 @@ public class LoginIntroFragment extends SlideFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.intro_fragment_login, container, false);
+        view = inflater.inflate(R.layout.intro_fragment_login, container, false);
 
         userDAO = new UserDAO(getActivity());
         personalDAO = new PersonalDAO(getActivity());
@@ -71,7 +75,13 @@ public class LoginIntroFragment extends SlideFragment implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public boolean canGoForward() {
+        return canGoForward;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
@@ -90,6 +100,10 @@ public class LoginIntroFragment extends SlideFragment implements
 
                     user.setId(userDAO.findIdByIdSocial(idSocial));
                     personalDAO.create(user);
+
+                    canGoForward = true;
+                    canGoForward();
+                    nextSlide();
                 }
             }
         }
@@ -97,6 +111,10 @@ public class LoginIntroFragment extends SlideFragment implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        if (connectionResult.getErrorMessage() != null) {
+            Snackbar.make(view, connectionResult.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(view, "Algo deu errado...", Snackbar.LENGTH_SHORT).show();
+        }
     }
 }
