@@ -112,6 +112,13 @@ public class LoginIntroFragment extends SlideFragment implements
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        googleApiClient.stopAutoManage(getActivity());
+        googleApiClient.disconnect();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         googleApiClient.stopAutoManage(getActivity());
