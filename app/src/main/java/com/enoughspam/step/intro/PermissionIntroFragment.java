@@ -32,11 +32,6 @@ public class PermissionIntroFragment extends SlideFragment {
         return view;
     }
 
-    @Override
-    public boolean canGoForward() {
-        return canGoForward;
-    }
-
     private void onRequestButtonClick() {
         rxPermissions
                 .request(Manifest.permission.READ_PHONE_STATE,
@@ -59,5 +54,10 @@ public class PermissionIntroFragment extends SlideFragment {
                                 .show();
                     }
                 });
+    }
+
+    @Override
+    public boolean canGoForward() {
+        return canGoForward;
     }
 }

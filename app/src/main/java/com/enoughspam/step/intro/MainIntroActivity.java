@@ -30,14 +30,10 @@ public class MainIntroActivity extends IntroActivity {
                 .fragment(new LoginIntroFragment())
                 .build());
 
-        addSlide(new SimpleSlide.Builder()
-                .title(R.string.title_4)
-                .image(R.drawable.intro_4)
-                .description(R.string.description_4)
+        addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .canGoBackward(false)
-                .scrollable(false)
+                .fragment(new NumberIntroFragment())
                 .build());
 
         addSlide(new SimpleSlide.Builder()

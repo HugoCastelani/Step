@@ -7,15 +7,24 @@
 
     <!-- intro activity -->
     <string name="title_1">Chega de Spam!\nServiço Anti-Spam</string>
-    <string name="description_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de celular, como companhias bancárias, prisioneiros, golpistas e chantagistas.</string>
+    <string name="description_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de
+        celular, como companhias bancárias, prisioneiros, golpistas e chantagistas.
+    </string>
 
     <string name="title_2">Conceda as permissões</string>
-    <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações desnecessárias ou invasivas.</string>
+    <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações
+        desnecessárias ou invasivas.
+    </string>
     <string name="grant_permissions">Conceder permissões</string>
     <string name="granted_permissions">Permissões concedidas</string>
-    <string name="rationale_phone_state">Sem essa permissão, seremos incapazes de interceptar as ligações para ignorá-las ou silenciá-las.</string>
-    <string name="rationale_sms">Sem essa permissão, seremos incapazes de interceptar as mensagens para silenciá-las.</string>
-    <string name="rationale_contacts">Sem essa permissão, seremos incapazes de criar uma lista de amizade a partir de seus contatos.</string>
+    <string name="rationale_phone_state">Sem essa permissão, seremos incapazes de interceptar as ligações para
+        ignorá-las ou silenciá-las.
+    </string>
+    <string name="rationale_sms">Sem essa permissão, seremos incapazes de interceptar as mensagens para silenciá-las.
+    </string>
+    <string name="rationale_contacts">Sem essa permissão, seremos incapazes de criar uma lista de amizade a partir de
+        seus contatos.
+    </string>
     <string name="all_permissions_required">Você deve conceder todas as permissões antes de prosseguir</string>
 
     <string name="title_3">Entre com uma rede social:</string>
@@ -25,7 +34,10 @@
     <string name="description_4">Digite o código recebido por SMS:</string>
 
     <string name="title_5">Tudo pronto!</string>
-    <string name="description_5">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas funcionam por aqui. Não se esqueça de dar uma passada na tela de ajustes para melhorar a sua experiência por meio de configurações.</string>
+    <string name="description_5">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas
+        funcionam por aqui. Não se esqueça de dar uma passada na tela de ajustes para melhorar a sua experiência por
+        meio de configurações.
+    </string>
 
     <!-- settings activity -->
     <string name="settings_activity_label">Ajustes</string>

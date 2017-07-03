@@ -1,0 +1,92 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="false"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/mi_baseline"
+        tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
+
+    <com.afollestad.aesthetic.AestheticImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/mi_baseline"
+            android:paddingLeft="?actionBarSize"
+            android:paddingRight="?actionBarSize"
+            android:gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/intro_4" />
+
+    <com.afollestad.aesthetic.AestheticTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/title_4"
+            android:textColor="?android:textColorPrimary"/>
+
+    <com.afollestad.aesthetic.AestheticSpinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"/>
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/mi_baseline">
+
+        <com.afollestad.aesthetic.AestheticImageView
+                android:id="@+id/intro_number_plus"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_add"/>
+
+        <com.afollestad.aesthetic.AestheticImageView
+                android:id="@+id/intro_number_go"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_arrow_forward"/>
+
+        <com.afollestad.aesthetic.AestheticEditText
+                android:id="@+id/intro_number_country_code"
+                android:layout_width="0dp"
+                android:minWidth="18dp"
+                android:layout_height="0dp"
+                app:layout_constraintLeft_toRightOf="@+id/intro_number_plus"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.afollestad.aesthetic.AestheticEditText
+                android:id="@+id/intro_number_number"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintLeft_toRightOf="@+id/intro_number_country_code"
+                app:layout_constraintRight_toLeftOf="@+id/intro_number_go"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <com.afollestad.aesthetic.AestheticTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/description_4"
+            android:textColor="?android:textColorSecondary"/>
+
+    <com.afollestad.aesthetic.AestheticEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"/>
+
+</LinearLayout>
