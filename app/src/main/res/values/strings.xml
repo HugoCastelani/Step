@@ -12,6 +12,11 @@
     <string name="title_2">Conceda as permissões</string>
     <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações desnecessárias ou invasivas.</string>
     <string name="grant_permissions">Conceder permissões</string>
+    <string name="granted_permissions">Permissões concedidas</string>
+    <string name="rationale_phone_state">Sem essa permissão, seremos incapazes de interceptar as ligações para ignorá-las ou silenciá-las.</string>
+    <string name="rationale_sms">Sem essa permissão, seremos incapazes de interceptar as mensagens para silenciá-las.</string>
+    <string name="rationale_contacts">Sem essa permissão, seremos incapazes de criar uma lista de amizade a partir de seus contatos.</string>
+    <string name="all_permissions_required">Você deve conceder todas as permissões antes de prosseguir</string>
 
     <string name="title_3">Entre com uma rede social:</string>
     <string name="sign_in_google">Continuar com o Google+</string>

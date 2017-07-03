@@ -4,6 +4,7 @@ package com.enoughspam.step.intro;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +13,13 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.AestheticButton;
 import com.enoughspam.step.R;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
-import com.maxcruz.reactivePermissions.entity.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import io.reactivex.functions.Consumer;
-import kotlin.Pair;
-
-import java.util.ArrayList;
 
 public class PermissionIntroFragment extends SlideFragment {
 
     private static final int REQUEST_CODE = 4;
     private RxPermissions rxPermissions;
+    private AestheticButton button;
 
     private boolean canGoForward = false;
 
@@ -32,14 +29,9 @@ public class PermissionIntroFragment extends SlideFragment {
         View view = inflater.inflate(R.layout.intro_fragment_permission, container, false);
 
         rxPermissions = new RxPermissions(getActivity());
-        AestheticButton button = (AestheticButton) view.findViewById(R.id.intro_permission_button);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onRequestButtonClick();
-            }
-        });
+        button = (AestheticButton) view.findViewById(R.id.intro_permission_button);
+        button.setOnClickListener(v -> onRequestButtonClick());
 
         return view;
     }
@@ -56,46 +48,16 @@ public class PermissionIntroFragment extends SlideFragment {
                         Manifest.permission.READ_CONTACTS)
                 .subscribe(granted -> {
                     if (granted) {
-
+                        canGoForward = true;
+                        canGoForward();
+                        nextSlide();
+                    } else {
+                        Snackbar.make(getView(),
+                                getResources().getString(R.string.all_permissions_required),
+                                Snackbar.LENGTH_SHORT)
+                                .show();
                     }
-                }
-        });
-
-        Permission phoneState = new Permission(
-                Manifest.permission.READ_PHONE_STATE, // Permission constant to request
-                R.string.rationale_phone_state, // String resource with rationale explanation
-                false // Define if the app can continue without the permission
-        );
-
-        Permission sms = new Permission(
-                Manifest.permission.READ_SMS,
-                R.string.rationale_sms,
-                false
-        );
-
-        Permission contacts = new Permission(
-                Manifest.permission.READ_CONTACTS,
-                R.string.rationale_contacts,
-                true
-        );
-
-        ArrayList<Permission> permissions = new ArrayList<>();
-        permissions.add(phoneState);
-        permissions.add(sms);
-        permissions.add(contacts);
-
-        reactive = new ReactivePermissions(this, REQUEST_CODE);
-
-        reactive.observeResultPermissions().subscribe(new Consumer<Pair<String, Boolean>>() {
-            @Override
-            public void accept(Pair<String, Boolean> event) throws Exception {
-                switch (event.getFirst()) {
-                    case Manifest.permission.READ_PHONE_STATE:
-                        if (event.getSecond()) {
-
-                        }
-                }
-        })
+                });
     }
 
     @Override
@@ -107,6 +69,10 @@ public class PermissionIntroFragment extends SlideFragment {
                     && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_SMS)
                     == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getActivity(), "Both permissions granted", Toast.LENGTH_SHORT).show();
+
+                button.setActivated(false);
+                button.setText(getResources().getString(R.string.granted_permissions));
+
                 canGoForward = true;
                 canGoForward();
                 nextSlide();
