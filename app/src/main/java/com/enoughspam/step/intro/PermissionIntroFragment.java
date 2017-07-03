@@ -14,7 +14,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 public class PermissionIntroFragment extends SlideFragment {
 
-    private static final int REQUEST_CODE = 4;
     private RxPermissions rxPermissions;
     private AestheticButton button;
 
