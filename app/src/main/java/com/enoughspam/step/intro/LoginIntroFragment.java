@@ -48,12 +48,7 @@ public class LoginIntroFragment extends SlideFragment implements
         TextView textView = (TextView) googleButton.getChildAt(0);
         textView.setText(R.string.sign_in_google);
 
-        googleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onGoogleButtonClick();
-            }
-        });
+        googleButton.setOnClickListener(v -> onGoogleButtonClick());
 
         GoogleSignInOptions signInOptions = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,5 +109,12 @@ public class LoginIntroFragment extends SlideFragment implements
         } else {
             Snackbar.make(view, "Algo deu errado...", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        googleApiClient.stopAutoManage(getActivity());
+        googleApiClient.disconnect();
     }
 }
