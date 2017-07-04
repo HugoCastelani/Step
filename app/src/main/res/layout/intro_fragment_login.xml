@@ -10,7 +10,7 @@
         android:padding="@dimen/mi_baseline"
         tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
 
-    <com.afollestad.aesthetic.AestheticImageView
+    <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/mi_baseline"
@@ -20,7 +20,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/intro_3" />
 
-    <com.afollestad.aesthetic.AestheticTextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"

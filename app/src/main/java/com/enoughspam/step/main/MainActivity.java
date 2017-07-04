@@ -18,10 +18,8 @@ import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.generalClasses.ScreenInfo;
-import com.enoughspam.step.intro.MainIntroActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -53,14 +51,6 @@ public class MainActivity extends AestheticActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        PersonalDAO personalDAO = new PersonalDAO(this);
-
-        if (personalDAO.get() == null) {
-            Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_INTRO);
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

@@ -10,7 +10,7 @@
         android:padding="@dimen/mi_baseline"
         tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
 
-    <com.afollestad.aesthetic.AestheticImageView
+    <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/mi_baseline"
@@ -20,7 +20,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/intro_4" />
 
-    <com.afollestad.aesthetic.AestheticTextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"
@@ -30,7 +30,7 @@
             android:text="@string/title_4"
             android:textColor="?android:textColorPrimary"/>
 
-    <com.afollestad.aesthetic.AestheticSpinner
+    <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"/>
@@ -41,7 +41,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/mi_baseline">
 
-        <com.afollestad.aesthetic.AestheticImageView
+        <ImageView
                 android:id="@+id/intro_number_plus"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_add"/>
 
-        <com.afollestad.aesthetic.AestheticImageView
+        <ImageView
                 android:id="@+id/intro_number_go"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -57,7 +57,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_arrow_forward"/>
 
-        <com.afollestad.aesthetic.AestheticEditText
+        <EditText
                 android:id="@+id/intro_number_country_code"
                 android:layout_width="0dp"
                 android:minWidth="18dp"
@@ -65,7 +65,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/intro_number_plus"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.afollestad.aesthetic.AestheticEditText
+        <EditText
                 android:id="@+id/intro_number_number"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -75,7 +75,7 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <com.afollestad.aesthetic.AestheticTextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"
@@ -84,7 +84,7 @@
             android:text="@string/description_4"
             android:textColor="?android:textColorSecondary"/>
 
-    <com.afollestad.aesthetic.AestheticEditText
+    <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"/>
