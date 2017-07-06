@@ -8,14 +8,17 @@ package com.enoughspam.step.database.domains;
 
 public class Country {
     private long id;
+    private String code;
     private String name;
 
-    public Country(long id, String name) {
+    public Country(long id, String code, String name) {
         this.id = id;
+        this.code = code;
         this.name = name;
     }
 
-    public Country(String name) {
+    public Country(String code, String name) {
+        this.code = code;
         this.name = name;
     }
 
@@ -25,6 +28,14 @@ public class Country {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
