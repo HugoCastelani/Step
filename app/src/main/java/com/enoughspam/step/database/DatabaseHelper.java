@@ -143,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating suspicious denunciations amount configuration table
         sqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
-                "amount tinyint primary key not null);");
+                "amount smallint primary key not null);");
 
         // creating theme configuration table
         sqLiteDatabase.execSQL("create table config_theme (" +
