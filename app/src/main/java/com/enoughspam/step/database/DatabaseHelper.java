@@ -9,9 +9,10 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
     public static final String DATABASE_NAME = "enough_spam.db";
     public static final int VERSION = 1;
+
+    private SQLiteDatabase sqLiteDatabase;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -19,7 +20,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
+        createTables();
+        insertAttributes();
+    }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {}
+
+    private void createTables() {
         // create personal table
         sqLiteDatabase.execSQL("create table personal (" +
                 "id integer primary key not null," +
@@ -30,64 +39,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create user table
         sqLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
-                "idSocial varchar not null, " +
+                "social_id varchar not null, " +
                 "name varchar(50) not null);");
 
         // create friendship table
         sqLiteDatabase.execSQL("create table friendship (" +
                 "id integer primary key not null," +
-                "idUserAdded integer not null," +
-                "idUserAdding integer not null," +
-                "foreign key(idUserAdded) references user(id)," +
-                "foreign key(idUserAdding) references personal(id));");
+                "user_added_id integer not null," +
+                "user_adding_id integer not null," +
+                "foreign key(user_added_id) references user(id)," +
+                "foreign key(user_adding_id) references personal(id));");
 
         // creating country table
         sqLiteDatabase.execSQL("create table country (" +
                 "id integer primary key not null," +
+                "code varchar(10) not null," +
                 "name varchar(50) not null)");
-
-        // creating country code table
-        sqLiteDatabase.execSQL("create table country_code (" +
-                "code varchar(10) primary key not null," +
-                "idCountry integer not null," +
-                "foreign key(idCountry) references country(id));");
 
         // creating state table
         sqLiteDatabase.execSQL("create table state (" +
                 "id integer primary key not null," +
                 "name varchar(50) not null," +
-                "idCountry integer not null," +
-                "foreign key(idCountry) references country(id));");
+                "country_id integer not null," +
+                "foreign key(country_id) references country(id));");
 
         // creating area code table
-        sqLiteDatabase.execSQL("create table area_code (" +
+        sqLiteDatabase.execSQL("create table area (" +
                 "code varchar(10) primary key not null," +
                 "name varchar(50) not null," +
-                "idState integer not null," +
-                "foreign key(idState) references state(id));");
+                "state_id integer not null," +
+                "foreign key(state_id) references state(id));");
 
         // creating phone table
         sqLiteDatabase.execSQL("create table phone (" +
                 "id integer primary key not null," +
                 "number varchar(20) not null," +
-                "areaCode varchar(10) not null," +
-                "idUser integer not null," +
-                "foreign key(areaCode) references area_code(code)," +
-                "foreign key(idUser) references personal(id));");
+                "area_code varchar(10) not null," +
+                "user_id integer not null," +
+                "foreign key(area_code) references area(code)," +
+                "foreign key(user_id) references personal(id));");
 
         // creating notification table
         sqLiteDatabase.execSQL("create table notification (" +
                 "id integer primary key not null," +
-                "idPhone integer not null," +
-                "idUserNotified integer not null," +
-                "foreign key(idPhone) references phone(id)," +
-                "foreign key(idUserNotified) references user(id));");
+                "phone_id integer not null," +
+                "notified_user_id integer not null," +
+                "foreign key(phone_id) references phone(id)," +
+                "foreign key(notified_user_id) references user(id));");
 
         // creating denunciation table
         sqLiteDatabase.execSQL("create table denunciation (" +
                 "id integer primary key not null," +
-                "idPhone integer not null," +
-                "foreign key(idPhone) references phone(id));");
+                "phone_id integer not null," +
+                "foreign key(phone_id) references phone(id));");
 
         // creating description table
         sqLiteDatabase.execSQL("create table description (" +
@@ -96,11 +100,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating denunciation/description table
         sqLiteDatabase.execSQL("create table denunciation_description (" +
-                "idDenunciation integer not null," +
-                "idDescription integer not null," +
-                "primary key(idDenunciation, idDescription)," +
-                "foreign key(idDenunciation) references denunciation(id)," +
-                "foreign key(idDescription) references description(id));");
+                "denunciation_id integer not null," +
+                "description_id integer not null," +
+                "primary key(denunciation_id, description_id)," +
+                "foreign key(denunciation_id) references denunciation(id)," +
+                "foreign key(description_id) references description(id));");
 
         // creating suspicious treatment table
         sqLiteDatabase.execSQL("create table suspicious_treatment (" +
@@ -109,33 +113,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating treatment configuration table
         sqLiteDatabase.execSQL("create table config_treatment (" +
-                "idDescription integer not null," +
-                "idSuspiciousTreatment integer not null," +
-                "primary key(idDescription, idSuspiciousTreatment)," +
-                "foreign key(idDescription) references description(id)," +
-                "foreign key(idSuspiciousTreatment) references suspicious_treatment(id));");
+                "description_id integer not null," +
+                "suspicious_treatment_id integer not null," +
+                "primary key(description_id, suspicious_treatment_id)," +
+                "foreign key(description_id) references description(id)," +
+                "foreign key(suspicious_treatment_id) references suspicious_treatment(id));");
 
         // NOT RELATED TABLES
 
         // creating feedback configuration table
         sqLiteDatabase.execSQL("create table config_feedback (" +
-                "nmCallKind varchar(20) primary key  not null," +
-                "showFeedback tinyint not null);");
+                "call_kind_name varchar(20) primary key  not null," +
+                "show_feedback tinyint not null);");
 
         // creating service blocking configuration table
         sqLiteDatabase.execSQL("create table config_service_block (" +
-                "nmService varchar(20) primary key not null," +
+                "service_name varchar(20) primary key not null," +
                 "block tinyint not null);");
 
         // creating guide configuration table
         sqLiteDatabase.execSQL("create table config_guide (" +
-                "nmView varchar(20) primary key not null," +
-                "showGuide tinyint not null);");
+                "view_name varchar(20) primary key not null," +
+                "show_guide tinyint not null);");
 
         // creating network to download DB configuration table
         sqLiteDatabase.execSQL("create table config_network_download_db (" +
-                "nmNetwork varchar(20) primary key not null," +
-                "downloadIt tinyint not null);");
+                "network_name varchar(20) primary key not null," +
+                "download_it tinyint not null);");
 
         // creating suspicious denunciations amount configuration table
         sqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
@@ -143,13 +147,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating theme configuration table
         sqLiteDatabase.execSQL("create table config_theme (" +
-                "isDark tinyint primary key not null," +
-                "accentColor char(7) not null," +
-                "defaultAccentColor char(7) not null);");
-
-        sqLiteDatabase.execSQL("insert into config_theme values(0, '#00BCD4', '#00BCD4');");
+                "is_dark tinyint primary key not null," +
+                "accent_color char(7) not null," +
+                "default_accent_color char(7) not null);");
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {}
+    private void insertAttributes() {
+        // inserting default theme attributes
+        sqLiteDatabase.execSQL("insert into config_theme values(0, '#00BCD4', '#00BCD4');");
+
+        // inserting countries and its codes
+        sqLiteDatabase.execSQL("insert into country(code, name) values('1', 'United States');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values('1', 'Canada');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values('20', 'مصر');"); // Egypt
+        sqLiteDatabase.execSQL("insert into country(code, name) values('211', 'South Sudan');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values('212', 'المغرب');"); // Morocco
+        sqLiteDatabase.execSQL("insert into country(code, name) values('55', 'Brasil');");
+    }
 }
