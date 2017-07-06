@@ -34,6 +34,7 @@ public class CountryDAO {
     Country generate(Cursor cursor) {
         return new Country(
                 cursor.getLong(cursor.getColumnIndex("id")),
+                cursor.getString(cursor.getColumnIndex("code")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
     }
@@ -48,6 +49,21 @@ public class CountryDAO {
 
         cursor.close();
         return country;
+    }
+
+    public List<Country> findByCode(int code) {
+        String sql = "select * from country where code = '" + code + "'";
+        Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+        List<Country> countries = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            Country country = generate(cursor);
+            countries.add(country);
+        }
+
+        cursor.close();
+        return countries;
     }
 
     public List<Country> getCountryList() {
