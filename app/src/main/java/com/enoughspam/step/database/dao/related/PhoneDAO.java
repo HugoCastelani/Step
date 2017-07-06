@@ -35,17 +35,17 @@ public class PhoneDAO {
         return new Phone(
                 cursor.getLong(cursor.getColumnIndex("id")),
                 cursor.getString(cursor.getColumnIndex("number")),
-                cursor.getString(cursor.getColumnIndex("areaCode")),
+                cursor.getString(cursor.getColumnIndex("area_code")),
                 personalDAO.get()
         );
     }
 
     public boolean create(Phone phone) {
-        String sql = "insert into phone(number, areaCode, userId) values(" +
+        String sql = "insert into phone(number, area_code, user_id) values(" +
                 "'" + phone.getNumber() + "', " +
                 " '" + phone.getAreaCode() + "', " +
                 " " + phone.getUser().getId() +
-                ")";
+                ");";
 
         try {
             getSqLiteDatabase().execSQL(sql);

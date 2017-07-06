@@ -11,10 +11,8 @@ public class User {
     private String idSocial;
     private String name;
 
-    public User() {
-    }
-
-    public User(String name) {
+    public User(long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

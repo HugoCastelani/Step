@@ -31,6 +31,7 @@ public class PersonalDAO {
 
     private User generate(Cursor cursor) {
         return new User(
+                cursor.getLong(cursor.getColumnIndex("id")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
     }

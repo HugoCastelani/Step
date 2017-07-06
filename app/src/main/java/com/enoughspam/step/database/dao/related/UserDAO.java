@@ -33,13 +33,13 @@ public class UserDAO {
     private User generate(Cursor cursor) {
         return new User(
                 cursor.getLong(cursor.getColumnIndex("id")),
-                cursor.getString(cursor.getColumnIndex("idSocial")),
+                cursor.getString(cursor.getColumnIndex("social_id")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
     }
 
     public boolean create(User user) {
-        String sql = "insert into user(idSocial, name) values('"
+        String sql = "insert into user(social_id, name) values('"
                 + user.getIdSocial() + "', '"
                 + user.getName() + "')";
 
@@ -65,11 +65,11 @@ public class UserDAO {
         return true;
     }
 
-    public long findIdByIdSocial(String idSocial) {
-        String sql = "select * from user where idSocial = '" + idSocial + "'";
+    public long findIdByIdSocial(String socialId) {
+        String sql = "select * from user where social_id = '" + socialId + "'";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
-        long id = -1;
+        long id = -1L;
         while (cursor.moveToNext())
             id = generate(cursor).getId();
 
@@ -89,8 +89,8 @@ public class UserDAO {
         return user;
     }
 
-    public User findByIdSocial(String idSocial) {
-        String sql = "select * from user where idSocial = '" + idSocial + "'";
+    public User findByIdSocial(String socialId) {
+        String sql = "select * from user where social_id = '" + socialId + "'";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
         User user = null;
