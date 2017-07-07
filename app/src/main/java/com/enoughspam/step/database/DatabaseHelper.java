@@ -31,90 +31,90 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void createTables() {
         // create personal table
         sqLiteDatabase.execSQL("create table personal (" +
-                "id integer primary key not null," +
+                "id int primary key not null," +
                 "name varchar(50) not null);");
 
         // RELATED TABLES
 
         // create user table
         sqLiteDatabase.execSQL("create table user (" +
-                "id integer primary key not null," +
-                "social_id varchar not null, " +
+                "id int primary key not null," +
+                "social_id varchar(50) not null, " +
                 "name varchar(50) not null);");
 
         // create friendship table
         sqLiteDatabase.execSQL("create table friendship (" +
-                "id integer primary key not null," +
-                "user_added_id integer not null," +
-                "user_adding_id integer not null," +
+                "id int primary key not null," +
+                "user_added_id int not null," +
+                "user_adding_id int not null," +
                 "foreign key(user_added_id) references user(id)," +
                 "foreign key(user_adding_id) references personal(id));");
 
         // creating country table
         sqLiteDatabase.execSQL("create table country (" +
-                "id integer primary key not null," +
-                "code varchar(10) not null," +
+                "id int primary key not null," +
+                "code int not null," +
                 "name varchar(50) not null)");
 
         // creating state table
         sqLiteDatabase.execSQL("create table state (" +
-                "id integer primary key not null," +
+                "id int primary key not null," +
                 "name varchar(50) not null," +
-                "country_id integer not null," +
+                "country_id int not null," +
                 "foreign key(country_id) references country(id));");
 
         // creating area code table
         sqLiteDatabase.execSQL("create table area (" +
-                "code varchar(10) primary key not null," +
+                "code int primary key not null," +
                 "name varchar(50) not null," +
-                "state_id integer not null," +
+                "state_id int not null," +
                 "foreign key(state_id) references state(id));");
 
         // creating phone table
         sqLiteDatabase.execSQL("create table phone (" +
-                "id integer primary key not null," +
-                "number varchar(20) not null," +
-                "area_code varchar(10) not null," +
-                "user_id integer not null," +
+                "id int primary key not null," +
+                "number bigint not null," +
+                "area_code int not null," +
+                "user_id int," +
                 "foreign key(area_code) references area(code)," +
                 "foreign key(user_id) references personal(id));");
 
         // creating notification table
         sqLiteDatabase.execSQL("create table notification (" +
-                "id integer primary key not null," +
-                "phone_id integer not null," +
-                "notified_user_id integer not null," +
+                "id int primary key not null," +
+                "phone_id_a int not null," +
+                "notified_user_id int not null," +
                 "foreign key(phone_id) references phone(id)," +
                 "foreign key(notified_user_id) references user(id));");
 
         // creating denunciation table
         sqLiteDatabase.execSQL("create table denunciation (" +
-                "id integer primary key not null," +
-                "phone_id integer not null," +
+                "id int primary key not null," +
+                "phone_id int not null," +
                 "foreign key(phone_id) references phone(id));");
 
         // creating description table
         sqLiteDatabase.execSQL("create table description (" +
-                "id integer primary key not null," +
+                "id int primary key not null," +
                 "description varchar(50) not null);");
 
         // creating denunciation/description table
         sqLiteDatabase.execSQL("create table denunciation_description (" +
-                "denunciation_id integer not null," +
-                "description_id integer not null," +
+                "denunciation_id int not null," +
+                "description_id int not null," +
                 "primary key(denunciation_id, description_id)," +
                 "foreign key(denunciation_id) references denunciation(id)," +
                 "foreign key(description_id) references description(id));");
 
         // creating suspicious treatment table
         sqLiteDatabase.execSQL("create table suspicious_treatment (" +
-                "id integer primary key not null," +
+                "id int primary key not null," +
                 "name varchar(20) not null);");
 
         // creating treatment configuration table
         sqLiteDatabase.execSQL("create table config_treatment (" +
-                "description_id integer not null," +
-                "suspicious_treatment_id integer not null," +
+                "description_id int not null," +
+                "suspicious_treatment_id int not null," +
                 "primary key(description_id, suspicious_treatment_id)," +
                 "foreign key(description_id) references description(id)," +
                 "foreign key(suspicious_treatment_id) references suspicious_treatment(id));");
@@ -157,11 +157,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("insert into config_theme values(0, '#00BCD4', '#00BCD4');");
 
         // inserting countries and its codes
-        sqLiteDatabase.execSQL("insert into country(code, name) values('1', 'United States');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values('1', 'Canada');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values('20', 'مصر');"); // Egypt
-        sqLiteDatabase.execSQL("insert into country(code, name) values('211', 'South Sudan');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values('212', 'المغرب');"); // Morocco
-        sqLiteDatabase.execSQL("insert into country(code, name) values('55', 'Brasil');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values(1, 'United States');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values(1, 'Canada');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values(20, 'مصر');"); // Egypt
+        sqLiteDatabase.execSQL("insert into country(code, name) values(211, 'South Sudan');");
+        sqLiteDatabase.execSQL("insert into country(code, name) values(212, 'المغرب');"); // Morocco
+        sqLiteDatabase.execSQL("insert into country(code, name) values(55, 'Brasil');");
     }
 }
