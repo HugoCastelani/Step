@@ -7,40 +7,40 @@ package com.enoughspam.step.database.domains;
  */
 
 public class User {
-    private long id;
-    private String idSocial;
+    private int id;
+    private String socialId;
     private String name;
 
-    public User(long id, String name) {
+    public User(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public User(String idSocial, String name) {
-        this.idSocial = idSocial;
+    public User(String socialId, String name) {
+        this.socialId = socialId;
         this.name = name;
     }
 
-    public User(long id, String idSocial, String name) {
+    public User(int id, String socialId, String name) {
         this.id = id;
-        this.idSocial = idSocial;
+        this.socialId = socialId;
         this.name = name;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getIdSocial() {
-        return idSocial;
+    public String getSocialId() {
+        return socialId;
     }
 
-    public void setIdSocial(String idSocial) {
-        this.idSocial = idSocial;
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
     }
 
     public String getName() {

@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create user table
         sqLiteDatabase.execSQL("create table user (" +
                 "id int primary key not null," +
-                "social_id varchar(50) not null, " +
+                "social_id varchar(30) not null, " +
                 "name varchar(50) not null);");
 
         // create friendship table

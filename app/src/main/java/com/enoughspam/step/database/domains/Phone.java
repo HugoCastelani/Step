@@ -7,47 +7,45 @@ package com.enoughspam.step.database.domains;
  */
 
 public class Phone {
-    private long id;
-    private String number;
-    private String areaCode;
+    private int id;
+    private long number;
+    private int areaCode;
     private User user;
 
-    public Phone() {}
-
-    public Phone(String number, String areaCode, User user) {
+    public Phone(long number, int areaCode, User user) {
         this.number = number;
         this.areaCode = areaCode;
         this.user = user;
     }
 
-    public Phone(long id, String number, String areaCode, User user) {
+    public Phone(int id, long number, int areaCode, User user) {
         this.id = id;
         this.number = number;
         this.areaCode = areaCode;
         this.user = user;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
-    public String getAreaCode() {
+    public int getAreaCode() {
         return areaCode;
     }
 
-    public void setAreaCode(String areaCode) {
+    public void setAreaCode(int areaCode) {
         this.areaCode = areaCode;
     }
 

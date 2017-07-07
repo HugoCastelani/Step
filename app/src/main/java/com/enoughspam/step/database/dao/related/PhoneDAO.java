@@ -3,6 +3,7 @@ package com.enoughspam.step.database.dao.related;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.enoughspam.step.database.DatabaseHelper;
 import com.enoughspam.step.database.domains.Phone;
 
@@ -33,9 +34,9 @@ public class PhoneDAO {
 
     private Phone generate(Cursor cursor) {
         return new Phone(
-                cursor.getLong(cursor.getColumnIndex("id")),
-                cursor.getString(cursor.getColumnIndex("number")),
-                cursor.getString(cursor.getColumnIndex("area_code")),
+                cursor.getInt(cursor.getColumnIndex("id")),
+                cursor.getLong(cursor.getColumnIndex("number")),
+                cursor.getInt(cursor.getColumnIndex("area_code")),
                 personalDAO.get()
         );
     }

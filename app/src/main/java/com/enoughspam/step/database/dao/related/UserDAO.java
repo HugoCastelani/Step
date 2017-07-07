@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.enoughspam.step.database.DatabaseHelper;
 import com.enoughspam.step.database.domains.User;
 
@@ -32,7 +33,7 @@ public class UserDAO {
 
     private User generate(Cursor cursor) {
         return new User(
-                cursor.getLong(cursor.getColumnIndex("id")),
+                cursor.getInt(cursor.getColumnIndex("id")),
                 cursor.getString(cursor.getColumnIndex("social_id")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
@@ -40,7 +41,7 @@ public class UserDAO {
 
     public boolean create(User user) {
         String sql = "insert into user(social_id, name) values('"
-                + user.getIdSocial() + "', '"
+                + user.getSocialId() + "', '"
                 + user.getName() + "')";
 
         try {

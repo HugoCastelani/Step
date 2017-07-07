@@ -7,34 +7,34 @@ package com.enoughspam.step.database.domains;
  */
 
 public class Country {
-    private long id;
-    private String code;
+    private int id;
+    private int code;
     private String name;
 
-    public Country(long id, String code, String name) {
+    public Country(int code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public Country(int id, int code, String name) {
         this.id = id;
         this.code = code;
         this.name = name;
     }
 
-    public Country(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

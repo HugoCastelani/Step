@@ -3,6 +3,7 @@ package com.enoughspam.step.database.dao.related;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.enoughspam.step.database.DatabaseHelper;
 import com.enoughspam.step.database.domains.Country;
 
@@ -33,8 +34,8 @@ public class CountryDAO {
 
     Country generate(Cursor cursor) {
         return new Country(
-                cursor.getLong(cursor.getColumnIndex("id")),
-                cursor.getString(cursor.getColumnIndex("code")),
+                cursor.getInt(cursor.getColumnIndex("id")),
+                cursor.getInt(cursor.getColumnIndex("code")),
                 cursor.getString(cursor.getColumnIndex("name"))
         );
     }
