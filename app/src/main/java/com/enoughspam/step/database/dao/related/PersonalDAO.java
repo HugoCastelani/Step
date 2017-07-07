@@ -51,7 +51,7 @@ public class PersonalDAO {
         return true;
     }
 
-    public boolean delete(long id) {
+    public boolean delete(int id) {
         String sql = "delete from personal where id = " + id;
 
         try {

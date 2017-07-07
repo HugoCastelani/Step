@@ -54,7 +54,7 @@ public class UserDAO {
         return true;
     }
 
-    public boolean delete(long id) {
+    public boolean delete(int id) {
         String sql = "delete from user where id = " + id;
 
         try {
@@ -66,11 +66,11 @@ public class UserDAO {
         return true;
     }
 
-    public long findIdByIdSocial(String socialId) {
+    public int findIdByIdSocial(String socialId) {
         String sql = "select * from user where social_id = '" + socialId + "'";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
-        long id = -1L;
+        int id = -1;
         while (cursor.moveToNext())
             id = generate(cursor).getId();
 
@@ -78,7 +78,7 @@ public class UserDAO {
         return id;
     }
 
-    public User findById(long id) {
+    public User findById(int id) {
         String sql = "select * from user where id = " + id;
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 

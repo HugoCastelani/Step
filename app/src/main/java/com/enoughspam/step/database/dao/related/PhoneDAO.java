@@ -57,7 +57,7 @@ public class PhoneDAO {
         return true;
     }
 
-    public boolean delete(long id) {
+    public boolean delete(int id) {
         String sql = "delete from phone where id = " + id;
 
         try {
@@ -69,7 +69,7 @@ public class PhoneDAO {
         return true;
     }
 
-    public Phone findById(long id) {
+    public Phone findById(int id) {
         String sql = "select * from phone where id = " + id;
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 

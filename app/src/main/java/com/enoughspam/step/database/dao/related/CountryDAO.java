@@ -40,7 +40,7 @@ public class CountryDAO {
         );
     }
 
-    public Country findById(long id) {
+    public Country findById(int id) {
         String sql = "select * from country where id = " + id;
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
