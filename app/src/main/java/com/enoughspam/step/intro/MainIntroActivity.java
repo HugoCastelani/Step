@@ -2,6 +2,7 @@ package com.enoughspam.step.intro;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.main.MainActivity;
@@ -9,14 +10,31 @@ import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+
 public class MainIntroActivity extends IntroActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        KeyboardVisibilityEvent.setEventListener(
+                this,
+                isOpen -> {
+                    if (isOpen) {
+                        setButtonBackVisible(false);
+                        setButtonNextVisible(false);
+
+                    } else {
+
+                        setButtonBackVisible(true);
+                        setButtonNextVisible(true);
+                    }
+                }
+        );
+
         PersonalDAO personalDAO = new PersonalDAO(this);
-        if (personalDAO.get() == null) {
+        if (personalDAO.get() != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

@@ -60,6 +60,9 @@ dependencies {
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+
+    // yshrsmz
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
     */
 
     // aidas follestad
@@ -81,12 +84,14 @@ dependencies {
     }
 
     // google
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-auth:11.0.1'
     compile 'com.google.firebase:firebase-core:9.6.1'
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+
+    // yshrsmz
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 
     testCompile 'junit:junit:4.12'
 }
