@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating country table
         sqLiteDatabase.execSQL("create table country (" +
                 "id integer primary key not null," +
-                "code int not null," +
+                "code integer not null," +
                 "name varchar(50) not null)");
 
         // creating state table
@@ -65,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creating area code table
         sqLiteDatabase.execSQL("create table area (" +
-                "code int primary key not null," +
+                "code integer primary key not null," +
                 "name varchar(50) not null," +
                 "state_id integer not null," +
                 "foreign key(state_id) references state(id));");
@@ -74,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table phone (" +
                 "id integer primary key not null," +
                 "number bigint not null," +
-                "area_code int not null," +
+                "area_code integer not null," +
                 "user_id integer," +
                 "foreign key(area_code) references area(code)," +
                 "foreign key(user_id) references personal(id));");
