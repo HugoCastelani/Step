@@ -31,6 +31,9 @@
     <string name="sign_in_google">Continuar com o Google+</string>
 
     <string name="title_4">Registre seu número:</string>
+    <string name="country_code_error">O código não corresponde ao de nenhum país</string>
+    <string name="empty_input_error">Campo vazio</string>
+    <string name="input_error">Número inválido</string>
     <string name="description_4">Digite o código recebido por SMS:</string>
 
     <string name="title_5">Tudo pronto!</string>

@@ -67,6 +67,21 @@ public class CountryDAO {
         return countries;
     }
 
+    public List<String> findNameByCode(int code) {
+        String sql = "select name from country where code = '" + code + "'";
+        Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+        List<String> countries = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            String string = cursor.getString(cursor.getColumnIndex("name"));
+            countries.add(string);
+        }
+
+        cursor.close();
+        return countries;
+    }
+
     public List<Country> getCountryList() {
         String sql = "select * from country";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
@@ -82,7 +97,7 @@ public class CountryDAO {
         return countries;
     }
 
-    public List<String> getCountryStringList() {
+    public List<String> getCountryNameList() {
         String sql = "select name from country";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
