@@ -52,11 +52,11 @@ public class MainIntroActivity extends IntroActivity {
                 .fragment(new PermissionIntroFragment())
                 .build());
 
-        addSlide(new FragmentSlide.Builder()
+        /*addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
                 .fragment(new LoginIntroFragment())
-                .build());
+                .build());*/
 
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)

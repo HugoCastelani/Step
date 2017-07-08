@@ -78,7 +78,7 @@ public class NumberIntroFragment extends SlideFragment {
     private ArrayAdapter<String> createSpinnerAdapter() {
         return new ArrayAdapter<>(
                 getActivity(),
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.custom_simple_spinner_dropdown_item,
                 countryDAO.getCountryNameList()
         );
     }
