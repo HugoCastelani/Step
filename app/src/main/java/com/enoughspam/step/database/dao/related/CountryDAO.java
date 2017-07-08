@@ -81,4 +81,19 @@ public class CountryDAO {
         cursor.close();
         return countries;
     }
+
+    public List<String> getCountryStringList() {
+        String sql = "select name from country";
+        Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+        List<String> countries = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            String string = cursor.getString(cursor.getColumnIndex("name"));
+            countries.add(string);
+        }
+
+        cursor.close();
+        return countries;
+    }
 }

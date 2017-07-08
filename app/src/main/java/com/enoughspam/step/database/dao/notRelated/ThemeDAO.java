@@ -5,6 +5,7 @@ package com.enoughspam.step.database.dao.notRelated;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.enoughspam.step.database.DatabaseHelper;
 import com.enoughspam.step.database.domains.ThemeData;
 
@@ -27,13 +28,13 @@ public class ThemeDAO {
 
     private ThemeData generateThemeData(Cursor cursor) {
         return new ThemeData(
-                cursor.getInt(cursor.getColumnIndex("isDark")) == 1,
-                cursor.getString(cursor.getColumnIndex("accentColor"))
+                cursor.getInt(cursor.getColumnIndex("is_dark")) == 1,
+                cursor.getString(cursor.getColumnIndex("accent_color"))
         );
     }
 
     public ThemeData getThemeData() {
-        Cursor cursor = getSqLiteDatabase().rawQuery("SELECT isDark, accentColor FROM config_theme", null);
+        Cursor cursor = getSqLiteDatabase().rawQuery("SELECT is_dark, accent_color FROM config_theme", null);
 
         ThemeData themeData = null;
         while (cursor.moveToNext())
@@ -45,10 +46,10 @@ public class ThemeDAO {
 
     public void setThemeData(ThemeData themeData) {
         String isDarkQuery = "UPDATE config_theme " +
-                " SET isDark = " + (themeData.isDark() ? 1 : 0);
+                " SET is_dark = " + (themeData.isDark() ? 1 : 0);
 
         String accentQuery = "UPDATE config_theme " +
-                "SET accentColor = '" + themeData.getAccentColor() + "'";
+                "SET accent_color = '" + themeData.getAccentColor() + "'";
 
         getSqLiteDatabase().execSQL(isDarkQuery);
         getSqLiteDatabase().execSQL(accentQuery);
