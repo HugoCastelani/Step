@@ -87,4 +87,9 @@ public class PersonalDAO {
          cursor.close();
          return allSet == 1 ? true : false;
      }
+
+    public void setAreWeAllSet(boolean allSet) {
+        String sql = "update personal set all_set = " + (allSet ? 1 : 0);
+        getSqLiteDatabase().execSQL(sql);
+    }
 }
