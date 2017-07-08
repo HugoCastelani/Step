@@ -9,12 +9,15 @@
     tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
 
     <LinearLayout
+        android:id="@+id/intro_number_parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:padding="@dimen/mi_baseline"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/mi_baseline">
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -69,7 +72,7 @@
                 android:layout_marginStart="@dimen/mi_baseline_half_half"
                 android:gravity="center"
                 android:inputType="number"
-                android:maxLength="10"
+                android:maxLength="9"
                 android:layout_weight="0.2"/>
 
             <EditText
@@ -80,7 +83,7 @@
                 android:layout_marginEnd="@dimen/mi_baseline_half_half"
                 android:gravity="center"
                 android:inputType="phone"
-                android:maxLength="20"
+                android:maxLength="19"
                 android:layout_weight="0.75"/>
 
             <ImageView
