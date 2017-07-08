@@ -4,40 +4,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
     tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="false"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/mi_baseline">
 
         <ImageView
-            android:id="@+id/intro_number_image"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="@dimen/mi_baseline_quadruple"
             android:layout_marginStart="@dimen/mi_baseline_quadruple"
             android:layout_marginRight="@dimen/mi_baseline_quadruple"
             android:layout_marginEnd="@dimen/mi_baseline_quadruple"
             android:gravity="center"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/intro_4"
-            android:layout_marginTop="0dp" />
+            app:srcCompat="@drawable/intro_4"/>
 
         <TextView
-            android:id="@+id/intro_number_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="@dimen/mi_baseline_double"
             android:gravity="center"
             android:textSize="26sp"
@@ -47,73 +39,65 @@
 
         <Spinner
             android:id="@+id/intro_number_spinner"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mi_baseline"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_title" />
+            android:layout_marginTop="@dimen/mi_baseline"/>
 
-        <TextView
-            android:id="@+id/intro_number_plus"
-            android:layout_width="wrap_content"
+        <LinearLayout
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/intro_number_country_code"
-            android:layout_marginTop="6dp"
-            android:textSize="26sp"
-            android:text="+" />k
-
-        <EditText
-            android:id="@+id/intro_number_country_code"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
-            app:layout_constraintHeight_default="wrap"
-            android:paddingLeft="48dp"
-            app:layout_constraintLeft_toRightOf="@+id/intro_number_plus"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_spinner"
+            android:layout_width="match_parent"
             android:layout_marginTop="@dimen/mi_baseline"
-            android:layout_marginStart="@dimen/mi_baseline_half"
-            android:layout_marginLeft="@dimen/mi_baseline_half"
-            android:gravity="start"
-            android:textAlignment="viewStart"
-            android:text="teste"/>
+            android:orientation="horizontal"
+            android:weightSum="1">
 
-        <EditText
-            android:id="@+id/intro_number_phone"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintLeft_toRightOf="@+id/intro_number_country_code"
-            app:layout_constraintRight_toLeftOf="@+id/intro_number_go"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_spinner"
-            android:layout_marginTop="@dimen/mi_baseline"
-            android:layout_marginRight="@dimen/mi_baseline_half"
-            android:layout_marginEnd="@dimen/mi_baseline_half"
-            android:layout_marginLeft="@dimen/mi_baseline_half"
-            android:layout_marginStart="@dimen/mi_baseline_half" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="26sp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="+"/>
 
-        <ImageView
-            android:id="@+id/intro_number_go"
-            android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/intro_number_country_code"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginRight="@dimen/mi_baseline_half_half"
+                android:layout_marginEnd="@dimen/mi_baseline_half_half"
+                android:layout_marginLeft="@dimen/mi_baseline_half_half"
+                android:layout_marginStart="@dimen/mi_baseline_half_half"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="10"
+                android:layout_weight="0.2"/>
+
+            <EditText
+                android:id="@+id/intro_number_phone"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginRight="@dimen/mi_baseline_half_half"
+                android:layout_marginEnd="@dimen/mi_baseline_half_half"
+                android:gravity="center"
+                android:inputType="phone"
+                android:maxLength="20"
+                android:layout_weight="0.75"/>
+
+            <ImageView
+                android:id="@+id/intro_number_go"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:background="?selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_arrow_forward"
+                android:layout_weight="0.02"/>
+
+        </LinearLayout>
+
+        <!--TextView
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_spinner"
-            android:background="?selectableItemBackgroundBorderless"
-            app:srcCompat="@drawable/ic_arrow_forward" />
-
-        <TextView
-            android:id="@+id/intro_number_description"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_phone"
+            android:layout_width="match_parent"
             android:layout_marginTop="@dimen/mi_baseline"
             android:gravity="center"
             android:textSize="16sp"
@@ -122,15 +106,10 @@
 
         <EditText
             android:id="@+id/intro_number_code"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/intro_number_description"
-            android:layout_marginTop="@dimen/mi_baseline" />
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/mi_baseline" /-->
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </ScrollView>

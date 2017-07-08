@@ -10,6 +10,7 @@
     <!-- Material Introduction dimens -->
     <dimen name="mi_baseline">16dp</dimen>
     <dimen name="mi_baseline_half">8dp</dimen>
+    <dimen name="mi_baseline_half_half">4dp</dimen>
     <dimen name="mi_baseline_double">32dp</dimen>
     <dimen name="mi_baseline_quadruple">64dp</dimen>
     <dimen name="mi_margin_bottom_pager_indicator">39dp</dimen>

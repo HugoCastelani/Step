@@ -13,9 +13,10 @@
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/mi_baseline"
-            android:paddingLeft="?actionBarSize"
-            android:paddingRight="?actionBarSize"
+            android:layout_marginLeft="@dimen/mi_baseline_quadruple"
+            android:layout_marginStart="@dimen/mi_baseline_quadruple"
+            android:layout_marginRight="@dimen/mi_baseline_quadruple"
+            android:layout_marginEnd="@dimen/mi_baseline_quadruple"
             android:gravity="center"
             android:adjustViewBounds="true"
             android:src="@drawable/intro_3" />
@@ -23,7 +24,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mi_baseline"
+            android:layout_marginTop="@dimen/mi_baseline_double"
             android:gravity="center"
             android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
