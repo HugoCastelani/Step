@@ -20,10 +20,20 @@ import java.util.List;
 public class AutoItemSelectorTextWatcher implements TextWatcher {
     private CountryDAO countryDAO;
     private Spinner spinner;
+    private boolean paused;
 
     public AutoItemSelectorTextWatcher(Context context, Spinner spinner) {
         countryDAO = new CountryDAO(context);
         this.spinner = spinner;
+        paused = false;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     @Override
@@ -34,21 +44,23 @@ public class AutoItemSelectorTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        int countryCode;
+        if (!isPaused()) {
+            int countryCode;
 
-        try {
-            countryCode = Integer.parseInt(s.toString());
-        } catch (NumberFormatException e) {
-            return;
-        }
+            try {
+                countryCode = Integer.parseInt(s.toString());
+            } catch (NumberFormatException e) {
+                return;
+            }
 
-        List<String> matchingCountry = countryDAO.findNameByCode(countryCode);
+            List<String> matchingCountry = countryDAO.findNameByCode(countryCode);
 
-        if (!matchingCountry.isEmpty()) {
-            List<String> countryList = countryDAO.getCountryNameList();
+            if (!matchingCountry.isEmpty()) {
+                List<String> countryList = countryDAO.getCountryNameList();
 
-            int matchingPosition = countryList.indexOf(matchingCountry.get(0));
-            spinner.setSelection(matchingPosition);
+                int matchingPosition = countryList.indexOf(matchingCountry.get(0));
+                spinner.setSelection(matchingPosition);
+            }
         }
     }
 }

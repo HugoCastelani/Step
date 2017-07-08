@@ -111,4 +111,18 @@ public class CountryDAO {
         cursor.close();
         return countries;
     }
+
+    public String findCodeByName(String name) {
+        String sql = "select code from country where name = '" + name + "'";
+        Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+        String code = null;
+
+        if (cursor.moveToFirst()) {
+            code = cursor.getString(cursor.getColumnIndex("code"));
+        }
+
+        cursor.close();
+        return code;
+    }
 }

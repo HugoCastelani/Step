@@ -6,11 +6,11 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,9 +56,22 @@ public class NumberIntroFragment extends SlideFragment {
     }
 
     private void initActions() {
-        spinner.setAdapter(createSpinnerAdapter());
+        final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(getActivity(), spinner);
 
-        countryCode.addTextChangedListener(new AutoItemSelectorTextWatcher(getActivity(), spinner));
+        spinner.setAdapter(createSpinnerAdapter());
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                textWatcher.setPaused(true);
+                countryCode.setText(countryDAO.findCodeByName(spinner.getSelectedItem().toString()));
+                textWatcher.setPaused(false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        countryCode.addTextChangedListener(textWatcher);
         countryCode.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 countryCode.getBackground().clearColorFilter();
@@ -68,11 +81,9 @@ public class NumberIntroFragment extends SlideFragment {
         sendMessage.setOnClickListener(v -> sendMessage());
         sendMessage.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                countryCode.getBackground().clearColorFilter();
+                sendMessage.getBackground().clearColorFilter();
             }
         });
-
-        phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
     private ArrayAdapter<String> createSpinnerAdapter() {
