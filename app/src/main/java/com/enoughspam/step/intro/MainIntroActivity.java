@@ -34,7 +34,7 @@ public class MainIntroActivity extends IntroActivity {
         );
 
         PersonalDAO personalDAO = new PersonalDAO(this);
-        if (personalDAO.get() != null) {
+        if (personalDAO.areWeAllSet()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

@@ -32,7 +32,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create personal table
         sqLiteDatabase.execSQL("create table personal (" +
                 "id integer primary key not null," +
-                "name varchar(50) not null);");
+                "name varchar(50) not null" +
+                "all_set tinyint);");
 
         // RELATED TABLES
 

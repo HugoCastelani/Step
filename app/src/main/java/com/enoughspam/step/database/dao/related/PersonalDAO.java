@@ -74,4 +74,17 @@ public class PersonalDAO {
         cursor.close();
         return user;
     }
+
+     public boolean areWeAllSet() {
+         String sql = "select all_set from personal";
+         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+         int allSet = 0;
+         if (cursor.moveToFirst()) {
+             allSet = cursor.getInt(cursor.getColumnIndex("all_set"));
+         }
+
+         cursor.close();
+         return allSet == 1 ? true : false;
+     }
 }
