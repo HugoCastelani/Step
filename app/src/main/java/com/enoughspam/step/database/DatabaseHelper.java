@@ -84,8 +84,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "id integer primary key not null," +
                 "phone_id integer not null," +
                 "notified_user_id integer not null," +
+                "notifying_user_id integer not null," +
                 "foreign key(phone_id) references phone(id)," +
-                "foreign key(notified_user_id) references user(id));");
+                "foreign key(notified_user_id) references user(id)," +
+                "foreign key(notifying_user_id) references personal(id));");
 
         // creating denunciation table
         sqLiteDatabase.execSQL("create table denunciation (" +
