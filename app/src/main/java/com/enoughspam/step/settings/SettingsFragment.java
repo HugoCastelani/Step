@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.NavigationViewMode;
 import com.enoughspam.step.R;
@@ -31,7 +32,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_settings, container, false);
+        view = inflater.inflate(R.layout.settings_fragment, container, false);
 
         themeDAO = new ThemeDAO(view.getContext());
         themeData = themeDAO.getThemeData();

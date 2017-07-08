@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
@@ -52,7 +53,7 @@ public class MainActivity extends AestheticActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         // theme
         themeDAO = new ThemeDAO(this);

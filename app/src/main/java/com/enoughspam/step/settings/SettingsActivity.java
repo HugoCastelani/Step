@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+
 import com.afollestad.aesthetic.AestheticActivity;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
@@ -18,7 +19,7 @@ public class SettingsActivity extends AestheticActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.settings_activity);
 
         ScreenInfo screenInfo = new ScreenInfo(this);
 
