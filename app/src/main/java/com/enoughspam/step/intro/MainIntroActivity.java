@@ -8,7 +8,6 @@ import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.main.MainActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
-import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -64,14 +63,12 @@ public class MainIntroActivity extends IntroActivity {
                 .fragment(new NumberIntroFragment())
                 .build());
 
-        addSlide(new SimpleSlide.Builder()
-                .title(R.string.title_5)
-                .image(R.drawable.intro_5)
-                .description(R.string.description_5)
+        addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
                 .canGoBackward(false)
-                .scrollable(false)
+                .canGoForward(false)
+                .fragment(new ReadyIntroFragment())
                 .build());
     }
 }

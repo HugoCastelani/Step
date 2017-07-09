@@ -36,13 +36,16 @@
     <string name="empty_inputs_error">Campos vazios</string>
     <string name="input_error">Erro desconhecido</string>
     <string name="inputs_error">Erros desconhecidos</string>
-    <string name="description_4">Digite o código recebido por SMS:</string>
+    <string name="invalid_number">Número inválido, tente novamente</string>
 
-    <string name="title_5">Tudo pronto!</string>
-    <string name="description_5">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas
+    <string name="title_5">Digite o código recebido por SMS:</string>
+
+    <string name="title_6">Tudo pronto!</string>
+    <string name="description_6">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas
         funcionam por aqui. Não se esqueça de dar uma passada na tela de ajustes para melhorar a sua experiência por
         meio de configurações.
     </string>
+    <string name="begin">Começar</string>
 
     <!-- settings activity -->
     <string name="settings_activity_label">Ajustes</string>
