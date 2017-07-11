@@ -39,6 +39,7 @@
                 android:parentActivityName=".main.MainActivity"/>
         
         <activity android:name=".intro.MainIntroActivity"
+                  android:screenOrientation="portrait"
                   android:theme="@style/AppTheme">
 
             <intent-filter>

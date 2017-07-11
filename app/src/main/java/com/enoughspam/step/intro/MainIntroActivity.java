@@ -66,8 +66,6 @@ public class MainIntroActivity extends IntroActivity {
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
-                .canGoBackward(false)
-                .canGoForward(false)
                 .fragment(new ReadyIntroFragment())
                 .build());
     }

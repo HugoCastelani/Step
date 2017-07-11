@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 17;
+    public static final int VERSION = 24;
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -55,7 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table country (" +
                 "id integer primary key not null," +
                 "code integer not null," +
-                "name varchar(50) not null)");
+                "name varchar(50) not null," +
+                "mask varchar(25) not null)");
 
         // creating state table
         sqLiteDatabase.execSQL("create table state (" +
@@ -160,11 +161,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("insert into config_theme values(0, '#00BCD4', '#00BCD4');");
 
         // inserting countries and its codes
-        sqLiteDatabase.execSQL("insert into country(code, name) values(1, 'United States');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values(1, 'Canada');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values(20, 'مصر');"); // Egypt
-        sqLiteDatabase.execSQL("insert into country(code, name) values(211, 'South Sudan');");
-        sqLiteDatabase.execSQL("insert into country(code, name) values(212, 'المغرب');"); // Morocco
-        sqLiteDatabase.execSQL("insert into country(code, name) values(55, 'Brasil');");
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'United States', '999 999 9999');");
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Canada', '999 999 9999');");
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'República Dominicana', '999 999 9999');");
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Puerto Rico', '999 999 9999');");
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');"); // Russia
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');"); // Kazakhstan
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');"); // Egypt
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(55, 'Brasil', '99 99999 9999');");
     }
 }

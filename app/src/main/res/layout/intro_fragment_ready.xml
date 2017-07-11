@@ -40,11 +40,4 @@
         android:text="@string/description_6"
         android:textColor="?android:textColorSecondary"/>
 
-    <Button
-        android:id="@+id/intro_ready_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/mi_baseline"
-        android:text="@string/begin"/>
-
 </LinearLayout>

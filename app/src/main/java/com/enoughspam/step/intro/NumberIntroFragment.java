@@ -19,6 +19,8 @@ import android.widget.Spinner;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.CountryDAO;
+import com.enoughspam.step.database.dao.related.PersonalDAO;
+import com.enoughspam.step.database.dao.related.PhoneDAO;
 import com.enoughspam.step.generalClasses.AutoItemSelectorTextWatcher;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
@@ -35,6 +37,8 @@ public class NumberIntroFragment extends SlideFragment {
     private ImageView sendMessage;
 
     private CountryDAO countryDAO;
+    private PhoneDAO phoneDAO;
+    private PersonalDAO personalDAO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +60,8 @@ public class NumberIntroFragment extends SlideFragment {
     }
 
     private void initActions() {
-        final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(getActivity(), spinner);
+        final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(
+                getActivity(), spinner, phoneNumber);
 
         spinner.setAdapter(createSpinnerAdapter());
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -79,9 +84,10 @@ public class NumberIntroFragment extends SlideFragment {
         });
 
         sendMessage.setOnClickListener(v -> sendMessage());
-        sendMessage.setOnFocusChangeListener((v, hasFocus) -> {
+
+        phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                sendMessage.getBackground().clearColorFilter();
+                phoneNumber.getBackground().clearColorFilter();
             }
         });
     }
@@ -149,12 +155,25 @@ public class NumberIntroFragment extends SlideFragment {
         }
 
         if (!countryDAO.findByCode(countryInput).isEmpty()) {
-            if (PhoneNumberUtils.isGlobalPhoneNumber(("" + countryInput + phoneInput))) {
-                Snackbar.make(view, "+" + countryInput + phoneInput + " is a valid number",
-                        Snackbar.LENGTH_LONG).show();
+            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryInput + phoneInput))) {
+                String phoneInputString = String.valueOf(phoneInput);
+
+                int area = Integer.parseInt(phoneInputString.substring(0, 2));
+                long local = Long.parseLong(phoneInputString.substring(2, phoneInputString.length()));
+
+                Snackbar.make(view, area + " " + local, Snackbar.LENGTH_LONG).show();
+
+                // Phone phone = new Phone()
+
+                canGoForward = true;
+                canGoForward();
+                nextSlide();
+
             } else {
-                Snackbar.make(view, "+" + countryInput + phoneInput + " is not a valid number",
-                        Snackbar.LENGTH_LONG).show();
+
+                phoneNumber.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                countryCode.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                Snackbar.make(view, R.string.invalid_number, Snackbar.LENGTH_LONG).show();
             }
 
         } else {

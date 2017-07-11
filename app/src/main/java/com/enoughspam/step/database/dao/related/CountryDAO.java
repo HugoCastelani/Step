@@ -36,7 +36,8 @@ public class CountryDAO {
         return new Country(
                 cursor.getInt(cursor.getColumnIndex("id")),
                 cursor.getInt(cursor.getColumnIndex("code")),
-                cursor.getString(cursor.getColumnIndex("name"))
+                cursor.getString(cursor.getColumnIndex("name")),
+                cursor.getString(cursor.getColumnIndex("mask"))
         );
     }
 
