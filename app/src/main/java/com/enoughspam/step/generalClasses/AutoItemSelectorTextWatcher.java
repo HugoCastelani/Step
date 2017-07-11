@@ -1,17 +1,9 @@
 package com.enoughspam.step.generalClasses;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
-import android.widget.Spinner;
 
-import com.azimolabs.maskformatter.MaskFormatter;
-import com.enoughspam.step.database.dao.related.CountryDAO;
-import com.enoughspam.step.database.domains.Country;
-
-import java.util.List;
-
+import com.enoughspam.step.intro.FormHandler;
 
 /**
  * Created by hugo
@@ -19,18 +11,13 @@ import java.util.List;
  * Time: 13:18
  */
 
-
 public class AutoItemSelectorTextWatcher implements TextWatcher {
-    private CountryDAO countryDAO;
-    private Spinner spinner;
-    private EditText phoneNumber;
+    private FormHandler handler;
     private boolean paused;
 
-    public AutoItemSelectorTextWatcher(Context context, Spinner spinner, EditText phoneNumber) {
-        countryDAO = new CountryDAO(context);
-        this.spinner = spinner;
-        this.phoneNumber = phoneNumber;
-        paused = false;
+    public AutoItemSelectorTextWatcher(FormHandler handler) {
+        this.handler = handler;
+        this.paused = false;
     }
 
     public boolean isPaused() {
@@ -58,19 +45,8 @@ public class AutoItemSelectorTextWatcher implements TextWatcher {
                 return;
             }
 
-            List<Country> matchingCountry = countryDAO.findByCode(countryCode);
-
-            if (!matchingCountry.isEmpty()) {
-                List<String> countryList = countryDAO.getCountryNameList();
-
-                int matchingPosition = countryList.indexOf(matchingCountry.get(0).getName());
-                spinner.setSelection(matchingPosition);
-
-                phoneNumber.addTextChangedListener(new MaskFormatter(
-                        matchingCountry.get(0).getMask(),
-                        phoneNumber
-                ));
-            }
+            handler.updateSpinnerSelection(countryCode);
+            handler.updatePhoneNumberMask(countryCode);
         }
     }
 }

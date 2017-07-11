@@ -32,8 +32,8 @@ public class NumberIntroFragment extends SlideFragment {
 
     private LinearLayout parentView;
     private Spinner spinner;
-    private EditText countryCode;
-    private EditText phoneNumber;
+    private EditText countryCodeEditText;
+    private EditText phoneNumberEditText;
     private ImageView sendMessage;
 
     private CountryDAO countryDAO;
@@ -54,21 +54,24 @@ public class NumberIntroFragment extends SlideFragment {
     private void initViews() {
         parentView = (LinearLayout) view.findViewById(R.id.intro_number_parent);
         spinner = (Spinner) view.findViewById(R.id.intro_number_spinner);
-        countryCode = (EditText) view.findViewById(R.id.intro_number_country_code);
-        phoneNumber = (EditText) view.findViewById(R.id.intro_number_phone);
+        countryCodeEditText = (EditText) view.findViewById(R.id.intro_number_country_code);
+        phoneNumberEditText = (EditText) view.findViewById(R.id.intro_number_phone);
         sendMessage = (ImageView) view.findViewById(R.id.intro_number_go);
     }
 
     private void initActions() {
-        final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(
-                getActivity(), spinner, phoneNumber);
+        final FormHandler handler = new FormHandler(
+                getActivity(), spinner, countryCodeEditText, phoneNumberEditText);
+        final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(handler);
 
         spinner.setAdapter(createSpinnerAdapter());
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 textWatcher.setPaused(true);
-                countryCode.setText(countryDAO.findCodeByName(spinner.getSelectedItem().toString()));
+                final String itemName = spinner.getSelectedItem().toString();
+                handler.updateCountryCode(itemName);
+                handler.updatePhoneNumberMask(itemName);
                 textWatcher.setPaused(false);
             }
 
@@ -76,18 +79,18 @@ public class NumberIntroFragment extends SlideFragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        countryCode.addTextChangedListener(textWatcher);
-        countryCode.setOnFocusChangeListener((v, hasFocus) -> {
+        countryCodeEditText.addTextChangedListener(textWatcher);
+        countryCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                countryCode.getBackground().clearColorFilter();
+                countryCodeEditText.getBackground().clearColorFilter();
             }
         });
 
         sendMessage.setOnClickListener(v -> sendMessage());
 
-        phoneNumber.setOnFocusChangeListener((v, hasFocus) -> {
+        phoneNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                phoneNumber.getBackground().clearColorFilter();
+                phoneNumberEditText.getBackground().clearColorFilter();
             }
         });
     }
@@ -103,18 +106,18 @@ public class NumberIntroFragment extends SlideFragment {
     private void sendMessage() {
         parentView.requestFocus();
 
-        int countryInput = 0;
-        long phoneInput = 0;
+        int countryCode = 0;
+        long phoneNumber = 0;
         String error = "";
 
         // country code edittext input treatment
 
         try {
-            countryInput = Integer.parseInt(countryCode.getText().toString());
+            countryCode = Integer.parseInt(countryCodeEditText.getText().toString());
 
         } catch (NumberFormatException e) {
 
-            countryCode.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
             if (e.getMessage().equals("For input string: \"\"")) {
                 error = getResources().getString(R.string.empty_input_error);
@@ -126,11 +129,11 @@ public class NumberIntroFragment extends SlideFragment {
         // phone edittext input treatment
 
         try {
-            phoneInput = Long.parseLong(phoneNumber.getText().toString().replaceAll("\\D+",""));
+            phoneNumber = Long.parseLong(phoneNumberEditText.getText().toString().replaceAll("\\D+",""));
 
         } catch (NumberFormatException e) {
 
-            phoneNumber.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
             if (e.getMessage().equals("For input string: \"\"")) {
                 if (error.isEmpty()) {
@@ -154,9 +157,9 @@ public class NumberIntroFragment extends SlideFragment {
             return;
         }
 
-        if (!countryDAO.findByCode(countryInput).isEmpty()) {
-            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryInput + phoneInput))) {
-                String phoneInputString = String.valueOf(phoneInput);
+        if (countryDAO.findByCode(countryCode) != null) {
+            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryCode + phoneNumber))) {
+                String phoneInputString = String.valueOf(phoneNumber);
 
                 int area = Integer.parseInt(phoneInputString.substring(0, 2));
                 long local = Long.parseLong(phoneInputString.substring(2, phoneInputString.length()));
@@ -171,14 +174,14 @@ public class NumberIntroFragment extends SlideFragment {
 
             } else {
 
-                phoneNumber.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                countryCode.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
                 Snackbar.make(view, R.string.invalid_number, Snackbar.LENGTH_LONG).show();
             }
 
         } else {
 
-            countryCode.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
             Snackbar.make(view, R.string.country_code_error, BaseTransientBottomBar.LENGTH_SHORT).show();
         }
     }
