@@ -33,20 +33,44 @@ public class PhoneDAO {
     }
 
     private Phone generate(Cursor cursor) {
-        return new Phone(
-                cursor.getInt(cursor.getColumnIndex("id")),
-                cursor.getLong(cursor.getColumnIndex("number")),
-                cursor.getInt(cursor.getColumnIndex("area_code")),
-                personalDAO.get()
-        );
+        if (cursor.getInt(cursor.getColumnIndex("area_code")) == 0) {
+            return new Phone(
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getLong(cursor.getColumnIndex("number")),
+                    cursor.getInt(cursor.getColumnIndex("area_code")),
+                    personalDAO.get()
+            );
+
+        } else {
+
+            return new Phone(
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("country_id")),
+                    cursor.getLong(cursor.getColumnIndex("number")),
+                    personalDAO.get()
+            );
+        }
+
     }
 
     public boolean create(Phone phone) {
-        String sql = "insert into phone(number, area_code, user_id) values(" +
-                "'" + phone.getNumber() + "', " +
-                " '" + phone.getAreaCode() + "', " +
-                " " + phone.getUser().getId() +
-                ");";
+        String sql;
+
+        if (phone.getAreaCode() == 0) {
+            sql = "insert into phone(number, country_id, user_id) values(" +
+                    "'" + phone.getNumber() + "', " +
+                    " '" + phone.getCountryId() + "', " +
+                    " " + phone.getUser().getId() +
+                    ");";
+
+        } else {
+
+            sql = "insert into phone(number, area_code, user_id) values(" +
+                    "'" + phone.getNumber() + "', " +
+                    " '" + phone.getAreaCode() + "', " +
+                    " " + phone.getUser().getId() +
+                    ");";
+        }
 
         try {
             getSqLiteDatabase().execSQL(sql);

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 24;
+    public static final int VERSION = 26;
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -76,8 +76,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table phone (" +
                 "id integer primary key not null," +
                 "number bigint not null," +
-                "area_code integer not null," +
+                "country_id integer," +
+                "area_code integer," +
                 "user_id integer," +
+                "foreign key(country_id) references country(id)," +
                 "foreign key(area_code) references area(code)," +
                 "foreign key(user_id) references personal(id));");
 
@@ -168,6 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');"); // Russia
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');"); // Kazakhstan
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');"); // Egypt
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(39, 'Italia', '');");
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(55, 'Brasil', '99 99999 9999');");
     }
 }
