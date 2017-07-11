@@ -45,7 +45,8 @@
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mi_baseline"/>
+            android:layout_marginTop="@dimen/mi_baseline"
+            android:spinnerMode="dialog"/>
 
         <LinearLayout
             android:layout_height="wrap_content"

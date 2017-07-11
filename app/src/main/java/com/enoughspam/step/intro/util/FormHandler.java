@@ -1,4 +1,4 @@
-package com.enoughspam.step.intro;
+package com.enoughspam.step.intro.util;
 
 import android.content.Context;
 import android.text.Editable;

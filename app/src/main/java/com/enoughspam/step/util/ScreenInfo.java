@@ -1,4 +1,4 @@
-package com.enoughspam.step.generalClasses;
+package com.enoughspam.step.util;
 
 import android.content.Context;
 import android.content.res.Configuration;

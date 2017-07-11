@@ -21,7 +21,8 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.CountryDAO;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.database.dao.related.PhoneDAO;
-import com.enoughspam.step.generalClasses.AutoItemSelectorTextWatcher;
+import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
+import com.enoughspam.step.intro.util.FormHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class NumberIntroFragment extends SlideFragment {

@@ -16,9 +16,9 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 import com.enoughspam.step.database.domains.ThemeData;
-import com.enoughspam.step.generalClasses.EndOffsetItemDecoration;
-import com.enoughspam.step.generalClasses.LeftRightOffsetItemDecoration;
-import com.enoughspam.step.generalClasses.ScreenInfo;
+import com.enoughspam.step.util.EndOffsetItemDecoration;
+import com.enoughspam.step.util.LeftRightOffsetItemDecoration;
+import com.enoughspam.step.util.ScreenInfo;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 

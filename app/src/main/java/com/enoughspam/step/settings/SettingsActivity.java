@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.generalClasses.ScreenInfo;
+import com.enoughspam.step.util.ScreenInfo;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 

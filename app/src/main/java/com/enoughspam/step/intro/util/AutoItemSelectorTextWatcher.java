@@ -1,9 +1,7 @@
-package com.enoughspam.step.generalClasses;
+package com.enoughspam.step.intro.util;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-
-import com.enoughspam.step.intro.FormHandler;
 
 /**
  * Created by hugo
