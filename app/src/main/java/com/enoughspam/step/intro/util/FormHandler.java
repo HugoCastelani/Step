@@ -54,8 +54,11 @@ public class FormHandler {
         removeMaskFormatterIfExists();
 
         if (matchingCountry != null) {
-            this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
-            phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+            String mask = matchingCountry.getMask();
+            if (!mask.isEmpty()) {
+                this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
+                phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+            }
         }
 
         finishUpdating();
@@ -67,8 +70,11 @@ public class FormHandler {
         removeMaskFormatterIfExists();
 
         if (matchingCountry != null) {
-            this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
-            phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+            String mask = matchingCountry.getMask();
+            if (!mask.isEmpty()) {
+                this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
+                phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+            }
         }
 
         finishUpdating();

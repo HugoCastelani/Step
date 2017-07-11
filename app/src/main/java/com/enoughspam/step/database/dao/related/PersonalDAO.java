@@ -38,7 +38,7 @@ public class PersonalDAO {
     }
 
     public boolean create(User user) {
-        String sql = "insert into personal values("
+        String sql = "insert into personal(id, name) values("
                 + user.getId() + ", '"
                 + user.getName() + "')";
 
@@ -68,7 +68,7 @@ public class PersonalDAO {
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
         User user = null;
-        while (cursor.moveToNext())
+        if (cursor.moveToFirst())
             user = generate(cursor);
 
         cursor.close();
