@@ -53,34 +53,46 @@ public class CountryDAO {
         return country;
     }
 
-    public List<Country> findByCode(int code) {
-        String sql = "select * from country where code = '" + code + "'";
+    public Country findByCode(int code) {
+        String sql = "select * from country where code = " + code;
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
-        List<Country> countries = new ArrayList<>();
+        Country firstCountry = null;
 
-        while (cursor.moveToNext()) {
-            Country country = generate(cursor);
-            countries.add(country);
+        if (cursor.moveToFirst()) {
+            firstCountry = generate(cursor);
         }
 
         cursor.close();
-        return countries;
+        return firstCountry;
     }
 
-    public List<String> findNameByCode(int code) {
+    public Country findByName(String name) {
+        String sql = "select * from country where name = '" + name + "'";
+        Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
+
+        Country country = null;
+
+        if (cursor.moveToFirst()) {
+            country = generate(cursor);
+        }
+
+        cursor.close();
+        return country;
+    }
+
+    public String findNameByCode(int code) {
         String sql = "select name from country where code = '" + code + "'";
         Cursor cursor = getSqLiteDatabase().rawQuery(sql, null);
 
-        List<String> countries = new ArrayList<>();
+        String firstName = null;
 
-        while (cursor.moveToNext()) {
-            String string = cursor.getString(cursor.getColumnIndex("name"));
-            countries.add(string);
+        if (cursor.moveToFirst()) {
+            firstName = cursor.getString(cursor.getColumnIndex("name"));
         }
 
         cursor.close();
-        return countries;
+        return firstName;
     }
 
     public List<Country> getCountryList() {
