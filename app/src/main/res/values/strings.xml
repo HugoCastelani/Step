@@ -34,8 +34,6 @@
     <string name="country_code_error">O código não corresponde ao de nenhum país</string>
     <string name="empty_input_error">Campo vazio</string>
     <string name="empty_inputs_error">Campos vazios</string>
-    <string name="input_error">Erro desconhecido</string>
-    <string name="inputs_error">Erros desconhecidos</string>
     <string name="invalid_number">Número inválido, tente novamente</string>
 
     <string name="title_5">Digite o código recebido por SMS:</string>

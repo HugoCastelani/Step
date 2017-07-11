@@ -21,6 +21,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.CountryDAO;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.database.dao.related.PhoneDAO;
+import com.enoughspam.step.database.domains.Phone;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
@@ -45,6 +46,8 @@ public class NumberIntroFragment extends SlideFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_number, container, false);
         countryDAO = new CountryDAO(getActivity());
+        phoneDAO = new PhoneDAO(getActivity());
+        personalDAO = new PersonalDAO(getActivity());
 
         initViews();
         initActions();
@@ -87,7 +90,7 @@ public class NumberIntroFragment extends SlideFragment {
             }
         });
 
-        sendMessage.setOnClickListener(v -> sendMessage());
+        sendMessage.setOnClickListener(v -> validateNumber());
 
         phoneNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -104,52 +107,32 @@ public class NumberIntroFragment extends SlideFragment {
         );
     }
 
-    private void sendMessage() {
+    private void validateNumber() {
         parentView.requestFocus();
 
-        int countryCode = 0;
-        long phoneNumber = 0;
+        String countryCode;
+        String phoneNumber;
+        String mergePhoneNumber;
         String error = "";
 
         // country code edittext input treatment
+        countryCode = countryCodeEditText.getText().toString();
 
-        try {
-            countryCode = Integer.parseInt(countryCodeEditText.getText().toString());
-
-        } catch (NumberFormatException e) {
-
+        if (countryCode.isEmpty()) {
             countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-
-            if (e.getMessage().equals("For input string: \"\"")) {
-                error = getResources().getString(R.string.empty_input_error);
-            } else {
-                error = getResources().getString(R.string.input_error);
-            }
+            error = getResources().getString(R.string.empty_input_error);
         }
 
         // phone edittext input treatment
+        phoneNumber = phoneNumberEditText.getText().toString();
+        mergePhoneNumber = phoneNumber.replaceAll("\\D+","");
 
-        try {
-            phoneNumber = Long.parseLong(phoneNumberEditText.getText().toString().replaceAll("\\D+",""));
-
-        } catch (NumberFormatException e) {
-
+        if (phoneNumber.isEmpty()) {
             phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-
-            if (e.getMessage().equals("For input string: \"\"")) {
-                if (error.isEmpty()) {
-                    error = getResources().getString(R.string.empty_input_error);
-                } else {
-                    error = getResources().getString(R.string.empty_inputs_error);
-                }
-
+            if (error.isEmpty()) {
+                error = getResources().getString(R.string.empty_input_error);
             } else {
-
-                if (error.isEmpty()) {
-                    error = getResources().getString(R.string.input_error);
-                } else {
-                    error = getResources().getString(R.string.inputs_error);
-                }
+                error = getResources().getString(R.string.empty_inputs_error);
             }
         }
 
@@ -158,16 +141,33 @@ public class NumberIntroFragment extends SlideFragment {
             return;
         }
 
-        if (countryDAO.findByCode(countryCode) != null) {
-            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryCode + phoneNumber))) {
-                String phoneInputString = String.valueOf(phoneNumber);
+        if (countryDAO.findByCode(Integer.parseInt(countryCode)) != null) {
+            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryCode + mergePhoneNumber))) {
+                int spaceIndex = phoneNumber.indexOf(' ');
 
-                int area = Integer.parseInt(phoneInputString.substring(0, 2));
-                long local = Long.parseLong(phoneInputString.substring(2, phoneInputString.length()));
+                Phone phone;
 
-                Snackbar.make(view, area + " " + local, Snackbar.LENGTH_LONG).show();
+                if (spaceIndex != -1) {
+                    long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
+                    int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
+                    phone = new Phone(
+                            phoneNumberL,
+                            areaCode,
+                            personalDAO.get()
+                    );
 
-                // Phone phone = new Phone()
+                } else {
+
+                    int countryId = countryDAO.findByCode(Integer.parseInt(countryCode)).getId();
+                    long phoneNumberL = Long.parseLong(mergePhoneNumber);
+                    phone = new Phone(
+                            countryId,
+                            phoneNumberL,
+                            personalDAO.get()
+                    );
+                }
+
+                phoneDAO.create(phone);
 
                 canGoForward = true;
                 canGoForward();
