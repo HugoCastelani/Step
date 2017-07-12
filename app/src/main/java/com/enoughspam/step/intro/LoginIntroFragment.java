@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.database.dao.related.UserDAO;
@@ -76,6 +77,7 @@ public class LoginIntroFragment extends SlideFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String error;
 
         if (requestCode == RC_SIGN_IN) {
 
@@ -97,9 +99,17 @@ public class LoginIntroFragment extends SlideFragment implements
                     canGoForward = true;
                     canGoForward();
                     nextSlide();
-                }
-            }
-        }
+                    return;
+
+                } else error = getResources().getString(R.string.sign_in_error_empty_id);
+
+            } else error = "\n" + result.getStatus().toString();
+
+        } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
+
+
+        Snackbar.make(view, getResources().getString(R.string.sign_in_error) + error,
+                Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -107,7 +117,7 @@ public class LoginIntroFragment extends SlideFragment implements
         if (connectionResult.getErrorMessage() != null) {
             Snackbar.make(view, connectionResult.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
         } else {
-            Snackbar.make(view, "Algo deu errado...", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, R.string.something_went_wrong, Snackbar.LENGTH_SHORT).show();
         }
     }
 
