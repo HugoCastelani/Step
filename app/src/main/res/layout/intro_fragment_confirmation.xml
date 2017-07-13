@@ -49,13 +49,23 @@
             android:weightSum="1">
 
             <EditText
-                android:id="@+id/intro_number_code"
+                android:id="@+id/intro_confirmation_code"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:inputType="number|textNoSuggestions"
+                android:inputType="number"
                 android:gravity="center"
                 android:maxLength="6"
                 android:layout_weight=".50"/>
+
+            <ImageView
+                android:id="@+id/intro_confirmation_go"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:background="?selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_arrow_forward"
+                android:layout_weight=".02"/>
 
         </LinearLayout>
 

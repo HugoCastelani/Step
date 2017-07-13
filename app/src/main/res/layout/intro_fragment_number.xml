@@ -73,7 +73,7 @@
                 android:layout_marginLeft="@dimen/mi_baseline_half_half"
                 android:layout_marginStart="@dimen/mi_baseline_half_half"
                 android:gravity="center"
-                android:inputType="number|textNoSuggestions"
+                android:inputType="number"
                 android:maxLength="9"
                 android:layout_weight="0.2"/>
 
@@ -84,7 +84,7 @@
                 android:layout_marginRight="@dimen/mi_baseline_half_half"
                 android:layout_marginEnd="@dimen/mi_baseline_half_half"
                 android:gravity="center"
-                android:inputType="number|textNoSuggestions"
+                android:inputType="number"
                 android:maxLength="19"
                 android:layout_weight="0.75"/>
 
@@ -99,21 +99,6 @@
                 android:layout_weight="0.02"/>
 
         </LinearLayout>
-
-        <!--TextView
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/mi_baseline"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:text="@string/description_4"
-            android:textColor="?android:textColorSecondary"/>
-
-        <EditText
-            android:id="@+id/intro_number_code"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/mi_baseline" /-->
 
     </LinearLayout>
 
