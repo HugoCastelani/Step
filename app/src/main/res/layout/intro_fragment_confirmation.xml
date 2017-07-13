@@ -1,0 +1,64 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
+    tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
+
+    <LinearLayout
+        android:id="@+id/intro_number_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="@dimen/mi_baseline"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/mi_baseline_quadruple"
+            android:layout_marginStart="@dimen/mi_baseline_quadruple"
+            android:layout_marginRight="@dimen/mi_baseline_quadruple"
+            android:layout_marginEnd="@dimen/mi_baseline_quadruple"
+            android:gravity="center"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/intro_5"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline_double"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/title_5"
+            android:textColor="?android:textColorPrimary"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mi_baseline"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/intro_number_code"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:inputType="number|textNoSuggestions"
+                android:gravity="center"
+                android:maxLength="6"
+                android:layout_weight=".50"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
