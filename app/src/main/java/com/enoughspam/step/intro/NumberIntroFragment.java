@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.blankj.utilcode.util.PhoneUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.CountryDAO;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
@@ -23,7 +25,10 @@ import com.enoughspam.step.database.dao.related.PhoneDAO;
 import com.enoughspam.step.database.domains.Phone;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
+import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
+
+import java.util.Random;
 
 public class NumberIntroFragment extends SlideFragment {
 
@@ -40,6 +45,11 @@ public class NumberIntroFragment extends SlideFragment {
     private CountryDAO countryDAO;
     private PhoneDAO phoneDAO;
     private PersonalDAO personalDAO;
+
+    private String countryCode;
+    private String phoneNumber;
+    private String mergePhoneNumber;
+    private String error;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,11 +118,7 @@ public class NumberIntroFragment extends SlideFragment {
 
     private void validateNumber() {
         parentView.requestFocus();
-
-        String countryCode;
-        String phoneNumber;
-        String mergePhoneNumber;
-        String error = "";
+        error = "";
 
         // country code edittext input treatment
         countryCode = countryCodeEditText.getText().toString();
@@ -142,41 +148,7 @@ public class NumberIntroFragment extends SlideFragment {
 
         if (countryDAO.findByCode(Integer.parseInt(countryCode)) != null) {
             if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryCode + mergePhoneNumber))) {
-                int spaceIndex = phoneNumber.indexOf(' ');
-
-                Phone phone;
-
-                if (spaceIndex != -1) {
-                    long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
-                    int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
-                    phone = new Phone(
-                            phoneNumberL,
-                            areaCode,
-                            personalDAO.get()
-                    );
-
-                } else {
-
-                    int countryId = countryDAO.findByCode(Integer.parseInt(countryCode)).getId();
-                    long phoneNumberL = Long.parseLong(mergePhoneNumber);
-                    phone = new Phone(
-                            countryId,
-                            phoneNumberL,
-                            personalDAO.get()
-                    );
-                }
-
-                phoneDAO.create(phone);
-
-                if (sendMessage()) {
-                    canGoForward = true;
-                    canGoForward();
-                    nextSlide();
-
-                } else {
-
-                    error = getResources().getString(R.string.message_sending_error);
-                }
+                confirmNumber();
 
             } else {
 
@@ -196,8 +168,61 @@ public class NumberIntroFragment extends SlideFragment {
         }
     }
 
-    private boolean sendMessage() {
-        return true;
+    private void confirmNumber() {
+        String formattedPhoneNumber = "+" + countryCode + " " + phoneNumber + "\n";
+
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.confirmation_dialog_title)
+                .content(formattedPhoneNumber + getResources().getString(R.string.confirmation_dialog_content))
+                .positiveText(R.string.yes_button)
+                .negativeText(R.string.cancel_button)
+                .onPositive((dialog, which) -> {
+
+                    int spaceIndex = this.phoneNumber.indexOf(' ');
+
+                    Phone phone;
+
+                    if (spaceIndex != -1) {
+                        long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
+                        int areaCode = Integer.parseInt(this.phoneNumber.substring(0, spaceIndex));
+                        phone = new Phone(
+                                phoneNumberL,
+                                areaCode,
+                                personalDAO.get()
+                        );
+
+                    } else {
+
+                        int countryId = countryDAO.findByCode(Integer.parseInt(countryCode)).getId();
+                        long phoneNumberL = Long.parseLong(mergePhoneNumber);
+                        phone = new Phone(
+                                countryId,
+                                phoneNumberL,
+                                personalDAO.get()
+                        );
+                    }
+
+                    phoneDAO.create(phone);
+
+                    sendMessage();
+                    canGoForward = true;
+                    canGoForward();
+                    nextSlide();
+
+                })
+                .show();
+    }
+
+    private void sendMessage() {
+        final int MAX_VALUE = 999999;
+        final int MIN_VALUE = 111111;
+        String code = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
+        String cryptoPass = Integer.toString(new Random().nextInt(MAX_VALUE + 1));
+
+        MessageCodeHandler.cryptoPass = cryptoPass;
+        MessageCodeHandler.code = MessageCodeHandler.encryptIt(code);
+
+        PhoneUtils.sendSmsSilent(countryCode + mergePhoneNumber, code);
     }
 
     @Override

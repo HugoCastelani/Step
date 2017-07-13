@@ -3,6 +3,7 @@ package com.enoughspam.step.intro;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
 import com.enoughspam.step.main.MainActivity;
@@ -16,6 +17,7 @@ public class MainIntroActivity extends IntroActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.init(this);
 
         KeyboardVisibilityEvent.setEventListener(
                 this,
@@ -61,6 +63,12 @@ public class MainIntroActivity extends IntroActivity {
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_50)
                 .fragment(new NumberIntroFragment())
+                .build());
+
+        addSlide(new FragmentSlide.Builder()
+                .background(R.color.md_grey_50)
+                .backgroundDark(R.color.md_grey_50)
+                .fragment(new ConfirmationIntroFragment())
                 .build());
 
         addSlide(new FragmentSlide.Builder()

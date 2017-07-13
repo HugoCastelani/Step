@@ -38,9 +38,12 @@
     <string name="empty_input_error">Campo vazio</string>
     <string name="empty_inputs_error">Campos vazios</string>
     <string name="invalid_number">Número inválido, tente novamente</string>
+    <string name="confirmation_dialog_title">Você tem certeza?</string>
+    <string name="confirmation_dialog_content">O número está correto. Deseja prosseguir?</string>
     <string name="message_sending_error">Erro ao enviar a mensagem de confirmação, tente novamente</string>
 
     <string name="title_5">Digite o código recebido por SMS:</string>
+    <string name="invalid_code_error">Código inválido, tente novamente</string>
 
     <string name="title_6">Tudo pronto!</string>
     <string name="description_6">Chega de enrolação! Chega de Spam! Nosso guia rápido o mostrará como as coisas
@@ -106,6 +109,9 @@
     <string name="done_button">Pronto</string>
     <string name="back_button">Voltar</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Ordinary dialog -->
+    <string name="yes_button">Sim</string>
 
     <!-- Snackbar -->
     <string name="undo">Desfazer</string>
