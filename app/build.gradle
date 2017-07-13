@@ -46,6 +46,9 @@ dependencies {
     // azimo labs
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
 
+    // blankj
+    compile 'com.blankj:utilcode:1.7.1'
+
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
@@ -77,6 +80,9 @@ dependencies {
 
     // azimo labs
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
+
+    // blankj
+    compile 'com.blankj:utilcode:1.7.1'
 
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
