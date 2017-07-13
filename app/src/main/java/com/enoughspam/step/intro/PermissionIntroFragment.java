@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import com.enoughspam.step.R;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -36,6 +37,7 @@ public class PermissionIntroFragment extends SlideFragment {
         rxPermissions
                 .request(Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.READ_SMS,
+                        Manifest.permission.SEND_SMS,
                         Manifest.permission.READ_CONTACTS)
                 .subscribe(granted -> {
                     if (granted) {
