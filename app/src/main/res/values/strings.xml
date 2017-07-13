@@ -38,6 +38,7 @@
     <string name="empty_input_error">Campo vazio</string>
     <string name="empty_inputs_error">Campos vazios</string>
     <string name="invalid_number">Número inválido, tente novamente</string>
+    <string name="message_sending_error">Erro ao enviar a mensagem de confirmação, tente novamente</string>
 
     <string name="title_5">Digite o código recebido por SMS:</string>
 

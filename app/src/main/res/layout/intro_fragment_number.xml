@@ -84,7 +84,7 @@
                 android:layout_marginRight="@dimen/mi_baseline_half_half"
                 android:layout_marginEnd="@dimen/mi_baseline_half_half"
                 android:gravity="center"
-                android:inputType="phone|textNoSuggestions"
+                android:inputType="number|textNoSuggestions"
                 android:maxLength="19"
                 android:layout_weight="0.75"/>
 

@@ -4,7 +4,6 @@ package com.enoughspam.step.intro;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
@@ -169,26 +168,45 @@ public class NumberIntroFragment extends SlideFragment {
 
                 phoneDAO.create(phone);
 
-                canGoForward = true;
-                canGoForward();
-                nextSlide();
+                if (sendMessage()) {
+                    canGoForward = true;
+                    canGoForward();
+                    nextSlide();
+
+                } else {
+
+                    error = getResources().getString(R.string.message_sending_error);
+                }
 
             } else {
 
                 phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
                 countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                Snackbar.make(view, R.string.invalid_number, Snackbar.LENGTH_LONG).show();
+                error = getResources().getString(R.string.invalid_number);
             }
 
         } else {
 
             countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            Snackbar.make(view, R.string.country_code_error, BaseTransientBottomBar.LENGTH_SHORT).show();
+            error = getResources().getString(R.string.country_code_error);
         }
+
+        if (!error.isEmpty()) {
+            Snackbar.make(view, error, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean sendMessage() {
+        return true;
     }
 
     @Override
     public boolean canGoForward() {
         return canGoForward;
+    }
+
+    @Override
+    public boolean canGoBackward() {
+        return false;
     }
 }

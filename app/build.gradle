@@ -54,7 +54,7 @@ dependencies {
 
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
-        ctransitive = true
+        transitive = true
     }
 
     // google
@@ -101,6 +101,5 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
-
 
 apply plugin: 'com.google.gms.google-services'
