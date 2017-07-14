@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.blankj.utilcode.util.PhoneUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.related.CountryDAO;
 import com.enoughspam.step.database.dao.related.PersonalDAO;
@@ -216,13 +215,14 @@ public class NumberIntroFragment extends SlideFragment {
     private void sendMessage() {
         final int MAX_VALUE = 999999;
         final int MIN_VALUE = 111111;
-        String code = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
-        String cryptoPass = Integer.toString(new Random().nextInt(MAX_VALUE + 1));
+        //String code = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
+        String code = Integer.toString(123456);
+        String cryptoPass = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
 
         MessageCodeHandler.cryptoPass = cryptoPass;
         MessageCodeHandler.code = MessageCodeHandler.encryptIt(code);
 
-        PhoneUtils.sendSmsSilent(countryCode + mergePhoneNumber, code);
+        // PhoneUtils.sendSmsSilent(countryCode + mergePhoneNumber, code);
     }
 
     @Override

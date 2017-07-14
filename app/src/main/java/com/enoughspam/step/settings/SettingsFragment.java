@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -49,21 +48,18 @@ public class SettingsFragment extends Fragment {
         if (themeData.isDark())
             isDarkSwitch.setChecked(true);
 
-        isDarkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    themeData.setIsDark(true);
-                    themeDAO.setThemeData(themeData);
+        isDarkSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                themeData.setIsDark(true);
+                themeDAO.setThemeData(themeData);
 
-                } else {
+            } else {
 
-                    themeData.setIsDark(false);
-                    themeDAO.setThemeData(themeData);
-                }
-
-                themeIt();
+                themeData.setIsDark(false);
+                themeDAO.setThemeData(themeData);
             }
+
+            themeIt();
         });
     }
 
