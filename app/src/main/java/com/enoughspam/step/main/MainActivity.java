@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -27,7 +26,6 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.M;
@@ -70,11 +68,11 @@ public class MainActivity extends AestheticActivity {
 
         // fragment
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
-        if(mainFragment == null) {
+        if (mainFragment == null) {
             mainFragment = new MainFragment();
-            FragmentTransaction infoFragmentT = getSupportFragmentManager().beginTransaction();
-            infoFragmentT.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
-            infoFragmentT.commit();
+            FragmentTransaction mainFragmentT = getSupportFragmentManager().beginTransaction();
+            mainFragmentT.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
+            mainFragmentT.commit();
         }
 
         // search view
@@ -145,27 +143,21 @@ public class MainActivity extends AestheticActivity {
         navDrawer.addItem(new PrimaryDrawerItem().withIdentifier(1).withName(R.string.settings_activity_label).withIcon(settingsDraw));
 
         // navigation drawer actions
-        navDrawer.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                switch (position) {
-                    case 1: break;
+        navDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
+            switch (position) {
+                case 1: break;
 
-                    case 2:
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                startActivityForResult(intent, 1);
-                                //navDrawer.setSelectionAtPosition(currentSelectedPosition);
-                            }
-                        }, 250);
+                case 2:
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivityForResult(intent, 1);
+                        //navDrawer.setSelectionAtPosition(currentSelectedPosition);
+                    }, 250);
 
-                        break;
-                }
-
-                return false;
+                    break;
             }
+
+            return false;
         });
     }
 

@@ -41,13 +41,8 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.main_fragment, container, false);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
 
         // preparing theme
         themeDAO = new ThemeDAO(view.getContext());
@@ -81,7 +76,7 @@ public class MainFragment extends Fragment {
     private ArrayList<ArrayList<String>> getBlockedNumbersList() {
         ArrayList<ArrayList<String>> blockedNumbersList = new ArrayList<>();
 
-        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Meus números");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(85) 98262-8443");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(66) 99906-5122");
@@ -89,7 +84,7 @@ public class MainFragment extends Fragment {
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(77) 98814-7783");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(21) 99993-9964");
 
-        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de Maria");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(95) 98539-9723");
@@ -101,13 +96,13 @@ public class MainFragment extends Fragment {
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(79) 99871-4874");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
 
-        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de João Boladão");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(96) 99274-9851");
 
-        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números de Septuspxío");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");
@@ -119,7 +114,7 @@ public class MainFragment extends Fragment {
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(86) 99585-6067");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(95) 98539-9723");
 
-        blockedNumbersList.add(new ArrayList<String>());
+        blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Números da comunidade oficial");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(15) 98490-9207");
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(61) 99493-1778");

@@ -1,60 +1,32 @@
 package com.enoughspam.step.settings;
 
+
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 
 import com.afollestad.aesthetic.AestheticActivity;
+import com.afollestad.aesthetic.AestheticToolbar;
+import com.blankj.utilcode.util.ConvertUtils;
+import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.util.ScreenInfo;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class SettingsActivity extends AestheticActivity {
 
-    private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
+        Utils.init(this);
 
-        ScreenInfo screenInfo = new ScreenInfo(this);
-
-        // getting main_toolbar ready
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
+        AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // setting fragment
-        SettingsFragment settingsFragment= (SettingsFragment) getSupportFragmentManager().findFragmentByTag("settingsFragmentTag");
-        if(settingsFragment == null) {
-            settingsFragment = new SettingsFragment();
-            FragmentTransaction settingsFragmentT = getSupportFragmentManager().beginTransaction();
-            settingsFragmentT.replace(R.id.settings_fragment_container, settingsFragment, "mainFragmentTag");
-            settingsFragmentT.commit();
-        }
-
-        themeIt();
+        getFragmentManager().beginTransaction().replace(R.id.settings_fragment_container, new SettingsFragment()).commit();
     }
-
-    private void themeIt() {
-
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) {
-
-            if (new ThemeDAO(this).getThemeData().isDark())
-                toolbar.setElevation(0);
-
-            else
-                toolbar.setElevation(new ScreenInfo(this).getPixelDensity() * 4);
-
-        }
-
-    }
-
 }
