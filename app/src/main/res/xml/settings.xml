@@ -1,0 +1,67 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/select_theme_colors">
+
+        <SwitchPreference
+            android:key="theme_switch"
+            android:defaultValue="false"
+            android:title="@string/set_dark_theme"
+            android:summary="@string/set_dark_theme_substring" />
+
+        <Preference
+            android:key="accent_color"
+            android:title="@string/select_accent_color"
+            android:summary="@string/select_accent_color_substring" />
+
+        <Preference
+            android:key="default_color"
+            android:title="@string/restore_default_colors"
+            android:summary="@string/restore_default_colors_substring" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/select_database_options">
+
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+            android:key="select_networkss"
+            android:entries="@array/network_list_titles"
+            android:entryValues="@array/network_list_values"
+            android:persistent="true"
+            android:negativeButtonText="@string/cancel_button"
+            android:positiveButtonText="@string/done_button"
+            android:title="@string/select_database_network"
+            android:summary="@string/select_database_network_substring"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/select_block_calls_options">
+
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+            android:key="select_services"
+            android:entries="@array/service_list_titles"
+            android:entryValues="@array/service_list_values"
+            android:persistent="true"
+            android:negativeButtonText="@string/cancel_button"
+            android:positiveButtonText="@string/done_button"
+            android:title="@string/select_services_block"
+            android:summary="@string/select_services_block_substring"/>
+
+        <com.afollestad.materialdialogs.prefs.MaterialDialogPreference
+            android:key="select_suspicious_treatment"
+            android:negativeButtonText="@string/cancel_button"
+            android:positiveButtonText="@string/done_button"
+            android:title="@string/select_suspicious_treatment"
+            android:summary="@string/select_suspicious_treatment_substring" />
+
+        <SwitchPreference
+            android:key="select_feedback_options"
+            android:defaultValue="true"
+            android:title="@string/select_feedback_options"
+            android:summary="@string/select_feedback_options_substring"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
