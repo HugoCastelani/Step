@@ -70,9 +70,9 @@ public class MainActivity extends AestheticActivity {
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
         if (mainFragment == null) {
             mainFragment = new MainFragment();
-            FragmentTransaction mainFragmentT = getSupportFragmentManager().beginTransaction();
-            mainFragmentT.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
-            mainFragmentT.commit();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
+            fragmentTransaction.commit();
         }
 
         // search view

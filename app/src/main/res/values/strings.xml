@@ -65,7 +65,7 @@
     <string name="restore_default_colors">Cor padrão</string>
     <string name="restore_default_colors_substring">Restaurar a cor de expressão definida por padrão do tema escolhido
     </string>
-    <string name="restore_default_colors_dialog">Tem certeza que quer restaurar a cor padrão?</string>
+    <string name="restore_default_colors_dialog">Tem certeza que deseja restaurar a cor padrão?</string>
 
     <string name="select_database_options">Banco de dados</string>
     <string name="select_database_network">Redes para atualizações</string>

@@ -10,7 +10,7 @@
             android:summary="@string/set_dark_theme_substring" />
 
         <com.enoughspam.step.settings.customPreferences.ColorPreference
-            android:key="accent_color"
+            android:key="select_accent_color"
             android:title="@string/select_accent_color"
             android:summary="@string/select_accent_color_substring" />
 

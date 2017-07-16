@@ -1,6 +1,7 @@
 package com.enoughspam.step.settings;
 
 
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +23,8 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 public class SettingsActivity extends AestheticActivity
         implements ColorChooserDialog.ColorCallback {
 
-    ThemeDAO themeDAO;
-    ThemeData themeData;
+    private ThemeDAO themeDAO;
+    private ThemeData themeData;
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
@@ -45,9 +46,6 @@ public class SettingsActivity extends AestheticActivity
         setContentView(R.layout.settings_activity);
         Utils.init(this);
 
-        themeDAO = new ThemeDAO(this);
-        themeData = themeDAO.getThemeData();
-
         AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -55,7 +53,16 @@ public class SettingsActivity extends AestheticActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getFragmentManager().beginTransaction().replace(R.id.settings_fragment_container, new SettingsFragment()).commit();
+        themeDAO = new ThemeDAO(this);
+        themeData = themeDAO.getThemeData();
+
+        SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentByTag("settingsFragmentTag");
+        if (fragment == null) {
+            fragment = new SettingsFragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.settings_fragment_container, fragment, "settingsFragmentTag");
+            fragmentTransaction.commit();
+        }
     }
 
     private void setUpTheme() {
