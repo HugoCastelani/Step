@@ -27,7 +27,7 @@ public class SettingsActivity extends AestheticActivity
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        final String color = String.format("#%06X", 0xFFFFFF & selectedColor);
+        final String color = String.format("#%06X", 0xFFFFFFFF & selectedColor);
 
         themeData.setAccentColor(color);
         themeDAO.setThemeData(themeData);
