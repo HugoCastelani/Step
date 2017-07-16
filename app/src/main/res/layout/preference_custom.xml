@@ -18,7 +18,8 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
-        <TextView android:id="@android:id/title"
+        <com.afollestad.aesthetic.AestheticTextView
+            android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -26,7 +27,8 @@
             android:textColor="?android:textColorPrimary"
             android:ellipsize="marquee" />
 
-        <TextView android:id="@android:id/summary"
+        <com.afollestad.aesthetic.AestheticTextView
+            android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"

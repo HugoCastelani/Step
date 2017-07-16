@@ -34,7 +34,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class MainActivity extends AestheticActivity {
 
-    private static final int REQUEST_CODE_INTRO = 2;
+    private static final int REQUEST_CODE_SETTINGS = 2;
 
     private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
@@ -150,8 +150,7 @@ public class MainActivity extends AestheticActivity {
                 case 2:
                     new Handler().postDelayed(() -> {
                         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivityForResult(intent, 1);
-                        //navDrawer.setSelectionAtPosition(currentSelectedPosition);
+                        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
                     }, 250);
 
                     break;
@@ -175,7 +174,7 @@ public class MainActivity extends AestheticActivity {
                     .textColorSecondaryRes(R.color.textColorSecondaryInverse)
                     .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
                     .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
-                    .colorCardViewBackgroundRes(R.color.colorCardBackgoundInverse)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
                     .apply();
 
             Aesthetic.get()
@@ -194,7 +193,7 @@ public class MainActivity extends AestheticActivity {
                     .textColorSecondaryRes(R.color.textColorSecondary)
                     .colorIconTitleActiveRes(R.color.textColorPrimary)
                     .colorIconTitleInactiveRes(R.color.textColorPrimary)
-                    .colorCardViewBackgroundRes(R.color.colorCardBackgound)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackground)
                     .apply();
 
             if (Build.VERSION.SDK_INT >= M) {
@@ -208,10 +207,8 @@ public class MainActivity extends AestheticActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_INTRO) {
-            if (resultCode != RESULT_OK) {
-                finish();
-            }
+        if (requestCode == REQUEST_CODE_SETTINGS) {
+            recreate();
         }
     }
 

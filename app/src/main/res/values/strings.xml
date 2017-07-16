@@ -121,6 +121,7 @@
     <string name="restore_default_denunciation">Padrão</string>
 
     <!-- Color picker dialog -->
+    <string name="select_color">Selecione uma cor</string>
     <string name="custom_button">Personalizar</string>
     <string name="presets_button">Pré-definidas</string>
     <string name="cancel_button">Cancelar</string>

@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 
 import com.enoughspam.step.R;
 
-
 /**
  * Created by hugo
  * Date: 15/07/17

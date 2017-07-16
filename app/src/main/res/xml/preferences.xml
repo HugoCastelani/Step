@@ -14,7 +14,7 @@
             android:title="@string/select_accent_color"
             android:summary="@string/select_accent_color_substring" />
 
-        <Preference
+        <com.enoughspam.step.settings.customPreferences.CustomPreference
             android:key="default_color"
             android:title="@string/restore_default_colors"
             android:summary="@string/restore_default_colors_substring" />
