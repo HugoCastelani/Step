@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.afollestad.aesthetic.AestheticCardView;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
@@ -53,7 +54,7 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
         int layout;
         switch (viewType) {
             case VIEW_TYPE_HEADER:
-                layout = R.layout.item_blocker;
+                layout = R.layout.preference_category;
                 break;
             case VIEW_TYPE_ITEM:
                 layout = R.layout.item_number;
@@ -75,7 +76,7 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            blocker_or_number = (AestheticTextView) itemView.findViewById(R.id.blocked_recylerview_blocker_or_number);
+            blocker_or_number = (AestheticTextView) itemView.findViewById(android.R.id.title);
             cardView = (AestheticCardView) itemView.findViewById(R.id.item_number_cardview);
         }
     }

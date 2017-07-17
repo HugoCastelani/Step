@@ -156,7 +156,7 @@ public class MainFragment extends Fragment {
             }
         }
 
-        // screenInfo.getPixelDensity() * 12 should have same size that item_blocker margin's, but it don't
+        // screenInfo.getPixelDensity() * 12 should have same size that preference_category margin's, but it don't
         recyclerView.addItemDecoration(new EndOffsetItemDecoration((int) screenInfo.getPixelDensity() * 16));
     }
 

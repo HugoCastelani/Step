@@ -19,7 +19,7 @@
         android:paddingBottom="16dp">
 
         <com.afollestad.aesthetic.AestheticTextView
-            android:id="@android:id/title"
+            android:id="@+android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"

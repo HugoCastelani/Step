@@ -3,8 +3,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="card_label_top_bottom_padding">12dp</dimen>
-    <dimen name="card_label_left_right_padding">@dimen/activity_horizontal_margin</dimen>
+    <dimen name="preference_category_top_bottom_padding">16dp</dimen>
     <dimen name="custom_tab_layout_height">72dp</dimen>
 
     <!-- Material Introduction dimens -->

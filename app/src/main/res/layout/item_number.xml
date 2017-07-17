@@ -12,7 +12,7 @@
         android:clickable="true">
 
     <com.afollestad.aesthetic.AestheticTextView
-            android:id="@+id/blocked_recylerview_blocker_or_number"
+            android:id="@+android:id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

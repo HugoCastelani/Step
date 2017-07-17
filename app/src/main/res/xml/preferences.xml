@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
+    <com.enoughspam.step.settings.customPreferences.CategoryPreference
         android:title="@string/select_theme_colors">
 
         <SwitchPreference
@@ -19,9 +19,9 @@
             android:title="@string/restore_default_colors"
             android:summary="@string/restore_default_colors_substring" />
 
-    </PreferenceCategory>
+    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
 
-    <PreferenceCategory
+    <com.enoughspam.step.settings.customPreferences.CategoryPreference
         android:title="@string/select_database_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
@@ -34,9 +34,9 @@
             android:title="@string/select_database_network"
             android:summary="@string/select_database_network_substring"/>
 
-    </PreferenceCategory>
+    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
 
-    <PreferenceCategory
+    <com.enoughspam.step.settings.customPreferences.CategoryPreference
         android:title="@string/select_block_calls_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
@@ -62,6 +62,6 @@
             android:title="@string/select_feedback_options"
             android:summary="@string/select_feedback_options_substring"/>
 
-    </PreferenceCategory>
+    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
 
 </PreferenceScreen>
