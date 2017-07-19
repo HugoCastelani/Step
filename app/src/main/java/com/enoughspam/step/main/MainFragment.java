@@ -1,6 +1,5 @@
 package com.enoughspam.step.main;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
+import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.LeftRightOffsetItemDecoration;
 import com.enoughspam.step.util.ScreenInfo;
+import com.enoughspam.step.util.ThemeHandler;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
@@ -27,13 +26,6 @@ import java.util.ArrayList;
 // Created by Hugo on 01/04/17, 22:00
 
 public class MainFragment extends Fragment {
-
-    // data access objects
-    private ThemeDAO themeDAO;
-    private ThemeData themeData;
-
-    // theme vars
-    private int accentColor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,20 +36,14 @@ public class MainFragment extends Fragment {
         fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        // preparing theme
-        themeDAO = new ThemeDAO(view.getContext());
-        themeData = themeDAO.getThemeData();
-        accentColor = Color.parseColor(themeData.getAccentColor());
-
         // getting tap target view ready
         TapTargetView.showFor(getActivity(),
                 TapTarget.forView(fab,
                         "O quê esse FAB faz?",
                         "No momento, só chama uma snackbar inútil...")
-                        //.outerCircleColor(themeData.isDark() ? darkAccentColor : accentColor)
-                        .outerCircleColor(R.color.md_cyan_500)
+                        .outerCircleColorInt(ThemeHandler.getAccent())
                         .textTypeface(Typeface.DEFAULT)
-                        .targetCircleColor(themeData.isDark() ? R.color.colorPrimaryInverse : R.color.colorPrimary)
+                        .targetCircleColor(ThemeHandler.isDark() ? R.color.colorPrimaryInverse : R.color.colorPrimary)
                         .transparentTarget(true),
                 null);
 
@@ -157,7 +143,7 @@ public class MainFragment extends Fragment {
         }
 
         // screenInfo.getPixelDensity() * 12 should have same size that preference_category margin's, but it don't
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration((int) screenInfo.getPixelDensity() * 16));
+        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
     }
 
 }

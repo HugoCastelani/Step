@@ -1,7 +1,6 @@
 package com.enoughspam.step.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +15,10 @@ import android.widget.Toast;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
+import com.blankj.utilcode.util.ConvertUtils;
+import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.settings.SettingsActivity;
-import com.enoughspam.step.util.ScreenInfo;
 import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -40,31 +38,18 @@ public class MainActivity extends AestheticActivity {
     private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
 
-    // data access objects
-    private ThemeDAO themeDAO;
-    private ThemeData themeData;
-
     private SearchView searchView;
-
-    // theme vars
-    private int accentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        // theme
-        themeDAO = new ThemeDAO(this);
-        themeData = themeDAO.getThemeData();
-
-        accentColor = Color.parseColor(themeData.getAccentColor());
-
-        // toolbar
-        ScreenInfo screenInfo = new ScreenInfo(this);
+        Utils.init(this);
+        initAesthetic();
 
         toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(screenInfo.getPixelDensity() * 4);
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
         setSupportActionBar(toolbar);
 
         // fragment
@@ -87,13 +72,9 @@ public class MainActivity extends AestheticActivity {
 
         // navigation drawer
         setUpNavDrawer();
-
-        // theme
-        setUpTheme();
     }
 
     private void setUpSearchView() {
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -113,7 +94,7 @@ public class MainActivity extends AestheticActivity {
         // navigation drawer header
         AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                //.withHeaderBackground(accentColor)
+                //.withHeaderBackground(ThemeHandler.getAccent())
                 .withHeaderBackground(R.color.md_cyan_500)
                 .build();
 
@@ -121,7 +102,7 @@ public class MainActivity extends AestheticActivity {
         final Drawer navDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
-                .withSliderBackgroundColorRes(themeData.isDark() ? R.color.colorPrimaryInverse : R.color.md_white_1000)
+                .withSliderBackgroundColorRes(ThemeHandler.isDark() ? R.color.colorWindowBackgroundInverse : R.color.md_white_1000)
                 .withAccountHeader(navDrawerHeader)
                 .build();
 
@@ -129,7 +110,7 @@ public class MainActivity extends AestheticActivity {
         Drawable homeDraw;
         Drawable settingsDraw;
 
-        if (themeData.isDark()) {
+        if (ThemeHandler.isDark()) {
             homeDraw = ContextCompat.getDrawable(this, R.drawable.ic_home_inverse);
             settingsDraw = ContextCompat.getDrawable(this, R.drawable.ic_settings_inverse);
 
@@ -161,7 +142,7 @@ public class MainActivity extends AestheticActivity {
         });
     }
 
-    private void setUpTheme() {
+    private void initAesthetic() {
         if (Aesthetic.isFirstTime()) {
             Aesthetic.get()
                     .activityTheme(R.style.AppTheme)
