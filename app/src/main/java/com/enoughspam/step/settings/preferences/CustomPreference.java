@@ -1,4 +1,4 @@
-package com.enoughspam.step.settings.customPreferences;
+package com.enoughspam.step.settings.preferences;
 
 import android.content.Context;
 import android.preference.Preference;

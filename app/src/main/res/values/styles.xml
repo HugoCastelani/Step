@@ -18,7 +18,7 @@
         <item name="android:paddingTop">@dimen/preference_category_top_bottom_padding</item>
         <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">?android:attr/listPreferredItemPaddingEnd</item>
         <item name="android:paddingRight">?android:attr/listPreferredItemPaddingEnd</item>
-        <item name="android:paddingBottom">@dimen/preference_category_top_bottom_padding</item>
+        <item name="android:layout_marginBottom">@dimen/preference_category_top_bottom_padding</item>
         <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">?android:attr/listPreferredItemPaddingStart</item>
         <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingStart</item>
         <item name="android:textColor">?android:textColorPrimary</item>

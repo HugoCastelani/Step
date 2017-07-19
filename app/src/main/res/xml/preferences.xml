@@ -1,27 +1,27 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.enoughspam.step.settings.customPreferences.CategoryPreference
+    <com.enoughspam.step.settings.preferences.CategoryPreference
         android:title="@string/select_theme_colors">
 
-        <SwitchPreference
-            android:key="theme_switch"
-            android:defaultValue="false"
-            android:title="@string/set_dark_theme"
-            android:summary="@string/set_dark_theme_substring" />
+            <com.enoughspam.step.settings.preferences.SwitchPreference
+                android:key="theme_switch"
+                android:defaultValue="false"
+                android:title="@string/set_dark_theme"
+                android:summary="@string/set_dark_theme_substring" />
 
-        <com.enoughspam.step.settings.customPreferences.ColorPreference
-            android:key="select_accent_color"
-            android:title="@string/select_accent_color"
-            android:summary="@string/select_accent_color_substring" />
+            <com.enoughspam.step.settings.preferences.ColorPreference
+                android:key="select_accent_color"
+                android:title="@string/select_accent_color"
+                android:summary="@string/select_accent_color_substring" />
 
-        <com.enoughspam.step.settings.customPreferences.CustomPreference
-            android:key="default_color"
-            android:title="@string/restore_default_colors"
-            android:summary="@string/restore_default_colors_substring" />
+            <com.enoughspam.step.settings.preferences.CustomPreference
+                android:key="default_color"
+                android:title="@string/restore_default_colors"
+                android:summary="@string/restore_default_colors_substring" />
 
-    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
+    </com.enoughspam.step.settings.preferences.CategoryPreference>
 
-    <com.enoughspam.step.settings.customPreferences.CategoryPreference
+    <com.enoughspam.step.settings.preferences.CategoryPreference
         android:title="@string/select_database_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
@@ -34,9 +34,9 @@
             android:title="@string/select_database_network"
             android:summary="@string/select_database_network_substring"/>
 
-    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
+    </com.enoughspam.step.settings.preferences.CategoryPreference>
 
-    <com.enoughspam.step.settings.customPreferences.CategoryPreference
+    <com.enoughspam.step.settings.preferences.CategoryPreference
         android:title="@string/select_block_calls_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
@@ -62,6 +62,6 @@
             android:title="@string/select_feedback_options"
             android:summary="@string/select_feedback_options_substring"/>
 
-    </com.enoughspam.step.settings.customPreferences.CategoryPreference>
+    </com.enoughspam.step.settings.preferences.CategoryPreference>
 
 </PreferenceScreen>

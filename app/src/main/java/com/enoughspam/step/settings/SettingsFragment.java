@@ -10,8 +10,9 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 import com.enoughspam.step.database.domains.ThemeData;
-import com.enoughspam.step.settings.customPreferences.ColorPreference;
-import com.enoughspam.step.settings.customPreferences.CustomPreference;
+import com.enoughspam.step.settings.preferences.ColorPreference;
+import com.enoughspam.step.settings.preferences.CustomPreference;
+import com.enoughspam.step.settings.preferences.SwitchPreference;
 
 /**
  * Created by hugo
@@ -26,8 +27,27 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        ThemeDAO themeDAO = new ThemeDAO(getActivity());
-        ThemeData themeData = themeDAO.getThemeData();
+        final ThemeDAO themeDAO = new ThemeDAO(getActivity());
+        final ThemeData themeData = themeDAO.getThemeData();
+
+        // theme switch preference
+
+        final SwitchPreference switchPreference = (SwitchPreference) findPreference("theme_switch");
+        if (themeData.isDark()) {
+            switchPreference.setChecked(true);
+        }
+        switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (((SwitchPreference) preference).isChecked()) {
+                themeData.setIsDark(true);
+            } else {
+                themeData.setIsDark(false);
+            }
+            themeDAO.setThemeData(themeData);
+
+            return true;
+        });
+
+        // accent color preference
 
         final ColorPreference selectAccentColor = (ColorPreference) findPreference("select_accent_color");
         selectAccentColor.setColor(themeData.getAccentColor());
@@ -43,12 +63,17 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         });
 
+        // default color preference
+
         final CustomPreference defaultColor = (CustomPreference) findPreference("default_color");
         defaultColor.setOnPreferenceClickListener(preference -> {
             new MaterialDialog.Builder(getActivity())
                     .title(R.string.restore_default_colors_dialog)
+                    .content(R.string.restore_default_colors_dialog_substring)
                     .positiveText(R.string.yes_button)
+                    .positiveColor(Color.parseColor(themeData.getAccentColor()))
                     .negativeText(R.string.cancel_button)
+                    .negativeColor(Color.parseColor(themeData.getAccentColor()))
                     .onPositive(((dialog, which) ->
                         ((SettingsActivity) getActivity()).onColorSelection(
                                 null, ContextCompat.getColor(getActivity(), R.color.accent))
