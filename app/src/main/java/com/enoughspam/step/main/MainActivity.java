@@ -21,6 +21,7 @@ import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 import com.enoughspam.step.database.domains.ThemeData;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ScreenInfo;
+import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -161,33 +162,12 @@ public class MainActivity extends AestheticActivity {
     }
 
     private void setUpTheme() {
-
-        if (themeData.isDark()) {
-
-            Aesthetic.get()
-                    .activityTheme(R.style.AppThemeDark)
-                    .isDark(true)
-                    .colorPrimaryRes(R.color.colorPrimaryInverse)
-                    .colorAccent(accentColor)
-                    .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
-                    .textColorPrimaryRes(R.color.textColorPrimaryInverse)
-                    .textColorSecondaryRes(R.color.textColorSecondaryInverse)
-                    .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
-                    .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
-                    .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
-                    .apply();
-
-            Aesthetic.get()
-                    .colorStatusBarRes(R.color.colorPrimaryInverse)
-                    .apply();
-
-        } else {
-
+        if (Aesthetic.isFirstTime()) {
             Aesthetic.get()
                     .activityTheme(R.style.AppTheme)
                     .isDark(false)
                     .colorPrimaryRes(R.color.colorPrimary)
-                    .colorAccent(accentColor)
+                    .colorAccentRes(R.color.colorAccent)
                     .colorWindowBackgroundRes(R.color.colorWindowBackground)
                     .textColorPrimaryRes(R.color.textColorPrimary)
                     .textColorSecondaryRes(R.color.textColorSecondary)
@@ -196,10 +176,45 @@ public class MainActivity extends AestheticActivity {
                     .colorCardViewBackgroundRes(R.color.colorCardBackground)
                     .apply();
 
-            if (Build.VERSION.SDK_INT >= M) {
+        } else {
+
+            if (ThemeHandler.isDark()) {
+
                 Aesthetic.get()
-                        .colorStatusBar(ContextCompat.getColor(this, R.color.colorPrimary))
+                        .activityTheme(R.style.AppThemeDark)
+                        .colorPrimaryRes(R.color.colorPrimaryInverse)
+                        .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
+                        .textColorPrimaryRes(R.color.textColorPrimaryInverse)
+                        .textColorSecondaryRes(R.color.textColorSecondaryInverse)
+                        .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
+                        .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
+                        .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
                         .apply();
+
+                if (Build.VERSION.SDK_INT >= M) {
+                    Aesthetic.get()
+                            .colorStatusBarRes(R.color.colorPrimaryInverse)
+                            .apply();
+                }
+
+            } else {
+
+                Aesthetic.get()
+                        .activityTheme(R.style.AppTheme)
+                        .colorPrimaryRes(R.color.colorPrimary)
+                        .colorWindowBackgroundRes(R.color.colorWindowBackground)
+                        .textColorPrimaryRes(R.color.textColorPrimary)
+                        .textColorSecondaryRes(R.color.textColorSecondary)
+                        .colorIconTitleActiveRes(R.color.textColorPrimary)
+                        .colorIconTitleInactiveRes(R.color.textColorPrimary)
+                        .colorCardViewBackgroundRes(R.color.colorCardBackground)
+                        .apply();
+
+                if (Build.VERSION.SDK_INT >= M) {
+                    Aesthetic.get()
+                            .colorStatusBarRes(R.color.colorPrimary)
+                            .apply();
+                }
             }
         }
     }
