@@ -1,7 +1,7 @@
 <resources>
     <!-- main activity -->
     <string name="main_activity_label">Step</string>
-    <string name="main_fragment_label">Notificações</string>
+    <string name="main_fragment_label">Home</string>
     <string name="search_hint">Pesquisar</string>
     <string name="notifications_hint">Notificações</string>
 

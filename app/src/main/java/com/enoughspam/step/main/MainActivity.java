@@ -1,10 +1,10 @@
 package com.enoughspam.step.main;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
@@ -91,11 +91,13 @@ public class MainActivity extends AestheticActivity {
     }
 
     private void setUpNavDrawer() {
+        Drawable header = ContextCompat.getDrawable(getBaseContext(), R.drawable.header);
+        header.setColorFilter(ThemeHandler.getAccent(), PorterDuff.Mode.SRC_IN);
+
         // navigation drawer header
         AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
-                //.withHeaderBackground(ThemeHandler.getAccent())
-                .withHeaderBackground(R.color.md_cyan_500)
+                .withHeaderBackground(header)
                 .build();
 
         // navigation drawer itself
@@ -104,6 +106,7 @@ public class MainActivity extends AestheticActivity {
                 .withToolbar(toolbar)
                 .withSliderBackgroundColorRes(ThemeHandler.isDark() ? R.color.colorWindowBackgroundInverse : R.color.md_white_1000)
                 .withAccountHeader(navDrawerHeader)
+                .withDelayDrawerClickEvent(250)
                 .build();
 
         // adapting drawable colors
@@ -130,10 +133,8 @@ public class MainActivity extends AestheticActivity {
                 case 1: break;
 
                 case 2:
-                    new Handler().postDelayed(() -> {
-                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
-                    }, 250);
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SETTINGS);
 
                     break;
             }
