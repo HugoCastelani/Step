@@ -41,19 +41,21 @@ public class DialogPreference extends MaterialDialogPreference {
         setLayoutResource(R.layout.preference_custom);
     }
 
+    private MaterialDialog.SingleButtonCallback mListener;
+
     @Override
     public MaterialDialog.Builder getBuilder() {
         MaterialDialog.Builder builder = super.getBuilder();
 
         builder.backgroundColor(ThemeHandler.getBackground())
                 .positiveColor(ThemeHandler.getAccent())
-                .negativeColor(ThemeHandler.getAccent());
+                .negativeColor(ThemeHandler.getAccent())
+                .onPositive(mListener); // don't gotta check if it's not null because own class does it
 
         return builder;
     }
 
     public void setOnPositiveClickListener(MaterialDialog.SingleButtonCallback listener) {
-        MaterialDialog.Builder builder = super.getBuilder();
-        builder.onPositive(listener);
+        mListener = listener;
     }
 }
