@@ -75,8 +75,8 @@ dependencies {
     // aidas follestad
     compile 'com.afollestad:sectioned-recyclerview:0.4.1'
     compile 'com.afollestad:aesthetic:0.4.7'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
+    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6'
+    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6'
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
     // azimo labs

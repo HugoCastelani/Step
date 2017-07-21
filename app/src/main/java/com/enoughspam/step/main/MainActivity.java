@@ -7,10 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
@@ -35,10 +31,7 @@ public class MainActivity extends AestheticActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
 
-    private int currentSelectedPosition = 1;
     private AestheticToolbar toolbar;
-
-    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,33 +54,8 @@ public class MainActivity extends AestheticActivity {
             fragmentTransaction.commit();
         }
 
-        // search view
-        searchView = (SearchView) findViewById(R.id.search_view);
-
-        /* Sets searchable configuration defined in searchable.xml for this SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        setUpSearchView();*/
-
         // navigation drawer
         setUpNavDrawer();
-    }
-
-    private void setUpSearchView() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getBaseContext(), "Submit", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) {
-                Toast.makeText(getBaseContext(), "Change", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
     }
 
     private void setUpNavDrawer() {
@@ -207,22 +175,5 @@ public class MainActivity extends AestheticActivity {
         if (requestCode == REQUEST_CODE_SETTINGS) {
             recreate();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        /*if (id == R.id.search_view) {
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -14,10 +14,14 @@
                 android:title="@string/select_accent_color"
                 android:summary="@string/select_accent_color_substring" />
 
-            <com.enoughspam.step.settings.preferences.CustomPreference
+            <com.enoughspam.step.settings.preferences.DialogPreference
                 android:key="default_color"
                 android:title="@string/restore_default_colors"
-                android:summary="@string/restore_default_colors_substring" />
+                android:summary="@string/restore_default_colors_substring"
+                android:dialogTitle="@string/restore_default_colors_dialog"
+                android:dialogMessage="@string/restore_default_colors_dialog_substring"
+                android:positiveButtonText="@string/done_button"
+                android:negativeButtonText="@string/cancel_button"/>
 
     </com.enoughspam.step.settings.preferences.CategoryPreference>
 
