@@ -28,8 +28,8 @@
     <com.enoughspam.step.settings.preferences.CategoryPreference
         android:title="@string/select_database_options">
 
-        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
-            android:key="select_networkss"
+        <com.enoughspam.step.settings.preferences.MultiSelectListPreference
+            android:key="select_networks"
             android:entries="@array/network_list_titles"
             android:entryValues="@array/network_list_values"
             android:persistent="true"
@@ -43,7 +43,7 @@
     <com.enoughspam.step.settings.preferences.CategoryPreference
         android:title="@string/select_block_calls_options">
 
-        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+        <com.enoughspam.step.settings.preferences.MultiSelectListPreference
             android:key="select_services"
             android:entries="@array/service_list_titles"
             android:entryValues="@array/service_list_values"
@@ -60,7 +60,7 @@
             android:title="@string/select_suspicious_treatment"
             android:summary="@string/select_suspicious_treatment_substring" />
 
-        <SwitchPreference
+        <com.enoughspam.step.settings.preferences.SwitchPreference
             android:key="select_feedback_options"
             android:defaultValue="true"
             android:title="@string/select_feedback_options"
