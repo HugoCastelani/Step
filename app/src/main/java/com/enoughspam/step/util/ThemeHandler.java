@@ -17,6 +17,12 @@ public class ThemeHandler {
         return isDark;
     }
 
+    private static int primaryColor;
+    public static int getPrimary() {
+        Aesthetic.get().colorPrimary().take(1).subscribe(color -> primaryColor = color);
+        return primaryColor;
+    }
+
     private static int accentColor;
     public static int getAccent() {
         Aesthetic.get().colorAccent().take(1).subscribe(color -> accentColor = color);
@@ -27,5 +33,17 @@ public class ThemeHandler {
     public static int getBackground() {
         Aesthetic.get().colorWindowBackground().take(1).subscribe(color -> backgroundColor = color);
         return backgroundColor;
+    }
+
+    private static int primaryTextColor;
+    public static int getPrimaryText() {
+        Aesthetic.get().textColorPrimary().take(1).subscribe(color -> primaryTextColor = color);
+        return primaryTextColor;
+    }
+
+    private static int secondaryTextColor;
+    public static int getSecondaryText() {
+        Aesthetic.get().textColorSecondary().take(1).subscribe(color -> secondaryTextColor = color);
+        return secondaryTextColor;
     }
 }
