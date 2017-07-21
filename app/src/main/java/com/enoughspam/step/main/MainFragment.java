@@ -6,17 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
-import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.util.EndOffsetItemDecoration;
-import com.enoughspam.step.util.LeftRightOffsetItemDecoration;
-import com.enoughspam.step.util.ScreenInfo;
+import com.enoughspam.step.util.RecyclerViewDecorator;
 import com.enoughspam.step.util.ThemeHandler;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
@@ -54,7 +50,9 @@ public class MainFragment extends Fragment {
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        decorateRecycler(recyclerView);
+
+        RecyclerViewDecorator.init(getContext());
+        RecyclerViewDecorator.decorate(recyclerView);
 
         return view;
     }
@@ -120,30 +118,6 @@ public class MainFragment extends Fragment {
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("(68) 98684-7763");
 
         return blockedNumbersList;
-    }
-
-    private void decorateRecycler(RecyclerView recyclerView) {
-        ScreenInfo screenInfo = new ScreenInfo(getActivity());
-
-        if (screenInfo.isScreenLarge()) {
-            if (screenInfo.getOrientarion() == 1) {
-                recyclerView.addItemDecoration(new LeftRightOffsetItemDecoration(screenInfo.getFabAlignMargin()));
-
-            } else {
-
-                recyclerView.addItemDecoration(new LeftRightOffsetItemDecoration(screenInfo.getTenPercentageMargin()));
-            }
-
-        } else {
-
-            if (screenInfo.getOrientarion() == 2) {
-                recyclerView.addItemDecoration(new LeftRightOffsetItemDecoration(screenInfo.getFabAlignMargin()));
-
-            }
-        }
-
-        // screenInfo.getPixelDensity() * 12 should have same size that preference_category margin's, but it don't
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
     }
 
 }

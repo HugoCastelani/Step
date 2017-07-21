@@ -12,21 +12,15 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
 
 import java.util.ArrayList;
 
 public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedNumbersAdapter.MyViewHolder> {
 
     private ArrayList<ArrayList<String>> blockedNumbersList;
-    private Context context;
-    private boolean isDark;
 
     public BlockedNumbersAdapter(ArrayList<ArrayList<String>> blockedNumbersList, Context context) {
         this.blockedNumbersList = blockedNumbersList;
-        this.context = context;
-
-        this.isDark = new ThemeDAO(context).getThemeData().isDark();
     }
 
     @Override

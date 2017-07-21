@@ -8,18 +8,17 @@ import android.view.View;
 
 public class LeftRightOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int mIdealMargin;
+    private int idealMargin;
 
     public LeftRightOffsetItemDecoration(int idealMargin) {
-        mIdealMargin = idealMargin;
+        this.idealMargin = idealMargin;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        outRect.left = mIdealMargin;
-        outRect.right = mIdealMargin;
-
+        outRect.left = idealMargin;
+        outRect.right = idealMargin;
     }
 }
