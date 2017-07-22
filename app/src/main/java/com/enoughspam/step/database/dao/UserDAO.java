@@ -21,23 +21,23 @@ public class UserDAO extends DAO {
     private static final String SOCIALID = "social_id";
     private static final String NAME = "name";
 
-    public UserDAO(@NonNull Context context) {
-        super(context, "user", "id");
+    public UserDAO(@NonNull final Context context) {
+        super(context, "user");
     }
 
     @Override
-    public User generate(@NonNull Cursor cursor) {
+    public User generate(@NonNull final Cursor cursor) {
         return new User(
-                super.generate(cursor).getId(),
+                cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(SOCIALID)),
                 cursor.getString(cursor.getColumnIndex(NAME))
         );
     }
 
     @Override
-    public boolean create(@NonNull Domain domain) {
-        User user = (User) domain;
-        ContentValues values = new ContentValues();
+    public boolean create(@NonNull final Domain domain) {
+        final User user = (User) domain;
+        final ContentValues values = new ContentValues();
 
         values.put(SOCIALID, user.getSocialId());
         values.put(NAME, user.getName());
@@ -45,8 +45,13 @@ public class UserDAO extends DAO {
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
 
-    public int findIdByIdSocial(@NonNull String socialId) {
-        Cursor cursor = getSqLiteDatabase().query(
+    @Override
+    public User findById(@NonNegative final int id) {
+        return (User) super.findById(id);
+    }
+
+    public int findIdByIdSocial(@NonNull final String socialId) {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, new String[] {ID}, SOCIALID + " = ?", new String[] {socialId},
                 null, null, null);
 
@@ -57,13 +62,8 @@ public class UserDAO extends DAO {
         return id;
     }
 
-    @Override
-    public User findById(@NonNegative int id) {
-        return (User) super.findById(id);
-    }
-
-    public User findBySocialId(@NonNull String socialId) {
-        Cursor cursor = getSqLiteDatabase().query(
+    public User findBySocialId(@NonNull final String socialId) {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, null, SOCIALID + " = ?", new String[] {socialId},
                 null, null, null);
 

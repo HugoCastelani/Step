@@ -17,6 +17,7 @@ import java.util.List;
 
 public interface IDAO {
     SQLiteDatabase getSqLiteDatabase();
+    void closeSqLiteDatabase();
     Domain generate(@NonNull final Cursor cursor);
     boolean create(@NonNull final Domain domain);
     boolean delete(@NonNegative final int id);

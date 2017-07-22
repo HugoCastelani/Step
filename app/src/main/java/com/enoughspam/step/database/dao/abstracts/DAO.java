@@ -1,6 +1,5 @@
 package com.enoughspam.step.database.dao.abstracts;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,13 +24,12 @@ public abstract class DAO implements IDAO {
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase sqLiteDatabase;
 
+    public static final String ID = "id";
     public String TABLE;
-    public String ID;
 
-    public DAO(@NonNull final Context context, @NonNull String TABLE, @NonNull String ID) {
+    public DAO(@NonNull final Context context, @NonNull final String TABLE) {
         databaseHelper = new DatabaseHelper(context);
         this.TABLE = TABLE;
-        this.ID = ID;
     }
 
     @Override
@@ -43,13 +41,25 @@ public abstract class DAO implements IDAO {
     }
 
     @Override
-    public Domain generate(@NonNull Cursor cursor) {
-        return new Domain(cursor.getInt(cursor.getColumnIndex(ID)));
+    public void closeSqLiteDatabase() {
+        getSqLiteDatabase().close();
+    }
+
+    @Override
+    public abstract Domain generate(@NonNull final Cursor cursor);
+
+    @Override
+    public abstract boolean create(@NonNull final Domain domain);
+
+    @Override
+    public boolean delete(@NonNegative final int id) {
+        return getSqLiteDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)}) > 0;
     }
 
     @Override
     public Domain findById(@NonNegative final int id) {
-        Cursor cursor = getSqLiteDatabase().query(
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
@@ -58,20 +68,6 @@ public abstract class DAO implements IDAO {
 
         cursor.close();
         return domain;
-    }
-
-    @Override
-    public boolean create(@NonNull Domain domain) {
-        ContentValues values = new ContentValues();
-        values.put(ID, domain.getId());
-
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    @Override
-    public boolean delete(@NonNegative int id) {
-        return getSqLiteDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)}) > 0;
     }
 
     @Override

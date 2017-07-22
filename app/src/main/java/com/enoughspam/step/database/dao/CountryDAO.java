@@ -25,18 +25,14 @@ public class CountryDAO extends DAO {
     private static final String NAME = "name";
     private static final String MASK = "mask";
 
-    public CountryDAO(@NonNull Context context) {
-        super(context, "country", "id");
+    public CountryDAO(@NonNull final Context context) {
+        super(context, "country");
     }
 
-    /*
-        CASTCLASSEXCEPTION DE DOMAIN PRA COUNTRY
-     */
-
     @Override
-    public Country generate(@NonNull Cursor cursor) {
+    public Country generate(@NonNull final Cursor cursor) {
         return new Country(
-                super.generate(cursor).getId(),
+                cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getInt(cursor.getColumnIndex(CODE)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(MASK))
@@ -44,9 +40,9 @@ public class CountryDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull Domain domain) {
-        Country country = (Country) domain;
-        ContentValues contentValues = new ContentValues();
+    public boolean create(@NonNull final Domain domain) {
+        final Country country = (Country) domain;
+        final ContentValues contentValues = new ContentValues();
 
         contentValues.put(CODE, country.getCode());
         contentValues.put(NAME, country.getName());
@@ -56,12 +52,12 @@ public class CountryDAO extends DAO {
     }
 
     @Override
-    public Country findById(@NonNegative int id) {
+    public Country findById(@NonNegative final int id) {
         return (Country) super.findById(id);
     }
 
-    public Country findByCode(@NonNegative int code) {
-        Cursor cursor = getSqLiteDatabase().query(
+    public Country findByCode(@NonNegative final int code) {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
                 null, null, null);
 
@@ -73,8 +69,8 @@ public class CountryDAO extends DAO {
         return firstCountry;
     }
 
-    public Country findByName(@NonNull String name) {
-        Cursor cursor = getSqLiteDatabase().query(
+    public Country findByName(@NonNull final String name) {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, null, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -86,8 +82,8 @@ public class CountryDAO extends DAO {
         return country;
     }
 
-    public String findCodeByName(@NonNull String name) {
-        Cursor cursor = getSqLiteDatabase().query(
+    public String findCodeByName(@NonNull final String name) {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, new String[] {CODE}, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -99,11 +95,11 @@ public class CountryDAO extends DAO {
         return code;
     }
 
-    public List<String> getCountryNameList() {
-        Cursor cursor = getSqLiteDatabase().query(
+    public List<String> getNameList() {
+        final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, new String[] {NAME}, null, null, null, null, null);
 
-        List<String> countries = new ArrayList<>();
+        final List<String> countries = new ArrayList<>();
 
         while (cursor.moveToNext())
             countries.add(cursor.getString(cursor.getColumnIndex("name")));

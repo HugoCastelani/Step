@@ -25,16 +25,16 @@ public class PhoneDAO extends DAO {
 
     private PersonalDAO personalDAO;
 
-    public PhoneDAO(@NonNull Context context) {
-        super(context, "phone", "id");
+    public PhoneDAO(@NonNull final Context context) {
+        super(context, "phone");
         personalDAO = new PersonalDAO(context);
     }
 
     @Override
-    public Phone generate(@NonNull Cursor cursor) {
+    public Phone generate(@NonNull final Cursor cursor) {
         if (cursor.getInt(cursor.getColumnIndex(AREACODE)) == 0) {
             return new Phone(
-                    super.generate(cursor).getId(),
+                    cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
                     cursor.getInt(cursor.getColumnIndex(AREACODE)),
                     personalDAO.get()
@@ -43,7 +43,7 @@ public class PhoneDAO extends DAO {
         } else {
 
             return new Phone(
-                    super.generate(cursor).getId(),
+                    cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getInt(cursor.getColumnIndex(COUNTRYID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
                     personalDAO.get()
@@ -52,9 +52,9 @@ public class PhoneDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull Domain domain) {
-        Phone phone = (Phone) domain;
-        ContentValues values = new ContentValues();
+    public boolean create(@NonNull final Domain domain) {
+        final Phone phone = (Phone) domain;
+        final ContentValues values = new ContentValues();
 
         if (phone.getAreaCode() == 0) {
             values.put(NUMBER, phone.getNumber());
@@ -72,7 +72,7 @@ public class PhoneDAO extends DAO {
     }
 
     @Override
-    public Phone findById(@NonNegative int id) {
+    public Phone findById(@NonNegative final int id) {
         return (Phone) super.findById(id);
     }
 }

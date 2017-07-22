@@ -20,22 +20,22 @@ public class PersonalDAO extends DAO {
     private static final String NAME = "name";
     private static final String ALLSET = "all_set";
 
-    public PersonalDAO(@NonNull Context context) {
-        super(context, "personal", "id");
+    public PersonalDAO(@NonNull final Context context) {
+        super(context, "personal");
     }
 
     @Override
-    public User generate(@NonNull Cursor cursor) {
+    public User generate(@NonNull final Cursor cursor) {
         return new User(
-                super.generate(cursor).getId(),
+                cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME))
         );
     }
 
     @Override
-    public boolean create(@NonNull Domain domain) {
-        User user = (User) domain;
-        ContentValues contentValues = new ContentValues();
+    public boolean create(@NonNull final Domain domain) {
+        final User user = (User) domain;
+        final ContentValues contentValues = new ContentValues();
 
         contentValues.put(ID, user.getId());
         contentValues.put(NAME, user.getName());
@@ -44,7 +44,7 @@ public class PersonalDAO extends DAO {
     }
 
     public User get() {
-        Cursor cursor = getSqLiteDatabase().query(TABLE, null, null, null, null, null, null, null);
+        final Cursor cursor = getSqLiteDatabase().query(TABLE, null, null, null, null, null, null, null);
 
         User user = null;
         if (cursor.moveToFirst()) user = generate(cursor);
@@ -54,7 +54,7 @@ public class PersonalDAO extends DAO {
     }
 
      public boolean isAllSet() {
-         Cursor cursor = getSqLiteDatabase().query(
+         final Cursor cursor = getSqLiteDatabase().query(
                  TABLE, new String[] {ALLSET}, null, null, null, null, null, null);
 
          int allSet = 0;
@@ -64,8 +64,8 @@ public class PersonalDAO extends DAO {
          return allSet == 1 ? true : false;
      }
 
-    public boolean setAllSet(boolean allSet) {
-        ContentValues values = new ContentValues();
+    public boolean setAllSet(final boolean allSet) {
+        final ContentValues values = new ContentValues();
         values.put(ALLSET, allSet ? 1 : 0);
 
         return getSqLiteDatabase().update(TABLE, values, null, null) > 0;
