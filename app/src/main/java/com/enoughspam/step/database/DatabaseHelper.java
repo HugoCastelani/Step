@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 26;
+    public static final int VERSION = 28;
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -133,9 +133,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "show_feedback tinyint not null);");
 
         // creating service blocking configuration table
-        sqLiteDatabase.execSQL("create table config_service_block (" +
+        /*sqLiteDatabase.execSQL("create table config_service_block (" +
                 "service_name varchar(20) primary key not null," +
-                "block tinyint not null);");
+                "block tinyint not null);");*/
 
         // creating guide configuration table
         sqLiteDatabase.execSQL("create table config_guide (" +
@@ -143,33 +143,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "show_guide tinyint not null);");
 
         // creating network to download DB configuration table
-        sqLiteDatabase.execSQL("create table config_network_download_db (" +
+        /*sqLiteDatabase.execSQL("create table config_network_download_db (" +
                 "network_name varchar(20) primary key not null," +
-                "download_it tinyint not null);");
+                "download_it tinyint not null);");*/
 
         // creating suspicious denunciations amount configuration table
         sqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
                 "amount smallint primary key not null);");
 
         // creating theme configuration table
-        sqLiteDatabase.execSQL("create table config_theme (" +
+        /*sqLiteDatabase.execSQL("create table config_theme (" +
                 "is_dark tinyint primary key not null," +
                 "accent_color char(7) not null," +
-                "default_accent_color char(7) not null);");
+                "default_accent_color char(7) not null);");*/
     }
 
     private void insertAttributes() {
-        // inserting default theme attributes
-        sqLiteDatabase.execSQL("insert into config_theme values(0, '#00BCD4', '#00BCD4');");
+        // inserting description attributes
+        sqLiteDatabase.execSQL("insert into description(description) values('Companhia bancária');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Telemarketing');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Oferta utópica');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Oferta indesejada');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Oferta repetitiva');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Prisioneiro');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Golpe');");
+        sqLiteDatabase.execSQL("insert into description(description) values('Chantagem');");
+
+        // inserting suspicious treatment attributes
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(name) values('Silenciar');");
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(name) values('Bloquear');");
 
         // inserting countries and its codes
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'United States', '999 999 9999');");
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Canada', '999 999 9999');");
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'República Dominicana', '999 999 9999');");
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Puerto Rico', '999 999 9999');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');"); // Russia
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');"); // Kazakhstan
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');"); // Egypt
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');");   // Russia
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');");   // Kazakhstan
+        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');");    // Egypt
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(39, 'Italia', '');");
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(55, 'Brasil', '99 99999 9999');");
     }
