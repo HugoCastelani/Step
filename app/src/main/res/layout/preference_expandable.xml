@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.andexert.expandablelayout.library.ExpandableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/expandable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:el_headerLayout="@layout/preference_custom"
+    app:el_contentLayout="@layout/preference_expandable_content"
+    android:clickable="false"/>

@@ -53,10 +53,8 @@
             android:title="@string/select_services_block"
             android:summary="@string/select_services_block_substring"/>
 
-        <com.afollestad.materialdialogs.prefs.MaterialDialogPreference
+        <com.enoughspam.step.settings.preferences.ExpandablePreference
             android:key="select_suspicious_treatment"
-            android:negativeButtonText="@string/cancel_button"
-            android:positiveButtonText="@string/done_button"
             android:title="@string/select_suspicious_treatment"
             android:summary="@string/select_suspicious_treatment_substring" />
 
