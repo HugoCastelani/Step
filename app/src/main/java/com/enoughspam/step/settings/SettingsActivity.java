@@ -2,7 +2,6 @@ package com.enoughspam.step.settings;
 
 
 import android.app.FragmentTransaction;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -15,25 +14,15 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.notRelated.ThemeDAO;
-import com.enoughspam.step.database.domains.ThemeData;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class SettingsActivity extends AestheticActivity
         implements ColorChooserDialog.ColorCallback {
 
-    private ThemeDAO themeDAO;
-    private ThemeData themeData;
-
     @Override
-    public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        final String color = String.format("#%06X", 0xFFFFFFFF & selectedColor);
-
-        themeData.setAccentColor(color);
-        themeDAO.setThemeData(themeData);
-        setUpTheme();
-
+    public void onColorSelection(ColorChooserDialog dialog, @ColorInt int selectedColor) {
+        Aesthetic.get().colorAccent(selectedColor).apply();
         recreate();
     }
 
@@ -53,9 +42,6 @@ public class SettingsActivity extends AestheticActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        themeDAO = new ThemeDAO(this);
-        themeData = themeDAO.getThemeData();
-
         SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentByTag("settingsFragmentTag");
         if (fragment == null) {
             fragment = new SettingsFragment();
@@ -63,11 +49,5 @@ public class SettingsActivity extends AestheticActivity
             fragmentTransaction.replace(R.id.settings_fragment_container, fragment, "settingsFragmentTag");
             fragmentTransaction.commit();
         }
-    }
-
-    private void setUpTheme() {
-        Aesthetic.get()
-                .colorAccent(Color.parseColor(themeData.getAccentColor()))
-                .apply();
     }
 }
