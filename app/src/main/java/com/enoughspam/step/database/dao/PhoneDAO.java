@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.Phone;
-import com.enoughspam.step.database.domains.abstracts.Domain;
 
 /**
  * Created by Hugo Castelani
@@ -16,7 +14,7 @@ import com.enoughspam.step.database.domains.abstracts.Domain;
  * Time: 09:20
  */
 
-public class PhoneDAO extends DAO {
+public class PhoneDAO extends DAO<Phone> {
 
     private static final String NUMBER = "number";
     private static final String COUNTRYID = "country_id";
@@ -52,8 +50,7 @@ public class PhoneDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull final Domain domain) {
-        final Phone phone = (Phone) domain;
+    public boolean create(@NonNull final Phone phone) {
         final ContentValues values = new ContentValues();
 
         if (phone.getAreaCode() == 0) {
@@ -69,10 +66,5 @@ public class PhoneDAO extends DAO {
         }
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    @Override
-    public Phone findById(@NonNegative final int id) {
-        return (Phone) super.findById(id);
     }
 }

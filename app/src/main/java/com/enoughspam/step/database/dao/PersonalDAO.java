@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.User;
-import com.enoughspam.step.database.domains.abstracts.Domain;
+
+import java.util.List;
 
 /**
  * Created by Hugo
@@ -15,7 +17,7 @@ import com.enoughspam.step.database.domains.abstracts.Domain;
  * Time: 10:47
  */
 
-public class PersonalDAO extends DAO {
+public class PersonalDAO extends DAO<User> {
 
     private static final String NAME = "name";
     private static final String ALLSET = "all_set";
@@ -33,14 +35,23 @@ public class PersonalDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull final Domain domain) {
-        final User user = (User) domain;
+    public boolean create(@NonNull final User user) {
         final ContentValues contentValues = new ContentValues();
 
         contentValues.put(ID, user.getId());
         contentValues.put(NAME, user.getName());
 
         return getSqLiteDatabase().insert(TABLE, null, contentValues) > 0;
+    }
+
+    @Override @Deprecated
+    public User findById(@NonNegative final int id) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("You should use get() method instead.");
+    }
+
+    @Override @Deprecated
+    public List<User> getList() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("You should use get() method instead.");
     }
 
     public User get() {

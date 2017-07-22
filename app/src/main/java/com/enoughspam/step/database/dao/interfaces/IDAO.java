@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.abstracts.Domain;
 
 import java.util.List;
 
@@ -15,12 +14,12 @@ import java.util.List;
  * Time: 18:29
  */
 
-public interface IDAO {
+public interface IDAO<T> {
     SQLiteDatabase getSqLiteDatabase();
     void closeSqLiteDatabase();
-    Domain generate(@NonNull final Cursor cursor);
-    boolean create(@NonNull final Domain domain);
+    T generate(@NonNull final Cursor cursor);
+    boolean create(@NonNull final T type);
     boolean delete(@NonNegative final int id);
-    Domain findById(@NonNegative final int id);
-    List<Domain> getList();
+    T findById(@NonNegative final int id);
+    List<T> getList();
 }

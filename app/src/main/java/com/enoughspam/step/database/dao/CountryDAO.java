@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.Country;
-import com.enoughspam.step.database.domains.abstracts.Domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
  * Time: 17:25
  */
 
-public class CountryDAO extends DAO {
+public class CountryDAO extends DAO<Country> {
 
     private static final String CODE = "code";
     private static final String NAME = "name";
@@ -40,8 +39,7 @@ public class CountryDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull final Domain domain) {
-        final Country country = (Country) domain;
+    public boolean create(@NonNull final Country country) {
         final ContentValues contentValues = new ContentValues();
 
         contentValues.put(CODE, country.getCode());
@@ -49,11 +47,6 @@ public class CountryDAO extends DAO {
         contentValues.put(MASK, country.getMask());
 
         return getSqLiteDatabase().insert(TABLE, null, contentValues) > 0;
-    }
-
-    @Override
-    public Country findById(@NonNegative final int id) {
-        return (Country) super.findById(id);
     }
 
     public Country findByCode(@NonNegative final int code) {

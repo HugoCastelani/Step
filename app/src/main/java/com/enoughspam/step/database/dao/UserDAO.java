@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.User;
-import com.enoughspam.step.database.domains.abstracts.Domain;
 
 /**
  * Created by Hugo Castelani
@@ -16,7 +14,7 @@ import com.enoughspam.step.database.domains.abstracts.Domain;
  * Time: 17:01
  */
 
-public class UserDAO extends DAO {
+public class UserDAO extends DAO<User> {
 
     private static final String SOCIALID = "social_id";
     private static final String NAME = "name";
@@ -35,19 +33,13 @@ public class UserDAO extends DAO {
     }
 
     @Override
-    public boolean create(@NonNull final Domain domain) {
-        final User user = (User) domain;
+    public boolean create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
         values.put(SOCIALID, user.getSocialId());
         values.put(NAME, user.getName());
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    @Override
-    public User findById(@NonNegative final int id) {
-        return (User) super.findById(id);
     }
 
     public int findIdByIdSocial(@NonNull final String socialId) {
