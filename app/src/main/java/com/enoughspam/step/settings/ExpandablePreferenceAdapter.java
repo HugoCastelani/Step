@@ -1,5 +1,6 @@
 package com.enoughspam.step.settings;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.AestheticTextView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.domains.Description;
+import com.enoughspam.step.database.dao.DescriptionDAO;
+import com.enoughspam.step.database.dao.TreatmentDAO;
 
 import java.util.List;
 
@@ -20,10 +23,15 @@ import java.util.List;
 
 public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
 
-    private final List<Description> list;
+    private final List<String> descriptionStringList;
+    private final List<String> treatmentStringList;
 
-    public ExpandablePreferenceAdapter(@NonNull final List<Description> list) {
-        this.list = list;
+    public ExpandablePreferenceAdapter(@NonNull final Context context) {
+        DescriptionDAO descriptionDAO = new DescriptionDAO(context);
+        this.descriptionStringList = descriptionDAO.getColumnList(descriptionDAO.DESCRIPTION);
+
+        TreatmentDAO treatmentDAO = new TreatmentDAO(context);
+        this.treatmentStringList = treatmentDAO.getColumnList(treatmentDAO.TREATMENT);
     }
 
     @Override
@@ -35,12 +43,27 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.description.setText(list.get(position).getDescription());
+        final String itemText = descriptionStringList.get(position);
+
+        holder.description.setText(itemText);
+        holder.description.setOnClickListener(v ->
+            new MaterialDialog.Builder(holder.description.getContext())
+                    .title(itemText)
+                    .items(treatmentStringList)
+                    .positiveText(R.string.done_button)
+                    .negativeText(R.string.cancel_button)
+                    .itemsCallbackSingleChoice(0,
+                            ((dialog, itemView, which, text) -> true))
+                    .onPositive(((dialog, which) -> {
+                        dialog.getSelectedIndex();
+                    }))
+                    .show()
+        );
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return descriptionStringList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

@@ -37,7 +37,7 @@ public class FormHandler {
         Country matchingCountry = countryDAO.findByCode(countryCode);
 
         if (matchingCountry != null) {
-            List<String> countryList = countryDAO.getNameList();
+            List<String> countryList = countryDAO.getColumnList(countryDAO.NAME);
 
             int matchingPosition = countryList.indexOf(matchingCountry.getName());
             this.spinner.setSelection(matchingPosition);
@@ -86,8 +86,8 @@ public class FormHandler {
     }
 
     /*
-     * When country get changed, new mark formatter is applied, but you got to type something
-     * to update it, and that's this method does
+     * When country get changed, new mark formatter is applied, but you
+     * got to type something to update it, and that's this method does
      */
     private void finishUpdating() {
         Editable editable = phoneNumberEditText.getText();

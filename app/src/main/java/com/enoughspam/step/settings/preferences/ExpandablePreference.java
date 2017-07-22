@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.DescriptionDAO;
 import com.enoughspam.step.settings.ExpandablePreferenceAdapter;
 
 /**
@@ -48,11 +47,9 @@ public class ExpandablePreference extends Preference implements IPreference {
     public void onBindView(View view) {
         super.onBindView(view);
 
-        DescriptionDAO descriptionDAO = new DescriptionDAO(getContext());
-
         AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.preference_expandable_recyclerview);
 
-        ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(descriptionDAO.getList());
+        ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
