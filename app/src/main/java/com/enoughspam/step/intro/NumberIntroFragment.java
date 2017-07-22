@@ -18,9 +18,9 @@ import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.related.CountryDAO;
-import com.enoughspam.step.database.dao.related.PersonalDAO;
-import com.enoughspam.step.database.dao.related.PhoneDAO;
+import com.enoughspam.step.database.dao.CountryDAO;
+import com.enoughspam.step.database.dao.PersonalDAO;
+import com.enoughspam.step.database.dao.PhoneDAO;
 import com.enoughspam.step.database.domains.Phone;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;

@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.related.PersonalDAO;
+import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.main.MainActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
@@ -35,7 +35,7 @@ public class MainIntroActivity extends IntroActivity {
         );
 
         PersonalDAO personalDAO = new PersonalDAO(this);
-        if (personalDAO.areWeAllSet()) {
+        if (personalDAO.isAllSet()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

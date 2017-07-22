@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.related.PersonalDAO;
-import com.enoughspam.step.database.dao.related.UserDAO;
+import com.enoughspam.step.database.dao.PersonalDAO;
+import com.enoughspam.step.database.dao.UserDAO;
 import com.enoughspam.step.database.domains.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -89,7 +89,7 @@ public class LoginIntroFragment extends SlideFragment implements
                     String idSocial = account.getId() + GOOGLE_CODE;
                     User user = new User(idSocial, account.getDisplayName());
 
-                    if (userDAO.findByIdSocial(idSocial) == null) {
+                    if (userDAO.findBySocialId(idSocial) == null) {
                         userDAO.create(user);
                     }
 

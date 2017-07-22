@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.azimolabs.maskformatter.MaskFormatter;
-import com.enoughspam.step.database.dao.related.CountryDAO;
+import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.domains.Country;
 
 import java.util.List;

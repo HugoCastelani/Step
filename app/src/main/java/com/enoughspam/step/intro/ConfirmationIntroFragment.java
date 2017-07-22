@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.related.PersonalDAO;
+import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
@@ -36,7 +36,7 @@ public class ConfirmationIntroFragment extends SlideFragment {
                 MessageCodeHandler.decryptIt(MessageCodeHandler.code))) {
 
                 PersonalDAO personalDAO = new PersonalDAO(getActivity());
-                personalDAO.setAreWeAllSet(true);
+                personalDAO.setAllSet(true);
 
                 canGoForward = true;
                 canGoForward();
