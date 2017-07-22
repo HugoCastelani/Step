@@ -18,21 +18,23 @@ public class Phone extends Domain {
     private int areaCode;
     private User user;
 
-    public Phone(@MaskRespectful long number, @NonNegative int areaCode, @NonNull User user) {
+    public Phone(@MaskRespectful final long number, @NonNegative final int areaCode,
+                 @NonNull final User user) {
         this.number = number;
         this.areaCode = areaCode;
         this.user = user;
     }
 
     // some countries don't have area code
-    public Phone(@NonNegative int countryId, @MaskRespectful long number, @NonNull User user) {
+    public Phone(@NonNegative final int countryId, @MaskRespectful final long number,
+                 @NonNull final User user) {
         this.countryId = countryId;
         this.number = number;
         this.user = user;
     }
 
-    public Phone(@NonNegative int id, @MaskRespectful long number,
-                 @NonNegative int areaCode, @NonNull User user) {
+    public Phone(@NonNegative final int id, @MaskRespectful final long number,
+                 @NonNegative final int areaCode, @NonNull final User user) {
         super(id);
         this.number = number;
         this.areaCode = areaCode;
@@ -40,8 +42,8 @@ public class Phone extends Domain {
     }
 
     // some countries don't have area code
-    public Phone(@NonNegative int id, @NonNegative int countryId,
-                 @MaskRespectful long number, @NonNull User user) {
+    public Phone(@NonNegative final int id, @NonNegative final int countryId,
+                 @MaskRespectful final long number, @NonNull final User user) {
         super(id);
         this.countryId = countryId;
         this.number = number;
@@ -52,7 +54,7 @@ public class Phone extends Domain {
         return number;
     }
 
-    public void setNumber(@MaskRespectful long number) {
+    public void setNumber(@MaskRespectful final long number) {
         this.number = number;
     }
 
@@ -60,7 +62,7 @@ public class Phone extends Domain {
         return countryId;
     }
 
-    public void setCountryId(@NonNegative int countryId) {
+    public void setCountryId(@NonNegative final int countryId) {
         this.countryId = countryId;
     }
 
@@ -68,7 +70,7 @@ public class Phone extends Domain {
         return areaCode;
     }
 
-    public void setAreaCode(@NonNegative int areaCode) {
+    public void setAreaCode(@NonNegative final int areaCode) {
         this.areaCode = areaCode;
     }
 
@@ -76,7 +78,7 @@ public class Phone extends Domain {
         return user;
     }
 
-    public void setUser(@NonNull User user) {
+    public void setUser(@NonNull final User user) {
         this.user = user;
     }
 }

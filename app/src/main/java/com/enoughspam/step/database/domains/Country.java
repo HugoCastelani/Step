@@ -16,14 +16,15 @@ public class Country extends Domain {
     private String name;
     private String mask;
 
-    public Country(@NonNegative int code, @NonNull String name, @NonNull String mask) {
+    public Country(@NonNegative final int code, @NonNull final String name,
+                   @NonNull final String mask) {
         this.code = code;
         this.name = name;
         this.mask = mask;
     }
 
-    public Country(@NonNegative int id, @NonNegative int code,
-                   @NonNull String name, @NonNull String mask) {
+    public Country(@NonNegative final int id, @NonNegative final int code,
+                   @NonNull final String name, @NonNull final String mask) {
         super(id);
         this.code = code;
         this.name = name;
@@ -34,7 +35,7 @@ public class Country extends Domain {
         return code;
     }
 
-    public void setCode(@NonNegative int code) {
+    public void setCode(@NonNegative final int code) {
         this.code = code;
     }
 
@@ -42,7 +43,7 @@ public class Country extends Domain {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(@NonNull final String name) {
         this.name = name;
     }
 
@@ -50,7 +51,7 @@ public class Country extends Domain {
         return mask;
     }
 
-    public void setMask(@NonNull String mask) {
+    public void setMask(@NonNull final String mask) {
         this.mask = mask;
     }
 }

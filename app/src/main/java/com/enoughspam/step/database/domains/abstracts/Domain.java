@@ -14,7 +14,7 @@ public class Domain {
 
     public Domain() {}
 
-    public Domain(@NonNegative int id) {
+    public Domain(@NonNegative final int id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class Domain {
         return id;
     }
 
-    public void setId(@NonNegative int id) {
+    public void setId(@NonNegative final int id) {
         this.id = id;
     }
 }

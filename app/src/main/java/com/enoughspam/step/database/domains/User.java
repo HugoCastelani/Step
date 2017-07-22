@@ -15,17 +15,18 @@ public class User extends Domain {
     private String socialId;
     private String name;
 
-    public User(@NonNegative int id, @NonNull String name) {
+    public User(@NonNegative final int id, @NonNull final String name) {
         super(id);
         this.name = name;
     }
 
-    public User(@NonNull String socialId, @NonNull String name) {
+    public User(@NonNull final String socialId, @NonNull final String name) {
         this.socialId = socialId;
         this.name = name;
     }
 
-    public User(@NonNegative int id, @NonNull String socialId, @NonNull String name) {
+    public User(@NonNegative final int id, @NonNull final String socialId,
+                @NonNull final String name) {
         super(id);
         this.socialId = socialId;
         this.name = name;
@@ -35,7 +36,7 @@ public class User extends Domain {
         return socialId;
     }
 
-    public void setSocialId(@NonNull String socialId) {
+    public void setSocialId(@NonNull final String socialId) {
         this.socialId = socialId;
     }
 
@@ -43,7 +44,7 @@ public class User extends Domain {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(@NonNull final String name) {
         this.name = name;
     }
 }
