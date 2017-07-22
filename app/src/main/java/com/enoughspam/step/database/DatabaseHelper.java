@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 28;
+    public static final int VERSION = 29;
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating suspicious treatment table
         sqLiteDatabase.execSQL("create table suspicious_treatment (" +
                 "id integer primary key not null," +
-                "name varchar(20) not null);");
+                "treatment varchar(20) not null);");
 
         // creating treatment configuration table
         sqLiteDatabase.execSQL("create table config_treatment (" +
@@ -168,10 +168,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("insert into description(description) values('Prisioneiro');");
         sqLiteDatabase.execSQL("insert into description(description) values('Golpe');");
         sqLiteDatabase.execSQL("insert into description(description) values('Chantagem');");
+        // !!!!!!!!!!! NEVER ADD A NEW DESCRIPTION ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting suspicious treatment attributes
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(name) values('Silenciar');");
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(name) values('Bloquear');");
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(treatment) values('Silenciar');");
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(treatment) values('Bloquear');");
+        // !!!!!!!!!!! NEVER ADD A NEW TREATMENT ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting countries and its codes
         sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'United States', '999 999 9999');");
