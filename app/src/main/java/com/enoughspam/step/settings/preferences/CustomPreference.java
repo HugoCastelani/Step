@@ -12,29 +12,30 @@ import com.enoughspam.step.R;
  * Time: 17:53
  */
 
-public class CustomPreference extends Preference {
+public class CustomPreference extends Preference implements IPreference {
 
     public CustomPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init();
     }
 
     public CustomPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init();
     }
 
     public CustomPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init();
     }
 
     public CustomPreference(Context context) {
         super(context);
-        init(context, null);
+        init();
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @Override
+    public void init() {
         setLayoutResource(R.layout.preference_custom);
     }
 }

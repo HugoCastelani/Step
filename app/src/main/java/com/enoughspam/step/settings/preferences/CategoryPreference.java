@@ -12,29 +12,30 @@ import com.enoughspam.step.R;
  * Time: 20:42
  */
 
-public class CategoryPreference extends PreferenceCategory {
+public class CategoryPreference extends PreferenceCategory implements IPreference {
 
     public CategoryPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init();
     }
 
     public CategoryPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init();
     }
 
     public CategoryPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init();
     }
 
     public CategoryPreference(Context context) {
         super(context);
-        init(context, null);
+        init();
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @Override
+    public void init() {
         setLayoutResource(R.layout.preference_category);
     }
 }

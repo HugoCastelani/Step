@@ -16,32 +16,33 @@ import com.enoughspam.step.R;
  */
 
 
-public class ColorPreference extends Preference {
+public class ColorPreference extends Preference implements IPreference {
 
     private View mView;
     private int color;
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init();
     }
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init();
     }
 
     public ColorPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init();
     }
 
     public ColorPreference(Context context) {
         super(context);
-        init(context, null);
+        init();
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @Override
+    public void init() {
         setLayoutResource(R.layout.preference_custom);
         setWidgetLayoutResource(R.layout.preference_color);
         setPersistent(false);

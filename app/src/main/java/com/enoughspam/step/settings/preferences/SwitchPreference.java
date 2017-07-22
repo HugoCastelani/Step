@@ -13,29 +13,31 @@ import com.enoughspam.step.R;
  * Time: 21:25
  */
 
-public class SwitchPreference extends android.preference.SwitchPreference {
+public class SwitchPreference extends android.preference.SwitchPreference
+        implements IPreference {
 
     public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init();
     }
 
     public SwitchPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init();
     }
 
     public SwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init();
     }
 
     public SwitchPreference(Context context) {
         super(context);
-        init(context, null);
+        init();
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @Override
+    public void init() {
         setLayoutResource(R.layout.preference_custom);
         setWidgetLayoutResource(R.layout.preference_switch);
         setPersistent(true);

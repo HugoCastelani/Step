@@ -1,7 +1,6 @@
 package com.enoughspam.step.settings.preferences;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -15,29 +14,30 @@ import com.enoughspam.step.util.ThemeHandler;
  * Time: 10:09
  */
 
-public class DialogPreference extends MaterialDialogPreference {
+public class DialogPreference extends MaterialDialogPreference implements IPreference {
 
     public DialogPreference(Context context) {
         super(context);
-        init(context, null);
+        init();
     }
 
     public DialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init();
     }
 
     public DialogPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init();
     }
 
     public DialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init();
     }
 
-    private void init(Context context, @Nullable AttributeSet attrs) {
+    @Override
+    public void init() {
         setLayoutResource(R.layout.preference_custom);
     }
 
