@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
-import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
 /**
@@ -25,7 +24,7 @@ public class RecyclerViewDecorator {
         RecyclerViewDecorator.context = context.getApplicationContext();
     }
 
-    public static void decorate(@NonNull RecyclerView recyclerView) {
+    public static void addAdaptableMargins(@NonNull final RecyclerView recyclerView) {
         MarginUtils.init(context);
         RecyclerView.ItemDecoration decoration = null;
 
@@ -44,6 +43,5 @@ public class RecyclerViewDecorator {
         }
 
         if (decoration != null) recyclerView.addItemDecoration(decoration);
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
     }
 }

@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
+import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.RecyclerViewDecorator;
 import com.enoughspam.step.util.ThemeHandler;
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -45,14 +47,18 @@ public class MainFragment extends Fragment {
 
         // getting recycler view ready
         AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.blocked_recyclerview);
+
         BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList(), getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
+
+
+        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
         RecyclerViewDecorator.init(getContext());
-        RecyclerViewDecorator.decorate(recyclerView);
+        RecyclerViewDecorator.addAdaptableMargins(recyclerView);
 
         return view;
     }
