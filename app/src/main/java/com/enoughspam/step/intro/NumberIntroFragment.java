@@ -111,7 +111,7 @@ public class NumberIntroFragment extends SlideFragment {
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
-                countryDAO.getCountryNameList()
+                countryDAO.getNameList()
         );
     }
 

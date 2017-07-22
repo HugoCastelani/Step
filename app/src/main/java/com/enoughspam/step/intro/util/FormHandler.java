@@ -37,7 +37,7 @@ public class FormHandler {
         Country matchingCountry = countryDAO.findByCode(countryCode);
 
         if (matchingCountry != null) {
-            List<String> countryList = countryDAO.getCountryNameList();
+            List<String> countryList = countryDAO.getNameList();
 
             int matchingPosition = countryList.indexOf(matchingCountry.getName());
             this.spinner.setSelection(matchingPosition);
