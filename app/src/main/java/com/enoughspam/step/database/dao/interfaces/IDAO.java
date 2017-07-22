@@ -9,7 +9,7 @@ import com.enoughspam.step.annotation.NonNegative;
 import java.util.List;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 21/07/17
  * Time: 18:29
  */
@@ -22,4 +22,5 @@ public interface IDAO<T> {
     boolean delete(@NonNegative final int id);
     T findById(@NonNegative final int id);
     List<T> getList();
+    List<String> getColumnList(@NonNull final String column);
 }

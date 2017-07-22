@@ -83,4 +83,18 @@ public abstract class DAO<T> implements IDAO<T> {
         cursor.close();
         return ts;
     }
+
+    @Override
+    public List<String> getColumnList(@NonNull final String column) {
+        final Cursor cursor = getSqLiteDatabase().query(
+                TABLE, new String[] {column}, null, null, null, null, null);
+
+        final List<String> countries = new ArrayList<>();
+
+        while (cursor.moveToNext())
+            countries.add(cursor.getString(cursor.getColumnIndex(column)));
+
+        cursor.close();
+        return countries;
+    }
 }

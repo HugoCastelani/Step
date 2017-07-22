@@ -16,10 +16,10 @@ import com.enoughspam.step.database.domains.Phone;
 
 public class PhoneDAO extends DAO<Phone> {
 
-    private static final String NUMBER = "number";
-    private static final String COUNTRYID = "country_id";
-    private static final String AREACODE = "area_code";
-    private static final String USERID = "user_id";
+    public static final String NUMBER = "number";
+    public static final String COUNTRYID = "country_id";
+    public static final String AREACODE = "area_code";
+    public static final String USERID = "user_id";
 
     private PersonalDAO personalDAO;
 

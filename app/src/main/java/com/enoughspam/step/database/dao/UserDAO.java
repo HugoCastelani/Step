@@ -16,8 +16,8 @@ import com.enoughspam.step.database.domains.User;
 
 public class UserDAO extends DAO<User> {
 
-    private static final String SOCIALID = "social_id";
-    private static final String NAME = "name";
+    public static final String SOCIALID = "social_id";
+    public static final String NAME = "name";
 
     public UserDAO(@NonNull final Context context) {
         super(context, "user");

@@ -19,8 +19,8 @@ import java.util.List;
 
 public class PersonalDAO extends DAO<User> {
 
-    private static final String NAME = "name";
-    private static final String ALLSET = "all_set";
+    public static final String NAME = "name";
+    public static final String ALLSET = "all_set";
 
     public PersonalDAO(@NonNull final Context context) {
         super(context, "personal");
@@ -52,6 +52,11 @@ public class PersonalDAO extends DAO<User> {
     @Override @Deprecated
     public List<User> getList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("You should use get() method instead.");
+    }
+
+    @Override @Deprecated
+    public List<String> getColumnList(@NonNull final String column) {
+        throw new UnsupportedOperationException("You should use get() method and the intend variable instead.");
     }
 
     public User get() {

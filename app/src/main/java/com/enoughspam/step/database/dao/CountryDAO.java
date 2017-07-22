@@ -9,9 +9,6 @@ import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.Country;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Hugo Castelani
  * Date: 04/07/17
@@ -20,9 +17,9 @@ import java.util.List;
 
 public class CountryDAO extends DAO<Country> {
 
-    private static final String CODE = "code";
-    private static final String NAME = "name";
-    private static final String MASK = "mask";
+    public static final String CODE = "code";
+    public static final String NAME = "name";
+    public static final String MASK = "mask";
 
     public CountryDAO(@NonNull final Context context) {
         super(context, "country");
@@ -86,18 +83,5 @@ public class CountryDAO extends DAO<Country> {
 
         cursor.close();
         return code;
-    }
-
-    public List<String> getNameList() {
-        final Cursor cursor = getSqLiteDatabase().query(
-                TABLE, new String[] {NAME}, null, null, null, null, null);
-
-        final List<String> countries = new ArrayList<>();
-
-        while (cursor.moveToNext())
-            countries.add(cursor.getString(cursor.getColumnIndex("name")));
-
-        cursor.close();
-        return countries;
     }
 }

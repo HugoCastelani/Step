@@ -16,7 +16,7 @@ import com.enoughspam.step.database.domains.Description;
 
 public class DescriptionDAO extends DAO<Description> {
 
-    private static final String DESCRIPTION = "description";
+    public static final String DESCRIPTION = "description";
 
     public DescriptionDAO(@NonNull final Context context) {
         super(context, "description");
