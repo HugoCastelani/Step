@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 29;
+    public static final int VERSION = 32;
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -102,7 +102,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating description table
         sqLiteDatabase.execSQL("create table description (" +
                 "id integer primary key not null," +
-                "description varchar(50) not null);");
+                "description varchar(50) not null," +
+                "treatment_id integer not null," +
+                "foreign key(treatment_id) references suspicious_treatment(id));");
 
         // creating denunciation/description table
         sqLiteDatabase.execSQL("create table denunciation_description (" +
@@ -118,12 +120,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "treatment varchar(20) not null);");
 
         // creating treatment configuration table
-        sqLiteDatabase.execSQL("create table config_treatment (" +
+        /*sqLiteDatabase.execSQL("create table config_treatment (" +
                 "description_id integer not null," +
                 "suspicious_treatment_id integer not null," +
                 "primary key(description_id, suspicious_treatment_id)," +
                 "foreign key(description_id) references description(id)," +
-                "foreign key(suspicious_treatment_id) references suspicious_treatment(id));");
+                "foreign key(suspicious_treatment_id) references suspicious_treatment(id));");*/
 
         // NOT RELATED TABLES
 
@@ -160,19 +162,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void insertAttributes() {
         // inserting description attributes
-        sqLiteDatabase.execSQL("insert into description(description) values('Companhia bancária');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Telemarketing');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Oferta utópica');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Oferta indesejada');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Oferta repetitiva');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Prisioneiro');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Golpe');");
-        sqLiteDatabase.execSQL("insert into description(description) values('Chantagem');");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(0, 'Companhia bancária', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(1, 'Telemarketing', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(2, 'Oferta utópica', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(3, 'Oferta indesejada', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(4, 'Oferta repetitiva', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(5, 'Prisioneiro', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(6, 'Golpe', 0);");
+        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(7, 'Chantagem', 0);");
         // !!!!!!!!!!! NEVER ADD A NEW DESCRIPTION ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting suspicious treatment attributes
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(treatment) values('Silenciar');");
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(treatment) values('Bloquear');");
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(0, 'Silenciar');");
+        sqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
         // !!!!!!!!!!! NEVER ADD A NEW TREATMENT ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting countries and its codes
