@@ -37,13 +37,25 @@ public class CountryDAO extends DAO<Country> {
 
     @Override
     public boolean create(@NonNull final Country country) {
-        final ContentValues contentValues = new ContentValues();
+        final ContentValues values = new ContentValues();
 
-        contentValues.put(CODE, country.getCode());
-        contentValues.put(NAME, country.getName());
-        contentValues.put(MASK, country.getMask());
+        values.put(CODE, country.getCode());
+        values.put(NAME, country.getName());
+        values.put(MASK, country.getMask());
 
-        return getSqLiteDatabase().insert(TABLE, null, contentValues) > 0;
+        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
+    }
+
+    @Override
+    public boolean update(@NonNull final Country country) {
+        final ContentValues values = new ContentValues();
+
+        values.put(CODE, country.getCode());
+        values.put(NAME, country.getName());
+        values.put(MASK, country.getMask());
+
+        return getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(country.getId())}) > 0;
     }
 
     public Country findByCode(@NonNegative final int code) {

@@ -67,4 +67,17 @@ public class PhoneDAO extends DAO<Phone> {
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
+
+    @Override
+    public boolean update(@NonNull final Phone phone) {
+        final ContentValues values = new ContentValues();
+
+        values.put(NUMBER, phone.getNumber());
+        values.put(COUNTRYID, phone.getCountryId());
+        values.put(AREACODE, phone.getAreaCode());
+        values.put(USERID, phone.getUser().getId());
+
+        return getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(phone.getId())}) > 0;
+    }
 }

@@ -36,7 +36,6 @@ public class DescriptionDAO extends DAO<Description> {
     public boolean create(@NonNull final Description description) {
         final ContentValues values = new ContentValues();
 
-        values.put(ID, description.getId());
         values.put(DESCRIPTION, description.getDescription());
         values.put(TREATMENTID, description.getTreatmentId());
 
@@ -50,7 +49,6 @@ public class DescriptionDAO extends DAO<Description> {
         values.put(TREATMENTID, description.getTreatmentId());
 
         return getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(description.getId())})
-                > 0;
+                ID + " = ?", new String[] {String.valueOf(description.getId())}) > 0;
     }
 }

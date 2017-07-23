@@ -39,4 +39,14 @@ public class TreatmentDAO extends DAO<Treatment> {
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
+
+    @Override
+    public boolean update(@NonNull final Treatment treatment) {
+        final ContentValues values = new ContentValues();
+
+        values.put(TREATMENT, treatment.getTreatment());
+
+        return getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(treatment.getId())}) > 0;
+    }
 }

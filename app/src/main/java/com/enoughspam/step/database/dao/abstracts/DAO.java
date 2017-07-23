@@ -50,7 +50,10 @@ public abstract class DAO<T> implements IDAO<T> {
     public abstract T generate(@NonNull final Cursor cursor);
 
     @Override
-    public abstract boolean create(@NonNull final T t);
+    public abstract boolean create(@NonNull final T type);
+
+    @Override
+    public abstract boolean update(@NonNull final T type);
 
     @Override
     public boolean delete(@NonNegative final int id) {

@@ -36,12 +36,22 @@ public class PersonalDAO extends DAO<User> {
 
     @Override
     public boolean create(@NonNull final User user) {
-        final ContentValues contentValues = new ContentValues();
+        final ContentValues values = new ContentValues();
 
-        contentValues.put(ID, user.getId());
-        contentValues.put(NAME, user.getName());
+        values.put(ID, user.getId());
+        values.put(NAME, user.getName());
 
-        return getSqLiteDatabase().insert(TABLE, null, contentValues) > 0;
+        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
+    }
+
+    @Override
+    public boolean update(@NonNull final User user) {
+        final ContentValues values = new ContentValues();
+
+        values.put(NAME, user.getName());
+
+        return getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(user.getId())}) > 0;
     }
 
     @Override @Deprecated

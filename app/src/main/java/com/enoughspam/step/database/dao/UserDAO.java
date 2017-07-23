@@ -42,6 +42,17 @@ public class UserDAO extends DAO<User> {
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
 
+    @Override
+    public boolean update(@NonNull final User user) {
+        final ContentValues values = new ContentValues();
+
+        values.put(SOCIALID, user.getSocialId());
+        values.put(NAME, user.getName());
+
+        return getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(user.getId())}) > 0;
+    }
+
     public int findIdByIdSocial(@NonNull final String socialId) {
         final Cursor cursor = getSqLiteDatabase().query(
                 TABLE, new String[] {ID}, SOCIALID + " = ?", new String[] {socialId},

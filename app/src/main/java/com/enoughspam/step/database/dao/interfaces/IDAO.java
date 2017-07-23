@@ -19,6 +19,7 @@ public interface IDAO<T> {
     void closeSqLiteDatabase();
     T generate(@NonNull final Cursor cursor);
     boolean create(@NonNull final T type);
+    boolean update(@NonNull final T type);
     boolean delete(@NonNegative final int id);
     T findById(@NonNegative final int id);
     List<T> getList();
