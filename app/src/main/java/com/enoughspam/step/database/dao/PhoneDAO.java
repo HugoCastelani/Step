@@ -17,9 +17,9 @@ import com.enoughspam.step.database.domains.Phone;
 public class PhoneDAO extends DAO<Phone> {
 
     public static final String NUMBER = "number";
-    public static final String COUNTRYID = "country_id";
-    public static final String AREACODE = "area_code";
-    public static final String USERID = "user_id";
+    public static final String COUNTRY_ID = "country_id";
+    public static final String AREA_CODE = "area_code";
+    public static final String USER_ID = "user_id";
 
     private PersonalDAO personalDAO;
 
@@ -30,11 +30,11 @@ public class PhoneDAO extends DAO<Phone> {
 
     @Override
     public Phone generate(@NonNull final Cursor cursor) {
-        if (cursor.getInt(cursor.getColumnIndex(AREACODE)) == 0) {
+        if (cursor.getInt(cursor.getColumnIndex(AREA_CODE)) == 0) {
             return new Phone(
                     cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    cursor.getInt(cursor.getColumnIndex(AREACODE)),
+                    cursor.getInt(cursor.getColumnIndex(AREA_CODE)),
                     personalDAO.get()
             );
 
@@ -42,7 +42,7 @@ public class PhoneDAO extends DAO<Phone> {
 
             return new Phone(
                     cursor.getInt(cursor.getColumnIndex(ID)),
-                    cursor.getInt(cursor.getColumnIndex(COUNTRYID)),
+                    cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
                     personalDAO.get()
             );
@@ -55,14 +55,14 @@ public class PhoneDAO extends DAO<Phone> {
 
         if (phone.getAreaCode() == 0) {
             values.put(NUMBER, phone.getNumber());
-            values.put(COUNTRYID, phone.getCountryId());
-            values.put(USERID, phone.getUser().getId());
+            values.put(COUNTRY_ID, phone.getCountryId());
+            values.put(USER_ID, phone.getUser().getId());
 
         } else {
 
             values.put(NUMBER, phone.getNumber());
-            values.put(AREACODE, phone.getAreaCode());
-            values.put(USERID, phone.getUser().getId());
+            values.put(AREA_CODE, phone.getAreaCode());
+            values.put(USER_ID, phone.getUser().getId());
         }
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
@@ -73,9 +73,9 @@ public class PhoneDAO extends DAO<Phone> {
         final ContentValues values = new ContentValues();
 
         values.put(NUMBER, phone.getNumber());
-        values.put(COUNTRYID, phone.getCountryId());
-        values.put(AREACODE, phone.getAreaCode());
-        values.put(USERID, phone.getUser().getId());
+        values.put(COUNTRY_ID, phone.getCountryId());
+        values.put(AREA_CODE, phone.getAreaCode());
+        values.put(USER_ID, phone.getUser().getId());
 
         return getSqLiteDatabase().update(TABLE, values,
                 ID + " = ?", new String[] {String.valueOf(phone.getId())}) > 0;

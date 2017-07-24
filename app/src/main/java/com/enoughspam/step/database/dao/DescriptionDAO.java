@@ -17,7 +17,7 @@ import com.enoughspam.step.database.domains.Description;
 public class DescriptionDAO extends DAO<Description> {
 
     public static final String DESCRIPTION = "description";
-    public static final String TREATMENTID = "treatment_id";
+    public static final String TREATMENT_ID = "treatment_id";
 
     public DescriptionDAO(@NonNull final Context context) {
         super(context, "description");
@@ -28,7 +28,7 @@ public class DescriptionDAO extends DAO<Description> {
         return new Description(
                 cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
-                cursor.getInt(cursor.getColumnIndex(TREATMENTID))
+                cursor.getInt(cursor.getColumnIndex(TREATMENT_ID))
         );
     }
 
@@ -37,7 +37,7 @@ public class DescriptionDAO extends DAO<Description> {
         final ContentValues values = new ContentValues();
 
         values.put(DESCRIPTION, description.getDescription());
-        values.put(TREATMENTID, description.getTreatmentId());
+        values.put(TREATMENT_ID, description.getTreatmentId());
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
@@ -46,7 +46,7 @@ public class DescriptionDAO extends DAO<Description> {
         final ContentValues values = new ContentValues();
 
         // For convenience, I'm gonna update only treatment id
-        values.put(TREATMENTID, description.getTreatmentId());
+        values.put(TREATMENT_ID, description.getTreatmentId());
 
         return getSqLiteDatabase().update(TABLE, values,
                 ID + " = ?", new String[] {String.valueOf(description.getId())}) > 0;

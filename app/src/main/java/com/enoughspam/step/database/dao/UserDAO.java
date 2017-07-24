@@ -16,7 +16,7 @@ import com.enoughspam.step.database.domains.User;
 
 public class UserDAO extends DAO<User> {
 
-    public static final String SOCIALID = "social_id";
+    public static final String SOCIAL_ID = "social_id";
     public static final String NAME = "name";
 
     public UserDAO(@NonNull final Context context) {
@@ -27,7 +27,7 @@ public class UserDAO extends DAO<User> {
     public User generate(@NonNull final Cursor cursor) {
         return new User(
                 cursor.getInt(cursor.getColumnIndex(ID)),
-                cursor.getString(cursor.getColumnIndex(SOCIALID)),
+                cursor.getString(cursor.getColumnIndex(SOCIAL_ID)),
                 cursor.getString(cursor.getColumnIndex(NAME))
         );
     }
@@ -36,7 +36,7 @@ public class UserDAO extends DAO<User> {
     public boolean create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
-        values.put(SOCIALID, user.getSocialId());
+        values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());
 
         return getSqLiteDatabase().insert(TABLE, null, values) > 0;
@@ -46,7 +46,7 @@ public class UserDAO extends DAO<User> {
     public boolean update(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
-        values.put(SOCIALID, user.getSocialId());
+        values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());
 
         return getSqLiteDatabase().update(TABLE, values,
@@ -55,7 +55,7 @@ public class UserDAO extends DAO<User> {
 
     public int findIdByIdSocial(@NonNull final String socialId) {
         final Cursor cursor = getSqLiteDatabase().query(
-                TABLE, new String[] {ID}, SOCIALID + " = ?", new String[] {socialId},
+                TABLE, new String[] {ID}, SOCIAL_ID + " = ?", new String[] {socialId},
                 null, null, null);
 
         int id = -1;
@@ -67,7 +67,7 @@ public class UserDAO extends DAO<User> {
 
     public User findBySocialId(@NonNull final String socialId) {
         final Cursor cursor = getSqLiteDatabase().query(
-                TABLE, null, SOCIALID + " = ?", new String[] {socialId},
+                TABLE, null, SOCIAL_ID + " = ?", new String[] {socialId},
                 null, null, null);
 
         User user = null;

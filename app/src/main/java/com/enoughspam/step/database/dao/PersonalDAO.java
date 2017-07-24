@@ -20,7 +20,7 @@ import java.util.List;
 public class PersonalDAO extends DAO<User> {
 
     public static final String NAME = "name";
-    public static final String ALLSET = "all_set";
+    public static final String ALL_SET = "all_set";
 
     public PersonalDAO(@NonNull final Context context) {
         super(context, "personal");
@@ -81,7 +81,7 @@ public class PersonalDAO extends DAO<User> {
 
      public boolean isAllSet() {
          final Cursor cursor = getSqLiteDatabase().query(
-                 TABLE, new String[] {ALLSET}, null, null, null, null, null, null);
+                 TABLE, new String[] {ALL_SET}, null, null, null, null, null, null);
 
          int allSet = 0;
          if (cursor.moveToFirst()) allSet = cursor.getInt(cursor.getColumnIndex("all_set"));
@@ -92,7 +92,7 @@ public class PersonalDAO extends DAO<User> {
 
     public boolean setAllSet(final boolean allSet) {
         final ContentValues values = new ContentValues();
-        values.put(ALLSET, allSet ? 1 : 0);
+        values.put(ALL_SET, allSet ? 1 : 0);
 
         return getSqLiteDatabase().update(TABLE, values, null, null) > 0;
     }
