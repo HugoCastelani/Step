@@ -1,7 +1,6 @@
 package com.enoughspam.step.settings.preferences;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.preference.Preference;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,7 +47,7 @@ public class ExpandablePreference extends Preference {
         super.onBindView(view);
 
         mExpand = (ImageView) view.findViewById(R.id.preference_expand_drawable);
-        if (ThemeHandler.isDark()) mExpand.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        mExpand.setColorFilter(ThemeHandler.getSecondaryText(), PorterDuff.Mode.SRC_IN);
 
         mExpandableLayout = (ExpandableLayout) view.findViewById(R.id.preference_expandable_layout);
         mExpandableLayout.setOnStartShowingListener(expandableLayout -> rotateExpand());

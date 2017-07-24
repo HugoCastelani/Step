@@ -12,7 +12,6 @@ import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.blankj.utilcode.util.ConvertUtils;
-import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -33,7 +32,6 @@ public class SettingsActivity extends AestheticActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-        Utils.init(this);
 
         final AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));

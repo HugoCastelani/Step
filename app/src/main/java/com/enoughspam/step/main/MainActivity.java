@@ -84,18 +84,10 @@ public class MainActivity extends AestheticActivity {
                 .build();
 
         // adapting drawable colors
-        final Drawable homeDraw;
-        final Drawable settingsDraw;
-
-        if (ThemeHandler.isDark()) {
-            homeDraw = ContextCompat.getDrawable(this, R.drawable.ic_home_inverse);
-            settingsDraw = ContextCompat.getDrawable(this, R.drawable.ic_settings_inverse);
-
-        } else {
-
-            homeDraw = ContextCompat.getDrawable(this, R.drawable.ic_home);
-            settingsDraw = ContextCompat.getDrawable(this, R.drawable.ic_settings);
-        }
+        final Drawable homeDraw = ContextCompat.getDrawable(this, R.drawable.ic_home);
+        homeDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
+        final Drawable settingsDraw = ContextCompat.getDrawable(this, R.drawable.ic_settings);
+        settingsDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
 
         // navigation drawer items
         navDrawer.addItem(new PrimaryDrawerItem().withIdentifier(0).withName(R.string.main_fragment_label).withIcon(homeDraw));
@@ -172,14 +164,6 @@ public class MainActivity extends AestheticActivity {
                             .apply();
                 }
             }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SETTINGS) {
-            recreate();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.enoughspam.step.settings;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -19,6 +20,8 @@ import com.enoughspam.step.util.ThemeHandler;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
+import static android.os.Build.VERSION_CODES.M;
+
 /**
  * Created by Hugo Castelani
  * Date: 14/07/17
@@ -36,8 +39,9 @@ public class SettingsFragment extends PreferenceFragment {
 
         final SwitchPreference switchPreference = (SwitchPreference) findPreference("theme_switch");
         switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            // is checked returns situation before changing
+            // isChecked returns situation before changing
             Aesthetic.get().isDark(!((SwitchPreference) preference).isChecked()).apply();
+            updateTheme();
             return true;
         });
 
@@ -137,5 +141,45 @@ public class SettingsFragment extends PreferenceFragment {
 
             return true;
         });
+    }
+
+    public void updateTheme() {
+        if (ThemeHandler.isDark()) {
+            Aesthetic.get()
+                    .activityTheme(R.style.AppThemeDark)
+                    .colorPrimaryRes(R.color.colorPrimaryInverse)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
+                    .textColorPrimaryRes(R.color.textColorPrimaryInverse)
+                    .textColorSecondaryRes(R.color.textColorSecondaryInverse)
+                    .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= M) {
+                Aesthetic.get()
+                        .colorStatusBarRes(R.color.colorPrimaryInverse)
+                        .apply();
+            }
+
+        } else {
+
+            Aesthetic.get()
+                    .activityTheme(R.style.AppTheme)
+                    .colorPrimaryRes(R.color.colorPrimary)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackground)
+                    .textColorPrimaryRes(R.color.textColorPrimary)
+                    .textColorSecondaryRes(R.color.textColorSecondary)
+                    .colorIconTitleActiveRes(R.color.textColorPrimary)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimary)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackground)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= M) {
+                Aesthetic.get()
+                        .colorStatusBarRes(R.color.colorPrimary)
+                        .apply();
+            }
+        }
     }
 }
