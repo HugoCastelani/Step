@@ -57,7 +57,7 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
                     .itemsCallbackSingleChoice(getSelectedTreatment(position),
                             ((dialog, itemView, which, text) -> true))
                     .onPositive(((dialog, which) ->
-                        setSelectedTreatment(position, dialog.getSelectedIndex())))
+                            setSelectedTreatment(position, dialog.getSelectedIndex())))
                     .show()
         );
     }

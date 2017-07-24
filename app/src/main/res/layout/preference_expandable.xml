@@ -7,4 +7,5 @@
     android:layout_height="wrap_content"
     app:el_headerLayout="@layout/preference_custom"
     app:el_contentLayout="@layout/preference_expandable_content"
+    app:el_duration="300"
     android:clickable="false"/>

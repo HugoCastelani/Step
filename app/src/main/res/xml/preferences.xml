@@ -55,6 +55,7 @@
 
         <com.enoughspam.step.settings.preferences.ExpandablePreference
             android:layout="@layout/preference_expandable"
+            android:widgetLayout="@layout/preference_expand"
             android:key="select_suspicious_treatment"
             android:title="@string/select_suspicious_treatment"
             android:summary="@string/select_suspicious_treatment_substring" />
