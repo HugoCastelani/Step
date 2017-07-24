@@ -2,10 +2,10 @@ package com.enoughspam.step.intro;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.main.MainActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
@@ -13,6 +13,8 @@ import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 public class MainIntroActivity extends IntroActivity {
+
+    private static final String KEY_ALL_SET = "intro_all_set";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,7 @@ public class MainIntroActivity extends IntroActivity {
                 }
         );
 
-        final PersonalDAO personalDAO = new PersonalDAO(this);
-        if (personalDAO.isAllSet()) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_ALL_SET, false)) {
             final Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

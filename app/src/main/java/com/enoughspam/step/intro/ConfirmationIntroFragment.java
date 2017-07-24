@@ -3,6 +3,7 @@ package com.enoughspam.step.intro;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class ConfirmationIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
+
+    private static final String KEY_ALL_SET = "intro_all_set";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,8 +36,8 @@ public class ConfirmationIntroFragment extends SlideFragment {
             if (messageCode.getText().toString().equals(
                 MessageCodeHandler.decryptIt(MessageCodeHandler.sCode))) {
 
-                PersonalDAO personalDAO = new PersonalDAO(getActivity());
-                personalDAO.setAllSet(true);
+                PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+                        .putBoolean(KEY_ALL_SET, true);
 
                 mCanGoForward = true;
                 canGoForward();

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 32;
+    public static final int VERSION = 33;
 
     private SQLiteDatabase mSqLiteDatabase;
 
@@ -32,8 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create personal table
         mSqLiteDatabase.execSQL("create table personal (" +
                 "id integer primary key not null," +
-                "name varchar(50) not null," +
-                "all_set tinyint);");
+                "name varchar(50) not null);");
 
         // RELATED TABLES
 
