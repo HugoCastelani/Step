@@ -1,17 +1,22 @@
 package com.enoughspam.step.settings;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 
 import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
 import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.enoughspam.step.R;
 import com.enoughspam.step.settings.preferences.ColorPreference;
 import com.enoughspam.step.util.ThemeHandler;
+
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
 /**
  * Created by hugo
@@ -90,5 +95,43 @@ public class SettingsFragment extends PreferenceFragment {
                         .negativeText(R.string.cancel_button)
                         .negativeColor(ThemeHandler.getAccent())
         );
+
+        // denunciation amount preference
+
+        final Preference denunciationAmount = findPreference("select_denunciation_amount");
+
+        denunciationAmount.setOnPreferenceClickListener(preference -> {
+            final MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
+                    .minValue(5)
+                    .maxValue(100)
+                    .defaultValue(
+                            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                                    .getInt("select_denunciation_amount", 20)
+                    )
+                    .backgroundColor(ThemeHandler.getBackground())
+                    .separatorColor(ThemeHandler.getAccent())
+                    .textColor(ThemeHandler.getPrimaryText())
+                    .wrapSelectorWheel(false)
+                    .textSize(16F)
+                    .build();
+
+            new MaterialDialog.Builder(getActivity())
+                    .title(denunciationAmount.getTitle())
+                    .customView(numberPicker, false)
+                    .backgroundColor(ThemeHandler.getBackground())
+                    .positiveText(R.string.done_button)
+                    .positiveColor(ThemeHandler.getAccent())
+                    .negativeText(R.string.cancel_button)
+                    .negativeColor(ThemeHandler.getAccent())
+                    .contentColor(ThemeHandler.getPrimaryText())
+                    .titleColor(ThemeHandler.getPrimaryText())
+                    .onPositive((dialog, which) ->
+                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                                .putInt("select_denunciation_amount", numberPicker.getValue()).apply()
+                    )
+                    .show();
+
+            return true;
+        });
     }
 }
