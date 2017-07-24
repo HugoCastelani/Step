@@ -40,10 +40,6 @@ public class NumberIntroFragment extends SlideFragment {
     private EditText mPhoneNumberEditText;
     private ImageView mSendMessage;
 
-    private CountryDAO mCountryDAO;
-    private PhoneDAO mPhoneDAO;
-    private PersonalDAO mPersonalDAO;
-
     private String mCountryCode;
     private String mPhoneNumber;
     private String mMergePhoneNumber;
@@ -52,9 +48,6 @@ public class NumberIntroFragment extends SlideFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_number, container, false);
-        mCountryDAO = new CountryDAO(getActivity());
-        mPhoneDAO = new PhoneDAO(getActivity());
-        mPersonalDAO = new PersonalDAO(getActivity());
 
         initViews();
         initActions();
@@ -109,7 +102,7 @@ public class NumberIntroFragment extends SlideFragment {
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
-                mCountryDAO.getColumnList(mCountryDAO.NAME)
+                CountryDAO.getColumnList(CountryDAO.NAME)
         );
     }
 
@@ -143,7 +136,7 @@ public class NumberIntroFragment extends SlideFragment {
             return;
         }
 
-        if (mCountryDAO.findByCode(Integer.parseInt(mCountryCode)) != null) {
+        if (CountryDAO.findByCode(Integer.parseInt(mCountryCode)) != null) {
             if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + mCountryCode + mMergePhoneNumber))) {
                 confirmNumber();
 
@@ -185,21 +178,21 @@ public class NumberIntroFragment extends SlideFragment {
                         phone = new Phone(
                                 phoneNumberL,
                                 areaCode,
-                                mPersonalDAO.get()
+                                PersonalDAO.get()
                         );
 
                     } else {
 
-                        final int countryId = mCountryDAO.findByCode(Integer.parseInt(mCountryCode)).getId();
+                        final int countryId = CountryDAO.findByCode(Integer.parseInt(mCountryCode)).getId();
                         final long phoneNumberL = Long.parseLong(mMergePhoneNumber);
                         phone = new Phone(
                                 countryId,
                                 phoneNumberL,
-                                mPersonalDAO.get()
+                                PersonalDAO.get()
                         );
                     }
 
-                    mPhoneDAO.create(phone);
+                    PhoneDAO.create(phone);
 
                     sendMessage();
                     mCanGoForward = true;

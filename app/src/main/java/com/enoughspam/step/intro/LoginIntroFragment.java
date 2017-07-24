@@ -31,17 +31,11 @@ public class LoginIntroFragment extends SlideFragment implements
     private View view;
     private boolean mCanGoForward = false;
 
-    private UserDAO mUserDAO;
-    private PersonalDAO mPersonalDAO;
-
     private GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_login, container, false);
-
-        mUserDAO = new UserDAO(getActivity());
-        mPersonalDAO = new PersonalDAO(getActivity());
 
         final SignInButton googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
 
@@ -88,12 +82,12 @@ public class LoginIntroFragment extends SlideFragment implements
                     final String idSocial = account.getId() + GOOGLE_CODE;
                     final User user = new User(idSocial, account.getDisplayName());
 
-                    if (mUserDAO.findBySocialId(idSocial) == null) {
-                        mUserDAO.create(user);
+                    if (UserDAO.findBySocialId(idSocial) == null) {
+                        UserDAO.create(user);
                     }
 
-                    user.setId(mUserDAO.findIdByIdSocial(idSocial));
-                    mPersonalDAO.create(user);
+                    user.setId(UserDAO.findIdByIdSocial(idSocial));
+                    PersonalDAO.create(user);
 
                     mCanGoForward = true;
                     canGoForward();

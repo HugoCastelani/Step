@@ -19,7 +19,6 @@ import java.util.List;
  */
 
 public class FormHandler {
-    final private CountryDAO mCountryDAO;
     final private Spinner mSpinner;
     final private EditText mCountryCodeEditText;
     private EditText mPhoneNumberEditText;
@@ -27,17 +26,16 @@ public class FormHandler {
 
     public FormHandler(@NonNull final Spinner spinner, @NonNull final EditText countryCodeEditText,
                        @NonNull final EditText phoneNumberEditText) {
-        mCountryDAO = new CountryDAO(spinner.getContext());
         mSpinner = spinner;
         mCountryCodeEditText = countryCodeEditText;
         mPhoneNumberEditText = phoneNumberEditText;
     }
 
     public void updateSpinnerSelection(@NonNegative final int countryCode) {
-        final Country matchingCountry = mCountryDAO.findByCode(countryCode);
+        final Country matchingCountry = CountryDAO.findByCode(countryCode);
 
         if (matchingCountry != null) {
-            final List<String> countryList = mCountryDAO.getColumnList(mCountryDAO.NAME);
+            final List<String> countryList = CountryDAO.getColumnList(CountryDAO.NAME);
 
             final int matchingPosition = countryList.indexOf(matchingCountry.getName());
             mSpinner.setSelection(matchingPosition);
@@ -45,11 +43,11 @@ public class FormHandler {
     }
 
     public void updateCountryCode(@NonNull final String countryName) {
-        mCountryCodeEditText.setText(mCountryDAO.findCodeByName(countryName));
+        mCountryCodeEditText.setText(CountryDAO.findCodeByName(countryName));
     }
 
     public void updatePhoneNumberMask(@NonNull final String countryName) {
-        final Country matchingCountry = mCountryDAO.findByName(countryName);
+        final Country matchingCountry = CountryDAO.findByName(countryName);
 
         removeMaskFormatterIfExists();
 
@@ -65,7 +63,7 @@ public class FormHandler {
     }
 
     public void updatePhoneNumberMask(@NonNegative final int countryCode) {
-        final Country matchingCountry = mCountryDAO.findByCode(countryCode);
+        final Country matchingCountry = CountryDAO.findByCode(countryCode);
 
         removeMaskFormatterIfExists();
 

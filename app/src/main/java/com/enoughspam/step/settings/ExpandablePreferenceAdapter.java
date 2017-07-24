@@ -1,7 +1,5 @@
 package com.enoughspam.step.settings;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,16 +24,12 @@ import java.util.List;
 
 public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
 
-    private final DescriptionDAO mDescriptionDAO;
     private final List<String> mDescriptionStringList;
     private final List<String> mTreatmentStringList;
 
-    public ExpandablePreferenceAdapter(@NonNull final Context context) {
-        mDescriptionDAO = new DescriptionDAO(context);
-        mDescriptionStringList = mDescriptionDAO.getColumnList(mDescriptionDAO.DESCRIPTION);
-
-        final TreatmentDAO treatmentDAO = new TreatmentDAO(context);
-        mTreatmentStringList = treatmentDAO.getColumnList(treatmentDAO.TREATMENT);
+    public ExpandablePreferenceAdapter() {
+        mDescriptionStringList = DescriptionDAO.getColumnList(DescriptionDAO.DESCRIPTION);
+        mTreatmentStringList = TreatmentDAO.getColumnList(TreatmentDAO.TREATMENT);
     }
 
     @Override
@@ -74,13 +68,13 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
      */
 
     private int getSelectedTreatment(@NonNegative int position) {
-        return (mDescriptionDAO.findById(position).getTreatmentId());
+        return (DescriptionDAO.findById(position).getTreatmentId());
     }
 
     private void setSelectedTreatment(@NonNegative int position, @NonNegative int selected) {
-        final Description description = mDescriptionDAO.findById(position);
+        final Description description = DescriptionDAO.findById(position);
         description.setTreatmentId(selected);
-        mDescriptionDAO.update(description);
+        DescriptionDAO.update(description);
     }
 
     @Override
