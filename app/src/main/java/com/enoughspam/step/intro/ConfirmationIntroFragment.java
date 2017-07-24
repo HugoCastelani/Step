@@ -36,8 +36,8 @@ public class ConfirmationIntroFragment extends SlideFragment {
             if (messageCode.getText().toString().equals(
                 MessageCodeHandler.decryptIt(MessageCodeHandler.sCode))) {
 
-                PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
-                        .putBoolean(KEY_ALL_SET, true);
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                        .putBoolean(KEY_ALL_SET, true).apply();
 
                 mCanGoForward = true;
                 canGoForward();

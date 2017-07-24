@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.main.MainActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
@@ -20,6 +21,7 @@ public class MainIntroActivity extends IntroActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.init(this);
+        DAOHandler.init(this);
 
         KeyboardVisibilityEvent.setEventListener(
                 this,

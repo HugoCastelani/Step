@@ -15,7 +15,7 @@ import com.enoughspam.step.database.domains.User;
 public class PersonalDAO {
 
     public static final String TABLE = "personal";
-    public static final String ID = "ID";
+    public static final String ID = "id";
     public static final String NAME = "name";
 
     public PersonalDAO() {}

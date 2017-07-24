@@ -1,5 +1,6 @@
 package com.enoughspam.step.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -100,15 +101,15 @@ public class SettingsFragment extends PreferenceFragment {
 
         final Preference denunciationAmount = findPreference("select_denunciation_amount");
         denunciationAmount.setOnPreferenceClickListener(preference -> {
+            final SharedPreferences sharedPreferences = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+
             final MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
                     .minValue(5)
                     .maxValue(100)
-                    .defaultValue(
-                            PreferenceManager.getDefaultSharedPreferences(getActivity())
-                                    .getInt("select_denunciation_amount", 20)
-                    )
+                    .defaultValue(sharedPreferences.getInt("select_denunciation_amount", 20))
                     .backgroundColor(ThemeHandler.getBackground())
-                    .separatorColor(ThemeHandler.getPrimaryText())
+                    .separatorColor(ThemeHandler.getSecondaryText())
                     .textColor(ThemeHandler.getPrimaryText())
                     .wrapSelectorWheel(false)
                     .textSize(16F)
@@ -127,11 +128,11 @@ public class SettingsFragment extends PreferenceFragment {
                     .contentColor(ThemeHandler.getPrimaryText())
                     .titleColor(ThemeHandler.getPrimaryText())
                     .onPositive((dialog, which) ->
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                                    .putInt("select_denunciation_amount", numberPicker.getValue()).apply())
+                            sharedPreferences.edit().putInt(
+                                    "select_denunciation_amount", numberPicker.getValue()).apply())
                     .onNeutral((dialog, which) ->
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                                    .putInt("select_denunciation_amount", 20).apply()) // 20 is the default value
+                            sharedPreferences.edit().putInt(
+                                    "select_denunciation_amount", 20).apply()) // 20 is the default value
                     .show();
 
             return true;

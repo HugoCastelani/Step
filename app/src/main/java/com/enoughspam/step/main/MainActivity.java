@@ -14,6 +14,7 @@ import com.afollestad.aesthetic.AestheticToolbar;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -43,6 +44,7 @@ public class MainActivity extends AestheticActivity {
         setContentView(R.layout.main_activity);
 
         Utils.init(this);
+        DAOHandler.init(this);
         initAesthetic();
 
         mToolbar = (AestheticToolbar) findViewById(R.id.toolbar);
