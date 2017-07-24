@@ -2,7 +2,7 @@
 <com.andexert.expandablelayout.library.ExpandableLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/expandable_layout"
+    android:id="@+id/preference_expandable_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:el_headerLayout="@layout/preference_custom"

@@ -16,37 +16,26 @@ import com.enoughspam.step.R;
  */
 
 
-public class ColorPreference extends Preference implements IPreference {
-
-    private View mView;
-    private int color;
+public class ColorPreference extends Preference {
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     public ColorPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public ColorPreference(Context context) {
         super(context);
-        init();
     }
 
-    @Override
-    public void init() {
-        setLayoutResource(R.layout.preference_custom);
-        setWidgetLayoutResource(R.layout.preference_color);
-        setPersistent(false);
-    }
+    private View mView;
+    private int mColor;
 
     @Override
     protected void onBindView(View view) {
@@ -56,15 +45,15 @@ public class ColorPreference extends Preference implements IPreference {
     }
 
     public void setColor(int color) {
-        this.color = color;
+        mColor = color;
         invalidateColor();
     }
 
     private void invalidateColor() {
         if (mView != null) {
             CircleView circle = (CircleView) mView.findViewById(R.id.circle);
-            if (this.color != 0) {
-                circle.setBackgroundColor(this.color);
+            if (this.mColor != 0) {
+                circle.setBackgroundColor(this.mColor);
             } else {
                 circle.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.accent));
             }

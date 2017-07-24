@@ -16,31 +16,22 @@ import com.enoughspam.step.settings.ExpandablePreferenceAdapter;
  * Time: 23:37
  */
 
-public class ExpandablePreference extends Preference implements IPreference {
+public class ExpandablePreference extends Preference {
 
     public ExpandablePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
     public ExpandablePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     public ExpandablePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public ExpandablePreference(Context context) {
         super(context);
-        init();
-    }
-
-    @Override
-    public void init() {
-        setLayoutResource(R.layout.preference_expandable);
     }
 
     @Override

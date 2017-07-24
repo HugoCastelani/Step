@@ -14,6 +14,7 @@ import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DescriptionDAO;
 import com.enoughspam.step.database.dao.TreatmentDAO;
 import com.enoughspam.step.database.domains.Description;
+import com.enoughspam.step.util.ThemeHandler;
 
 import java.util.List;
 
@@ -54,8 +55,11 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
             new MaterialDialog.Builder(holder.description.getContext())
                     .title(itemText)
                     .items(treatmentStringList)
+                    .backgroundColor(ThemeHandler.getBackground())
                     .positiveText(R.string.done_button)
+                    .positiveColor(ThemeHandler.getAccent())
                     .negativeText(R.string.cancel_button)
+                    .negativeColor(ThemeHandler.getAccent())
                     .itemsCallbackSingleChoice(getSelectedTreatment(position),
                             ((dialog, itemView, which, text) -> true))
                     .onPositive(((dialog, which) ->

@@ -1,69 +1,78 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.enoughspam.step.settings.preferences.CategoryPreference
+    <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:title="@string/select_theme_colors">
 
-            <com.enoughspam.step.settings.preferences.SwitchPreference
+            <SwitchPreference
+                android:layout="@layout/preference_custom"
                 android:key="theme_switch"
                 android:defaultValue="false"
                 android:title="@string/set_dark_theme"
-                android:summary="@string/set_dark_theme_substring" />
+                android:summary="@string/set_dark_theme_substring"/>
 
             <com.enoughspam.step.settings.preferences.ColorPreference
+                android:layout="@layout/preference_custom"
+                android:widgetLayout="@layout/preference_color"
                 android:key="select_accent_color"
                 android:title="@string/select_accent_color"
                 android:summary="@string/select_accent_color_substring" />
 
-            <com.enoughspam.step.settings.preferences.DialogPreference
+            <com.afollestad.materialdialogs.prefs.MaterialDialogPreference
+                android:layout="@layout/preference_custom"
                 android:key="default_color"
                 android:title="@string/restore_default_colors"
                 android:summary="@string/restore_default_colors_substring"
                 android:dialogTitle="@string/restore_default_colors_dialog"
-                android:dialogMessage="@string/restore_default_colors_dialog_substring"
-                android:positiveButtonText="@string/done_button"
-                android:negativeButtonText="@string/cancel_button"/>
+                android:dialogMessage="@string/restore_default_colors_dialog_substring"/>
 
-    </com.enoughspam.step.settings.preferences.CategoryPreference>
+    </PreferenceCategory>
 
-    <com.enoughspam.step.settings.preferences.CategoryPreference
+    <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:title="@string/select_database_options">
 
-        <com.enoughspam.step.settings.preferences.MultiSelectListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
             android:key="select_networks"
             android:entries="@array/network_list_titles"
             android:entryValues="@array/network_list_values"
             android:persistent="true"
-            android:negativeButtonText="@string/cancel_button"
-            android:positiveButtonText="@string/done_button"
             android:title="@string/select_database_network"
             android:summary="@string/select_database_network_substring"/>
 
-    </com.enoughspam.step.settings.preferences.CategoryPreference>
+    </PreferenceCategory>
 
-    <com.enoughspam.step.settings.preferences.CategoryPreference
+    <PreferenceCategory
+        android:layout="@layout/preference_category"
         android:title="@string/select_block_calls_options">
 
-        <com.enoughspam.step.settings.preferences.MultiSelectListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
             android:key="select_services"
             android:entries="@array/service_list_titles"
             android:entryValues="@array/service_list_values"
             android:persistent="true"
-            android:negativeButtonText="@string/cancel_button"
-            android:positiveButtonText="@string/done_button"
             android:title="@string/select_services_block"
             android:summary="@string/select_services_block_substring"/>
 
         <com.enoughspam.step.settings.preferences.ExpandablePreference
+            android:layout="@layout/preference_expandable"
             android:key="select_suspicious_treatment"
             android:title="@string/select_suspicious_treatment"
             android:summary="@string/select_suspicious_treatment_substring" />
 
-        <com.enoughspam.step.settings.preferences.SwitchPreference
+        <SwitchPreference
+            android:layout="@layout/preference_custom"
             android:key="select_feedback_options"
             android:defaultValue="true"
             android:title="@string/select_feedback_options"
             android:summary="@string/select_feedback_options_substring"/>
 
-    </com.enoughspam.step.settings.preferences.CategoryPreference>
+        <Preference
+            android:layout="@layout/preference_custom"
+            android:key="select_denunciation_amount"
+            android:title="@string/select_denunciation_amount"
+            android:summary="@string/select_denunciation_amount_substring"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
