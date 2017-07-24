@@ -1,6 +1,5 @@
 package com.enoughspam.step.intro;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,19 +12,19 @@ import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class ReadyIntroFragment extends SlideFragment {
 
-    private boolean canGoForward = false;
+    private boolean mCanGoForward = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.intro_fragment_ready, container, false);
-        canGoForward = true;
+        final View view = inflater.inflate(R.layout.intro_fragment_ready, container, false);
+        mCanGoForward = true;
         return view;
     }
 
     // temporary
     @Override
     public void onDestroy() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        final Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         getActivity().finish();
         super.onDestroy();
@@ -33,7 +32,7 @@ public class ReadyIntroFragment extends SlideFragment {
 
     @Override
     public boolean canGoForward() {
-        return canGoForward;
+        return mCanGoForward;
     }
 
     @Override

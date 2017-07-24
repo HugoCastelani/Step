@@ -3,11 +3,10 @@ package com.enoughspam.step.database.domains.abstracts;
 import com.enoughspam.step.annotation.NonNegative;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 21/07/17
  * Time: 19:25
  */
-
 
 public class Domain {
     private int id;

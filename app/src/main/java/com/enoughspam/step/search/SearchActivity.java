@@ -12,7 +12,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //doMySearch(query);

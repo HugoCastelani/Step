@@ -25,7 +25,7 @@ public class Phone extends Domain {
         this.user = user;
     }
 
-    // some countries don't have area code
+    // some countries don't have area sCode
     public Phone(@NonNegative final int countryId, @MaskRespectful final long number,
                  @NonNull final User user) {
         this.countryId = countryId;
@@ -41,7 +41,7 @@ public class Phone extends Domain {
         this.user = user;
     }
 
-    // some countries don't have area code
+    // some countries don't have area sCode
     public Phone(@NonNegative final int id, @NonNegative final int countryId,
                  @MaskRespectful final long number, @NonNull final User user) {
         super(id);

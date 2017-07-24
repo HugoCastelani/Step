@@ -10,11 +10,10 @@ import com.afollestad.materialdialogs.color.CircleView;
 import com.enoughspam.step.R;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 15/07/17
  * Time: 19:20
  */
-
 
 public class ColorPreference extends Preference {
 
@@ -44,16 +43,16 @@ public class ColorPreference extends Preference {
         invalidateColor();
     }
 
-    public void setColor(int color) {
+    public void setColor(final int color) {
         mColor = color;
         invalidateColor();
     }
 
     private void invalidateColor() {
         if (mView != null) {
-            CircleView circle = (CircleView) mView.findViewById(R.id.circle);
-            if (this.mColor != 0) {
-                circle.setBackgroundColor(this.mColor);
+            final CircleView circle = (CircleView) mView.findViewById(R.id.circle);
+            if (mColor != 0) {
+                circle.setBackgroundColor(mColor);
             } else {
                 circle.setBackgroundColor(ContextCompat.getColor(mView.getContext(), R.color.accent));
             }

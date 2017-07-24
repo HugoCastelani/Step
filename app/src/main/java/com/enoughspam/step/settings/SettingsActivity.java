@@ -35,7 +35,7 @@ public class SettingsActivity extends AestheticActivity
         setContentView(R.layout.settings_activity);
         Utils.init(this);
 
-        AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
+        final AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
         if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setSupportActionBar(toolbar);
@@ -45,7 +45,7 @@ public class SettingsActivity extends AestheticActivity
         SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentByTag("settingsFragmentTag");
         if (fragment == null) {
             fragment = new SettingsFragment();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.settings_fragment_container, fragment, "settingsFragmentTag");
             fragmentTransaction.commit();
         }

@@ -8,7 +8,11 @@ import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.Utils;
 
-// Created by Hugo on 02/04/17, 01:50
+/**
+ * Created by Hugo Castelani
+ * Date: 02/04/17
+ * Time: 01:50
+ */
 
 public class MarginUtils {
 
@@ -17,7 +21,7 @@ public class MarginUtils {
     }
 
     public static void init(@NonNull final Context context) {
-        Utils.init(context);
+        if (Utils.getContext() == null) Utils.init(context);
     }
 
     public static boolean isTablet() {

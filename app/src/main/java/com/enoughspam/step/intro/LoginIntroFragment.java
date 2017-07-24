@@ -1,6 +1,5 @@
 package com.enoughspam.step.intro;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,33 +29,33 @@ public class LoginIntroFragment extends SlideFragment implements
     private static final int GOOGLE_CODE = 1;
 
     private View view;
-    private boolean canGoForward = false;
+    private boolean mCanGoForward = false;
 
-    private UserDAO userDAO;
-    private PersonalDAO personalDAO;
+    private UserDAO mUserDAO;
+    private PersonalDAO mPersonalDAO;
 
-    private GoogleApiClient googleApiClient;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_login, container, false);
 
-        userDAO = new UserDAO(getActivity());
-        personalDAO = new PersonalDAO(getActivity());
+        mUserDAO = new UserDAO(getActivity());
+        mPersonalDAO = new PersonalDAO(getActivity());
 
-        SignInButton googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
+        final SignInButton googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
 
-        TextView textView = (TextView) googleButton.getChildAt(0);
+        final TextView textView = (TextView) googleButton.getChildAt(0);
         textView.setText(R.string.sign_in_google);
 
         googleButton.setOnClickListener(v -> onGoogleButtonClick());
 
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions
+        final GoogleSignInOptions signInOptions = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestId()
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .enableAutoManage(getActivity(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
                 .build();
@@ -65,38 +64,38 @@ public class LoginIntroFragment extends SlideFragment implements
     }
 
     private void onGoogleButtonClick() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     public boolean canGoForward() {
-        return canGoForward;
+        return mCanGoForward;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String error;
+        final String error;
 
         if (requestCode == RC_SIGN_IN) {
 
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
+                final GoogleSignInAccount account = result.getSignInAccount();
 
                 if (account.getId() != null) {
-                    String idSocial = account.getId() + GOOGLE_CODE;
-                    User user = new User(idSocial, account.getDisplayName());
+                    final String idSocial = account.getId() + GOOGLE_CODE;
+                    final User user = new User(idSocial, account.getDisplayName());
 
-                    if (userDAO.findBySocialId(idSocial) == null) {
-                        userDAO.create(user);
+                    if (mUserDAO.findBySocialId(idSocial) == null) {
+                        mUserDAO.create(user);
                     }
 
-                    user.setId(userDAO.findIdByIdSocial(idSocial));
-                    personalDAO.create(user);
+                    user.setId(mUserDAO.findIdByIdSocial(idSocial));
+                    mPersonalDAO.create(user);
 
-                    canGoForward = true;
+                    mCanGoForward = true;
                     canGoForward();
                     nextSlide();
                     return;
@@ -124,14 +123,14 @@ public class LoginIntroFragment extends SlideFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        googleApiClient.stopAutoManage(getActivity());
-        googleApiClient.disconnect();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        googleApiClient.stopAutoManage(getActivity());
-        googleApiClient.disconnect();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 }

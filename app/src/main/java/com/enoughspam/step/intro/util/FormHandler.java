@@ -1,79 +1,79 @@
 package com.enoughspam.step.intro.util;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.azimolabs.maskformatter.MaskFormatter;
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.domains.Country;
 
 import java.util.List;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 11/07/17
  * Time: 15:02
  */
 
-
 public class FormHandler {
-    private CountryDAO countryDAO;
-    private Spinner spinner;
-    private EditText countryCodeEditText;
-    private EditText phoneNumberEditText;
-    private MaskFormatter maskFormatter;
+    final private CountryDAO mCountryDAO;
+    final private Spinner mSpinner;
+    final private EditText mCountryCodeEditText;
+    private EditText mPhoneNumberEditText;
+    private MaskFormatter mMaskFormatter;
 
-    public FormHandler(Context context, Spinner spinner, EditText countryCode,
-                       EditText phoneNumberEditText) {
-        this.countryDAO = new CountryDAO(context);
-        this.spinner = spinner;
-        this.countryCodeEditText = countryCode;
-        this.phoneNumberEditText = phoneNumberEditText;
+    public FormHandler(@NonNull final Spinner spinner, @NonNull final EditText countryCodeEditText,
+                       @NonNull final EditText phoneNumberEditText) {
+        mCountryDAO = new CountryDAO(spinner.getContext());
+        mSpinner = spinner;
+        mCountryCodeEditText = countryCodeEditText;
+        mPhoneNumberEditText = phoneNumberEditText;
     }
 
-    public void updateSpinnerSelection(int countryCode) {
-        Country matchingCountry = countryDAO.findByCode(countryCode);
+    public void updateSpinnerSelection(@NonNegative final int countryCode) {
+        final Country matchingCountry = mCountryDAO.findByCode(countryCode);
 
         if (matchingCountry != null) {
-            List<String> countryList = countryDAO.getColumnList(countryDAO.NAME);
+            final List<String> countryList = mCountryDAO.getColumnList(mCountryDAO.NAME);
 
-            int matchingPosition = countryList.indexOf(matchingCountry.getName());
-            this.spinner.setSelection(matchingPosition);
+            final int matchingPosition = countryList.indexOf(matchingCountry.getName());
+            mSpinner.setSelection(matchingPosition);
         }
     }
 
-    public void updateCountryCode(String countryName) {
-        countryCodeEditText.setText(countryDAO.findCodeByName(countryName));
+    public void updateCountryCode(@NonNull final String countryName) {
+        mCountryCodeEditText.setText(mCountryDAO.findCodeByName(countryName));
     }
 
-    public void updatePhoneNumberMask(String countryName) {
-        Country matchingCountry = countryDAO.findByName(countryName);
+    public void updatePhoneNumberMask(@NonNull final String countryName) {
+        final Country matchingCountry = mCountryDAO.findByName(countryName);
 
         removeMaskFormatterIfExists();
 
         if (matchingCountry != null) {
-            String mask = matchingCountry.getMask();
+            final String mask = matchingCountry.getMask();
             if (!mask.isEmpty()) {
-                this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
-                phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+                mMaskFormatter = new MaskFormatter(matchingCountry.getMask(), mPhoneNumberEditText);
+                mPhoneNumberEditText.addTextChangedListener(mMaskFormatter);
             }
         }
 
         finishUpdating();
     }
 
-    public void updatePhoneNumberMask(int countryCode) {
-        Country matchingCountry = countryDAO.findByCode(countryCode);
+    public void updatePhoneNumberMask(@NonNegative final int countryCode) {
+        final Country matchingCountry = mCountryDAO.findByCode(countryCode);
 
         removeMaskFormatterIfExists();
 
         if (matchingCountry != null) {
-            String mask = matchingCountry.getMask();
+            final String mask = matchingCountry.getMask();
             if (!mask.isEmpty()) {
-                this.maskFormatter = new MaskFormatter(matchingCountry.getMask(), phoneNumberEditText);
-                phoneNumberEditText.addTextChangedListener(this.maskFormatter);
+                mMaskFormatter = new MaskFormatter(matchingCountry.getMask(), mPhoneNumberEditText);
+                mPhoneNumberEditText.addTextChangedListener(mMaskFormatter);
             }
         }
 
@@ -81,17 +81,17 @@ public class FormHandler {
     }
 
     private void removeMaskFormatterIfExists() {
-        try { phoneNumberEditText.removeTextChangedListener(this.maskFormatter);
+        try { mPhoneNumberEditText.removeTextChangedListener(mMaskFormatter);
         } catch (Exception e) {}
     }
 
     /*
      * When country get changed, new mark formatter is applied, but you
-     * got to type something to update it, and that's this method does
+     * got to type something to update it, and that's method does
      */
     private void finishUpdating() {
-        Editable editable = phoneNumberEditText.getText();
-        String number = editable.toString();
+        final Editable editable = mPhoneNumberEditText.getText();
+        final String number = editable.toString();
         editable.clear();
         editable.insert(0, number);
     }

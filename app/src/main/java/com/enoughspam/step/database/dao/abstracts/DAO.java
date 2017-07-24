@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 21/07/17
  * Time: 18:34
  */
@@ -29,16 +29,16 @@ public abstract class DAO<T> implements IDAO<T> {
     public static final String ID = "id";
     public final String TABLE;
 
-    private final SQLiteDatabase sqLiteDatabase;
+    private final SQLiteDatabase mSqLiteDatabase;
 
     public DAO(@NonNull final Context context, @NonNull final String TABLE) {
-        sqLiteDatabase = new DatabaseHelper(context).getWritableDatabase();
+        mSqLiteDatabase = new DatabaseHelper(context).getWritableDatabase();
         this.TABLE = TABLE;
     }
 
     @Override
     public SQLiteDatabase getSqLiteDatabase() {
-        return sqLiteDatabase;
+        return mSqLiteDatabase;
     }
 
     @Override

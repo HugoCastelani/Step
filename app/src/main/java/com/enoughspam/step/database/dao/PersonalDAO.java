@@ -84,7 +84,7 @@ public class PersonalDAO extends DAO<User> {
                  TABLE, new String[] {ALL_SET}, null, null, null, null, null, null);
 
          int allSet = 0;
-         if (cursor.moveToFirst()) allSet = cursor.getInt(cursor.getColumnIndex("all_set"));
+         if (cursor.moveToFirst()) allSet = cursor.getInt(cursor.getColumnIndex(ALL_SET));
 
          cursor.close();
          return allSet == 1 ? true : false;

@@ -11,7 +11,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.settings.ExpandablePreferenceAdapter;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 20/07/17
  * Time: 23:37
  */
@@ -38,10 +38,10 @@ public class ExpandablePreference extends Preference {
     public void onBindView(View view) {
         super.onBindView(view);
 
-        AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.preference_expandable_recyclerview);
+        final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.preference_expandable_recyclerview);
 
-        ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext(),
+        final ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);

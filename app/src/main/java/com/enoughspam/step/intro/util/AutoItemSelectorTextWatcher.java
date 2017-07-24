@@ -1,29 +1,30 @@
 package com.enoughspam.step.intro.util;
 
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 08/07/17
  * Time: 13:18
  */
 
 public class AutoItemSelectorTextWatcher implements TextWatcher {
-    private FormHandler handler;
-    private boolean paused;
+    final private FormHandler mHandler;
+    private boolean mPaused;
 
-    public AutoItemSelectorTextWatcher(FormHandler handler) {
-        this.handler = handler;
-        this.paused = false;
+    public AutoItemSelectorTextWatcher(@NonNull final FormHandler handler) {
+        mHandler = handler;
+        mPaused = false;
     }
 
     public boolean isPaused() {
-        return paused;
+        return mPaused;
     }
 
-    public void setPaused(boolean paused) {
-        this.paused = paused;
+    public void setPaused(final boolean paused) {
+        mPaused = paused;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class AutoItemSelectorTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         if (!isPaused()) {
-            int countryCode;
+            final int countryCode;
 
             try {
                 countryCode = Integer.parseInt(s.toString());
@@ -43,8 +44,8 @@ public class AutoItemSelectorTextWatcher implements TextWatcher {
                 return;
             }
 
-            handler.updateSpinnerSelection(countryCode);
-            handler.updatePhoneNumberMask(countryCode);
+            mHandler.updateSpinnerSelection(countryCode);
+            mHandler.updatePhoneNumberMask(countryCode);
         }
     }
 }

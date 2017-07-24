@@ -4,13 +4,19 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-// Created by Hugo on 02/04/17, 02:10
+import com.enoughspam.step.annotation.NonNegative;
+
+/**
+ * Created by Hugo Castelani
+ * Date: 02/04/17
+ * Time: 02:10
+ */
 
 public class EndOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOffsetPx;
 
-    public EndOffsetItemDecoration(int offsetPx) {
+    public EndOffsetItemDecoration(@NonNegative final int offsetPx) {
         mOffsetPx = offsetPx;
     }
 
@@ -18,12 +24,11 @@ public class EndOffsetItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        int viewPosition = parent.getChildAdapterPosition(view);
-        int itemCount = state.getItemCount();
+        final int viewPosition = parent.getChildAdapterPosition(view);
+        final int itemCount = state.getItemCount();
 
-        if(viewPosition == itemCount - 1) {
+        if (viewPosition == itemCount - 1) {
             outRect.bottom = mOffsetPx;
-
         }
     }
 }

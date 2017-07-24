@@ -1,6 +1,5 @@
 package com.enoughspam.step.intro;
 
-
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -31,31 +30,31 @@ import java.util.Random;
 
 public class NumberIntroFragment extends SlideFragment {
 
-    private boolean canGoForward = false;
+    private boolean mCanGoForward = false;
 
     private View view;
 
-    private LinearLayout parentView;
-    private Spinner spinner;
-    private EditText countryCodeEditText;
-    private EditText phoneNumberEditText;
-    private ImageView sendMessage;
+    private LinearLayout mParentView;
+    private Spinner mSpinner;
+    private EditText mCountryCodeEditText;
+    private EditText mPhoneNumberEditText;
+    private ImageView mSendMessage;
 
-    private CountryDAO countryDAO;
-    private PhoneDAO phoneDAO;
-    private PersonalDAO personalDAO;
+    private CountryDAO mCountryDAO;
+    private PhoneDAO mPhoneDAO;
+    private PersonalDAO mPersonalDAO;
 
-    private String countryCode;
-    private String phoneNumber;
-    private String mergePhoneNumber;
-    private String error;
+    private String mCountryCode;
+    private String mPhoneNumber;
+    private String mMergePhoneNumber;
+    private String mError;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_number, container, false);
-        countryDAO = new CountryDAO(getActivity());
-        phoneDAO = new PhoneDAO(getActivity());
-        personalDAO = new PersonalDAO(getActivity());
+        mCountryDAO = new CountryDAO(getActivity());
+        mPhoneDAO = new PhoneDAO(getActivity());
+        mPersonalDAO = new PersonalDAO(getActivity());
 
         initViews();
         initActions();
@@ -64,24 +63,23 @@ public class NumberIntroFragment extends SlideFragment {
     }
 
     private void initViews() {
-        parentView = (LinearLayout) view.findViewById(R.id.intro_number_parent);
-        spinner = (Spinner) view.findViewById(R.id.intro_number_spinner);
-        countryCodeEditText = (EditText) view.findViewById(R.id.intro_number_country_code);
-        phoneNumberEditText = (EditText) view.findViewById(R.id.intro_number_phone);
-        sendMessage = (ImageView) view.findViewById(R.id.intro_number_go);
+        mParentView = (LinearLayout) view.findViewById(R.id.intro_number_parent);
+        mSpinner = (Spinner) view.findViewById(R.id.intro_number_spinner);
+        mCountryCodeEditText = (EditText) view.findViewById(R.id.intro_number_country_code);
+        mPhoneNumberEditText = (EditText) view.findViewById(R.id.intro_number_phone);
+        mSendMessage = (ImageView) view.findViewById(R.id.intro_number_go);
     }
 
     private void initActions() {
-        final FormHandler handler = new FormHandler(
-                getActivity(), spinner, countryCodeEditText, phoneNumberEditText);
+        final FormHandler handler = new FormHandler(mSpinner, mCountryCodeEditText, mPhoneNumberEditText);
         final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(handler);
 
-        spinner.setAdapter(createSpinnerAdapter());
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinner.setAdapter(createSpinnerAdapter());
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 textWatcher.setPaused(true);
-                final String itemName = spinner.getSelectedItem().toString();
+                final String itemName = mSpinner.getSelectedItem().toString();
                 handler.updateCountryCode(itemName);
                 handler.updatePhoneNumberMask(itemName);
                 textWatcher.setPaused(false);
@@ -91,18 +89,18 @@ public class NumberIntroFragment extends SlideFragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        countryCodeEditText.addTextChangedListener(textWatcher);
-        countryCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
+        mCountryCodeEditText.addTextChangedListener(textWatcher);
+        mCountryCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                countryCodeEditText.getBackground().clearColorFilter();
+                mCountryCodeEditText.getBackground().clearColorFilter();
             }
         });
 
-        sendMessage.setOnClickListener(v -> validateNumber());
+        mSendMessage.setOnClickListener(v -> validateNumber());
 
-        phoneNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
+        mPhoneNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                phoneNumberEditText.getBackground().clearColorFilter();
+                mPhoneNumberEditText.getBackground().clearColorFilter();
             }
         });
     }
@@ -111,64 +109,64 @@ public class NumberIntroFragment extends SlideFragment {
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
-                countryDAO.getColumnList(countryDAO.NAME)
+                mCountryDAO.getColumnList(mCountryDAO.NAME)
         );
     }
 
     private void validateNumber() {
-        parentView.requestFocus();
-        error = "";
+        mParentView.requestFocus();
+        mError = "";
 
-        // country code edittext input treatment
-        countryCode = countryCodeEditText.getText().toString();
+        // country sCode edittext input treatment
+        mCountryCode = mCountryCodeEditText.getText().toString();
 
-        if (countryCode.isEmpty()) {
-            countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            error = getResources().getString(R.string.empty_input_error);
+        if (mCountryCode.isEmpty()) {
+            mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            mError = getResources().getString(R.string.empty_input_error);
         }
 
         // phone edittext input treatment
-        phoneNumber = phoneNumberEditText.getText().toString();
-        mergePhoneNumber = phoneNumber.replaceAll("\\D+","");
+        mPhoneNumber = mPhoneNumberEditText.getText().toString();
+        mMergePhoneNumber = mPhoneNumber.replaceAll("\\D+","");
 
-        if (phoneNumber.isEmpty()) {
-            phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            if (error.isEmpty()) {
-                error = getResources().getString(R.string.empty_input_error);
+        if (mPhoneNumber.isEmpty()) {
+            mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            if (mError.isEmpty()) {
+                mError = getResources().getString(R.string.empty_input_error);
             } else {
-                error = getResources().getString(R.string.empty_inputs_error);
+                mError = getResources().getString(R.string.empty_inputs_error);
             }
         }
 
-        if (!error.isEmpty()) {
-            Snackbar.make(view, error, Snackbar.LENGTH_LONG).show();
+        if (!mError.isEmpty()) {
+            Snackbar.make(view, mError, Snackbar.LENGTH_LONG).show();
             return;
         }
 
-        if (countryDAO.findByCode(Integer.parseInt(countryCode)) != null) {
-            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + countryCode + mergePhoneNumber))) {
+        if (mCountryDAO.findByCode(Integer.parseInt(mCountryCode)) != null) {
+            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + mCountryCode + mMergePhoneNumber))) {
                 confirmNumber();
 
             } else {
 
-                phoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                error = getResources().getString(R.string.invalid_number);
+                mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                mError = getResources().getString(R.string.invalid_number);
             }
 
         } else {
 
-            countryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            error = getResources().getString(R.string.country_code_error);
+            mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            mError = getResources().getString(R.string.country_code_error);
         }
 
-        if (!error.isEmpty()) {
-            Snackbar.make(view, error, Snackbar.LENGTH_LONG).show();
+        if (!mError.isEmpty()) {
+            Snackbar.make(view, mError, Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void confirmNumber() {
-        String formattedPhoneNumber = "+" + countryCode + " " + phoneNumber + "\n";
+        final String formattedPhoneNumber = "+" + mCountryCode + " " + mPhoneNumber + "\n";
 
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.confirmation_dialog_title)
@@ -177,34 +175,34 @@ public class NumberIntroFragment extends SlideFragment {
                 .negativeText(R.string.cancel_button)
                 .onPositive((dialog, which) -> {
 
-                    int spaceIndex = this.phoneNumber.indexOf(' ');
+                    final int spaceIndex = mPhoneNumber.indexOf(' ');
 
-                    Phone phone;
+                    final Phone phone;
 
                     if (spaceIndex != -1) {
-                        long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
-                        int areaCode = Integer.parseInt(this.phoneNumber.substring(0, spaceIndex));
+                        final long phoneNumberL = Long.parseLong(mMergePhoneNumber.substring(spaceIndex));
+                        final int areaCode = Integer.parseInt(mPhoneNumber.substring(0, spaceIndex));
                         phone = new Phone(
                                 phoneNumberL,
                                 areaCode,
-                                personalDAO.get()
+                                mPersonalDAO.get()
                         );
 
                     } else {
 
-                        int countryId = countryDAO.findByCode(Integer.parseInt(countryCode)).getId();
-                        long phoneNumberL = Long.parseLong(mergePhoneNumber);
+                        final int countryId = mCountryDAO.findByCode(Integer.parseInt(mCountryCode)).getId();
+                        final long phoneNumberL = Long.parseLong(mMergePhoneNumber);
                         phone = new Phone(
                                 countryId,
                                 phoneNumberL,
-                                personalDAO.get()
+                                mPersonalDAO.get()
                         );
                     }
 
-                    phoneDAO.create(phone);
+                    mPhoneDAO.create(phone);
 
                     sendMessage();
-                    canGoForward = true;
+                    mCanGoForward = true;
                     canGoForward();
                     nextSlide();
 
@@ -215,19 +213,19 @@ public class NumberIntroFragment extends SlideFragment {
     private void sendMessage() {
         final int MAX_VALUE = 999999;
         final int MIN_VALUE = 111111;
-        //String code = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
-        String code = Integer.toString(123456);
-        String cryptoPass = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
+        //String sCode = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
+        final String code = Integer.toString(123456);
+        final String cryptoPass = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
 
-        MessageCodeHandler.cryptoPass = cryptoPass;
-        MessageCodeHandler.code = MessageCodeHandler.encryptIt(code);
+        MessageCodeHandler.sPassword = cryptoPass;
+        MessageCodeHandler.sCode = MessageCodeHandler.encryptIt(code);
 
-        // PhoneUtils.sendSmsSilent(countryCode + mergePhoneNumber, code);
+        // PhoneUtils.sendSmsSilent(mCountryCode + mMergePhoneNumber, sCode);
     }
 
     @Override
     public boolean canGoForward() {
-        return canGoForward;
+        return mCanGoForward;
     }
 
     @Override

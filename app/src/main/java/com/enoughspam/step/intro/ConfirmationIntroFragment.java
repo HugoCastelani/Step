@@ -1,6 +1,5 @@
 package com.enoughspam.step.intro;
 
-
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class ConfirmationIntroFragment extends SlideFragment {
 
-    private boolean canGoForward = false;
+    private boolean mCanGoForward = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,12 +32,12 @@ public class ConfirmationIntroFragment extends SlideFragment {
             parentView.requestFocus();
 
             if (messageCode.getText().toString().equals(
-                MessageCodeHandler.decryptIt(MessageCodeHandler.code))) {
+                MessageCodeHandler.decryptIt(MessageCodeHandler.sCode))) {
 
                 PersonalDAO personalDAO = new PersonalDAO(getActivity());
                 personalDAO.setAllSet(true);
 
-                canGoForward = true;
+                mCanGoForward = true;
                 canGoForward();
                 nextSlide();
 
@@ -61,6 +60,6 @@ public class ConfirmationIntroFragment extends SlideFragment {
 
     @Override
     public boolean canGoForward() {
-        return canGoForward;
+        return mCanGoForward;
     }
 }

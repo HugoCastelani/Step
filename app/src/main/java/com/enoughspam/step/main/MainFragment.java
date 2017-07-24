@@ -21,16 +21,20 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 
-// Created by Hugo on 01/04/17, 22:00
+/**
+ * Created by Hugo Castelani
+ * Date: 01/04/17
+ * Time: 22:00
+ */
 
 public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_fragment, container, false);
+        final View view = inflater.inflate(R.layout.main_fragment, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
@@ -46,10 +50,10 @@ public class MainFragment extends Fragment {
                 null);
 
         // getting recycler view ready
-        AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.blocked_recyclerview);
+        final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.blocked_recyclerview);
 
-        BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList(), getActivity());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
+        final BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
 
@@ -64,7 +68,7 @@ public class MainFragment extends Fragment {
     }
 
     private ArrayList<ArrayList<String>> getBlockedNumbersList() {
-        ArrayList<ArrayList<String>> blockedNumbersList = new ArrayList<>();
+        final ArrayList<ArrayList<String>> blockedNumbersList = new ArrayList<>();
 
         blockedNumbersList.add(new ArrayList<>());
         blockedNumbersList.get(blockedNumbersList.size() - 1).add("Meus números");

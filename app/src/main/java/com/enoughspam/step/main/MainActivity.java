@@ -25,13 +25,17 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.M;
 
-// Created by Hugo on 01/04/17, 21:30
+/**
+ * Created by Hugo Castelani
+ * Date: 01/04/17
+ * Time: 21:30
+ */
 
 public class MainActivity extends AestheticActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
 
-    private AestheticToolbar toolbar;
+    private AestheticToolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +45,15 @@ public class MainActivity extends AestheticActivity {
         Utils.init(this);
         initAesthetic();
 
-        toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
-        setSupportActionBar(toolbar);
+        mToolbar = (AestheticToolbar) findViewById(R.id.toolbar);
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) mToolbar.setElevation(ConvertUtils.dp2px(4));
+        setSupportActionBar(mToolbar);
 
         // fragment
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
         if (mainFragment == null) {
             mainFragment = new MainFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
             fragmentTransaction.commit();
         }
@@ -59,11 +63,11 @@ public class MainActivity extends AestheticActivity {
     }
 
     private void setUpNavDrawer() {
-        Drawable header = ContextCompat.getDrawable(getBaseContext(), R.drawable.header);
+        final Drawable header = ContextCompat.getDrawable(getBaseContext(), R.drawable.header);
         header.setColorFilter(ThemeHandler.getAccent(), PorterDuff.Mode.SRC_IN);
 
         // navigation drawer header
-        AccountHeader navDrawerHeader = new AccountHeaderBuilder()
+        final AccountHeader navDrawerHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(header)
                 .build();
@@ -71,15 +75,15 @@ public class MainActivity extends AestheticActivity {
         // navigation drawer itself
         final Drawer navDrawer = new DrawerBuilder()
                 .withActivity(this)
-                .withToolbar(toolbar)
+                .withToolbar(mToolbar)
                 .withSliderBackgroundColorRes(ThemeHandler.isDark() ? R.color.colorWindowBackgroundInverse : R.color.md_white_1000)
                 .withAccountHeader(navDrawerHeader)
                 .withDelayDrawerClickEvent(250)
                 .build();
 
         // adapting drawable colors
-        Drawable homeDraw;
-        Drawable settingsDraw;
+        final Drawable homeDraw;
+        final Drawable settingsDraw;
 
         if (ThemeHandler.isDark()) {
             homeDraw = ContextCompat.getDrawable(this, R.drawable.ic_home_inverse);
@@ -101,7 +105,7 @@ public class MainActivity extends AestheticActivity {
                 case 1: break;
 
                 case 2:
-                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_SETTINGS);
 
                     break;

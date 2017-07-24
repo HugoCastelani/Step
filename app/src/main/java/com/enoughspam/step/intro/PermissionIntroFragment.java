@@ -1,6 +1,5 @@
 package com.enoughspam.step.intro;
 
-
 import android.Manifest;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -15,36 +14,36 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 public class PermissionIntroFragment extends SlideFragment {
 
-    private RxPermissions rxPermissions;
-    private Button button;
+    private RxPermissions mRxPermissions;
+    private Button mButton;
 
-    private boolean canGoForward = false;
+    private boolean mCanGoForward = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.intro_fragment_permission, container, false);
+        final View view = inflater.inflate(R.layout.intro_fragment_permission, container, false);
 
-        rxPermissions = new RxPermissions(getActivity());
+        mRxPermissions = new RxPermissions(getActivity());
 
-        button = (Button) view.findViewById(R.id.intro_permission_button);
-        button.setOnClickListener(v -> onRequestButtonClick());
+        mButton = (Button) view.findViewById(R.id.intro_permission_button);
+        mButton.setOnClickListener(v -> onRequestButtonClick());
 
         return view;
     }
 
     private void onRequestButtonClick() {
-        rxPermissions
+        mRxPermissions
                 .request(Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.READ_SMS,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.READ_CONTACTS)
                 .subscribe(granted -> {
                     if (granted) {
-                        button.setEnabled(false);
-                        button.setText(getResources().getString(R.string.granted_permissions));
+                        mButton.setEnabled(false);
+                        mButton.setText(getResources().getString(R.string.granted_permissions));
 
-                        canGoForward = true;
+                        mCanGoForward = true;
                         canGoForward();
                         nextSlide();
 
@@ -60,6 +59,6 @@ public class PermissionIntroFragment extends SlideFragment {
 
     @Override
     public boolean canGoForward() {
-        return canGoForward;
+        return mCanGoForward;
     }
 }

@@ -12,7 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
     public static final int VERSION = 32;
 
-    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteDatabase mSqLiteDatabase;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        this.sqLiteDatabase = sqLiteDatabase;
+        mSqLiteDatabase = sqLiteDatabase;
         createTables();
         insertAttributes();
     }
@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void createTables() {
         // create personal table
-        sqLiteDatabase.execSQL("create table personal (" +
+        mSqLiteDatabase.execSQL("create table personal (" +
                 "id integer primary key not null," +
                 "name varchar(50) not null," +
                 "all_set tinyint);");
@@ -38,13 +38,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // RELATED TABLES
 
         // create user table
-        sqLiteDatabase.execSQL("create table user (" +
+        mSqLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
                 "social_id varchar(30) not null, " +
                 "name varchar(50) not null);");
 
         // create friendship table
-        sqLiteDatabase.execSQL("create table friendship (" +
+        mSqLiteDatabase.execSQL("create table friendship (" +
                 "id integer primary key not null," +
                 "user_added_id integer not null," +
                 "user_adding_id integer not null," +
@@ -52,28 +52,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(user_adding_id) references personal(id));");
 
         // creating country table
-        sqLiteDatabase.execSQL("create table country (" +
+        mSqLiteDatabase.execSQL("create table country (" +
                 "id integer primary key not null," +
                 "code integer not null," +
                 "name varchar(50) not null," +
                 "mask varchar(25) not null)");
 
         // creating state table
-        sqLiteDatabase.execSQL("create table state (" +
+        mSqLiteDatabase.execSQL("create table state (" +
                 "id integer primary key not null," +
                 "name varchar(50) not null," +
                 "country_id integer not null," +
                 "foreign key(country_id) references country(id));");
 
         // creating area code table
-        sqLiteDatabase.execSQL("create table area (" +
+        mSqLiteDatabase.execSQL("create table area (" +
                 "code integer primary key not null," +
                 "name varchar(50) not null," +
                 "state_id integer not null," +
                 "foreign key(state_id) references state(id));");
 
         // creating phone table
-        sqLiteDatabase.execSQL("create table phone (" +
+        mSqLiteDatabase.execSQL("create table phone (" +
                 "id integer primary key not null," +
                 "number bigint not null," +
                 "country_id integer," +
@@ -84,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(user_id) references personal(id));");
 
         // creating notification table
-        sqLiteDatabase.execSQL("create table notification (" +
+        mSqLiteDatabase.execSQL("create table notification (" +
                 "id integer primary key not null," +
                 "phone_id integer not null," +
                 "notified_user_id integer not null," +
@@ -94,20 +94,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(notifying_user_id) references personal(id));");
 
         // creating denunciation table
-        sqLiteDatabase.execSQL("create table denunciation (" +
+        mSqLiteDatabase.execSQL("create table denunciation (" +
                 "id integer primary key not null," +
                 "phone_id integer not null," +
                 "foreign key(phone_id) references phone(id));");
 
         // creating description table
-        sqLiteDatabase.execSQL("create table description (" +
+        mSqLiteDatabase.execSQL("create table description (" +
                 "id integer primary key not null," +
                 "description varchar(50) not null," +
                 "treatment_id integer not null," +
                 "foreign key(treatment_id) references suspicious_treatment(id));");
 
         // creating denunciation/description table
-        sqLiteDatabase.execSQL("create table denunciation_description (" +
+        mSqLiteDatabase.execSQL("create table denunciation_description (" +
                 "denunciation_id integer not null," +
                 "description_id integer not null," +
                 "primary key(denunciation_id, description_id)," +
@@ -115,12 +115,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(description_id) references description(id));");
 
         // creating suspicious treatment table
-        sqLiteDatabase.execSQL("create table suspicious_treatment (" +
+        mSqLiteDatabase.execSQL("create table suspicious_treatment (" +
                 "id integer primary key not null," +
                 "treatment varchar(20) not null);");
 
         // creating treatment configuration table
-        /*sqLiteDatabase.execSQL("create table config_treatment (" +
+        /*mSqLiteDatabase.execSQL("create table config_treatment (" +
                 "description_id integer not null," +
                 "suspicious_treatment_id integer not null," +
                 "primary key(description_id, suspicious_treatment_id)," +
@@ -130,31 +130,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // NOT RELATED TABLES
 
         // creating feedback configuration table
-        sqLiteDatabase.execSQL("create table config_feedback (" +
+        mSqLiteDatabase.execSQL("create table config_feedback (" +
                 "call_kind_name varchar(20) primary key  not null," +
                 "show_feedback tinyint not null);");
 
         // creating service blocking configuration table
-        /*sqLiteDatabase.execSQL("create table config_service_block (" +
+        /*mSqLiteDatabase.execSQL("create table config_service_block (" +
                 "service_name varchar(20) primary key not null," +
                 "block tinyint not null);");*/
 
         // creating guide configuration table
-        sqLiteDatabase.execSQL("create table config_guide (" +
+        mSqLiteDatabase.execSQL("create table config_guide (" +
                 "view_name varchar(20) primary key not null," +
                 "show_guide tinyint not null);");
 
         // creating network to download DB configuration table
-        /*sqLiteDatabase.execSQL("create table config_network_download_db (" +
+        /*mSqLiteDatabase.execSQL("create table config_network_download_db (" +
                 "network_name varchar(20) primary key not null," +
                 "download_it tinyint not null);");*/
 
         // creating suspicious denunciations amount configuration table
-        sqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
+        mSqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
                 "amount smallint primary key not null);");
 
         // creating theme configuration table
-        /*sqLiteDatabase.execSQL("create table config_theme (" +
+        /*mSqLiteDatabase.execSQL("create table config_theme (" +
                 "is_dark tinyint primary key not null," +
                 "accent_color char(7) not null," +
                 "default_accent_color char(7) not null);");*/
@@ -162,30 +162,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void insertAttributes() {
         // inserting description attributes
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(0, 'Companhia bancária', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(1, 'Telemarketing', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(2, 'Oferta utópica', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(3, 'Oferta indesejada', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(4, 'Oferta repetitiva', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(5, 'Prisioneiro', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(6, 'Golpe', 0);");
-        sqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(7, 'Chantagem', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(0, 'Companhia bancária', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(1, 'Telemarketing', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(2, 'Oferta utópica', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(3, 'Oferta indesejada', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(4, 'Oferta repetitiva', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(5, 'Prisioneiro', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(6, 'Golpe', 0);");
+        mSqLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(7, 'Chantagem', 0);");
         // !!!!!!!!!!! NEVER ADD A NEW DESCRIPTION ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting suspicious treatment attributes
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(0, 'Silenciar');");
-        sqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
+        mSqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(0, 'Silenciar');");
+        mSqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
         // !!!!!!!!!!! NEVER ADD A NEW TREATMENT ON TOP OF THE TABLE !!!!!!!!!!!
 
         // inserting countries and its codes
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'United States', '999 999 9999');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Canada', '999 999 9999');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'República Dominicana', '999 999 9999');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Puerto Rico', '999 999 9999');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');");   // Russia
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');");   // Kazakhstan
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');");    // Egypt
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(39, 'Italia', '');");
-        sqLiteDatabase.execSQL("insert into country(code, name, mask) values(55, 'Brasil', '99 99999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'United States', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Canada', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'República Dominicana', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(1, 'Puerto Rico', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Россия', '999 999 9999');");   // Russia
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(7, 'Қазақстан', '999 999 99 99');");   // Kazakhstan
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(20, 'مَصر\u200E\u200E', '99 9999 9999');");    // Egypt
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(39, 'Italia', '');");
+        mSqLiteDatabase.execSQL("insert into country(code, name, mask) values(55, 'Brasil', '99 99999 9999');");
     }
 }

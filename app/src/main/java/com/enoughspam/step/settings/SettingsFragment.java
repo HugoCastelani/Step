@@ -19,7 +19,7 @@ import com.enoughspam.step.util.ThemeHandler;
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 14/07/17
  * Time: 21:16
  */
@@ -99,7 +99,6 @@ public class SettingsFragment extends PreferenceFragment {
         // denunciation amount preference
 
         final Preference denunciationAmount = findPreference("select_denunciation_amount");
-
         denunciationAmount.setOnPreferenceClickListener(preference -> {
             final MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
                     .minValue(5)

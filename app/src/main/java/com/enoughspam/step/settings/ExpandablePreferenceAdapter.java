@@ -19,23 +19,23 @@ import com.enoughspam.step.util.ThemeHandler;
 import java.util.List;
 
 /**
- * Created by hugo
+ * Created by Hugo Castelani
  * Date: 21/07/17
  * Time: 14:34
  */
 
 public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
 
-    private final DescriptionDAO descriptionDAO;
-    private final List<String> descriptionStringList;
-    private final List<String> treatmentStringList;
+    private final DescriptionDAO mDescriptionDAO;
+    private final List<String> mDescriptionStringList;
+    private final List<String> mTreatmentStringList;
 
     public ExpandablePreferenceAdapter(@NonNull final Context context) {
-        descriptionDAO = new DescriptionDAO(context);
-        this.descriptionStringList = descriptionDAO.getColumnList(descriptionDAO.DESCRIPTION);
+        mDescriptionDAO = new DescriptionDAO(context);
+        mDescriptionStringList = mDescriptionDAO.getColumnList(mDescriptionDAO.DESCRIPTION);
 
         final TreatmentDAO treatmentDAO = new TreatmentDAO(context);
-        this.treatmentStringList = treatmentDAO.getColumnList(treatmentDAO.TREATMENT);
+        mTreatmentStringList = treatmentDAO.getColumnList(treatmentDAO.TREATMENT);
     }
 
     @Override
@@ -47,14 +47,14 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final String itemText = descriptionStringList.get(position);
+        final String itemText = mDescriptionStringList.get(position);
 
         holder.description.setText(itemText);
         holder.description.setOnClickListener(v ->
 
             new MaterialDialog.Builder(holder.description.getContext())
                     .title(itemText)
-                    .items(treatmentStringList)
+                    .items(mTreatmentStringList)
                     .backgroundColor(ThemeHandler.getBackground())
                     .positiveText(R.string.done_button)
                     .positiveColor(ThemeHandler.getAccent())
@@ -74,18 +74,18 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
      */
 
     private int getSelectedTreatment(@NonNegative int position) {
-        return (descriptionDAO.findById(position).getTreatmentId());
+        return (mDescriptionDAO.findById(position).getTreatmentId());
     }
 
     private void setSelectedTreatment(@NonNegative int position, @NonNegative int selected) {
-        final Description description = descriptionDAO.findById(position);
+        final Description description = mDescriptionDAO.findById(position);
         description.setTreatmentId(selected);
-        descriptionDAO.update(description);
+        mDescriptionDAO.update(description);
     }
 
     @Override
     public int getItemCount() {
-        return descriptionStringList.size();
+        return mDescriptionStringList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

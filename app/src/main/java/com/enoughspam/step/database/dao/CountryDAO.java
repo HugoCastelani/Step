@@ -91,7 +91,7 @@ public class CountryDAO extends DAO<Country> {
 
         String code = null;
 
-        if (cursor.moveToFirst()) code = cursor.getString(cursor.getColumnIndex("code"));
+        if (cursor.moveToFirst()) code = cursor.getString(cursor.getColumnIndex(CODE));
 
         cursor.close();
         return code;
