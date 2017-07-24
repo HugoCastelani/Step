@@ -1,15 +1,10 @@
 package com.enoughspam.step.database.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.User;
-
-import java.util.List;
 
 /**
  * Created by Hugo
@@ -17,83 +12,37 @@ import java.util.List;
  * Time: 10:47
  */
 
-public class PersonalDAO extends DAO<User> {
+public class PersonalDAO {
 
+    public static final String TABLE = "personal";
+    public static final String ID = "ID";
     public static final String NAME = "name";
-    public static final String ALL_SET = "all_set";
 
-    public PersonalDAO(@NonNull final Context context) {
-        super(context, "personal");
-    }
+    public PersonalDAO() {}
 
-    @Override
-    public User generate(@NonNull final Cursor cursor) {
+    public static User generate(@NonNull final Cursor cursor) {
         return new User(
                 cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME))
         );
     }
 
-    @Override
-    public boolean create(@NonNull final User user) {
+    public static boolean create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
         values.put(ID, user.getId());
         values.put(NAME, user.getName());
 
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
+        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
 
-    @Override
-    public boolean update(@NonNull final User user) {
-        final ContentValues values = new ContentValues();
-
-        values.put(NAME, user.getName());
-
-        return getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(user.getId())}) > 0;
-    }
-
-    @Override @Deprecated
-    public User findById(@NonNegative final int id) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("You should use get() method instead.");
-    }
-
-    @Override @Deprecated
-    public List<User> getList() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("You should use get() method instead.");
-    }
-
-    @Override @Deprecated
-    public List<String> getColumnList(@NonNull final String column) {
-        throw new UnsupportedOperationException("You should use get() method and the intend variable instead.");
-    }
-
-    public User get() {
-        final Cursor cursor = getSqLiteDatabase().query(TABLE, null, null, null, null, null, null, null);
+    public static User get() {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null, null, null, null, null, null, null);
 
         User user = null;
         if (cursor.moveToFirst()) user = generate(cursor);
 
         cursor.close();
         return user;
-    }
-
-     public boolean isAllSet() {
-         final Cursor cursor = getSqLiteDatabase().query(
-                 TABLE, new String[] {ALL_SET}, null, null, null, null, null, null);
-
-         int allSet = 0;
-         if (cursor.moveToFirst()) allSet = cursor.getInt(cursor.getColumnIndex(ALL_SET));
-
-         cursor.close();
-         return allSet == 1 ? true : false;
-     }
-
-    public boolean setAllSet(final boolean allSet) {
-        final ContentValues values = new ContentValues();
-        values.put(ALL_SET, allSet ? 1 : 0);
-
-        return getSqLiteDatabase().update(TABLE, values, null, null) > 0;
     }
 }

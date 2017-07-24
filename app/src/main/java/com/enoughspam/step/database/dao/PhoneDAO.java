@@ -1,11 +1,10 @@
 package com.enoughspam.step.database.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.dao.abstracts.DAO;
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domains.Phone;
 
 /**
@@ -14,28 +13,24 @@ import com.enoughspam.step.database.domains.Phone;
  * Time: 09:20
  */
 
-public class PhoneDAO extends DAO<Phone> {
+public class PhoneDAO {
 
+    public static final String TABLE = "phone";
+    public static final String ID = "id";
     public static final String NUMBER = "number";
     public static final String COUNTRY_ID = "country_id";
     public static final String AREA_CODE = "area_code";
     public static final String USER_ID = "user_id";
 
-    private PersonalDAO personalDAO;
+    public PhoneDAO() {}
 
-    public PhoneDAO(@NonNull final Context context) {
-        super(context, "phone");
-        personalDAO = new PersonalDAO(context);
-    }
-
-    @Override
-    public Phone generate(@NonNull final Cursor cursor) {
+    public static Phone generate(@NonNull final Cursor cursor) {
         if (cursor.getInt(cursor.getColumnIndex(AREA_CODE)) == 0) {
             return new Phone(
                     cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
                     cursor.getInt(cursor.getColumnIndex(AREA_CODE)),
-                    personalDAO.get()
+                    PersonalDAO.get()
             );
 
         } else {
@@ -44,13 +39,12 @@ public class PhoneDAO extends DAO<Phone> {
                     cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    personalDAO.get()
+                    PersonalDAO.get()
             );
         }
     }
 
-    @Override
-    public boolean create(@NonNull final Phone phone) {
+    public static boolean create(@NonNull final Phone phone) {
         final ContentValues values = new ContentValues();
 
         if (phone.getAreaCode() == 0) {
@@ -65,19 +59,19 @@ public class PhoneDAO extends DAO<Phone> {
             values.put(USER_ID, phone.getUser().getId());
         }
 
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
+        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
     }
 
-    @Override
-    public boolean update(@NonNull final Phone phone) {
-        final ContentValues values = new ContentValues();
+    public static Phone findById(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
 
-        values.put(NUMBER, phone.getNumber());
-        values.put(COUNTRY_ID, phone.getCountryId());
-        values.put(AREA_CODE, phone.getAreaCode());
-        values.put(USER_ID, phone.getUser().getId());
+        Phone phone = null;
 
-        return getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(phone.getId())}) > 0;
+        if (cursor.moveToFirst()) phone = generate(cursor);
+
+        cursor.close();
+        return phone;
     }
 }

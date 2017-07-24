@@ -1,12 +1,14 @@
 package com.enoughspam.step.database.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.dao.abstracts.DAO;
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domains.Description;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -14,17 +16,16 @@ import com.enoughspam.step.database.domains.Description;
  * Time: 11:55
  */
 
-public class DescriptionDAO extends DAO<Description> {
+public class DescriptionDAO {
 
+    public static final String TABLE = "description";
+    public static final String ID = "id";
     public static final String DESCRIPTION = "description";
     public static final String TREATMENT_ID = "treatment_id";
 
-    public DescriptionDAO(@NonNull final Context context) {
-        super(context, "description");
-    }
+    protected DescriptionDAO() {}
 
-    @Override
-    public Description generate(@NonNull final Cursor cursor) {
+    public static Description generate(@NonNull final Cursor cursor) {
         return new Description(
                 cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
@@ -32,23 +33,39 @@ public class DescriptionDAO extends DAO<Description> {
         );
     }
 
-    @Override
-    public boolean create(@NonNull final Description description) {
-        final ContentValues values = new ContentValues();
-
-        values.put(DESCRIPTION, description.getDescription());
-        values.put(TREATMENT_ID, description.getTreatmentId());
-
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    public boolean update(@NonNull final Description description) {
+    public static boolean update(@NonNull final Description description) {
         final ContentValues values = new ContentValues();
 
         // For convenience, I'm gonna update only treatment id
         values.put(TREATMENT_ID, description.getTreatmentId());
 
-        return getSqLiteDatabase().update(TABLE, values,
+        return DAOHandler.getSqLiteDatabase().update(TABLE, values,
                 ID + " = ?", new String[] {String.valueOf(description.getId())}) > 0;
+    }
+
+    public static Description findById(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
+
+        Description description = null;
+        if (cursor.moveToFirst()) description = generate(cursor);
+
+        cursor.close();
+        return description;
+    }
+
+    public static List<String> getColumnList(@NonNull final String column) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, new String[] {column}, null, null, null, null, null);
+
+        final List<String> stringList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            stringList.add(cursor.getString(cursor.getColumnIndex(column)));
+        }
+
+        cursor.close();
+        return stringList;
     }
 }

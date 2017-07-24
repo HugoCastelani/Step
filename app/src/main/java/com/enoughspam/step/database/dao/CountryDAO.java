@@ -1,13 +1,13 @@
 package com.enoughspam.step.database.dao;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.dao.abstracts.DAO;
 import com.enoughspam.step.database.domains.Country;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -15,18 +15,17 @@ import com.enoughspam.step.database.domains.Country;
  * Time: 17:25
  */
 
-public class CountryDAO extends DAO<Country> {
+public class CountryDAO {
 
+    public static final String TABLE = "table";
+    public static final String ID = "id";
     public static final String CODE = "code";
     public static final String NAME = "name";
     public static final String MASK = "mask";
 
-    public CountryDAO(@NonNull final Context context) {
-        super(context, "country");
-    }
+    private CountryDAO() {}
 
-    @Override
-    public Country generate(@NonNull final Cursor cursor) {
+    public static Country generate(@NonNull final Cursor cursor) {
         return new Country(
                 cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getInt(cursor.getColumnIndex(CODE)),
@@ -35,31 +34,8 @@ public class CountryDAO extends DAO<Country> {
         );
     }
 
-    @Override
-    public boolean create(@NonNull final Country country) {
-        final ContentValues values = new ContentValues();
-
-        values.put(CODE, country.getCode());
-        values.put(NAME, country.getName());
-        values.put(MASK, country.getMask());
-
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    @Override
-    public boolean update(@NonNull final Country country) {
-        final ContentValues values = new ContentValues();
-
-        values.put(CODE, country.getCode());
-        values.put(NAME, country.getName());
-        values.put(MASK, country.getMask());
-
-        return getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(country.getId())}) > 0;
-    }
-
-    public Country findByCode(@NonNegative final int code) {
-        final Cursor cursor = getSqLiteDatabase().query(
+    public static Country findByCode(@NonNegative final int code) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
                 TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
                 null, null, null);
 
@@ -71,8 +47,8 @@ public class CountryDAO extends DAO<Country> {
         return firstCountry;
     }
 
-    public Country findByName(@NonNull final String name) {
-        final Cursor cursor = getSqLiteDatabase().query(
+    public static Country findByName(@NonNull final String name) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
                 TABLE, null, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -84,8 +60,8 @@ public class CountryDAO extends DAO<Country> {
         return country;
     }
 
-    public String findCodeByName(@NonNull final String name) {
-        final Cursor cursor = getSqLiteDatabase().query(
+    public static String findCodeByName(@NonNull final String name) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
                 TABLE, new String[] {CODE}, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -95,5 +71,19 @@ public class CountryDAO extends DAO<Country> {
 
         cursor.close();
         return code;
+    }
+
+    public static List<String> getColumnList(@NonNull final String column) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, new String[] {column}, null, null, null, null, null);
+
+        final List<String> stringList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            stringList.add(cursor.getString(cursor.getColumnIndex(column)));
+        }
+
+        cursor.close();
+        return stringList;
     }
 }

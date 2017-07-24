@@ -1,12 +1,10 @@
 package com.enoughspam.step.database.dao;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.dao.abstracts.DAO;
-import com.enoughspam.step.database.domains.Treatment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -14,39 +12,25 @@ import com.enoughspam.step.database.domains.Treatment;
  * Time: 17:26
  */
 
-public class TreatmentDAO extends DAO<Treatment> {
+public class TreatmentDAO {
 
+    public static final String TABLE = "suspicious_treatment";
+    public static final String ID = "id";
     public static final String TREATMENT = "treatment";
 
-    public TreatmentDAO(@NonNull final Context context) {
-        super(context, "suspicious_treatment");
-    }
+    protected TreatmentDAO() {}
 
-    @Override
-    public Treatment generate(@NonNull final Cursor cursor) {
-        return new Treatment(
-                cursor.getInt(cursor.getColumnIndex(ID)),
-                cursor.getString(cursor.getColumnIndex(TREATMENT))
-        );
-    }
+    public static List<String> getColumnList(@NonNull final String column) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, new String[] {column}, null, null, null, null, null);
 
-    @Override
-    public boolean create(@NonNull final Treatment treatment) {
-        final ContentValues values = new ContentValues();
+        final List<String> stringList = new ArrayList<>();
 
-        values.put(ID, treatment.getId());
-        values.put(TREATMENT, treatment.getTreatment());
+        while (cursor.moveToNext()) {
+            stringList.add(cursor.getString(cursor.getColumnIndex(column)));
+        }
 
-        return getSqLiteDatabase().insert(TABLE, null, values) > 0;
-    }
-
-    @Override
-    public boolean update(@NonNull final Treatment treatment) {
-        final ContentValues values = new ContentValues();
-
-        values.put(TREATMENT, treatment.getTreatment());
-
-        return getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(treatment.getId())}) > 0;
+        cursor.close();
+        return stringList;
     }
 }
