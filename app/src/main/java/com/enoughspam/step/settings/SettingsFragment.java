@@ -2,14 +2,15 @@ package com.enoughspam.step.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
+import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
+import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.enoughspam.step.R;
 import com.enoughspam.step.settings.preferences.ColorPreference;
-import com.enoughspam.step.settings.preferences.DialogPreference;
-import com.enoughspam.step.settings.preferences.SwitchPreference;
 import com.enoughspam.step.util.ThemeHandler;
 
 /**
@@ -28,16 +29,9 @@ public class SettingsFragment extends PreferenceFragment {
         // theme switch preference
 
         final SwitchPreference switchPreference = (SwitchPreference) findPreference("theme_switch");
-        if (ThemeHandler.isDark()) {
-            switchPreference.setChecked(true);
-        }
         switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (((SwitchPreference) preference).isChecked()) {
-                Aesthetic.get().isDark(true).apply();
-            } else {
-                Aesthetic.get().isDark(false).apply();
-            }
-
+            // is checked returns situation before changing
+            Aesthetic.get().isDark(!((SwitchPreference) preference).isChecked()).apply();
             return true;
         });
 
@@ -59,10 +53,42 @@ public class SettingsFragment extends PreferenceFragment {
 
         // default color preference
 
-        final DialogPreference defaultColor = (DialogPreference) findPreference("default_color");
-        defaultColor.setOnPositiveClickListener(((dialog, which) ->
-            ((SettingsActivity) getActivity()).onColorSelection(
-                    null, ContextCompat.getColor(getActivity(), R.color.accent))
-        ));
+        final MaterialDialogPreference defaultColor = (MaterialDialogPreference) findPreference("default_color");
+        defaultColor.setBuilder(
+                defaultColor.resetBuilder()
+                        .backgroundColor(ThemeHandler.getBackground())
+                        .positiveText(R.string.done_button)
+                        .positiveColor(ThemeHandler.getAccent())
+                        .negativeText(R.string.cancel_button)
+                        .negativeColor(ThemeHandler.getAccent())
+                        .onPositive(((dialog, which) ->
+                                ((SettingsActivity) getActivity()).onColorSelection(
+                                        null, ContextCompat.getColor(getActivity(), R.color.accent))
+                        ))
+        );
+
+        // networks preference
+
+        final MaterialMultiSelectListPreference networks = (MaterialMultiSelectListPreference) findPreference("select_networks");
+        networks.setBuilder(
+                networks.resetBuilder()
+                        .backgroundColor(ThemeHandler.getBackground())
+                        .positiveText(R.string.done_button)
+                        .positiveColor(ThemeHandler.getAccent())
+                        .negativeText(R.string.cancel_button)
+                        .negativeColor(ThemeHandler.getAccent())
+        );
+
+        // services preference
+
+        final MaterialMultiSelectListPreference services = (MaterialMultiSelectListPreference) findPreference("select_services");
+        services.setBuilder(
+                services.resetBuilder()
+                        .backgroundColor(ThemeHandler.getBackground())
+                        .positiveText(R.string.done_button)
+                        .positiveColor(ThemeHandler.getAccent())
+                        .negativeText(R.string.cancel_button)
+                        .negativeColor(ThemeHandler.getAccent())
+        );
     }
 }
