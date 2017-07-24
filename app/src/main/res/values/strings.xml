@@ -136,9 +136,12 @@
     <!-- Snackbar -->
     <string name="undo">Desfazer</string>
 
-    <!-- Dialog -->
+    <!-- Help dialog -->
     <string name="why_important">Por que isso é importante?</string>
     <string name="understood_button">Entendi</string>
+
+    <!-- Number picker dialog -->
+    <string name="default_button">Valor padrão</string>
 
     <!-- Accessibility -->
     <string name="help">Help icon</string>

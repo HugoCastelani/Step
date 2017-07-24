@@ -109,7 +109,7 @@ public class SettingsFragment extends PreferenceFragment {
                                     .getInt("select_denunciation_amount", 20)
                     )
                     .backgroundColor(ThemeHandler.getBackground())
-                    .separatorColor(ThemeHandler.getAccent())
+                    .separatorColor(ThemeHandler.getPrimaryText())
                     .textColor(ThemeHandler.getPrimaryText())
                     .wrapSelectorWheel(false)
                     .textSize(16F)
@@ -121,14 +121,18 @@ public class SettingsFragment extends PreferenceFragment {
                     .backgroundColor(ThemeHandler.getBackground())
                     .positiveText(R.string.done_button)
                     .positiveColor(ThemeHandler.getAccent())
+                    .neutralText(R.string.default_button)
+                    .neutralColor(ThemeHandler.getAccent())
                     .negativeText(R.string.cancel_button)
                     .negativeColor(ThemeHandler.getAccent())
                     .contentColor(ThemeHandler.getPrimaryText())
                     .titleColor(ThemeHandler.getPrimaryText())
                     .onPositive((dialog, which) ->
-                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                                .putInt("select_denunciation_amount", numberPicker.getValue()).apply()
-                    )
+                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                                    .putInt("select_denunciation_amount", numberPicker.getValue()).apply())
+                    .onNeutral((dialog, which) ->
+                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                                    .putInt("select_denunciation_amount", 20).apply()) // 20 is the default value
                     .show();
 
             return true;
