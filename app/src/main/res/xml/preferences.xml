@@ -33,6 +33,7 @@
         android:title="@string/select_database_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+            android:layout="@layout/preference_custom"
             android:key="select_networks"
             android:entries="@array/network_list_titles"
             android:entryValues="@array/network_list_values"
@@ -47,6 +48,7 @@
         android:title="@string/select_block_calls_options">
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+            android:layout="@layout/preference_custom"
             android:key="select_services"
             android:entries="@array/service_list_titles"
             android:entryValues="@array/service_list_values"
@@ -74,5 +76,8 @@
             android:summary="@string/select_denunciation_amount_substring"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout="@layout/preference_margin"/>
 
 </PreferenceScreen>

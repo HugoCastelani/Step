@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
+import android.widget.ListView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -16,6 +17,7 @@ import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
 import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.enoughspam.step.R;
 import com.enoughspam.step.settings.preferences.ColorPreference;
+import com.enoughspam.step.util.RecyclerViewDecorator;
 import com.enoughspam.step.util.ThemeHandler;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
@@ -29,6 +31,16 @@ import static android.os.Build.VERSION_CODES.M;
  */
 
 public class SettingsFragment extends PreferenceFragment {
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        final ListView listView = (ListView) getView().findViewById(android.R.id.list);
+        listView.setDivider(null);    // remove dividers
+
+        RecyclerViewDecorator.addAdaptableMargins(listView);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +155,7 @@ public class SettingsFragment extends PreferenceFragment {
         });
     }
 
-    public void updateTheme() {
+    private void updateTheme() {
         if (ThemeHandler.isDark()) {
             Aesthetic.get()
                     .activityTheme(R.style.AppThemeDark)

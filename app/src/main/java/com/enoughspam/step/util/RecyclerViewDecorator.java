@@ -3,6 +3,7 @@ package com.enoughspam.step.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ListView;
 
 import com.blankj.utilcode.util.ScreenUtils;
 
@@ -43,5 +44,22 @@ public class RecyclerViewDecorator {
         }
 
         if (decoration != null) recyclerView.addItemDecoration(decoration);
+    }
+
+    public static void addAdaptableMargins(@NonNull final ListView listView) {
+        MarginUtils.init(mContext);
+        int padding = -1;
+
+        // TODO: isTablet method must be replaced with proper UtilCode's method
+        if (MarginUtils.isTablet()) {
+            if (ScreenUtils.isPortrait()) padding = MarginUtils.getFabAlignMargin();
+            else padding = MarginUtils.getTenPercentageMargin();
+
+        } else {
+
+            if (ScreenUtils.isLandscape()) padding = MarginUtils.getFabAlignMargin();
+        }
+
+        if (padding != -1) listView.setPadding(padding, 0, padding, 0);
     }
 }

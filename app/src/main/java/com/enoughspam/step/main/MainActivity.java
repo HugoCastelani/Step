@@ -126,44 +126,55 @@ public class MainActivity extends AestheticActivity {
 
         } else {
 
-            if (ThemeHandler.isDark()) {
+            updateTheme();
+        }
+    }
 
+    private void updateTheme() {
+        if (ThemeHandler.isDark()) {
+            Aesthetic.get()
+                    .activityTheme(R.style.AppThemeDark)
+                    .colorPrimaryRes(R.color.colorPrimaryInverse)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
+                    .textColorPrimaryRes(R.color.textColorPrimaryInverse)
+                    .textColorSecondaryRes(R.color.textColorSecondaryInverse)
+                    .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
+                    .apply();
+
+            if (Build.VERSION.SDK_INT >= M) {
                 Aesthetic.get()
-                        .activityTheme(R.style.AppThemeDark)
-                        .colorPrimaryRes(R.color.colorPrimaryInverse)
-                        .colorWindowBackgroundRes(R.color.colorWindowBackgroundInverse)
-                        .textColorPrimaryRes(R.color.textColorPrimaryInverse)
-                        .textColorSecondaryRes(R.color.textColorSecondaryInverse)
-                        .colorIconTitleActiveRes(R.color.textColorPrimaryInverse)
-                        .colorIconTitleInactiveRes(R.color.textColorPrimaryInverse)
-                        .colorCardViewBackgroundRes(R.color.colorCardBackgroundInverse)
+                        .colorStatusBarRes(R.color.colorPrimaryInverse)
                         .apply();
+            }
 
-                if (Build.VERSION.SDK_INT >= M) {
-                    Aesthetic.get()
-                            .colorStatusBarRes(R.color.colorPrimaryInverse)
-                            .apply();
-                }
+        } else {
 
-            } else {
+            Aesthetic.get()
+                    .activityTheme(R.style.AppTheme)
+                    .colorPrimaryRes(R.color.colorPrimary)
+                    .colorWindowBackgroundRes(R.color.colorWindowBackground)
+                    .textColorPrimaryRes(R.color.textColorPrimary)
+                    .textColorSecondaryRes(R.color.textColorSecondary)
+                    .colorIconTitleActiveRes(R.color.textColorPrimary)
+                    .colorIconTitleInactiveRes(R.color.textColorPrimary)
+                    .colorCardViewBackgroundRes(R.color.colorCardBackground)
+                    .apply();
 
+            if (Build.VERSION.SDK_INT >= M) {
                 Aesthetic.get()
-                        .activityTheme(R.style.AppTheme)
-                        .colorPrimaryRes(R.color.colorPrimary)
-                        .colorWindowBackgroundRes(R.color.colorWindowBackground)
-                        .textColorPrimaryRes(R.color.textColorPrimary)
-                        .textColorSecondaryRes(R.color.textColorSecondary)
-                        .colorIconTitleActiveRes(R.color.textColorPrimary)
-                        .colorIconTitleInactiveRes(R.color.textColorPrimary)
-                        .colorCardViewBackgroundRes(R.color.colorCardBackground)
+                        .colorStatusBarRes(R.color.colorPrimary)
                         .apply();
-
-                if (Build.VERSION.SDK_INT >= M) {
-                    Aesthetic.get()
-                            .colorStatusBarRes(R.color.colorPrimary)
-                            .apply();
-                }
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_SETTINGS) {
+            recreate();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

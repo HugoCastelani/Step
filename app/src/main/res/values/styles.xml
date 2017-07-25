@@ -17,7 +17,7 @@
     <style name="CardLabel">
         <item name="android:paddingTop">@dimen/preference_category_top_bottom_padding</item>
         <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
-        <item name="android:layout_marginBottom">@dimen/preference_category_top_bottom_padding</item>
+        <item name="android:paddingBottom">@dimen/preference_category_top_bottom_padding</item>
         <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textStyle">bold</item>
