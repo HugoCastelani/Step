@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.Country;
+import com.enoughspam.step.database.domain.Country;
 
 import java.util.ArrayList;
 import java.util.List;

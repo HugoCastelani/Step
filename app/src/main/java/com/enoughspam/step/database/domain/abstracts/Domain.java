@@ -1,4 +1,4 @@
-package com.enoughspam.step.database.domains.abstracts;
+package com.enoughspam.step.database.domain.abstracts;
 
 import com.enoughspam.step.annotation.NonNegative;
 

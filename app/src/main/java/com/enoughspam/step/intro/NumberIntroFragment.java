@@ -20,7 +20,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.database.dao.PhoneDAO;
-import com.enoughspam.step.database.domains.Phone;
+import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
@@ -57,10 +57,10 @@ public class NumberIntroFragment extends SlideFragment {
 
     private void initViews() {
         mParentView = (LinearLayout) view.findViewById(R.id.intro_number_parent);
-        mSpinner = (Spinner) view.findViewById(R.id.intro_number_spinner);
-        mCountryCodeEditText = (EditText) view.findViewById(R.id.intro_number_country_code);
-        mPhoneNumberEditText = (EditText) view.findViewById(R.id.intro_number_phone);
-        mSendMessage = (ImageView) view.findViewById(R.id.intro_number_go);
+        mSpinner = (Spinner) view.findViewById(R.id.number_form_spinner);
+        mCountryCodeEditText = (EditText) view.findViewById(R.id.number_form_country_code);
+        mPhoneNumberEditText = (EditText) view.findViewById(R.id.number_form_phone);
+        mSendMessage = (ImageView) view.findViewById(R.id.number_form_go);
     }
 
     private void initActions() {

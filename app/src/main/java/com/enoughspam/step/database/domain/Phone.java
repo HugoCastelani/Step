@@ -1,10 +1,9 @@
-package com.enoughspam.step.database.domains;
+package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.MaskRespectful;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.abstracts.Domain;
+import com.enoughspam.step.database.domain.abstracts.Domain;
 
 /**
  * Created by Hugo Castelani
@@ -18,23 +17,20 @@ public class Phone extends Domain {
     private int areaCode;
     private User user;
 
-    public Phone(@MaskRespectful final long number, @NonNegative final int areaCode,
-                 @NonNull final User user) {
+    public Phone(final long number, @NonNegative final int areaCode, @NonNull final User user) {
         this.number = number;
         this.areaCode = areaCode;
         this.user = user;
     }
 
     // some countries don't have area sCode
-    public Phone(@NonNegative final int countryId, @MaskRespectful final long number,
-                 @NonNull final User user) {
+    public Phone(@NonNegative final int countryId, final long number, @NonNull final User user) {
         this.countryId = countryId;
         this.number = number;
         this.user = user;
     }
 
-    public Phone(@NonNegative final int id, @MaskRespectful final long number,
-                 @NonNegative final int areaCode, @NonNull final User user) {
+    public Phone(@NonNegative final int id, final long number, @NonNegative final int areaCode, @NonNull final User user) {
         super(id);
         this.number = number;
         this.areaCode = areaCode;
@@ -42,8 +38,7 @@ public class Phone extends Domain {
     }
 
     // some countries don't have area sCode
-    public Phone(@NonNegative final int id, @NonNegative final int countryId,
-                 @MaskRespectful final long number, @NonNull final User user) {
+    public Phone(@NonNegative final int id, @NonNegative final int countryId, final long number, @NonNull final User user) {
         super(id);
         this.countryId = countryId;
         this.number = number;
@@ -54,7 +49,7 @@ public class Phone extends Domain {
         return number;
     }
 
-    public void setNumber(@MaskRespectful final long number) {
+    public void setNumber(final long number) {
         this.number = number;
     }
 

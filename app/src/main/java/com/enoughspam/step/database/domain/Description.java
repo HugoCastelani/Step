@@ -1,9 +1,9 @@
-package com.enoughspam.step.database.domains;
+package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.abstracts.Domain;
+import com.enoughspam.step.database.domain.abstracts.Domain;
 
 /**
  * Created by Hugo Castelani

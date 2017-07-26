@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.Phone;
+import com.enoughspam.step.database.domain.Phone;
 
 /**
  * Created by Hugo Castelani

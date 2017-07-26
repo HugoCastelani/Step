@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domains.Description;
+import com.enoughspam.step.database.domain.Description;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.enoughspam.step.database.domains.abstracts;
+package com.enoughspam.step.database.domain.abstracts;
 
 import android.support.annotation.NonNull;
 

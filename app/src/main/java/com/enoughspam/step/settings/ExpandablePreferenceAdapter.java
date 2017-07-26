@@ -11,7 +11,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DescriptionDAO;
 import com.enoughspam.step.database.dao.TreatmentDAO;
-import com.enoughspam.step.database.domains.Description;
+import com.enoughspam.step.database.domain.Description;
 import com.enoughspam.step.util.ThemeHandler;
 
 import java.util.List;
@@ -82,7 +82,7 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
         return mDescriptionStringList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    protected static class MyViewHolder extends RecyclerView.ViewHolder {
         final AestheticTextView description;
 
         public MyViewHolder(View itemView) {
