@@ -1,9 +1,6 @@
 package com.enoughspam.step.main;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -14,10 +11,7 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
-import com.enoughspam.step.util.RecyclerViewDecorator;
-import com.enoughspam.step.util.ThemeHandler;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
+import com.enoughspam.step.util.ListDecorator;
 
 import java.util.ArrayList;
 
@@ -29,28 +23,19 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
 
+    private View view;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.main_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.main_fragment, container, false);
 
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        initViews();
 
-        // getting tap target view ready
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(fab,
-                        "O quê esse FAB faz?",
-                        "No momento, só chama uma snackbar inútil...")
-                        .outerCircleColorInt(ThemeHandler.getAccent())
-                        .textTypeface(Typeface.DEFAULT)
-                        .targetCircleColor(ThemeHandler.isDark() ? R.color.colorPrimaryInverse : R.color.colorPrimary)
-                        .transparentTarget(true),
-                null);
+        return view;
+    }
 
-        // getting recycler view ready
-        final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.blocked_recyclerview);
+    private void initViews() {
+        final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
         final BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumbersList());
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
@@ -61,10 +46,8 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        RecyclerViewDecorator.init(getContext());
-        RecyclerViewDecorator.addAdaptableMargins(recyclerView);
-
-        return view;
+        ListDecorator.init(getContext());
+        ListDecorator.addAdaptableMargins(recyclerView);
     }
 
     private ArrayList<ArrayList<String>> getBlockedNumbersList() {

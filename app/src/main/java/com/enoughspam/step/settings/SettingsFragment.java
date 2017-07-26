@@ -17,7 +17,7 @@ import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
 import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.enoughspam.step.R;
 import com.enoughspam.step.settings.preferences.ColorPreference;
-import com.enoughspam.step.util.RecyclerViewDecorator;
+import com.enoughspam.step.util.ListDecorator;
 import com.enoughspam.step.util.ThemeHandler;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
@@ -39,7 +39,7 @@ public class SettingsFragment extends PreferenceFragment {
         final ListView listView = (ListView) getView().findViewById(android.R.id.list);
         listView.setDivider(null);    // remove dividers
 
-        RecyclerViewDecorator.addAdaptableMargins(listView);
+        ListDecorator.addAdaptableMargins(listView);
     }
 
     @Override

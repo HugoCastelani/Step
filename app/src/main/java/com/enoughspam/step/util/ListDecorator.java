@@ -13,16 +13,16 @@ import com.blankj.utilcode.util.ScreenUtils;
  * Time: 14:39
  */
 
-public class RecyclerViewDecorator {
+public class ListDecorator {
 
     private static Context mContext;
 
-    private RecyclerViewDecorator() {
+    private ListDecorator() {
         throw new UnsupportedOperationException("You can't instantiate me.");
     }
 
     public static void init(@NonNull final Context context) {
-        RecyclerViewDecorator.mContext = context.getApplicationContext();
+        mContext = context.getApplicationContext();
     }
 
     public static void addAdaptableMargins(@NonNull final RecyclerView recyclerView) {

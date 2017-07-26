@@ -2,21 +2,16 @@ package com.enoughspam.step.settings;
 
 
 import android.app.FragmentTransaction;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.AestheticActivity;
-import com.afollestad.aesthetic.AestheticToolbar;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
-import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.abstracts.AbstractActivity;
 
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
-
-public class SettingsActivity extends AestheticActivity
+public class SettingsActivity extends AbstractActivity
         implements ColorChooserDialog.ColorCallback {
 
     @Override
@@ -33,13 +28,18 @@ public class SettingsActivity extends AestheticActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
-        final AestheticToolbar toolbar = (AestheticToolbar) findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) toolbar.setElevation(ConvertUtils.dp2px(4));
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        setSupportActionBar(toolbar);
+        initToolbar(true);
+        initFragment();
+    }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected void initViews() {}
 
+    @Override
+    protected void initActions() {}
+
+    @Override
+    protected void initFragment() {
         SettingsFragment fragment = (SettingsFragment) getFragmentManager().findFragmentByTag("settingsFragmentTag");
         if (fragment == null) {
             fragment = new SettingsFragment();
