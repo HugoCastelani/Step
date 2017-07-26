@@ -40,8 +40,8 @@ dependencies {
     // aidas follestad
     compile 'com.afollestad:sectioned-recyclerview:0.4.1'
     compile 'com.afollestad:aesthetic:0.4.7'
-    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6'
-    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6'
+    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
+    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
     // azimo labs
@@ -52,6 +52,9 @@ dependencies {
 
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
+
+    // kasual business
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
 
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
@@ -67,6 +70,9 @@ dependencies {
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+
+    // traex
+    compile 'com.github.HugoCastelani:ExpandableLayout:1.4.3'
 
     // yshrsmz
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
@@ -114,5 +120,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
+
 
 apply plugin: 'com.google.gms.google-services'
