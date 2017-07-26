@@ -74,7 +74,7 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
         public MyViewHolder(View itemView) {
             super(itemView);
             blocker_or_number = (AestheticTextView) itemView.findViewById(android.R.id.title);
-            cardView = (AestheticCardView) itemView.findViewById(R.id.item_number_cardview);
+            cardView = (AestheticCardView) itemView.findViewById(R.id.item_number_card_view);
         }
     }
 }
