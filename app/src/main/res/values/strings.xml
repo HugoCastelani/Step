@@ -123,6 +123,8 @@
 
     <!-- add number activity -->
     <string name="add_number_activity_label">Adicionar número</string>
+    <string name="add_manually">Adicionar manualmente</string>
+    <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
 
     <!-- Color picker dialog -->
     <string name="select_color">Selecione uma cor</string>

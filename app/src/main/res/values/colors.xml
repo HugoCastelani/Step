@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/md_grey_50</color>
+    <color name="colorPrimaryDark">@color/md_grey_100</color>
     <color name="colorPrimaryInverse">#28282E</color>
+    <color name="colorPrimaryDarkInverse">#25252B</color>
 
     <color name="colorAccent">@color/md_cyan_500</color>
 
@@ -11,7 +13,7 @@
     <color name="textColorSecondary">@color/md_grey_700</color>
     <color name="textColorSecondaryInverse">@color/md_grey_400</color>
 
-    <color name="colorWindowBackground">@color/md_grey_100</color>
+    <color name="colorWindowBackground">@color/colorPrimaryDark</color>
     <color name="colorWindowBackgroundInverse">@color/colorPrimaryInverse</color>
 
     <color name="colorCardBackground">@color/md_white_1000</color>

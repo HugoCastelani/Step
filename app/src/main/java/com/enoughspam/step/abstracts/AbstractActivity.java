@@ -7,9 +7,7 @@ import android.support.annotation.Nullable;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
-import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ConvertUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
@@ -44,10 +42,6 @@ public abstract class AbstractActivity extends AestheticActivity {
         if (Build.VERSION.SDK_INT >= LOLLIPOP) mToolbar.setElevation(ConvertUtils.dp2px(4));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(backButtonEnabled);
-
-        if (ActivityUtils.getTopActivity() != null) {
-            ToastUtils.showShort(ActivityUtils.getTopActivity().getTitle());
-        }
     }
 
     abstract protected void initViews();
@@ -66,6 +60,7 @@ public abstract class AbstractActivity extends AestheticActivity {
                 .activityTheme(R.style.AppTheme)
                 .isDark(false)
                 .colorPrimaryRes(R.color.colorPrimary)
+                .colorStatusBarRes(R.color.colorPrimaryDark)
                 .colorAccentRes(R.color.colorAccent)
                 .colorWindowBackgroundRes(R.color.colorWindowBackground)
                 .textColorPrimaryRes(R.color.textColorPrimary)
@@ -91,7 +86,7 @@ public abstract class AbstractActivity extends AestheticActivity {
 
             if (Build.VERSION.SDK_INT >= M) {
                 Aesthetic.get()
-                        .colorStatusBarRes(R.color.colorPrimaryInverse)
+                        .colorStatusBarRes(R.color.colorPrimaryDarkInverse)
                         .apply();
             }
 
@@ -110,7 +105,7 @@ public abstract class AbstractActivity extends AestheticActivity {
 
             if (Build.VERSION.SDK_INT >= M) {
                 Aesthetic.get()
-                        .colorStatusBarRes(R.color.colorPrimary)
+                        .colorStatusBarRes(R.color.colorPrimaryDark)
                         .apply();
             }
         }
