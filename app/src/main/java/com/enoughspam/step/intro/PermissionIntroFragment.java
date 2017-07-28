@@ -35,6 +35,7 @@ public class PermissionIntroFragment extends SlideFragment {
     private void onRequestButtonClick() {
         mRxPermissions
                 .request(Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.READ_SMS,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.READ_CONTACTS)
