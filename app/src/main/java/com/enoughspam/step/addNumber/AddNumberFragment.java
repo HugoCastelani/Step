@@ -18,6 +18,7 @@ import com.enoughspam.step.database.dao.PhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.ListDecorator;
+import com.enoughspam.step.util.ThemeHandler;
 
 /**
  * Created by Hugo Castelani
@@ -62,8 +63,11 @@ public class AddNumberFragment extends Fragment {
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.confirmation_dialog_title)
                 .content(formattedPhoneNumber + getResources().getString(R.string.confirmation_dialog_content))
+                .backgroundColor(ThemeHandler.getBackground())
                 .positiveText(R.string.yes_button)
+                .positiveColor(ThemeHandler.getAccent())
                 .negativeText(R.string.cancel_button)
+                .negativeColor(ThemeHandler.getAccent())
                 .onPositive((dialog, which) -> {
 
                     final int spaceIndex = phoneNumber.indexOf(' ');
