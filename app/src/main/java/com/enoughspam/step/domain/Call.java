@@ -1,5 +1,7 @@
 package com.enoughspam.step.domain;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Hugo Castelani
  * Date: 25/07/17
@@ -10,7 +12,7 @@ public class Call {
     private String name;
     private String number;
 
-    public Call(String name, String number) {
+    public Call(@NonNull final String name, @NonNull final String number) {
         this.name = name;
         this.number = number;
     }
@@ -19,7 +21,7 @@ public class Call {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull final String name) {
         this.name = name;
     }
 
@@ -27,7 +29,7 @@ public class Call {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(@NonNull final String number) {
         this.number = number;
     }
 }

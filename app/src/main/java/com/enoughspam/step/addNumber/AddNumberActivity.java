@@ -48,4 +48,12 @@ public class AddNumberActivity extends AbstractActivity {
             fragmentTransaction.commit();
         }
     }
+
+    public void showFab() {
+        mFab.show();
+    }
+
+    public void hideFab() {
+        mFab.hide();
+    }
 }

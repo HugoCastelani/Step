@@ -1,15 +1,14 @@
 package com.enoughspam.step.addNumber;
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.afollestad.aesthetic.AestheticCardView;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
@@ -34,23 +33,40 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     private final AddNumberFragment mFragment;
 
     public AddNumberAdapter(@NonNull final AddNumberFragment fragment) {
-        Uri calls = Uri.parse("content://call_log/calls");
+        mCallList = new ArrayList<>();
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+        mCallList.add(new Call("Dougras", "123456789"));
+
+        /*Uri calls = Uri.parse("content://call_log/calls");
         Cursor cursor = fragment.getContext().getContentResolver().query(calls, null, null, null, null);
 
         mCallList = new ArrayList<>();
-        List<String> nameList = new ArrayList<>();
+        List<String> numberList = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            Call call = new Call(
-                    cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME)),
-                    cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER))
-            );
+            String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
+            String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
 
-            if (!nameList.contains(call.getName())) {
-                mCallList.add(call);
-                nameList.add(call.getName());
+            if (number == null) continue;
+
+            if (name == null || name.equals(number)) {
+                name = fragment.getResources().getString(R.string.unknown);
             }
-        }
+
+            Call call = new Call(name, number);
+
+            if (!numberList.contains(number)) {
+                mCallList.add(call);
+                numberList.add(number);
+            }
+        }*/
 
         mFragment = fragment;
     }
@@ -77,7 +93,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
     @Override
     public void onBindHeaderViewHolder(SectionedViewHolder holder, int section, boolean expanded) {
-        final AestheticTextView view = ((OrdinaryViewHolder) holder).mSectionOrNumber;
+        final AestheticTextView view = ((OrdinaryViewHolder) holder).mSectionOrName;
 
         if (section == 0) {
             view.setText(view.getContext().getResources().getString(R.string.add_manually));
@@ -89,11 +105,61 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     @Override
     public void onBindFooterViewHolder(SectionedViewHolder holder, int section) {}
 
+    boolean mSelectionMode = false;
+    int mSelectedViews = 0;
+
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
         if (holder instanceof OrdinaryViewHolder) {
-            ((OrdinaryViewHolder) holder).mSectionOrNumber
-                    .setText("" + mCallList.get(relativePosition).getNumber());
+            final OrdinaryViewHolder aViewHolder = ((OrdinaryViewHolder) holder);
+
+            aViewHolder.mSectionOrName.setText("" + mCallList.get(relativePosition).getName());
+            aViewHolder.mNumber.setText("" + mCallList.get(relativePosition).getNumber());
+
+            aViewHolder.mCardView.setOnLongClickListener(view -> {
+                if (mSelectionMode) {
+                    if (aViewHolder.mParent.isSelected()) {
+                        if (mSelectedViews == 1) {
+                            mSelectionMode = false;
+                            ((AddNumberActivity) mFragment.getActivity()).hideFab();
+                        }
+                        aViewHolder.mParent.setSelected(false);
+                        mSelectedViews--;
+
+                    } else {
+
+                        aViewHolder.mParent.setSelected(true);
+                        mSelectedViews++;
+                    }
+
+                } else {
+
+                    mSelectionMode = true;
+                    aViewHolder.mParent.setSelected(true);
+                    mSelectedViews++;
+                    ((AddNumberActivity) mFragment.getActivity()).showFab();
+                }
+
+                return true;
+            });
+
+            aViewHolder.mCardView.setOnClickListener(view -> {
+                if (mSelectionMode) {
+                    if (aViewHolder.mParent.isSelected()) {
+                        if (mSelectedViews == 1) {
+                            mSelectionMode = false;
+                            ((AddNumberActivity) mFragment.getActivity()).hideFab();
+                        }
+                        aViewHolder.mParent.setSelected(false);
+                        mSelectedViews--;
+
+                    } else {
+
+                        aViewHolder.mParent.setSelected(true);
+                        mSelectedViews++;
+                    }
+                }
+            });
         }
     }
 
@@ -121,15 +187,22 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     }
 
     protected static class OrdinaryViewHolder extends SectionedViewHolder {
-        final AestheticTextView mSectionOrNumber;
+        final AestheticCardView mCardView;
+        final LinearLayout mParent;
+        final AestheticTextView mSectionOrName;
+        final AestheticTextView mNumber;
 
         public OrdinaryViewHolder(View itemView) {
             super(itemView);
-            mSectionOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
+            mCardView = (AestheticCardView) itemView.findViewById(R.id.add_number_item_call_card);
+            mParent = (LinearLayout) itemView.findViewById(R.id.add_number_item_call_parent);
+            mSectionOrName = (AestheticTextView) itemView.findViewById(android.R.id.title);
+            mNumber = (AestheticTextView) itemView.findViewById(android.R.id.summary);
         }
     }
 
     protected static class FormViewHolder extends SectionedViewHolder {
+
         public FormViewHolder(View itemView, Fragment fragment) {
             super(itemView);
 

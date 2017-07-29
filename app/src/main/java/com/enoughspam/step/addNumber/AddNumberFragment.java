@@ -68,37 +68,40 @@ public class AddNumberFragment extends Fragment {
                 .positiveColor(ThemeHandler.getAccent())
                 .negativeText(R.string.cancel_button)
                 .negativeColor(ThemeHandler.getAccent())
-                .onPositive((dialog, which) -> {
-
-                    final int spaceIndex = phoneNumber.indexOf(' ');
-
-                    final Phone phone;
-
-                    if (spaceIndex != -1) {
-                        final long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
-                        final int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
-                        phone = new Phone(
-                                phoneNumberL,
-                                areaCode,
-                                PersonalDAO.get()
-                        );
-
-                    } else {
-
-                        final int countryId = CountryDAO.findByCode(Integer.parseInt(countryCode)).getId();
-                        final long phoneNumberL = Long.parseLong(mergePhoneNumber);
-                        phone = new Phone(
-                                countryId,
-                                phoneNumberL,
-                                PersonalDAO.get()
-                        );
-                    }
-
-                    PhoneDAO.create(phone);
-
-                    getActivity().onBackPressed();
-                })
+                .onPositive((dialog, which) ->
+                        saveNumber(countryCode, phoneNumber, mergePhoneNumber))
                 .show();
     }
 
+    public void saveNumber(@NonNull final String countryCode, @NonNull final String phoneNumber,
+                           @NonNull final String mergePhoneNumber) {
+
+        final int spaceIndex = phoneNumber.indexOf(' ');
+
+        final Phone phone;
+
+        if (spaceIndex != -1) {
+            final long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
+            final int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
+            phone = new Phone(
+                    phoneNumberL,
+                    areaCode,
+                    PersonalDAO.get()
+            );
+
+        } else {
+
+            final int countryId = CountryDAO.findByCode(Integer.parseInt(countryCode)).getId();
+            final long phoneNumberL = Long.parseLong(mergePhoneNumber);
+            phone = new Phone(
+                    countryId,
+                    phoneNumberL,
+                    PersonalDAO.get()
+            );
+        }
+
+        PhoneDAO.create(phone);
+
+        getActivity().onBackPressed();
+    }
 }
