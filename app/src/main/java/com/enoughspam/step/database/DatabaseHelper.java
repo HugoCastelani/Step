@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 37;
+    public static final int VERSION = 41;
 
     private SQLiteDatabase mSqLiteDatabase;
 
@@ -55,6 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "id integer primary key not null," +
                 "code integer not null," +
                 "name varchar(50) not null," +
+                "iso char(2) not null," +
                 "mask varchar(25) not null)");
 
         // creating state table
@@ -184,20 +185,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mSqLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
 
         // inserting countries
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(1, 1, 'United States', '999 999 9999');");
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(2, 1, 'Canada', '999 999 9999');");
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(3, 1, 'República Dominicana', '999 999 9999');");
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(4, 1, 'Puerto Rico', '999 999 9999');");
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(5, 7, 'Россия', '999 999 9999');");   // Russia
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(6, 7, 'Қазақстан', '999 999 99 99');");   // Kazakhstan
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(7, 20, 'مَصر\u200E\u200E', '99 9999 9999');");    // Egypt
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(8, 39, 'Italia', '');");
-        mSqLiteDatabase.execSQL("insert into country(id, code, name, mask) values(9, 55, 'Brasil', '99 99999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(1, 1, 'United States', 'US', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(2, 1, 'Canada', 'CA', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(3, 1, 'República Dominicana', 'DO', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(4, 1, 'Puerto Rico', 'PR', '999 999 9999');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(5, 7, 'Россия', 'RU', '999 999 9999');");   // Russia
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(6, 7, 'Қазақстан', 'KZ', '999 999 99 99');");   // Kazakhstan
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(7, 20, 'مَصر\u200E\u200E', 'EG', '99 9999 9999');");    // Egypt
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(8, 39, 'Italia', 'IT', '');");
+        mSqLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(9, 55, 'Brasil', 'BR', '99 99999 9999');");
 
         // inserting states
-        mSqLiteDatabase.execSQL("insert into state(id, name, country_id) values(1, 'Minas Gerais', 9);");
+        mSqLiteDatabase.execSQL("insert into state(id, name, country_id) values(1, 'São Paulo', 9);");
+        mSqLiteDatabase.execSQL("insert into state(id, name, country_id) values(2, 'Rio de Janeiro', 9);");
+        mSqLiteDatabase.execSQL("insert into state(id, name, country_id) values(3, 'Espírito Santo', 9);");
+        mSqLiteDatabase.execSQL("insert into state(id, name, country_id) values(4, 'Minas Gerais', 9);");
 
-        // inserting states
-        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(31, ' Região metropolitana de Belo Horizonte', 1);");
+        // inserting areas
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(11, 'Região metropolitana de São Paulo', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(12, 'São José dos Campos e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(13, 'Região retropolitana da Baixada Santista', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(14, 'Bauru, Jaú, Marília, Botucatu e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(15, 'Sorocaba e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(16, 'Ribeirão Preto, São Carlos, Araraquara e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(17, 'São José do Rio Preto e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(18, 'Presidente Prudente, Araçatuba e região', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(19, 'Região metropolitana de Campinas', 1);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(22, 'Campos dos Goytacazes e Região', 2);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(21, 'Região metropolitana do Rio de Janeiro', 2);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(24, 'Volta Redonda, Petrópolis e região', 2);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(27, 'Região metropolitana de Vitória', 3);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(28, 'Cachoeiro de Itapemirim e região', 3);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(31, 'Região metropolitana de Belo Horizonte', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(32, 'Juiz de Fora e região', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(33, 'Governador Valadares e região', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(34, 'Uberlândia e região', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(35, 'Poços de Caldas, Pouso Alegre, Varginha e região', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(37, 'Divinópolis, Itaúna e região', 4);");
+        mSqLiteDatabase.execSQL("insert into area(code, name, state_id) values(38, 'Montes Claros e região', 4);");
     }
 }

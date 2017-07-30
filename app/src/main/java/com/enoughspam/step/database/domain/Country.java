@@ -14,20 +14,16 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 public class Country extends Domain {
     private int code;
     private String name;
+    private String iso;
     private String mask;
 
-    public Country(@NonNegative final int code, @NonNull final String name,
-                   @NonNull final String mask) {
-        this.code = code;
-        this.name = name;
-        this.mask = mask;
-    }
-
     public Country(@NonNegative final int id, @NonNegative final int code,
-                   @NonNull final String name, @NonNull final String mask) {
+                   @NonNull final String name, @NonNull final String iso,
+                   @NonNull final String mask) {
         super(id);
         this.code = code;
         this.name = name;
+        this.iso = iso;
         this.mask = mask;
     }
 
@@ -45,6 +41,14 @@ public class Country extends Domain {
 
     public void setName(@NonNull final String name) {
         this.name = name;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public void setIso(@NonNull final String iso) {
+        this.iso = iso;
     }
 
     public String getMask() {

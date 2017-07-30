@@ -21,6 +21,7 @@ public class CountryDAO {
     public static final String ID = "id";
     public static final String CODE = "code";
     public static final String NAME = "name";
+    public static final String ISO = "iso";
     public static final String MASK = "mask";
 
     private CountryDAO() {}
@@ -30,6 +31,7 @@ public class CountryDAO {
                 cursor.getInt(cursor.getColumnIndex(ID)),
                 cursor.getInt(cursor.getColumnIndex(CODE)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
+                cursor.getString(cursor.getColumnIndex(ISO)),
                 cursor.getString(cursor.getColumnIndex(MASK))
         );
     }
@@ -63,6 +65,19 @@ public class CountryDAO {
     public static Country findByName(@NonNull final String name) {
         final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
                 TABLE, null, NAME + " = ?", new String[] {name},
+                null, null, null);
+
+        Country country = null;
+
+        if (cursor.moveToFirst()) country = generate(cursor);
+
+        cursor.close();
+        return country;
+    }
+
+    public static Country findByIso(@NonNull final String iso) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, null, ISO + " = ?", new String[] {iso},
                 null, null, null);
 
         Country country = null;

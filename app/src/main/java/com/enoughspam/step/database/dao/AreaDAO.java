@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Area;
-import com.enoughspam.step.database.domain.Country;
 
 /**
  * Created by Hugo Castelani
@@ -41,19 +40,5 @@ public class AreaDAO {
 
         cursor.close();
         return area;
-    }
-
-    public static boolean mathingArea(@NonNull final Country country, @NonNull final String code) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
-                TABLE, new String[] {CODE}, CODE + " = ?", new String[] {code},
-                null, null, null);
-
-        if (cursor.moveToFirst()) {
-            if (generate(cursor).getState().getCountry().getId() == country.getId()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
