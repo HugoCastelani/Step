@@ -13,67 +13,56 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 
 public class Phone extends Domain {
     private long number;
-    private int countryId;
-    private int areaCode;
-    private User user;
+    private Country country;
+    private Area area;
 
-    public Phone(final long number, @NonNegative final int areaCode, @NonNull final User user) {
+    public Phone(@NonNegative final long number, @NonNull final Area area) {
         this.number = number;
-        this.areaCode = areaCode;
-        this.user = user;
+        this.area = area;
     }
 
-    // some countries don't have area sCode
-    public Phone(@NonNegative final int countryId, final long number, @NonNull final User user) {
-        this.countryId = countryId;
+    // some countries don't have area
+    public Phone(@NonNegative final long number, @NonNull final Country country) {
         this.number = number;
-        this.user = user;
+        this.country = country;
     }
 
-    public Phone(@NonNegative final int id, final long number, @NonNegative final int areaCode, @NonNull final User user) {
+    public Phone(@NonNegative final int id, @NonNegative final long number,
+                 @NonNull final Area area) {
         super(id);
         this.number = number;
-        this.areaCode = areaCode;
-        this.user = user;
+        this.area = area;
     }
 
-    // some countries don't have area sCode
-    public Phone(@NonNegative final int id, @NonNegative final int countryId, final long number, @NonNull final User user) {
+    // some countries don't have area
+    public Phone(@NonNegative final int id, @NonNegative final long number,
+                 @NonNull final Country country) {
         super(id);
-        this.countryId = countryId;
         this.number = number;
-        this.user = user;
+        this.country = country;
     }
 
     public long getNumber() {
         return number;
     }
 
-    public void setNumber(final long number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountryId(@NonNegative final int countryId) {
-        this.countryId = countryId;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
-    public int getAreaCode() {
-        return areaCode;
+    public Area getArea() {
+        return area;
     }
 
-    public void setAreaCode(@NonNegative final int areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(@NonNull final User user) {
-        this.user = user;
+    public void setArea(Area area) {
+        this.area = area;
     }
 }
