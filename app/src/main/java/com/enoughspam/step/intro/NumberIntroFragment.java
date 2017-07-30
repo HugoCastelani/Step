@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.PhoneDAO;
+import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
@@ -45,10 +45,30 @@ public class NumberIntroFragment extends SlideFragment {
         }
     }
 
-    public void confirmNumber(@NonNull final String countryCode, @NonNull final String phoneNumber,
-                              @NonNull final String mergePhoneNumber) {
+    public void confirmNumber(@NonNull final Phone phone) {
 
-        final String formattedPhoneNumber = "+" + countryCode + " " + phoneNumber + "\n";
+        int countryCode;
+        try {
+            countryCode = phone.getCountry().getCode();
+        } catch (NullPointerException e) {
+            countryCode = phone.getArea().getState().getCountry().getCode();
+        }
+
+        int areaCode;
+        try {
+            areaCode = phone.getArea().getCode();
+        } catch (NullPointerException e) {
+            areaCode = -1;
+        }
+
+        final long number = phone.getNumber();
+
+        String formattedPhoneNumber;
+        if (areaCode == -1) {
+            formattedPhoneNumber = "+" + countryCode + " " + number + "\n";
+        } else {
+            formattedPhoneNumber = "+" + countryCode + " " + areaCode + " " + number + "\n";
+        }
 
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.confirmation_dialog_title)
@@ -57,31 +77,7 @@ public class NumberIntroFragment extends SlideFragment {
                 .negativeText(R.string.cancel_button)
                 .onPositive((dialog, which) -> {
 
-                    final int spaceIndex = phoneNumber.indexOf(' ');
-
-                    final Phone phone;
-
-                    if (spaceIndex != -1) {
-                        final long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
-                        final int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
-                        phone = new Phone(
-                                phoneNumberL,
-                                areaCode,
-                                PersonalDAO.get()
-                        );
-
-                    } else {
-
-                        final int countryId = CountryDAO.findByCode(Integer.parseInt(countryCode)).getId();
-                        final long phoneNumberL = Long.parseLong(mergePhoneNumber);
-                        phone = new Phone(
-                                countryId,
-                                phoneNumberL,
-                                PersonalDAO.get()
-                        );
-                    }
-
-                    PhoneDAO.create(phone);
+                    UserPhoneDAO.create(new UserPhone(PersonalDAO.get(), phone, true));
 
                     sendMessage();
                     mCanGoForward = true;

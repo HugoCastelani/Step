@@ -4,9 +4,9 @@ package com.enoughspam.step.numberForm;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.addNumber.AddNumberFragment;
+import com.enoughspam.step.database.dao.AreaDAO;
 import com.enoughspam.step.database.dao.CountryDAO;
+import com.enoughspam.step.database.domain.Area;
+import com.enoughspam.step.database.domain.Country;
+import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.intro.NumberIntroFragment;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
@@ -96,7 +99,6 @@ public class NumberFormFragment extends Fragment {
         });
 
         mSendMessage.setOnClickListener(v -> {
-            ToastUtils.showShort("UPDATE THIS");
             validateNumber();
         });
 
@@ -146,15 +148,40 @@ public class NumberFormFragment extends Fragment {
             return;
         }
 
-        if (CountryDAO.findByCode(Integer.parseInt(mCountryCode)) != null) {
-            if (PhoneNumberUtils.isGlobalPhoneNumber(("+" + mCountryCode + mMergePhoneNumber))) {
-                confirmNumber();
+        final Country country = CountryDAO.findByCode(Integer.parseInt(mCountryCode));
+
+        if (country != null) {
+            final int spaceIndex = mPhoneNumber.indexOf(' ');
+
+            Phone phone = null;
+
+            if (spaceIndex != -1) {
+                final long phoneNumberL = Long.parseLong(mMergePhoneNumber.substring(spaceIndex));
+                final Area area = AreaDAO.findByCode(Integer.parseInt(mPhoneNumber.substring(0, spaceIndex)));
+
+                if (area == null) {
+                    mError = getResources().getString(R.string.area_code_error);
+                    mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+
+                } else {
+
+                    phone = new Phone(
+                            phoneNumberL,
+                            area
+                    );
+                }
 
             } else {
 
-                mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                mError = getResources().getString(R.string.invalid_number);
+                final long phoneNumberL = Long.parseLong(mMergePhoneNumber);
+                phone = new Phone(
+                        phoneNumberL,
+                        country
+                );
+            }
+
+            if (mError.isEmpty()) {
+                confirmNumber(phone);
             }
 
         } else {
@@ -168,13 +195,13 @@ public class NumberFormFragment extends Fragment {
         }
     }
 
-    private void confirmNumber() {
+    private void confirmNumber(@NonNull final Phone phone) {
         if (parentFragment instanceof NumberIntroFragment) {
             ((NumberIntroFragment) parentFragment)
-                    .confirmNumber(mCountryCode, mPhoneNumber, mMergePhoneNumber);
+                    .confirmNumber(phone);
         } else {
             ((AddNumberFragment) parentFragment)
-                    .confirmNumber(mCountryCode, mPhoneNumber, mMergePhoneNumber);
+                    .confirmNumber(phone);
         }
     }
 }

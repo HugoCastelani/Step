@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,10 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.PhoneDAO;
+import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.ListDecorator;
 import com.enoughspam.step.util.ThemeHandler;
@@ -29,6 +30,8 @@ import com.enoughspam.step.util.ThemeHandler;
 public class AddNumberFragment extends Fragment {
 
     private View view;
+    private RecyclerView mRecyclerView;
+    private CustomLinearLayoutManager mLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,25 +43,48 @@ public class AddNumberFragment extends Fragment {
     }
 
     private void initViews() {
-        final AestheticRecyclerView recyclerView = (AestheticRecyclerView)
-                view.findViewById(R.id.add_number_recycler_view);
+        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.add_number_recycler_view);
 
         final AddNumberAdapter adapter = new AddNumberAdapter(this);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
+        mLayoutManager = new CustomLinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(adapter);
 
         ListDecorator.init(getContext());
-        ListDecorator.addAdaptableMargins(recyclerView);
+        ListDecorator.addAdaptableMargins(mRecyclerView);
     }
 
-    public void confirmNumber(@NonNull final String countryCode, @NonNull final String phoneNumber,
-                              @NonNull final String mergePhoneNumber) {
+    public CustomLinearLayoutManager getLayoutManager() {
+        return mLayoutManager;
+    }
 
-        final String formattedPhoneNumber = "+" + countryCode + " " + phoneNumber + "\n";
+    public void confirmNumber(@NonNull final Phone phone) {
+
+        int countryCode;
+        try {
+            countryCode = phone.getCountry().getCode();
+        } catch (NullPointerException e) {
+            countryCode = phone.getArea().getState().getCountry().getCode();
+        }
+
+        int areaCode;
+        try {
+            areaCode = phone.getArea().getCode();
+        } catch (NullPointerException e) {
+            areaCode = -1;
+        }
+
+        final long number = phone.getNumber();
+
+        String formattedPhoneNumber;
+        if (areaCode == -1) {
+            formattedPhoneNumber = "+" + countryCode + " " + number + "\n";
+        } else {
+            formattedPhoneNumber = "+" + countryCode + " " + areaCode + " " + number + "\n";
+        }
 
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.confirmation_dialog_title)
@@ -68,40 +94,12 @@ public class AddNumberFragment extends Fragment {
                 .positiveColor(ThemeHandler.getAccent())
                 .negativeText(R.string.cancel_button)
                 .negativeColor(ThemeHandler.getAccent())
-                .onPositive((dialog, which) ->
-                        saveNumber(countryCode, phoneNumber, mergePhoneNumber))
+                .onPositive((dialog, which) -> saveNumber(phone))
                 .show();
     }
 
-    public void saveNumber(@NonNull final String countryCode, @NonNull final String phoneNumber,
-                           @NonNull final String mergePhoneNumber) {
-
-        final int spaceIndex = phoneNumber.indexOf(' ');
-
-        final Phone phone;
-
-        if (spaceIndex != -1) {
-            final long phoneNumberL = Long.parseLong(mergePhoneNumber.substring(spaceIndex));
-            final int areaCode = Integer.parseInt(phoneNumber.substring(0, spaceIndex));
-            phone = new Phone(
-                    phoneNumberL,
-                    areaCode,
-                    PersonalDAO.get()
-            );
-
-        } else {
-
-            final int countryId = CountryDAO.findByCode(Integer.parseInt(countryCode)).getId();
-            final long phoneNumberL = Long.parseLong(mergePhoneNumber);
-            phone = new Phone(
-                    countryId,
-                    phoneNumberL,
-                    PersonalDAO.get()
-            );
-        }
-
-        PhoneDAO.create(phone);
-
+    public void saveNumber(@NonNull final Phone phone) {
+        UserPhoneDAO.create(new UserPhone(PersonalDAO.get(), phone, false));
         getActivity().onBackPressed();
     }
 }

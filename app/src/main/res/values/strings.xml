@@ -35,6 +35,7 @@
     <string name="something_went_wrong">Algo deu errado...</string>
     <string name="title_4">Registre seu número:</string>
     <string name="country_code_error">O código não corresponde ao de nenhum país</string>
+    <string name="area_code_error">O código não corresponde ao de nenhuma área</string>
     <string name="empty_input_error">Campo vazio</string>
     <string name="empty_inputs_error">Campos vazios</string>
     <string name="invalid_number">Número inválido, tente novamente</string>
