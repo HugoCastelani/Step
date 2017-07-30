@@ -20,7 +20,6 @@ public class PhoneDAO {
     public static final String NUMBER = "number";
     public static final String COUNTRY_ID = "country_id";
     public static final String AREA_CODE = "area_code";
-    public static final String USER_ID = "user_id";
 
     private PhoneDAO() {}
 
@@ -69,5 +68,36 @@ public class PhoneDAO {
 
         cursor.close();
         return phone;
+    }
+
+    public static int exists(@NonNull final Phone phone) {
+        final String number = String.valueOf(phone.getNumber());
+        Cursor cursor;
+
+        if (phone.getCountry() == null) {
+            final String areaCode = String.valueOf(phone.getArea().getCode());
+
+            cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+                    NUMBER + " = ? AND " + AREA_CODE + " = ?",
+                    new String[] {number, areaCode},
+                    null, null, null);
+
+        } else {
+
+            final String countryId = String.valueOf(phone.getCountry().getId());
+
+            cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+                    NUMBER + " = ? AND " + COUNTRY_ID + " = ? ", new String[] {number, countryId},
+                    null, null, null);
+        }
+
+        Phone matchingPhone = null;
+
+        if (cursor.moveToFirst()) matchingPhone = generate(cursor);
+
+        cursor.close();
+
+        if (matchingPhone == null) return -1;
+        else return matchingPhone.getId();
     }
 }
