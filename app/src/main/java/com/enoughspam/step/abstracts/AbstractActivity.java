@@ -69,6 +69,12 @@ public abstract class AbstractActivity extends AestheticActivity {
                 .colorIconTitleInactiveRes(R.color.textColorPrimary)
                 .colorCardViewBackgroundRes(R.color.colorCardBackground)
                 .apply();
+
+        if (Build.VERSION.SDK_INT >= M) {
+            Aesthetic.get()
+                    .colorStatusBarRes(R.color.colorPrimaryDark)
+                    .apply();
+        }
     }
 
     protected void updateTheme() {

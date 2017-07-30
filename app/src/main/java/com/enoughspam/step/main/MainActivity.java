@@ -11,6 +11,9 @@ import android.support.v4.content.ContextCompat;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addNumber.AddNumberActivity;
+import com.enoughspam.step.database.dao.PersonalDAO;
+import com.enoughspam.step.database.dao.UserDAO;
+import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -35,6 +38,11 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        if (PersonalDAO.get() == null) {
+            UserDAO.create(new User(-1, "-1", "Developer"));
+            PersonalDAO.create(new User(-1, "-1", "Developer"));
+        }
 
         initToolbar(false);
         initViews();

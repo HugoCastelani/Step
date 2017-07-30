@@ -42,7 +42,6 @@ dependencies {
     compile 'com.afollestad:aesthetic:0.4.7'
     compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
     compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
-    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
     // azimo labs
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
@@ -83,7 +82,6 @@ dependencies {
     compile 'com.afollestad:aesthetic:0.4.7'
     compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
     compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
-    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
     // azimo labs
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'

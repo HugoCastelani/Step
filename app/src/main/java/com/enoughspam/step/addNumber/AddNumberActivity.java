@@ -8,6 +8,8 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+
 public class AddNumberActivity extends AbstractActivity {
 
     private FloatingActionButton mFab;
@@ -22,6 +24,17 @@ public class AddNumberActivity extends AbstractActivity {
         initViews();
         initActions();
         initFragment();
+
+        KeyboardVisibilityEvent.setEventListener(
+                this,
+                isOpen -> {
+                    if (isOpen) {
+                        mAddNumberFragment.getLayoutManager().setScrollEnabled(false);
+                    } else {
+                        mAddNumberFragment.getLayoutManager().setScrollEnabled(true);
+                    }
+                }
+        );
     }
 
     @Override
