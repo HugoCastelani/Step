@@ -18,8 +18,12 @@ import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.AreaDAO;
 import com.enoughspam.step.database.dao.CountryDAO;
+import com.enoughspam.step.database.dao.PersonalDAO;
+import com.enoughspam.step.database.dao.UserPhoneDAO;
+import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 
@@ -57,31 +61,46 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                 continue;
             }
 
+            // some names are unknown
             if (name == null || name.equals(number)) {
                 name = fragment.getResources().getString(R.string.unknown);
             }
 
-            // removing any left 0
-            number = String.valueOf(Long.getLong(number));
+            // removing any 0 left
+            number = String.valueOf(Long.parseLong(number));
 
-            String areaCode = null;
-            final Country country = CountryDAO.findByCode(Integer.getInteger(countryCode));
+            final Country country = CountryDAO.findByIso(countryCode);
+            Phone phone;
 
-            for (int i = 1; i < number.length(); i++) {
-                areaCode = number.substring(0, i);
+            // some countries don't have area code
+            if (!country.getMask().isEmpty()) {
 
-                if (AreaDAO.mathingArea(country, areaCode)) {
-                    number = number.substring(i - 1, number.length());
-                    continue;
+                // discover number's area and country
+                StringBuilder areaCode = new StringBuilder(50);
+                Area area = null;
+                final int codeLength = String.valueOf(country.getCode()).length();
+
+                for (int i = 0; i < codeLength; i++) {
+                    areaCode.append(number.charAt(i));
+
+                    area = AreaDAO.findByCode(Integer.valueOf(areaCode.toString()));
+                    if (area != null && area.getState().getCountry().getId() == country.getId()) {
+                        number = number.substring(i + 1, number.length());
+                    }
                 }
+
+                if (area == null) continue;
+                else phone = new Phone(Long.parseLong(number), area);
+
+            } else {
+
+                phone = new Phone(Long.parseLong(number), country);
             }
 
-            if (areaCode == null) continue;
-
-            final Phone phone = new Phone(
-                    Long.parseLong(number),
-                    AreaDAO.findByCode(Integer.parseInt(areaCode))
-            );
+            // see if number is already blocked
+            if (UserPhoneDAO.isAlreadyBlocked(new UserPhone(PersonalDAO.get(), phone, false))) {
+                continue;
+            }
 
             final Call call = new Call(name, phone);
 
@@ -144,10 +163,10 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
             final StringBuilder formattedNumber = new StringBuilder(50);
             formattedNumber.append("+" + countryCode);
             formattedNumber.append(" " + areaCode);
-            formattedNumber.append(" " + formattedNumber);
+            formattedNumber.append(" " + number);
 
-            aViewHolder.mSectionOrName.setText("" + call.getName());
-            aViewHolder.mNumber.setText("" + formattedNumber.toString());
+            aViewHolder.mSectionOrName.setText(call.getName());
+            aViewHolder.mNumber.setText(formattedNumber.toString());
 
             aViewHolder.mCardView.setOnLongClickListener(view -> {
                 if (mSelectionMode) {
