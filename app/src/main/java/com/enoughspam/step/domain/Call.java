@@ -2,6 +2,8 @@ package com.enoughspam.step.domain;
 
 import android.support.annotation.NonNull;
 
+import com.enoughspam.step.database.domain.Phone;
+
 /**
  * Created by Hugo Castelani
  * Date: 25/07/17
@@ -10,11 +12,11 @@ import android.support.annotation.NonNull;
 
 public class Call {
     private String name;
-    private String number;
+    private Phone phone;
 
-    public Call(@NonNull final String name, @NonNull final String number) {
+    public Call(@NonNull final String name, @NonNull final Phone phone) {
         this.name = name;
-        this.number = number;
+        this.phone = phone;
     }
 
     public String getName() {
@@ -25,11 +27,11 @@ public class Call {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public Phone getPhone() {
+        return phone;
     }
 
-    public void setNumber(@NonNull final String number) {
-        this.number = number;
+    public void setPhone(@NonNull final Phone phone) {
+        this.phone = phone;
     }
 }

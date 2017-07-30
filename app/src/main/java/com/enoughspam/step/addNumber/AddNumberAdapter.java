@@ -1,5 +1,8 @@
 package com.enoughspam.step.addNumber;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +16,10 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.AreaDAO;
+import com.enoughspam.step.database.dao.CountryDAO;
+import com.enoughspam.step.database.domain.Country;
+import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 
@@ -33,18 +40,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     private final AddNumberFragment mFragment;
 
     public AddNumberAdapter(@NonNull final AddNumberFragment fragment) {
-        mCallList = new ArrayList<>();
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-        mCallList.add(new Call("Dougras", "123456789"));
-
-        /*Uri calls = Uri.parse("content://call_log/calls");
+        Uri calls = Uri.parse("content://call_log/calls");
         Cursor cursor = fragment.getContext().getContentResolver().query(calls, null, null, null, null);
 
         mCallList = new ArrayList<>();
@@ -53,20 +49,47 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
             String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
+            final String countryCode = cursor.getString(cursor.getColumnIndex(CallLog.Calls.COUNTRY_ISO));
 
-            if (number == null) continue;
+            // doesn't make sense show null numbers or outgoing calls
+            if (number == null ||
+                cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE)) == CallLog.Calls.OUTGOING_TYPE) {
+                continue;
+            }
 
             if (name == null || name.equals(number)) {
                 name = fragment.getResources().getString(R.string.unknown);
             }
 
-            Call call = new Call(name, number);
+            // removing any left 0
+            number = String.valueOf(Long.getLong(number));
+
+            String areaCode = null;
+            final Country country = CountryDAO.findByCode(Integer.getInteger(countryCode));
+
+            for (int i = 1; i < number.length(); i++) {
+                areaCode = number.substring(0, i);
+
+                if (AreaDAO.mathingArea(country, areaCode)) {
+                    number = number.substring(i - 1, number.length());
+                    continue;
+                }
+            }
+
+            if (areaCode == null) continue;
+
+            final Phone phone = new Phone(
+                    Long.parseLong(number),
+                    AreaDAO.findByCode(Integer.parseInt(areaCode))
+            );
+
+            final Call call = new Call(name, phone);
 
             if (!numberList.contains(number)) {
                 mCallList.add(call);
                 numberList.add(number);
             }
-        }*/
+        }
 
         mFragment = fragment;
     }
@@ -112,9 +135,19 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
         if (holder instanceof OrdinaryViewHolder) {
             final OrdinaryViewHolder aViewHolder = ((OrdinaryViewHolder) holder);
+            final Call call = mCallList.get(relativePosition);
 
-            aViewHolder.mSectionOrName.setText("" + mCallList.get(relativePosition).getName());
-            aViewHolder.mNumber.setText("" + mCallList.get(relativePosition).getNumber());
+            final int countryCode = call.getPhone().getArea().getState().getCountry().getCode();
+            final int areaCode = call.getPhone().getArea().getCode();
+            final long number = call.getPhone().getNumber();
+
+            final StringBuilder formattedNumber = new StringBuilder(50);
+            formattedNumber.append("+" + countryCode);
+            formattedNumber.append(" " + areaCode);
+            formattedNumber.append(" " + formattedNumber);
+
+            aViewHolder.mSectionOrName.setText("" + call.getName());
+            aViewHolder.mNumber.setText("" + formattedNumber.toString());
 
             aViewHolder.mCardView.setOnLongClickListener(view -> {
                 if (mSelectionMode) {
@@ -158,6 +191,10 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                         aViewHolder.mParent.setSelected(true);
                         mSelectedViews++;
                     }
+
+                } else {
+
+                    mFragment.saveNumber(new Phone(number, AreaDAO.findByCode(areaCode)));
                 }
             });
         }
