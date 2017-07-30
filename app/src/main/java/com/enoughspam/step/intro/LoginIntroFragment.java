@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.PersonalDAO;
 import com.enoughspam.step.database.dao.UserDAO;
@@ -100,9 +101,23 @@ public class LoginIntroFragment extends SlideFragment implements
 
         } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
 
+        if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
 
-        Snackbar.make(view, getResources().getString(R.string.sign_in_error) + error,
-                Snackbar.LENGTH_LONG).show();
+            UserDAO.create(new User(-1, "-1", "Developer"));
+            PersonalDAO.create(new User(-1, "-1", "Developer"));
+
+            ToastUtils.showShort("Developer account created");
+
+            mCanGoForward = true;
+            canGoForward();
+            nextSlide();
+
+        } else {
+
+            Snackbar.make(view, getResources().getString(R.string.sign_in_error) +
+                    error, Snackbar.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
