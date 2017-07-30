@@ -10,7 +10,7 @@
         android:padding="@dimen/mi_baseline"
         tools:context="com.enoughspam.step.intro.PermissionIntroFragment">
 
-    <ImageView
+    <com.afollestad.aesthetic.AestheticImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/mi_baseline_quadruple"
@@ -21,7 +21,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/intro_2" />
 
-    <TextView
+    <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline_double"
@@ -31,7 +31,7 @@
             android:text="@string/title_2"
             android:textColor="?android:textColorPrimary"/>
 
-    <TextView
+    <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline"
@@ -40,7 +40,7 @@
             android:text="@string/description_2"
             android:textColor="?android:textColorSecondary"/>
 
-    <Button
+    <com.afollestad.aesthetic.AestheticButton
             android:id="@+id/intro_permission_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

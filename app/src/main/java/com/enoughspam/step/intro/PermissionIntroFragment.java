@@ -6,8 +6,8 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.afollestad.aesthetic.AestheticButton;
 import com.enoughspam.step.R;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -15,7 +15,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 public class PermissionIntroFragment extends SlideFragment {
 
     private RxPermissions mRxPermissions;
-    private Button mButton;
+    private AestheticButton mButton;
 
     private boolean mCanGoForward = false;
 
@@ -26,7 +26,7 @@ public class PermissionIntroFragment extends SlideFragment {
 
         mRxPermissions = new RxPermissions(getActivity());
 
-        mButton = (Button) view.findViewById(R.id.intro_permission_button);
+        mButton = (AestheticButton) view.findViewById(R.id.intro_permission_button);
         mButton.setOnClickListener(v -> onRequestButtonClick());
 
         return view;

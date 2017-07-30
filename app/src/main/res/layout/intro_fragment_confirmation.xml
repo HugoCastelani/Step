@@ -19,7 +19,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <ImageView
+        <com.afollestad.aesthetic.AestheticImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/mi_baseline_quadruple"
@@ -30,7 +30,7 @@
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/intro_5"/>
 
-        <TextView
+        <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline_double"
@@ -48,7 +48,7 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <EditText
+            <com.afollestad.aesthetic.AestheticEditText
                 android:id="@+id/intro_confirmation_code"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
@@ -57,7 +57,7 @@
                 android:maxLength="6"
                 android:layout_weight=".50"/>
 
-            <ImageView
+            <com.afollestad.aesthetic.AestheticImageView
                 android:id="@+id/intro_confirmation_go"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

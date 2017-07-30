@@ -8,10 +8,10 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.afollestad.aesthetic.AestheticEditText;
+import com.afollestad.aesthetic.AestheticImageView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
@@ -27,8 +27,8 @@ public class ConfirmationIntroFragment extends SlideFragment {
         final View view = inflater.inflate(R.layout.intro_fragment_confirmation, container, false);
 
         final LinearLayout parentView = (LinearLayout) view.findViewById(R.id.intro_confirmation_parent);
-        final EditText messageCode = (EditText) view.findViewById(R.id.intro_confirmation_code);
-        final ImageView confirm = (ImageView) view.findViewById(R.id.intro_confirmation_go);
+        final AestheticEditText messageCode = (AestheticEditText) view.findViewById(R.id.intro_confirmation_code);
+        final AestheticImageView confirm = (AestheticImageView) view.findViewById(R.id.intro_confirmation_go);
 
         confirm.setOnClickListener(v -> {
             parentView.requestFocus();

@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <com.afollestad.aesthetic.AestheticImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/mi_baseline_quadruple"
@@ -27,7 +27,7 @@
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/intro_4"/>
 
-        <TextView
+        <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mi_baseline_double"
