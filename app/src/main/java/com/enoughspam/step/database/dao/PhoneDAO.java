@@ -22,44 +22,40 @@ public class PhoneDAO {
     public static final String AREA_CODE = "area_code";
     public static final String USER_ID = "user_id";
 
-    public PhoneDAO() {}
+    private PhoneDAO() {}
 
     public static Phone generate(@NonNull final Cursor cursor) {
         if (cursor.getInt(cursor.getColumnIndex(AREA_CODE)) == 0) {
             return new Phone(
                     cursor.getInt(cursor.getColumnIndex(ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    cursor.getInt(cursor.getColumnIndex(AREA_CODE)),
-                    PersonalDAO.get()
+                    CountryDAO.findById(cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)))
             );
 
         } else {
 
             return new Phone(
                     cursor.getInt(cursor.getColumnIndex(ID)),
-                    cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)),
                     cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    PersonalDAO.get()
+                    AreaDAO.findByCode(cursor.getInt(cursor.getColumnIndex(AREA_CODE)))
             );
         }
     }
 
-    public static boolean create(@NonNull final Phone phone) {
+    public static long create(@NonNull final Phone phone) {
         final ContentValues values = new ContentValues();
 
-        if (phone.getAreaCode() == 0) {
+        if (phone.getArea().getCode() == 0) {
             values.put(NUMBER, phone.getNumber());
-            values.put(COUNTRY_ID, phone.getCountryId());
-            values.put(USER_ID, phone.getUser().getId());
+            values.put(COUNTRY_ID, phone.getCountry().getId());
 
         } else {
 
             values.put(NUMBER, phone.getNumber());
-            values.put(AREA_CODE, phone.getAreaCode());
-            values.put(USER_ID, phone.getUser().getId());
+            values.put(AREA_CODE, phone.getArea().getCode());
         }
 
-        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
+        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
     }
 
     public static Phone findById(@NonNegative final int id) {

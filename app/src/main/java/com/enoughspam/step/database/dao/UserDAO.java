@@ -20,7 +20,7 @@ public class UserDAO {
     public static final String SOCIAL_ID = "social_id";
     public static final String NAME = "name";
 
-    public UserDAO() {}
+    private UserDAO() {}
 
     public static User generate(@NonNull final Cursor cursor) {
         return new User(
@@ -42,6 +42,19 @@ public class UserDAO {
     public static boolean delete(@NonNegative final int id) {
         return DAOHandler.getSqLiteDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)}) > 0;
+    }
+
+    public static User findById(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
+
+        User area = null;
+
+        if (cursor.moveToFirst()) area = generate(cursor);
+
+        cursor.close();
+        return area;
     }
 
     public static int findIdByIdSocial(@NonNull final String socialId) {

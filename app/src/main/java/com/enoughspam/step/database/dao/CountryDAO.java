@@ -34,6 +34,19 @@ public class CountryDAO {
         );
     }
 
+    public static Country findById(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
+
+        Country country = null;
+
+        if (cursor.moveToFirst()) country = generate(cursor);
+
+        cursor.close();
+        return country;
+    }
+
     public static Country findByCode(@NonNegative final int code) {
         final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
                 TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
