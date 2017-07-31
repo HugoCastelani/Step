@@ -43,9 +43,14 @@ public class AddNumberFragment extends Fragment {
     private View view;
     private RecyclerView mRecyclerView;
     private CustomLinearLayoutManager mLayoutManager;
+    private AddNumberAdapter mAdapter;
 
     public CustomLinearLayoutManager getLayoutManager() {
         return mLayoutManager;
+    }
+
+    public AddNumberAdapter getAdapter() {
+        return mAdapter;
     }
 
     @Override
@@ -60,13 +65,13 @@ public class AddNumberFragment extends Fragment {
     private void initViews() {
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.add_number_recycler_view);
 
-        final AddNumberAdapter adapter = new AddNumberAdapter(getCallList(), this);
+        mAdapter = new AddNumberAdapter(getCallList(), this);
         mLayoutManager = new CustomLinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         ListDecorator.init(getContext());
         ListDecorator.addAdaptableMargins(mRecyclerView);

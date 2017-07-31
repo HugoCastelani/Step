@@ -6,9 +6,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.numberForm.NumberFormFragment;
+import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.domain.Call;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+
+import java.util.List;
 
 public class AddNumberActivity extends AbstractActivity {
 
@@ -39,15 +42,24 @@ public class AddNumberActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        mFab = (FloatingActionButton) findViewById(R.id.main_fab);
+        mFab = (FloatingActionButton) findViewById(R.id.add_number_fab);
     }
 
     @Override
     protected void initActions() {
-        mFab.setOnClickListener(view ->
-                 ((NumberFormFragment) mAddNumberFragment.getChildFragmentManager()
-                        .findFragmentByTag("numberFormFragmentTag")).validateNumber()
-        );
+        mFab.setOnClickListener(view -> {
+            final List<Call> callList = mAddNumberFragment.getAdapter().getSelectedItems();
+
+            for (int i = 0; i < callList.size(); i++) {
+                final Phone phone = callList.get(i).getPhone();
+
+                if (phone.getCountry() == null) {
+                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), phone.getArea()));
+                } else {
+                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), phone.getCountry()));
+                }
+            }
+        });
     }
 
     @Override
