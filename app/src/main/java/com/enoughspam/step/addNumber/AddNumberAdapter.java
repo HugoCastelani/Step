@@ -13,11 +13,11 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.AreaDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,24 +76,45 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
     boolean mSelectionMode = false;
     int mSelectedViews = 0;
 
+    private final List<OrdinaryViewHolder> mItemList = new ArrayList<>();
+
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
         if (holder instanceof OrdinaryViewHolder) {
             final OrdinaryViewHolder aViewHolder = ((OrdinaryViewHolder) holder);
             final Call call = mCallList.get(relativePosition);
 
-            final int countryCode = call.getPhone().getArea().getState().getCountry().getCode();
-            final int areaCode = call.getPhone().getArea().getCode();
-            final long number = call.getPhone().getNumber();
+            mItemList.add(aViewHolder);
 
             final StringBuilder formattedNumber = new StringBuilder(50);
-            formattedNumber.append("+" + countryCode);
-            formattedNumber.append(" " + areaCode);
+
+            int countryCode;
+            int areaCode;
+            long number;
+
+            if (call.getPhone().getCountry() == null) {
+                countryCode = call.getPhone().getArea().getState().getCountry().getCode();
+                areaCode = call.getPhone().getArea().getCode();
+                number = call.getPhone().getNumber();
+
+                formattedNumber.append("+" + countryCode);
+                formattedNumber.append(" " + areaCode);
+
+            } else {
+
+                countryCode = call.getPhone().getCountry().getCode();
+                areaCode = -1;
+                number = call.getPhone().getNumber();
+
+                formattedNumber.append("+" + countryCode);
+            }
+
             formattedNumber.append(" " + number);
 
             aViewHolder.mSectionOrName.setText(call.getName());
             aViewHolder.mNumber.setText(formattedNumber.toString());
 
+            // actions to multiple items selection
             aViewHolder.mCardView.setOnLongClickListener(view -> {
                 if (mSelectionMode) {
                     if (aViewHolder.mParent.isSelected()) {
@@ -121,6 +142,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                 return true;
             });
 
+            // actions to single item
             aViewHolder.mCardView.setOnClickListener(view -> {
                 if (mSelectionMode) {
                     if (aViewHolder.mParent.isSelected()) {
@@ -139,10 +161,26 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
                 } else {
 
-                    mFragment.saveNumber(new Phone(number, AreaDAO.findByCode(areaCode)));
+                    if (areaCode != -1) {
+                        mFragment.saveNumber(new Phone(number, call.getPhone().getArea()));
+                    } else {
+                        mFragment.saveNumber(new Phone(number, call.getPhone().getCountry()));
+                    }
                 }
             });
         }
+    }
+
+    public List<Call> getSelectedItems() {
+        final List<Call> callList = new ArrayList<>();
+
+        for (int i = 0; i < mItemList.size(); i++) {
+            if (mItemList.get(i).mParent.isSelected()) {
+                callList.add(mCallList.get(i));
+            }
+        }
+
+        return callList;
     }
 
     @Override
