@@ -9,8 +9,10 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.domain.PhoneSection;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -20,9 +22,9 @@ import java.util.ArrayList;
 
 public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedNumbersAdapter.MyViewHolder> {
 
-    private ArrayList<ArrayList<String>> mBlockedNumbersList;
+    private List<PhoneSection> mBlockedNumbersList;
 
-    public BlockedNumbersAdapter(@NonNull final ArrayList<ArrayList<String>> blockedNumbersList) {
+    public BlockedNumbersAdapter(@NonNull final List<PhoneSection> blockedNumbersList) {
         mBlockedNumbersList = blockedNumbersList;
     }
 
@@ -33,12 +35,12 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
 
     @Override
     public int getItemCount(int section) {
-        return mBlockedNumbersList.get(section).size() - 1; // -1 because first position stores section's name
+        return mBlockedNumbersList.get(section).getPhoneList().size();
     }
 
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
-        holder.blocker_or_number.setText(mBlockedNumbersList.get(section).get(0));
+        holder.blocker_or_number.setText(mBlockedNumbersList.get(section).getUserName());
     }
 
     @Override
@@ -46,7 +48,18 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int section, int relativePosition, int absolutePosition) {
-        holder.blocker_or_number.setText(mBlockedNumbersList.get(section).get(relativePosition + 1));
+        final Phone phone = mBlockedNumbersList.get(section).getPhoneList().get(relativePosition);
+
+        final int countryCode = phone.getArea().getState().getCountry().getCode();
+        final int areaCode = phone.getArea().getCode();
+        final long number = phone.getNumber();
+
+        final StringBuilder formattedNumber = new StringBuilder(50);
+        formattedNumber.append("+" + countryCode);
+        formattedNumber.append(" " + areaCode);
+        formattedNumber.append(" " + number);
+
+        holder.blocker_or_number.setText(formattedNumber);
     }
 
     @Override

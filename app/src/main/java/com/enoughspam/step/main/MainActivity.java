@@ -31,6 +31,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 public class MainActivity extends AbstractActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
+    private static final int REQUEST_CODE_ADD_NUMBER = 3;
 
     private FloatingActionButton mFab;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AbstractActivity {
     protected void initActions() {
         mFab.setOnClickListener(fab -> {
             final Intent intent = new Intent(MainActivity.this, AddNumberActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_ADD_NUMBER);
         });
 
         /*TapTargetView.showFor(getActivity(),
@@ -132,8 +133,14 @@ public class MainActivity extends AbstractActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SETTINGS) {
-            recreate();
+        switch (requestCode) {
+            case REQUEST_CODE_SETTINGS:
+                recreate();
+                break;
+            case REQUEST_CODE_ADD_NUMBER:
+                recreate();
+                break;
+            default: break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
