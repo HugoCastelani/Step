@@ -36,7 +36,12 @@ public class UserDAO {
         values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());
 
-        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
+        int id = (int) DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
+        if (id != -1) {
+            user.setId(id);
+            PersonalDAO.create(user);
+            return true;
+        } else return false;
     }
 
     public static boolean delete(@NonNegative final int id) {
@@ -55,18 +60,6 @@ public class UserDAO {
 
         cursor.close();
         return area;
-    }
-
-    public static int findIdByIdSocial(@NonNull final String socialId) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
-                TABLE, new String[] {ID}, SOCIAL_ID + " = ?", new String[] {socialId},
-                null, null, null);
-
-        int id = -1;
-        if (cursor.moveToFirst()) id = cursor.getInt(cursor.getColumnIndex(ID));
-
-        cursor.close();
-        return id;
     }
 
     public static User findBySocialId(@NonNull final String socialId) {

@@ -80,15 +80,16 @@ public class LoginIntroFragment extends SlideFragment implements
                 final GoogleSignInAccount account = result.getSignInAccount();
 
                 if (account.getId() != null) {
-                    final String idSocial = account.getId() + GOOGLE_CODE;
-                    final User user = new User(idSocial, account.getDisplayName());
+                    final String socialId = account.getId() + GOOGLE_CODE;
+                    final User user = new User(socialId, account.getDisplayName());
 
-                    if (UserDAO.findBySocialId(idSocial) == null) {
+                    final User existingUser = UserDAO.findBySocialId(socialId);
+                    if (existingUser == null) {
                         UserDAO.create(user);
+                    } else {
+                        user.setId(existingUser.getId());
+                        PersonalDAO.create(user);
                     }
-
-                    user.setId(UserDAO.findIdByIdSocial(idSocial));
-                    PersonalDAO.create(user);
 
                     mCanGoForward = true;
                     canGoForward();
