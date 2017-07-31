@@ -44,9 +44,9 @@ public class UserDAO {
         } else return false;
     }
 
-    public static boolean delete(@NonNegative final int id) {
-        return DAOHandler.getSqLiteDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)}) > 0;
+    public static void delete(@NonNegative final int id) {
+        DAOHandler.getSqLiteDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
     public static User findById(@NonNegative final int id) {

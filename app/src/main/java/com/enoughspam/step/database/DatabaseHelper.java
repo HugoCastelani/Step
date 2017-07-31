@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 41;
+    public static final int VERSION = 43;
 
     private SQLiteDatabase mSqLiteDatabase;
 
@@ -167,6 +167,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertAttributes() {
+        mSqLiteDatabase.execSQL("insert into user(id, social_id, name) values(0, '0', 'Enough Spam! Official');");
+
         // !!!!!!!!!!! NEVER ADD A NEW ATTRIBUTE ON TOP OF THE TABLE AFTER APP IS ON THE AIR!!!!!!!!!!!
 
         // inserting description attributes
