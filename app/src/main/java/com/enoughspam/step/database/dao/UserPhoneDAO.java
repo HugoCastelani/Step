@@ -36,7 +36,14 @@ public class UserPhoneDAO {
 
     public static int create(@NonNull final UserPhone userPhone) {
         final ContentValues values = new ContentValues();
-        final int id = (int) PhoneDAO.create(userPhone.getPhone());
+
+        int id;
+        final int possibleId = PhoneDAO.exists(userPhone.getPhone());
+        if (possibleId != -1) {
+            id = possibleId;
+        } else {
+            id = (int) PhoneDAO.create(userPhone.getPhone());
+        }
 
         if (id > 0) {
             values.put(USER_ID, userPhone.getUser().getId());
