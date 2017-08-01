@@ -34,21 +34,19 @@ public class UserPhoneDAO {
         );
     }
 
-    public static boolean create(@NonNull final UserPhone userPhone) {
+    public static int create(@NonNull final UserPhone userPhone) {
         final ContentValues values = new ContentValues();
-        final long id = PhoneDAO.create(userPhone.getPhone());
+        final int id = (int) PhoneDAO.create(userPhone.getPhone());
 
         if (id > 0) {
             values.put(USER_ID, userPhone.getUser().getId());
             values.put(PHONE_ID, id);
             values.put(IS_PROPERTY, userPhone.isProperty());
 
-            return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
-
-        } else {
-
-            return false;
+            return (int) DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
         }
+
+        return id;
     }
 
     public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {

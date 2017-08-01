@@ -30,7 +30,7 @@ public class UserDAO {
         );
     }
 
-    public static boolean create(@NonNull final User user) {
+    public static int create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
         values.put(SOCIAL_ID, user.getSocialId());
@@ -40,8 +40,9 @@ public class UserDAO {
         if (id != -1) {
             user.setId(id);
             PersonalDAO.create(user);
-            return true;
-        } else return false;
+        }
+
+        return id;
     }
 
     public static void delete(@NonNegative final int id) {

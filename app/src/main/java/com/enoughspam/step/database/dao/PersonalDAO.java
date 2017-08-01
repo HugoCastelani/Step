@@ -27,13 +27,13 @@ public class PersonalDAO {
         );
     }
 
-    public static boolean create(@NonNull final User user) {
+    public static int create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
         values.put(ID, user.getId());
         values.put(NAME, user.getName());
 
-        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values) > 0;
+        return (int) DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
     }
 
     public static User get() {

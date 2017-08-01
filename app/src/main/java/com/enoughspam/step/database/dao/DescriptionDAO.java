@@ -33,14 +33,14 @@ public class DescriptionDAO {
         );
     }
 
-    public static boolean update(@NonNull final Description description) {
+    public static void update(@NonNull final Description description) {
         final ContentValues values = new ContentValues();
 
         // For convenience, I'm gonna update only treatment id
         values.put(TREATMENT_ID, description.getTreatmentId());
 
-        return DAOHandler.getSqLiteDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(description.getId())}) > 0;
+        DAOHandler.getSqLiteDatabase().update(TABLE, values,
+                ID + " = ?", new String[] {String.valueOf(description.getId())});
     }
 
     public static Description findById(@NonNegative final int id) {

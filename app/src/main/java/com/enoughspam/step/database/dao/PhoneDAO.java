@@ -78,8 +78,7 @@ public class PhoneDAO {
             final String areaCode = String.valueOf(phone.getArea().getCode());
 
             cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
-                    NUMBER + " = ? AND " + AREA_CODE + " = ?",
-                    new String[] {number, areaCode},
+                    NUMBER + " = ? AND " + AREA_CODE + " = ?", new String[] {number, areaCode},
                     null, null, null);
 
         } else {
