@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 
@@ -48,6 +49,12 @@ public class UserPhoneDAO {
 
             return false;
         }
+    }
+
+    public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {
+        DAOHandler.getSqLiteDatabase().delete(TABLE,
+                USER_ID + " = ? AND " + PHONE_ID + " = ?",
+                new String[] {String.valueOf(userId), String.valueOf(phoneId)});
     }
 
     /**

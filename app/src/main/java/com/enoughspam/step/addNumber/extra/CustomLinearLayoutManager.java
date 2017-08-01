@@ -1,4 +1,4 @@
-package com.enoughspam.step.addNumber;
+package com.enoughspam.step.addNumber.extra;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

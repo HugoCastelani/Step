@@ -6,9 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.aesthetic.AestheticTextView;
+import com.afollestad.sectionedrecyclerview.ItemCoord;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
+import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.PersonalDAO;
+import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.PhoneSection;
 
@@ -22,10 +26,19 @@ import java.util.List;
 
 public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedNumbersAdapter.MyViewHolder> {
 
-    private List<PhoneSection> mBlockedNumbersList;
+    private final List<PhoneSection> mBlockedNumbersList;
 
     public BlockedNumbersAdapter(@NonNull final List<PhoneSection> blockedNumbersList) {
         mBlockedNumbersList = blockedNumbersList;
+    }
+
+    public void removeItem(@NonNegative final int absolutePosition) {
+        final ItemCoord coord = getRelativePosition(absolutePosition);
+        final List<Phone> phoneList = mBlockedNumbersList.get(coord.section()).getPhoneList();
+
+        UserPhoneDAO.delete(PersonalDAO.get().getId(), phoneList.get(coord.relativePos()).getId());
+        phoneList.remove(phoneList.get(coord.relativePos()));
+        notifyItemRemoved(absolutePosition);
     }
 
     @Override
@@ -41,6 +54,7 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
         holder.blocker_or_number.setText(mBlockedNumbersList.get(section).getUserName());
+        holder.isSwipeable = false;
     }
 
     @Override
@@ -82,12 +96,14 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
         return new MyViewHolder(view);
     }
 
-    protected static class MyViewHolder extends SectionedViewHolder {
+    public static class MyViewHolder extends SectionedViewHolder {
         final AestheticTextView blocker_or_number;
+        public boolean isSwipeable;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             blocker_or_number = (AestheticTextView) itemView.findViewById(android.R.id.title);
+            isSwipeable = true;
         }
     }
 }

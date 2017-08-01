@@ -3,6 +3,8 @@ package com.enoughspam.step.main;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +49,33 @@ public class MainFragment extends Fragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-
         recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.removeItem(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder instanceof BlockedNumbersAdapter.MyViewHolder
+                        && ((BlockedNumbersAdapter.MyViewHolder) viewHolder).isSwipeable) {
+                    return super.getSwipeDirs(recyclerView, viewHolder);
+                } else {
+                    return 0;
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         ListDecorator.init(getContext());
         ListDecorator.addAdaptableMargins(recyclerView);
