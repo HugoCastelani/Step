@@ -185,7 +185,7 @@ public class AddNumberFragment extends Fragment {
                 .show();
     }
 
-    protected void saveNumber(@NonNull final Phone phone) {
+    protected void saveNumber(@NonNull Phone phone) {
         UserPhoneDAO.create(new UserPhone(PersonalDAO.get(), phone, false));
         getActivity().onBackPressed();
     }
