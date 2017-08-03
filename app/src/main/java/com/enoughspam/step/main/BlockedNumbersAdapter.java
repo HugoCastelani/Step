@@ -16,6 +16,7 @@ import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.PhoneSection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,13 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
 
         UserPhoneDAO.delete(PersonalDAO.get().getId(), phoneList.get(coord.relativePos()).getId());
         phoneList.remove(phoneList.get(coord.relativePos()));
+
+        // swipe header when there's no item
+        if (phoneList.isEmpty()) {
+            mBlockedNumbersList.remove(coord.section());
+            notifyItemRemoved(absolutePosition - 1);
+        }
+
         notifyItemRemoved(absolutePosition);
     }
 
@@ -51,10 +59,12 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
         return mBlockedNumbersList.get(section).getPhoneList().size();
     }
 
+    List<AestheticTextView> headerList = new ArrayList<>();
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
         holder.blocker_or_number.setText(mBlockedNumbersList.get(section).getUserName());
         holder.isSwipeable = false;
+        headerList.add(holder.blocker_or_number);
     }
 
     @Override

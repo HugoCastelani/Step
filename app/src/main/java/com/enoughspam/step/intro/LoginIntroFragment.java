@@ -26,7 +26,7 @@ import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 public class LoginIntroFragment extends SlideFragment implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int RC_SIGN_IN = 3;
+    private static final int GOOGLE_SIGN_IN = 3;
     private static final int GOOGLE_CODE = 1;
 
     private View view;
@@ -60,7 +60,7 @@ public class LoginIntroFragment extends SlideFragment implements
 
     private void onGoogleButtonClick() {
         final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class LoginIntroFragment extends SlideFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         final String error;
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == GOOGLE_SIGN_IN) {
 
             final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {

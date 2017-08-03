@@ -1,33 +1,35 @@
 {
   "project_info": {
-    "project_number": "146209171471",
-    "project_id": "enough-spam"
+    "project_number": "845619460186",
+    "firebase_url": "https://enough-spam-ed0f2.firebaseio.com",
+    "project_id": "enough-spam-ed0f2",
+    "storage_bucket": "enough-spam-ed0f2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:146209171471:android:205b5b53535e6099",
+        "mobilesdk_app_id": "1:845619460186:android:205b5b53535e6099",
         "android_client_info": {
           "package_name": "com.enoughspam.step"
         }
       },
       "oauth_client": [
         {
-          "client_id": "146209171471-oj8a0bgptcu8rnsh5b4rdou16usj82jo.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "146209171471-o32l1gromfgjk8v8g07ocio2tst11p4m.apps.googleusercontent.com",
+          "client_id": "845619460186-t8110j16fmlo8qlm36t03belikj5rkkp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.enoughspam.step",
             "certificate_hash": "126cfbf05e3c7a647d06c110a09c944bf74742a8"
           }
+        },
+        {
+          "client_id": "845619460186-q58c53p7q7hdmedfdnok5peua42eag0l.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAEW-AHg_HQnKaEhv5Sb9bUyJg26uiWYrM"
+          "current_key": "AIzaSyAFCp96TPkl0SQElckuCjBKRPBVigl8WEA"
         }
       ],
       "services": {
@@ -35,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845619460186-q58c53p7q7hdmedfdnok5peua42eag0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
