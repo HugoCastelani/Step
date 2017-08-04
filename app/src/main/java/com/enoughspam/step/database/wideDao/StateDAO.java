@@ -1,9 +1,10 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.State;
 
 /**
@@ -30,7 +31,7 @@ public class StateDAO {
     }
 
     public static State findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 

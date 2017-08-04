@@ -1,9 +1,10 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Country;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class CountryDAO {
     }
 
     public static Country findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
@@ -50,7 +51,7 @@ public class CountryDAO {
     }
 
     public static Country findByCode(@NonNegative final int code) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
                 null, null, null);
 
@@ -63,7 +64,7 @@ public class CountryDAO {
     }
 
     public static Country findByName(@NonNull final String name) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -76,7 +77,7 @@ public class CountryDAO {
     }
 
     public static Country findByIso(@NonNull final String iso) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ISO + " = ?", new String[] {iso},
                 null, null, null);
 
@@ -89,7 +90,7 @@ public class CountryDAO {
     }
 
     public static String findCodeByName(@NonNull final String name) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, new String[] {CODE}, NAME + " = ?", new String[] {name},
                 null, null, null);
 
@@ -102,7 +103,7 @@ public class CountryDAO {
     }
 
     public static List<String> getColumnList(@NonNull final String column) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, new String[] {column}, null, null, null, null, null);
 
         final List<String> stringList = new ArrayList<>();

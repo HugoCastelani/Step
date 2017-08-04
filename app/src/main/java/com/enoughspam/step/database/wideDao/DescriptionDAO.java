@@ -1,10 +1,11 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Description;
 
 import java.util.ArrayList;
@@ -39,12 +40,12 @@ public class DescriptionDAO {
         // For convenience, I'm gonna update only treatment id
         values.put(TREATMENT_ID, description.getTreatmentId());
 
-        DAOHandler.getSqLiteDatabase().update(TABLE, values,
+        DAOHandler.getWideDatabase().update(TABLE, values,
                 ID + " = ?", new String[] {String.valueOf(description.getId())});
     }
 
     public static Description findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
@@ -56,7 +57,7 @@ public class DescriptionDAO {
     }
 
     public static List<String> getColumnList(@NonNull final String column) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, new String[] {column}, null, null, null, null, null);
 
         final List<String> stringList = new ArrayList<>();

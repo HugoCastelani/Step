@@ -1,7 +1,9 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+
+import com.enoughspam.step.database.DAOHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class TreatmentDAO {
     protected TreatmentDAO() {}
 
     public static List<String> getColumnList(@NonNull final String column) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, new String[] {column}, null, null, null, null, null);
 
         final List<String> stringList = new ArrayList<>();

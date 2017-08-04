@@ -1,10 +1,11 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
 
 /**
@@ -41,7 +42,7 @@ public class PhoneDAO {
         }
     }
 
-    public static long create(@NonNull final Phone phone) {
+    public static int create(@NonNull final Phone phone) {
         final ContentValues values = new ContentValues();
 
         if (phone.getArea().getCode() == 0) {
@@ -54,11 +55,11 @@ public class PhoneDAO {
             values.put(AREA_CODE, phone.getArea().getCode());
         }
 
-        return DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
+        return (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
     }
 
     public static Phone findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
@@ -77,7 +78,7 @@ public class PhoneDAO {
         if (phone.getCountry() == null) {
             final String areaCode = String.valueOf(phone.getArea().getCode());
 
-            cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+            cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                     NUMBER + " = ? AND " + AREA_CODE + " = ?", new String[] {number, areaCode},
                     null, null, null);
 
@@ -85,7 +86,7 @@ public class PhoneDAO {
 
             final String countryId = String.valueOf(phone.getCountry().getId());
 
-            cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+            cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                     NUMBER + " = ? AND " + COUNTRY_ID + " = ? ", new String[] {number, countryId},
                     null, null, null);
         }

@@ -1,10 +1,11 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 
@@ -42,7 +43,7 @@ public class UserPhoneDAO {
         if (possibleId != -1) {
             id = possibleId;
         } else {
-            id = (int) PhoneDAO.create(userPhone.getPhone());
+            id = PhoneDAO.create(userPhone.getPhone());
         }
 
         if (id > 0) {
@@ -50,14 +51,14 @@ public class UserPhoneDAO {
             values.put(PHONE_ID, id);
             values.put(IS_PROPERTY, userPhone.isProperty());
 
-            return (int) DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
+            return (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
         }
 
         return id;
     }
 
     public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {
-        DAOHandler.getSqLiteDatabase().delete(TABLE,
+        DAOHandler.getWideDatabase().delete(TABLE,
                 USER_ID + " = ? AND " + PHONE_ID + " = ?",
                 new String[] {String.valueOf(userId), String.valueOf(phoneId)});
     }
@@ -67,7 +68,7 @@ public class UserPhoneDAO {
      * object, but a list of phones blocked by the user
      */
     public static List<Phone> getUserPhoneList(@NonNull final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+        final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                 USER_ID + " = ? AND " + IS_PROPERTY + " = ?",
                 new String[] {String.valueOf(id), "0"},
                 null, null, null);
@@ -87,7 +88,7 @@ public class UserPhoneDAO {
 
         if (!result.equals("-1")) {
 
-            final Cursor cursor = DAOHandler.getSqLiteDatabase().query(TABLE, null,
+            final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                     USER_ID + " = ? AND " + PHONE_ID + " = ?",
                     new String[] {String.valueOf(userPhone.getUser().getId()), result},
                     null, null, null);

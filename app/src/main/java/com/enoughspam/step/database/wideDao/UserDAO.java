@@ -1,11 +1,13 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.localDao.LUserDAO;
 
 /**
  * Created by Hugo Castelani
@@ -36,22 +38,22 @@ public class UserDAO {
         values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());
 
-        int id = (int) DAOHandler.getSqLiteDatabase().insert(TABLE, null, values);
+        int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
         if (id != -1) {
             user.setId(id);
-            PersonalDAO.create(user);
+            LUserDAO.clone(user.getId());
         }
 
         return id;
     }
 
     public static void delete(@NonNegative final int id) {
-        DAOHandler.getSqLiteDatabase().delete(
+        DAOHandler.getWideDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
     public static User findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
@@ -64,7 +66,7 @@ public class UserDAO {
     }
 
     public static User findBySocialId(@NonNull final String socialId) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, SOCIAL_ID + " = ?", new String[] {socialId},
                 null, null, null);
 

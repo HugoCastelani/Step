@@ -1,9 +1,10 @@
-package com.enoughspam.step.database.dao;
+package com.enoughspam.step.database.wideDao;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Area;
 
 /**
@@ -30,7 +31,7 @@ public class AreaDAO {
     }
 
     public static Area findByCode(@NonNegative final int code) {
-        final Cursor cursor = DAOHandler.getSqLiteDatabase().query(
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
                 null, null, null);
 
