@@ -6,15 +6,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Hugo on 24/05/17.
+ *
+ * This is the globally shared database. It gets
+ * updated periodically and stores all exiting data.
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "enough_spam.db";
-    public static final int VERSION = 43;
+public class WideDatabaseHelper extends SQLiteOpenHelper {
+    public static final String DATABASE_NAME = "wide.db";
+    public static final int VERSION = 44;
 
     private SQLiteDatabase mSqLiteDatabase;
 
-    public DatabaseHelper(Context context) {
+    public WideDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
 
@@ -26,29 +29,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {}
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {}
 
     private void createTables() {
-        // create personal table
-        mSqLiteDatabase.execSQL("create table personal (" +
-                "id integer primary key not null," +
-                "name varchar(50) not null);");
 
-        // RELATED TABLES
+        /**
+         * Low access index tables
+         * Tables' below values are infrequently modified
+         */
 
-        // create user table
-        mSqLiteDatabase.execSQL("create table user (" +
+        // creating suspicious treatment table
+        mSqLiteDatabase.execSQL("create table suspicious_treatment (" +
                 "id integer primary key not null," +
-                "social_id varchar(30) not null, " +
-                "name varchar(50) not null);");
+                "treatment varchar(20) not null);");
 
-        // create friendship table
-        mSqLiteDatabase.execSQL("create table friendship (" +
-                "id integer primary key not null," +
-                "user_added_id integer not null," +
-                "user_adding_id integer not null," +
-                "foreign key(user_added_id) references user(id)," +
-                "foreign key(user_adding_id) references personal(id));");
+        // creating suspicious denunciations amount configuration table
+        mSqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
+                "amount smallint primary key not null);");
+
+        /**
+         * Static tables
+         * Tables' below values are read-only
+         */
 
         // creating country table
         mSqLiteDatabase.execSQL("create table country (" +
@@ -71,6 +73,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "name varchar(50) not null," +
                 "state_id integer not null," +
                 "foreign key(state_id) references state(id));");
+
+        // creating description table
+        mSqLiteDatabase.execSQL("create table description (" +
+                "id integer primary key not null," +
+                "description varchar(50) not null," +
+                "treatment_id integer not null," +
+                "foreign key(treatment_id) references suspicious_treatment(id));");
+
+        /**
+         * Dynamic tables
+         * Tables' below values are constantly modified
+         */
+
+        // create user table
+        mSqLiteDatabase.execSQL("create table user (" +
+                "id integer primary key not null," +
+                "social_id varchar(30) not null, " +
+                "name varchar(50) not null);");
+
+        // create friendship table
+        mSqLiteDatabase.execSQL("create table friendship (" +
+                "id integer primary key not null," +
+                "user_added_id integer not null," +
+                "user_adding_id integer not null," +
+                "foreign key(user_added_id) references user(id)," +
+                "foreign key(user_adding_id) references personal(id));");
 
         // creating phone table
         mSqLiteDatabase.execSQL("create table phone (" +
@@ -105,13 +133,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "phone_id integer not null," +
                 "foreign key(phone_id) references phone(id));");
 
-        // creating description table
-        mSqLiteDatabase.execSQL("create table description (" +
-                "id integer primary key not null," +
-                "description varchar(50) not null," +
-                "treatment_id integer not null," +
-                "foreign key(treatment_id) references suspicious_treatment(id));");
-
         // creating denunciation/description table
         mSqLiteDatabase.execSQL("create table denunciation_description (" +
                 "denunciation_id integer not null," +
@@ -119,51 +140,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "primary key(denunciation_id, description_id)," +
                 "foreign key(denunciation_id) references denunciation(id)," +
                 "foreign key(description_id) references description(id));");
-
-        // creating suspicious treatment table
-        mSqLiteDatabase.execSQL("create table suspicious_treatment (" +
-                "id integer primary key not null," +
-                "treatment varchar(20) not null);");
-
-        // creating treatment configuration table
-        /*mSqLiteDatabase.execSQL("create table config_treatment (" +
-                "description_id integer not null," +
-                "suspicious_treatment_id integer not null," +
-                "primary key(description_id, suspicious_treatment_id)," +
-                "foreign key(description_id) references description(id)," +
-                "foreign key(suspicious_treatment_id) references suspicious_treatment(id));");*/
-
-        // NOT RELATED TABLES
-
-        // creating feedback configuration table
-        mSqLiteDatabase.execSQL("create table config_feedback (" +
-                "call_kind_name varchar(20) primary key  not null," +
-                "ask_feedback tinyint not null);");
-
-        // creating service blocking configuration table
-        /*mSqLiteDatabase.execSQL("create table config_service_block (" +
-                "service_name varchar(20) primary key not null," +
-                "block tinyint not null);");*/
-
-        // creating guide configuration table
-        mSqLiteDatabase.execSQL("create table config_guide (" +
-                "view_name varchar(20) primary key not null," +
-                "show_guide tinyint not null);");
-
-        // creating network to download DB configuration table
-        /*mSqLiteDatabase.execSQL("create table config_network_download_db (" +
-                "network_name varchar(20) primary key not null," +
-                "download_it tinyint not null);");*/
-
-        // creating suspicious denunciations amount configuration table
-        mSqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
-                "amount smallint primary key not null);");
-
-        // creating theme configuration table
-        /*mSqLiteDatabase.execSQL("create table config_theme (" +
-                "is_dark tinyint primary key not null," +
-                "accent_color char(7) not null," +
-                "default_accent_color char(7) not null);");*/
     }
 
     private void insertAttributes() {
