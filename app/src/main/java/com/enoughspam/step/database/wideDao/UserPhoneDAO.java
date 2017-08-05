@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
-import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 
 import java.util.ArrayList;
@@ -76,26 +75,6 @@ public class UserPhoneDAO {
 
         cursor.close();
         return userPhoneList;
-    }
-
-    /**
-     * This method doesn't provide a list of UserPhone
-     * object, but a list of phones blocked by the user
-     */
-    public static List<Phone> getUsersPhoneList(@NonNull final int id) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                USER_ID + " = ? AND " + IS_PROPERTY + " = ?",
-                new String[] {String.valueOf(id), "0"},
-                null, null, null);
-
-        final List<Phone> phoneList = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            phoneList.add(PhoneDAO.findById(cursor.getInt(cursor.getColumnIndex(PHONE_ID))));
-        }
-
-        cursor.close();
-        return phoneList;
     }
 
     public static boolean isAlreadyBlocked(@NonNull final UserPhone userPhone) {
