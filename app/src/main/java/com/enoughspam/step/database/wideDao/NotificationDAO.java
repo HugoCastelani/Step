@@ -51,8 +51,8 @@ public class NotificationDAO {
     }
 
     public static Notification findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(NotificationDAO.TABLE, null,
-                NotificationDAO.ID + " = ?", new String[] {String.valueOf(id)},
+        final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
+                ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
         Notification notification = null;
@@ -60,6 +60,20 @@ public class NotificationDAO {
 
         cursor.close();
         return notification;
+    }
+
+    public static List<Notification> findByUserId(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
+                NOTIFIED_USER_ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
+
+        List<Notification> notificationList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            notificationList.add(generate(cursor));
+        }
+
+        cursor.close();
+        return notificationList;
     }
 
     public static void delete(@NonNull final int id) {

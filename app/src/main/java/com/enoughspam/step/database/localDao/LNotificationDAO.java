@@ -8,6 +8,8 @@ import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Notification;
 import com.enoughspam.step.database.wideDao.NotificationDAO;
 
+import java.util.List;
+
 /**
  * Created by Hugo Castelani
  * Date: 04/08/17
@@ -29,19 +31,21 @@ public class LNotificationDAO {
         return notification;
     }
 
-    public static int clone(@NonNegative final int id) {
-        if (findById(id) == null) {
-            Notification notification = NotificationDAO.findById(id);
-            final ContentValues values = new ContentValues();
+    public static void clone(@NonNegative final int id) {
+        List<Notification> notificationList = NotificationDAO.findByUserId(id);
 
-            values.put(NotificationDAO.ID, notification.getId());
-            values.put(NotificationDAO.PHONE_ID, notification.getId());
-            values.put(NotificationDAO.NOTIFIED_USER_ID, notification.getNotifiedUserId());
-            values.put(NotificationDAO.NOTIFYING_USER_ID, notification.getNotifyingUserId());
+        for (int i = 0; i < notificationList.size(); i++) {
+            if (findById(notificationList.get(i).getId()) == null) {
+                Notification notification = NotificationDAO.findById(id);
+                ContentValues values = new ContentValues();
 
-            return (int) DAOHandler.getLocalDatabase().insert(NotificationDAO.TABLE, null, values);
+                values.put(NotificationDAO.ID, notification.getId());
+                values.put(NotificationDAO.PHONE_ID, notification.getId());
+                values.put(NotificationDAO.NOTIFIED_USER_ID, notification.getNotifiedUserId());
+                values.put(NotificationDAO.NOTIFYING_USER_ID, notification.getNotifyingUserId());
+
+                DAOHandler.getLocalDatabase().insert(NotificationDAO.TABLE, null, values);
+            }
         }
-
-        return -1;
     }
 }

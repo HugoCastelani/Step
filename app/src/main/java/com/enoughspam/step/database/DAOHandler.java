@@ -3,6 +3,12 @@ package com.enoughspam.step.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.localDao.LNotificationDAO;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 
 /**
  * Created by Hugo Castelani
@@ -35,5 +41,13 @@ public class DAOHandler {
     public static SQLiteDatabase getLocalDatabase() {
         if (sLocalDatabase != null) return sLocalDatabase;
         throw new NullPointerException("You should call init method first.");
+    }
+
+    public static void cloneAll(@Nullable User user) {
+        if (user != null) LUserDAO.clone(user.getId());
+        else user = LUserDAO.get();
+
+        LUserPhoneDAO.clone(user.getId());
+        LNotificationDAO.clone(user.getId());
     }
 }

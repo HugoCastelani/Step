@@ -63,11 +63,26 @@ public class UserPhoneDAO {
                 new String[] {String.valueOf(userId), String.valueOf(phoneId)});
     }
 
+    public static List<UserPhone> getUsersUserPhoneList(@NonNegative final int id) {
+        Cursor cursor = DAOHandler.getWideDatabase().query(
+            UserPhoneDAO.TABLE, null, UserPhoneDAO.USER_ID + " = ?",
+            new String[] {String.valueOf(id)}, null, null, null);
+
+        final List<UserPhone> userPhoneList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            userPhoneList.add(generate(cursor));
+        }
+
+        cursor.close();
+        return userPhoneList;
+    }
+
     /**
      * This method doesn't provide a list of UserPhone
      * object, but a list of phones blocked by the user
      */
-    public static List<Phone> getUserPhoneList(@NonNull final int id) {
+    public static List<Phone> getUsersPhoneList(@NonNull final int id) {
         final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                 USER_ID + " = ? AND " + IS_PROPERTY + " = ?",
                 new String[] {String.valueOf(id), "0"},

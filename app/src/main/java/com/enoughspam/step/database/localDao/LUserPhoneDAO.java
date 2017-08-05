@@ -8,6 +8,8 @@ import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 
+import java.util.List;
+
 /**
  * Created by Hugo Castelani
  * Date: 04/08/17
@@ -35,12 +37,10 @@ public class LUserPhoneDAO {
     }
 
     public static void clone(@NonNegative final int id) {
-        Cursor cursor = DAOHandler.getWideDatabase().query(
-                UserPhoneDAO.TABLE, null, UserPhoneDAO.USER_ID + " = ?",
-                new String[] {String.valueOf(id)}, null, null, null);
+        List<UserPhone> userPhoneList = UserPhoneDAO.getUsersUserPhoneList(id);
 
-        while (cursor.moveToNext()) {
-            final UserPhone userPhone = UserPhoneDAO.generate(cursor);
+        for (int i = 0; i < userPhoneList.size(); i++) {
+            final UserPhone userPhone = userPhoneList.get(i);
             final int[] ids = new int[] {userPhone.getUser().getId(), userPhone.getPhone().getId()};
 
             if (findByIds(ids) == null) {
