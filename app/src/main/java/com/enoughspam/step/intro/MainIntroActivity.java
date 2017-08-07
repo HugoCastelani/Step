@@ -8,8 +8,7 @@ import android.preference.PreferenceManager;
 import com.afollestad.aesthetic.Aesthetic;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.main.MainActivity;
+import com.enoughspam.step.database.DAOHandler;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 
@@ -46,7 +45,7 @@ public class MainIntroActivity extends IntroActivity {
         );
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_ALL_SET, false)) {
-            final Intent intent = new Intent(this, MainActivity.class);
+            final Intent intent = new Intent(this, SplashScreenActivity.class);
             startActivity(intent);
             finish();
         }
