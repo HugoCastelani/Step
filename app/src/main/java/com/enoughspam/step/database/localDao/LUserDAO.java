@@ -2,6 +2,7 @@ package com.enoughspam.step.database.localDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
@@ -50,14 +51,19 @@ public class LUserDAO {
         return -1;
     }
 
-    public static User get() {
-        final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                UserDAO.TABLE, null, null, null, null, null, null);
+    public static User getThisUser() {
+        final int id = PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                .getInt("user_id", 0);
 
-        User user = null;
-        if (cursor.moveToFirst()) user = UserDAO.generate(cursor);
+        final Cursor cursor = DAOHandler.getLocalDatabase().query(
+                UserDAO.TABLE, null, UserDAO.ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
+
+        User area = null;
+
+        if (cursor.moveToFirst()) area = UserDAO.generate(cursor);
 
         cursor.close();
-        return user;
+        return area;
     }
 }

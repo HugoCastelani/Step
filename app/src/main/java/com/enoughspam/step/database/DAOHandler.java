@@ -3,12 +3,6 @@ package com.enoughspam.step.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.LNotificationDAO;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 
 /**
  * Created by Hugo Castelani
@@ -17,6 +11,7 @@ import com.enoughspam.step.database.localDao.LUserPhoneDAO;
  */
 
 public class DAOHandler {
+    private static Context sContext;
 
     private static SQLiteDatabase sWideDatabase;
     private static SQLiteDatabase sLocalDatabase;
@@ -24,8 +19,9 @@ public class DAOHandler {
     private DAOHandler() {}
 
     public static void init(@NonNull final Context context) {
-        sWideDatabase = new WideDatabaseHelper(context).getWritableDatabase();
-        sLocalDatabase = new LocalDatabaseHelper(context).getWritableDatabase();
+        sContext = context;
+        sWideDatabase = new WideDatabaseHelper(sContext).getWritableDatabase();
+        sLocalDatabase = new LocalDatabaseHelper(sContext).getWritableDatabase();
     }
 
     public static void finish() {
@@ -43,11 +39,7 @@ public class DAOHandler {
         throw new NullPointerException("You should call init method first.");
     }
 
-    public static void cloneAll(@Nullable User user) {
-        if (user != null) LUserDAO.clone(user.getId());
-        else user = LUserDAO.get();
-
-        LUserPhoneDAO.clone(user.getId());
-        LNotificationDAO.clone(user.getId());
+    public static Context getContext() {
+        return sContext;
     }
 }

@@ -1,13 +1,16 @@
 package com.enoughspam.step.database.localDao;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Notification;
+import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.wideDao.NotificationDAO;
+import com.enoughspam.step.domain.PhoneSection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,21 +34,46 @@ public class LNotificationDAO {
         return notification;
     }
 
-    public static void clone(@NonNegative final int id) {
-        List<Notification> notificationList = NotificationDAO.findByUserId(id);
+    public static List<Notification> getNotificationList(@NonNegative final int id) {
+        final Cursor cursor = DAOHandler.getLocalDatabase().query(NotificationDAO.TABLE, null,
+                NotificationDAO.NOTIFIED_USER_ID + " = ?", new String[] {String.valueOf(id)},
+                null, null, null);
 
-        for (int i = 0; i < notificationList.size(); i++) {
-            if (findById(notificationList.get(i).getId()) == null) {
-                Notification notification = NotificationDAO.findById(id);
-                ContentValues values = new ContentValues();
-
-                values.put(NotificationDAO.ID, notification.getId());
-                values.put(NotificationDAO.PHONE_ID, notification.getId());
-                values.put(NotificationDAO.NOTIFIED_USER_ID, notification.getNotifiedUserId());
-                values.put(NotificationDAO.NOTIFYING_USER_ID, notification.getNotifyingUserId());
-
-                DAOHandler.getLocalDatabase().insert(NotificationDAO.TABLE, null, values);
-            }
+        List<Notification> notificationList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            notificationList.add(NotificationDAO.generate(cursor));
         }
+
+        cursor.close();
+        return notificationList;
+    }
+
+    public static List<PhoneSection> getFriendsBlockedList(@NonNegative final int id) {
+        List<Notification> notificationList = LNotificationDAO.getNotificationList(id);
+        List<PhoneSection> phoneSectionList = new ArrayList<>();
+
+        outerLoop:
+        for (int i = 0; i < notificationList.size(); i++) {
+            final Notification notification = notificationList.get(i);
+            final String notifyingUserName = LUserDAO.findById(notification.getNotifyingUserId()).getName();
+            final Phone phone = LPhoneDAO.findById(notification.getPhoneId());
+
+            for (int j = 0; j < phoneSectionList.size(); j++) {
+                final String userName = phoneSectionList.get(j).getUserName();
+
+                if (notifyingUserName.equals(userName)) {
+                    phoneSectionList.get(j).addPhone(phone);
+                    continue outerLoop;
+                }
+            }
+
+            final List<Phone> phoneList = new ArrayList<>();
+            final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
+
+            phoneList.add(phone);
+            phoneSectionList.add(new PhoneSection(prefix + notifyingUserName, phoneList));
+        }
+
+        return phoneSectionList;
     }
 }

@@ -8,9 +8,6 @@ import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.UserPhone;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Hugo Castelani
  * Date: 29/07/17
@@ -30,51 +27,41 @@ public class UserPhoneDAO {
         return new UserPhone(
                 UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ID))),
                 PhoneDAO.findById(cursor.getInt(cursor.getColumnIndex(PHONE_ID))),
-                cursor.getInt(cursor.getColumnIndex(IS_PROPERTY)) == 0 ? false : true
+                cursor.getInt(cursor.getColumnIndex(IS_PROPERTY)) == 1
         );
     }
 
     public static int create(@NonNull final UserPhone userPhone) {
         final ContentValues values = new ContentValues();
 
-        int id;
-        final int possibleId = PhoneDAO.exists(userPhone.getPhone());
-        if (possibleId != -1) {
-            id = possibleId;
+        int phoneId;
+        final int possiblePhoneId = PhoneDAO.exists(userPhone.getPhone());
+        if (possiblePhoneId != -1) {
+            phoneId = possiblePhoneId;
         } else {
-            id = PhoneDAO.create(userPhone.getPhone());
+            phoneId = PhoneDAO.create(userPhone.getPhone());
         }
 
-        if (id > 0) {
+        if (phoneId != -1) {
             values.put(USER_ID, userPhone.getUser().getId());
-            values.put(PHONE_ID, id);
+            values.put(PHONE_ID, phoneId);
             values.put(IS_PROPERTY, userPhone.isProperty());
 
-            return (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+            DAOHandler.getWideDatabase().insert(TABLE, null, values);
+            return (int) DAOHandler.getLocalDatabase().insert(TABLE, null, values);
         }
 
-        return id;
+        return phoneId;
     }
 
     public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {
         DAOHandler.getWideDatabase().delete(TABLE,
                 USER_ID + " = ? AND " + PHONE_ID + " = ?",
                 new String[] {String.valueOf(userId), String.valueOf(phoneId)});
-    }
 
-    public static List<UserPhone> getUsersUserPhoneList(@NonNegative final int id) {
-        Cursor cursor = DAOHandler.getWideDatabase().query(
-            UserPhoneDAO.TABLE, null, UserPhoneDAO.USER_ID + " = ?",
-            new String[] {String.valueOf(id)}, null, null, null);
-
-        final List<UserPhone> userPhoneList = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            userPhoneList.add(generate(cursor));
-        }
-
-        cursor.close();
-        return userPhoneList;
+        DAOHandler.getLocalDatabase().delete(TABLE,
+                USER_ID + " = ? AND " + PHONE_ID + " = ?",
+                new String[] {String.valueOf(userId), String.valueOf(phoneId)});
     }
 
     public static boolean isAlreadyBlocked(@NonNull final UserPhone userPhone) {

@@ -1,19 +1,12 @@
 package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Notification;
-import com.enoughspam.step.database.domain.Phone;
-import com.enoughspam.step.domain.PhoneSection;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -47,7 +40,14 @@ public class NotificationDAO {
         values.put(NOTIFIED_USER_ID, notification.getNotifiedUserId());
         values.put(NOTIFYING_USER_ID, notification.getNotifyingUserId());
 
-        return (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+        final int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+
+        if (id != -1) {
+            values.put(ID, id);
+            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+        }
+
+        return id;
     }
 
     public static Notification findById(@NonNegative final int id) {
@@ -62,55 +62,11 @@ public class NotificationDAO {
         return notification;
     }
 
-    public static List<Notification> findByUserId(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                NOTIFIED_USER_ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
-
-        List<Notification> notificationList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            notificationList.add(generate(cursor));
-        }
-
-        cursor.close();
-        return notificationList;
-    }
-
     public static void delete(@NonNull final int id) {
         DAOHandler.getWideDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)});
-    }
-
-    public static List<PhoneSection> getFriendsBlockedList(final int id, @NonNull final Context context) {
-        Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                NOTIFIED_USER_ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
-
-        List<PhoneSection> phoneSectionList = new ArrayList<>();
-
-        outerLoop:
-        while (cursor.moveToNext()) {
-            final Notification notification = generate(cursor);
-            final String notifyingUserName = UserDAO.findById(notification.getNotifyingUserId()).getName();
-            final Phone phone = PhoneDAO.findById(notification.getPhoneId());
-
-            for (int j = 0; j < phoneSectionList.size(); j++) {
-                final String userName = phoneSectionList.get(j).getUserName();
-
-                if (notifyingUserName.equals(userName)) {
-                    phoneSectionList.get(j).addPhone(phone);
-                    continue outerLoop;
-                }
-            }
-
-            final List<Phone> phoneList = new ArrayList<>();
-            final String prefix = context.getResources().getString(R.string.numbers_of);
-
-            phoneList.add(phone);
-            phoneSectionList.add(new PhoneSection(prefix + notifyingUserName, phoneList));
-        }
-
-        return phoneSectionList;
+        DAOHandler.getLocalDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
 }

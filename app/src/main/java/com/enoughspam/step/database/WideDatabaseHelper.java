@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WideDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wide.db";
-    public static final int VERSION = 44;
+    public static final int VERSION = 45;
 
     private SQLiteDatabase mSqLiteDatabase;
 
@@ -143,7 +143,7 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertAttributes() {
-        mSqLiteDatabase.execSQL("insert into user(id, social_id, name) values(0, '0', 'Enough Spam! Official');");
+        mSqLiteDatabase.execSQL("insert into user(id, social_id, name) values(1, '0', 'Enough Spam! Official');");
 
         // !!!!!!!!!!! NEVER ADD A NEW ATTRIBUTE ON TOP OF THE TABLE AFTER APP IS ON THE AIR!!!!!!!!!!!
 

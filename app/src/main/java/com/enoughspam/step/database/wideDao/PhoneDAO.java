@@ -55,7 +55,14 @@ public class PhoneDAO {
             values.put(AREA_CODE, phone.getArea().getCode());
         }
 
-        return (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+        final int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+
+        if (id != -1) {
+            values.put(ID, id);
+            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+        }
+
+        return id;
     }
 
     public static Phone findById(@NonNegative final int id) {
@@ -69,6 +76,13 @@ public class PhoneDAO {
 
         cursor.close();
         return phone;
+    }
+
+    public static void delete(@NonNull final int id) {
+        DAOHandler.getWideDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+        DAOHandler.getLocalDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
     public static int exists(@NonNull final Phone phone) {

@@ -2,12 +2,12 @@ package com.enoughspam.step.database.wideDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.LUserDAO;
 
 /**
  * Created by Hugo Castelani
@@ -34,21 +34,32 @@ public class UserDAO {
 
     public static int create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
+        int id = user.getId();
 
         values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());
 
-        int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
-        if (id != -1) {
-            user.setId(id);
-            LUserDAO.clone(user.getId());
+        if (id == 0) {
+            id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+        } else {
+            values.put(ID, id);
         }
+
+        if (id != -1) {
+            values.put(ID, id);
+            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                .edit().putInt("user_id", id).apply();
 
         return id;
     }
 
     public static void delete(@NonNegative final int id) {
         DAOHandler.getWideDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+        DAOHandler.getLocalDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
