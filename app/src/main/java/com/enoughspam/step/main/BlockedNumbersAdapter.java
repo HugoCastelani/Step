@@ -11,9 +11,9 @@ import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedN
         final ItemCoord coord = getRelativePosition(absolutePosition);
         final List<Phone> phoneList = mBlockedNumbersList.get(coord.section()).getPhoneList();
 
-        UserPhoneDAO.delete(PersonalDAO.get().getId(), phoneList.get(coord.relativePos()).getId());
+        UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), phoneList.get(coord.relativePos()).getId());
         phoneList.remove(phoneList.get(coord.relativePos()));
 
         // swipe header when there's no item

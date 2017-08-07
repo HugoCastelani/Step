@@ -7,8 +7,8 @@ import android.widget.Spinner;
 
 import com.azimolabs.maskformatter.MaskFormatter;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.domain.Country;
+import com.enoughspam.step.database.wideDao.CountryDAO;
 
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class FormHandler {
     }
 
     /*
-     * When country get changed, new mark formatter is applied, but you
+     * When country getThisUser changed, new mark formatter is applied, but you
      * got to type something to update it, and that's method does
      */
     private void finishUpdating() {

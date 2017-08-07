@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.NotificationDAO;
-import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.localDao.LNotificationDAO;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.ListDecorator;
@@ -83,18 +83,18 @@ public class MainFragment extends Fragment {
 
     private List<PhoneSection> getBlockedNumberList() {
         final List<PhoneSection> phoneSectionList = new ArrayList<>();
-        final User user = PersonalDAO.get();
+        final User user = LUserDAO.getThisUser();
 
         // user's numbers
         phoneSectionList.add(new PhoneSection(
                 getResources().getString(R.string.my_numbers),
-                UserPhoneDAO.getUserPhoneList(user.getId())));
+                LUserPhoneDAO.getPhoneList()));
 
         // friends' numbers
-        phoneSectionList.addAll(NotificationDAO.getFriendsBlockedList(user.getId(), getContext()));
+        phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(user.getId()));
 
         // official numbers (its ID is 0)
-        phoneSectionList.addAll(NotificationDAO.getFriendsBlockedList(0, getContext()));
+        phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(0));
 
         return phoneSectionList;
     }

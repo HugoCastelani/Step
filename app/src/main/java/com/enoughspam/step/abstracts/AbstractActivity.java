@@ -10,7 +10,7 @@ import com.afollestad.aesthetic.AestheticToolbar;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.util.ThemeHandler;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;

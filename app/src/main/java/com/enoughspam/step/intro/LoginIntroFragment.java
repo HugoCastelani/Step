@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.UserDAO;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.wideDao.UserDAO;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -81,15 +80,13 @@ public class LoginIntroFragment extends SlideFragment implements
 
                 if (account.getId() != null) {
                     final String socialId = account.getId() + GOOGLE_CODE;
-                    final User user = new User(socialId, account.getDisplayName());
+                    User user = UserDAO.findBySocialId(socialId);
 
-                    final User existingUser = UserDAO.findBySocialId(socialId);
-                    if (existingUser == null) {
-                        UserDAO.create(user);
-                    } else {
-                        user.setId(existingUser.getId());
-                        PersonalDAO.create(user);
+                    if (user == null) {
+                        user = new User(socialId, account.getDisplayName());
                     }
+
+                    UserDAO.create(user);
 
                     mCanGoForward = true;
                     canGoForward();
@@ -105,7 +102,6 @@ public class LoginIntroFragment extends SlideFragment implements
         if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
 
             UserDAO.create(new User(-1, "-1", "Developer"));
-            PersonalDAO.create(new User(-1, "-1", "Developer"));
 
             ToastUtils.showShort("Developer account created");
 

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.enoughspam.step.numberForm.NumberFormFragment;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
@@ -77,7 +77,7 @@ public class NumberIntroFragment extends SlideFragment {
                 .negativeText(R.string.cancel_button)
                 .onPositive((dialog, which) -> {
 
-                    UserPhoneDAO.create(new UserPhone(PersonalDAO.get(), phone, true));
+                    UserPhoneDAO.create(new UserPhone(LUserDAO.getThisUser(), phone, true));
 
                     sendMessage();
                     mCanGoForward = true;

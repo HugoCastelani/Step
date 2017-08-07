@@ -17,14 +17,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.addNumber.extra.CustomLinearLayoutManager;
-import com.enoughspam.step.database.dao.AreaDAO;
-import com.enoughspam.step.database.dao.CountryDAO;
-import com.enoughspam.step.database.dao.PersonalDAO;
-import com.enoughspam.step.database.dao.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.wideDao.AreaDAO;
+import com.enoughspam.step.database.wideDao.CountryDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.util.EndOffsetItemDecoration;
 import com.enoughspam.step.util.ListDecorator;
@@ -133,7 +133,7 @@ public class AddNumberFragment extends Fragment {
             }
 
             // see if number is already blocked
-            if (UserPhoneDAO.isAlreadyBlocked(new UserPhone(PersonalDAO.get(), phone, false))) {
+            if (UserPhoneDAO.isAlreadyBlocked(new UserPhone(LUserDAO.getThisUser(), phone, false))) {
                 continue;
             }
 
@@ -186,7 +186,7 @@ public class AddNumberFragment extends Fragment {
     }
 
     protected void saveNumber(@NonNull final Phone phone) {
-        UserPhoneDAO.create(new UserPhone(PersonalDAO.get(), phone, false));
+        UserPhoneDAO.create(new UserPhone(LUserDAO.getThisUser(), phone, false));
         getActivity().onBackPressed();
     }
 }

@@ -19,11 +19,11 @@ import android.widget.Spinner;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.addNumber.AddNumberFragment;
-import com.enoughspam.step.database.dao.AreaDAO;
-import com.enoughspam.step.database.dao.CountryDAO;
 import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.wideDao.AreaDAO;
+import com.enoughspam.step.database.wideDao.CountryDAO;
 import com.enoughspam.step.intro.NumberIntroFragment;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;

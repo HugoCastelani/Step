@@ -9,9 +9,9 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.dao.DescriptionDAO;
-import com.enoughspam.step.database.dao.TreatmentDAO;
 import com.enoughspam.step.database.domain.Description;
+import com.enoughspam.step.database.wideDao.DescriptionDAO;
+import com.enoughspam.step.database.wideDao.TreatmentDAO;
 import com.enoughspam.step.util.ThemeHandler;
 
 import java.util.List;

@@ -64,8 +64,9 @@ dependencies {
     }
 
     // google
-    compile 'com.google.android.gms:play-services-auth:11.0.1'
-    compile 'com.google.firebase:firebase-core:9.6.1'
+    compile 'com.google.android.gms:play-services-auth:11.0.4'
+    compile 'com.google.firebase:firebase-core:10.2.1'
+    //compile 'com.google.firebase:firebase-auth:10.2.1'
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
