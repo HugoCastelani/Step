@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     private void initViews() {
         final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
-        final BlockedNumbersAdapter adapter = new BlockedNumbersAdapter(getBlockedNumberList());
+        final MainAdapter adapter = new MainAdapter(getBlockedNumberList(), view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
@@ -66,8 +66,8 @@ public class MainFragment extends Fragment {
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                if (viewHolder instanceof BlockedNumbersAdapter.MyViewHolder
-                        && ((BlockedNumbersAdapter.MyViewHolder) viewHolder).isSwipeable) {
+                if (viewHolder instanceof MainAdapter.MyViewHolder
+                        && ((MainAdapter.MyViewHolder) viewHolder).isSwipeable) {
                     return super.getSwipeDirs(recyclerView, viewHolder);
                 } else {
                     return 0;

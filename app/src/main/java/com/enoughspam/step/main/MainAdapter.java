@@ -1,6 +1,9 @@
 package com.enoughspam.step.main;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,28 +28,58 @@ import java.util.List;
  * Time: 23:05
  */
 
-public class BlockedNumbersAdapter extends SectionedRecyclerViewAdapter<BlockedNumbersAdapter.MyViewHolder> {
+public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyViewHolder> {
 
     private final List<PhoneSection> mBlockedNumbersList;
+    private final View mView;
 
-    public BlockedNumbersAdapter(@NonNull final List<PhoneSection> blockedNumbersList) {
+    public MainAdapter(@NonNull final List<PhoneSection> blockedNumbersList,
+                       @NonNull final View view) {
         mBlockedNumbersList = blockedNumbersList;
+        mView = view;
     }
 
     public void removeItem(@NonNegative final int absolutePosition) {
         final ItemCoord coord = getRelativePosition(absolutePosition);
         final List<Phone> phoneList = mBlockedNumbersList.get(coord.section()).getPhoneList();
 
-        UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), phoneList.get(coord.relativePos()).getId());
-        phoneList.remove(phoneList.get(coord.relativePos()));
+        final Resources resources = mView.getContext().getResources();
 
-        // swipe header when there's no item
+        // store information for undo case
+        Phone removedPhone = phoneList.get(coord.relativePos());
+        PhoneSection removedPhoneSection = mBlockedNumbersList.get(coord.section());
+
+        phoneList.remove(phoneList.get(coord.relativePos()));
+        notifyItemRemoved(absolutePosition);
+
+        // remove header when there's no item
         if (phoneList.isEmpty()) {
             mBlockedNumbersList.remove(coord.section());
             notifyItemRemoved(absolutePosition - 1);
         }
 
-        notifyItemRemoved(absolutePosition);
+        Snackbar.make(mView, resources.getString(R.string.removed_number), Snackbar.LENGTH_SHORT)
+                .setAction(resources.getString(R.string.undo), view -> {
+                    // add items to adapter again
+                    phoneList.add(coord.relativePos(), removedPhone);
+                    notifyItemInserted(absolutePosition);
+
+                    if (!mBlockedNumbersList.contains(removedPhoneSection)) {
+                        mBlockedNumbersList.add(coord.section(), removedPhoneSection);
+                        notifyItemInserted(absolutePosition - 1);
+                    }
+                })
+                .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        if (event != DISMISS_EVENT_ACTION) {
+                            // finally remove from database
+                            UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), removedPhone.getId());
+                        }
+                    }
+                })
+                .show();
     }
 
     @Override
