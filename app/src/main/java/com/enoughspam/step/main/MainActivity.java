@@ -41,7 +41,7 @@ public class MainActivity extends AbstractActivity {
         setContentView(R.layout.main_activity);
 
         if (LUserDAO.getThisUser() == null) {
-            UserDAO.create(new User(-1, "-1", "Developer"));
+            UserDAO.create(new User(Integer.MAX_VALUE, String.valueOf(Integer.MAX_VALUE), "Developer"));
         }
 
         initToolbar(false);

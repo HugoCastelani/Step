@@ -59,11 +59,11 @@ public class LUserDAO {
                 UserDAO.TABLE, null, UserDAO.ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
-        User area = null;
+        User user = null;
 
-        if (cursor.moveToFirst()) area = UserDAO.generate(cursor);
+        if (cursor.moveToFirst()) user = UserDAO.generate(cursor);
 
         cursor.close();
-        return area;
+        return user;
     }
 }

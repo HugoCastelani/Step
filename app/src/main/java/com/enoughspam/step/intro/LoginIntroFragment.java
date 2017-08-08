@@ -101,7 +101,7 @@ public class LoginIntroFragment extends SlideFragment implements
 
         if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
 
-            UserDAO.create(new User(-1, "-1", "Developer"));
+            UserDAO.create(new User(Integer.MAX_VALUE, String.valueOf(Integer.MAX_VALUE), "Developer"));
 
             ToastUtils.showShort("Developer account created");
 
