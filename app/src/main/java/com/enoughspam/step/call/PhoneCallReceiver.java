@@ -1,6 +1,5 @@
 package com.enoughspam.step.call;
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.localDao.LUserDAO;
@@ -37,21 +37,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
             // mute until discover whether is number blocked
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                final NotificationManager notificationManager =
-                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-                        !notificationManager.isNotificationPolicyAccessGranted()) {
-
-                    final Intent intentB = new Intent(android.provider.Settings
-                                    .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                    mContext.getApplicationContext().startActivity(intentB);
-
-                } else {
-
-                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }
+                mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             } else {
                 //noinspection deprecation
                 mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
@@ -61,10 +47,22 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             final String number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             final String iso = mTelephonyManager.getNetworkCountryIso().toUpperCase();
 
+            try {
+                DAOHandler.getContext();
+            } catch (NullPointerException e) {
+                DAOHandler.init(mContext);
+            }
+
             mPhone = Phone.generateObject(number, iso);
+            final boolean isBlocked;
+            try {
+                isBlocked = LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), mPhone, false));
+            } catch (NullPointerException e) {
+                return;
+            }
 
             // check if it's blocked
-            if (LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), mPhone, false))) {
+            if (isBlocked) {
                 disconnectPhoneITelephony();
 
             } else {

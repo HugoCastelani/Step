@@ -40,6 +40,7 @@ public class DAOHandler {
     }
 
     public static Context getContext() {
-        return sContext;
+        if (sLocalDatabase != null) return sContext;
+        throw new NullPointerException("You should call init method first.");
     }
 }
