@@ -60,7 +60,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
 
         Snackbar.make(mView, resources.getString(R.string.removed_number), Snackbar.LENGTH_SHORT)
                 .setAction(resources.getString(R.string.undo), view -> {
-                    // add items to adapter again
+                    // add items to adapter and list again
                     phoneList.add(coord.relativePos(), removedPhone);
                     notifyItemInserted(absolutePosition);
 
@@ -73,7 +73,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
-                        if (event != DISMISS_EVENT_ACTION) {
+                        if (event != DISMISS_EVENT_ACTION) {    // if equals, it has just undone
                             // finally remove from database
                             UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), removedPhone.getId());
                         }

@@ -35,10 +35,13 @@ public class PermissionIntroFragment extends SlideFragment {
     private void onRequestButtonClick() {
         mRxPermissions
                 .request(Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.MODIFY_PHONE_STATE,
+                        Manifest.permission.CALL_PHONE,
                         Manifest.permission.READ_SMS,
                         Manifest.permission.SEND_SMS,
-                        Manifest.permission.READ_CONTACTS)
+                        Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS)
                 .subscribe(granted -> {
                     if (granted) {
                         mButton.setEnabled(false);
