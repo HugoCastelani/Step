@@ -63,26 +63,4 @@ public class UserPhoneDAO {
                 USER_ID + " = ? AND " + PHONE_ID + " = ?",
                 new String[] {String.valueOf(userId), String.valueOf(phoneId)});
     }
-
-    public static boolean isAlreadyBlocked(@NonNull final UserPhone userPhone) {
-        final String result = String.valueOf(PhoneDAO.exists(userPhone.getPhone()));
-
-        if (!result.equals("-1")) {
-
-            final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                    USER_ID + " = ? AND " + PHONE_ID + " = ?",
-                    new String[] {String.valueOf(userPhone.getUser().getId()), result},
-                    null, null, null);
-
-            UserPhone matchingUserPhone = null;
-
-            if (cursor.moveToFirst()) matchingUserPhone = generate(cursor);
-
-            cursor.close();
-
-            if (matchingUserPhone == null) return false;
-            else return true;
-
-        } else return false;
-    }
 }

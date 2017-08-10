@@ -52,4 +52,34 @@ public class LPhoneDAO {
         cursor.close();
         return phone;
     }
+
+    public static int exists(@NonNull final Phone phone) {
+        final String number = String.valueOf(phone.getNumber());
+        Cursor cursor;
+
+        if (phone.getCountry() == null) {
+            final String areaCode = String.valueOf(phone.getArea().getCode());
+
+            cursor = DAOHandler.getLocalDatabase().query(PhoneDAO.TABLE, null,
+                    PhoneDAO.NUMBER + " = ? AND " + PhoneDAO.AREA_CODE + " = ?", new String[] {number, areaCode},
+                    null, null, null);
+
+        } else {
+
+            final String countryId = String.valueOf(phone.getCountry().getId());
+
+            cursor = DAOHandler.getLocalDatabase().query(PhoneDAO.TABLE, null,
+                    PhoneDAO.NUMBER + " = ? AND " + PhoneDAO.COUNTRY_ID + " = ? ", new String[] {number, countryId},
+                    null, null, null);
+        }
+
+        Phone matchingPhone = null;
+
+        if (cursor.moveToFirst()) matchingPhone = PhoneDAO.generate(cursor);
+
+        cursor.close();
+
+        if (matchingPhone == null) return -1;
+        else return matchingPhone.getId();
+    }
 }

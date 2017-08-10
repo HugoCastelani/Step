@@ -1,9 +1,11 @@
 package com.enoughspam.step.database.localDao;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 
 import java.util.ArrayList;
@@ -36,5 +38,27 @@ public class LUserPhoneDAO {
 
         cursor.close();
         return phoneList;
+    }
+
+    public static boolean isBlocked(@NonNull final UserPhone userPhone) {
+        final String result = String.valueOf(LPhoneDAO.exists(userPhone.getPhone()));
+
+        if (!result.equals("-1")) {
+
+            final Cursor cursor = DAOHandler.getLocalDatabase().query(UserPhoneDAO.TABLE, null,
+                    UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.PHONE_ID + " = ?",
+                    new String[] {String.valueOf(userPhone.getUser().getId()), result},
+                    null, null, null);
+
+            UserPhone matchingUserPhone = null;
+
+            if (cursor.moveToFirst()) matchingUserPhone = UserPhoneDAO.generate(cursor);
+
+            cursor.close();
+
+            if (matchingUserPhone == null) return false;
+            else return true;
+
+        } else return false;
     }
 }
