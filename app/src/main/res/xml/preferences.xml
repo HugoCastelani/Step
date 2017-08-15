@@ -9,7 +9,8 @@
                 android:key="theme_switch"
                 android:defaultValue="false"
                 android:title="@string/set_dark_theme"
-                android:summary="@string/set_dark_theme_substring"/>
+                android:summary="@string/set_dark_theme_substring"
+                android:enabled="false"/>
 
             <com.enoughspam.step.settings.preferences.ColorPreference
                 android:layout="@layout/preference_custom"

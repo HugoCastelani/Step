@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.AestheticCardView;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.ItemCoord;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
@@ -95,9 +96,9 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
     List<AestheticTextView> headerList = new ArrayList<>();
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
-        holder.blocker_or_number.setText(mBlockedNumbersList.get(section).getUserName());
-        holder.isSwipeable = false;
-        headerList.add(holder.blocker_or_number);
+        holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUserName());
+        holder.mIsSwipeable = false;
+        headerList.add(holder.mBlockerOrNumber);
     }
 
     @Override
@@ -116,7 +117,12 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         formattedNumber.append(" " + areaCode);
         formattedNumber.append(" " + number);
 
-        holder.blocker_or_number.setText(formattedNumber);
+        holder.mBlockerOrNumber.setText(formattedNumber);
+
+        holder.mCardView.setOnLongClickListener(view -> {
+            showBottomSheet();
+            return true;
+        });
     }
 
     @Override
@@ -139,14 +145,20 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         return new MyViewHolder(view);
     }
 
+    private void showBottomSheet() {
+
+    }
+
     public static class MyViewHolder extends SectionedViewHolder {
-        final AestheticTextView blocker_or_number;
-        public boolean isSwipeable;
+        final AestheticCardView mCardView;
+        final AestheticTextView mBlockerOrNumber;
+        public boolean mIsSwipeable;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            blocker_or_number = (AestheticTextView) itemView.findViewById(android.R.id.title);
-            isSwipeable = true;
+            mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
+            mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
+            mIsSwipeable = true;
         }
     }
 }

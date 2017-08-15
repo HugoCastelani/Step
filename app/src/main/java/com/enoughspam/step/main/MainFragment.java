@@ -17,8 +17,8 @@ import com.enoughspam.step.database.localDao.LNotificationDAO;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
-import com.enoughspam.step.util.EndOffsetItemDecoration;
-import com.enoughspam.step.util.ListDecorator;
+import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
+import com.enoughspam.step.util.decorator.ListDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class MainFragment extends Fragment {
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 if (viewHolder instanceof MainAdapter.MyViewHolder
-                        && ((MainAdapter.MyViewHolder) viewHolder).isSwipeable) {
+                        && ((MainAdapter.MyViewHolder) viewHolder).mIsSwipeable) {
                     return super.getSwipeDirs(recyclerView, viewHolder);
                 } else {
                     return 0;

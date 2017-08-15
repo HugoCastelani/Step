@@ -1,4 +1,4 @@
-package com.enoughspam.step.util;
+package com.enoughspam.step.util.decorator;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
 
 import com.blankj.utilcode.util.ScreenUtils;
+import com.enoughspam.step.util.MarginUtils;
 
 /**
  * Created by Hugo Castelani

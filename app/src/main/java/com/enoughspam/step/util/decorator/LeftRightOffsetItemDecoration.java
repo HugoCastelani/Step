@@ -1,4 +1,4 @@
-package com.enoughspam.step.util;
+package com.enoughspam.step.util.decorator;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

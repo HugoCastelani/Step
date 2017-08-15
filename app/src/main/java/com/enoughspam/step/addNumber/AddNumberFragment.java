@@ -23,9 +23,9 @@ import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.Call;
-import com.enoughspam.step.util.EndOffsetItemDecoration;
-import com.enoughspam.step.util.ListDecorator;
 import com.enoughspam.step.util.ThemeHandler;
+import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
+import com.enoughspam.step.util.decorator.ListDecorator;
 
 import java.util.ArrayList;
 import java.util.List;

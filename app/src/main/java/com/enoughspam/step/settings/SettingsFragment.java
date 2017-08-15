@@ -17,8 +17,8 @@ import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
 import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.enoughspam.step.R;
 import com.enoughspam.step.settings.preferences.ColorPreference;
-import com.enoughspam.step.util.ListDecorator;
 import com.enoughspam.step.util.ThemeHandler;
+import com.enoughspam.step.util.decorator.ListDecorator;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
