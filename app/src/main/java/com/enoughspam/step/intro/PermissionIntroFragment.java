@@ -1,6 +1,10 @@
 package com.enoughspam.step.intro;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -33,33 +37,45 @@ public class PermissionIntroFragment extends SlideFragment {
     }
 
     private void onRequestButtonClick() {
-        mRxPermissions
-                .request(Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.READ_SMS,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.READ_CALL_LOG,
-                        Manifest.permission.MODIFY_AUDIO_SETTINGS)
+        final NotificationManager notificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-                .subscribe(granted -> {
-                    if (granted) {
-                        mButton.setEnabled(false);
-                        mButton.setText(getResources().getString(R.string.granted_permissions));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                !notificationManager.isNotificationPolicyAccessGranted()) {
 
-                        mCanGoForward = true;
-                        canGoForward();
-                        nextSlide();
+            final Intent intentB = new Intent(android.provider.Settings
+                    .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivity(intentB);
 
-                    } else {
+        } else {
 
-                        Snackbar.make(getView(),
-                                getResources().getString(R.string.all_permissions_required),
-                                Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+            mRxPermissions
+                    .request(Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.CALL_PHONE,
+                            Manifest.permission.READ_SMS,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS)
 
+                    .subscribe(granted -> {
+                        if (granted) {
+                            mButton.setEnabled(false);
+                            mButton.setText(getResources().getString(R.string.granted_permissions));
+
+                            mCanGoForward = true;
+                            canGoForward();
+                            nextSlide();
+
+                        } else {
+
+                            Snackbar.make(getView(),
+                                    getResources().getString(R.string.all_permissions_required),
+                                    Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+        }
     }
 
     @Override

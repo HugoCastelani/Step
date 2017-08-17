@@ -40,12 +40,12 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
             final String number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             final String iso = mTelephonyManager.getNetworkCountryIso().toUpperCase();
-            final Phone phone = Phone.generateObject(number, iso);
 
             // NullPointerException is going to be thrown if it's an outcoming call
             final boolean isBlocked;
             try {
                 DAOHandler.init(mContext);
+                final Phone phone = Phone.generateObject(number, iso);
                 isBlocked = LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), phone, false));
             } catch (NullPointerException e) {
                 return;
