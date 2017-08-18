@@ -5,11 +5,17 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" tools:ignore="ProtectedPermissions"/>
+
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
@@ -27,8 +33,8 @@
 
         <receiver android:name=".call.PhoneCallReceiver" >
             <intent-filter android:priority="100" >
-                <action android:name="android.intent.action.PHONE_STATE" >
-                </action>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.provider.Telephony.SMS_SENT"/>
             </intent-filter>
         </receiver>
 
