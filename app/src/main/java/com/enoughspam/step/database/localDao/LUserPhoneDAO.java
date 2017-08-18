@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.wideDao.PhoneDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 
 import java.util.ArrayList;
@@ -38,6 +40,26 @@ public class LUserPhoneDAO {
 
         cursor.close();
         return phoneList;
+    }
+
+    public static Phone findThisUserPhone() {
+        final User user = LUserDAO.getThisUser();
+
+        final String[] parameters = new String[] {UserPhoneDAO.PHONE_ID};
+        final String select = UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.IS_PROPERTY + " = ?";
+        final String[] arguments = new String[] {String.valueOf(user.getId()), "1"};
+
+        final Cursor cursor = DAOHandler.getWideDatabase().query(
+                UserPhoneDAO.TABLE, parameters, select, arguments, null, null, null);
+
+        Phone phone = null;
+
+        if (cursor.moveToFirst()) {
+            phone = PhoneDAO.findById(cursor.getInt(cursor.getColumnIndex(UserPhoneDAO.PHONE_ID)));
+        }
+
+        cursor.close();
+        return phone;
     }
 
     public static boolean isBlocked(@NonNull final UserPhone userPhone) {

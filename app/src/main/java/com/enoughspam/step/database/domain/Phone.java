@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
+import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.database.wideDao.AreaDAO;
 import com.enoughspam.step.database.wideDao.CountryDAO;
 
@@ -72,22 +73,26 @@ public class Phone extends Domain {
      * @return: returns a phone if it exists or null if it doesn't exist
      */
     public static Phone generateObject(@NonNull String number, @NonNull final String iso) {
-        // removing any 0 left
-        number = String.valueOf(Long.parseLong(number));
+        final long numberL = Long.parseLong(number);
+        if (numberL <= 0) return null;    // a number can't be <= 0
+
+        // any 0 left from country's code was removed
+        number = String.valueOf(numberL);
 
         final Country country = CountryDAO.findByIso(iso);
-        Phone phone = null;
+        Phone phone;
 
-        // some countries don't have area code
+        // countries without mask don't have area code
         if (!country.getMask().isEmpty()) {
-
-            // discover number's area and country
+            // find out number's area and country
             StringBuilder areaCode = new StringBuilder(50);
             Area area = null;
-            final int codeLength = String.valueOf(country.getCode()).length();
+
+            // find out how many digits the area's code has by first space
+            final int codeLength = country.getMask().indexOf(" ") + 1;
 
             for (int i = 0; i < codeLength; i++) {
-                areaCode.append(number.charAt(i));
+                areaCode.append(number.charAt(i));    // add current position's digit
 
                 area = AreaDAO.findByCode(Integer.valueOf(areaCode.toString()));
                 if (area != null && area.getState().getCountry().getId() == country.getId()) {
@@ -95,7 +100,13 @@ public class Phone extends Domain {
                 }
             }
 
-            if (area != null) phone = new Phone(Long.parseLong(number), area);
+            if (area == null) {
+                // if no area was detected, we assume that it's the same as the user's number
+                final Phone thisUserPhone = LUserPhoneDAO.findThisUserPhone();
+                phone = new Phone(Long.parseLong(number), thisUserPhone.getArea());
+            } else {
+                phone = new Phone(Long.parseLong(number), area);
+            }
 
         } else {
 
