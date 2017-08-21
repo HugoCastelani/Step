@@ -300,4 +300,4 @@ Foi identificada a seguinte lista de funções para este produto:
 
 ### 7. Modelo de análise: projeto de dados
 
-<img src="https://image.ibb.co/cyn7rk/DER.png" alt="DER" border="0" />
+<img src="https://image.ibb.co/j6evBk/DER.png" alt="DER" border="0" />
