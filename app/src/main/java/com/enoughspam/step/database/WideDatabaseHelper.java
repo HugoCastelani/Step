@@ -43,10 +43,6 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
                 "id integer primary key not null," +
                 "treatment varchar(20) not null);");
 
-        // creating suspicious denunciations amount configuration table
-        mSqLiteDatabase.execSQL("create table suspicious_denunciations_amount (" +
-                "amount smallint primary key not null);");
-
         /**
          * Static tables
          * Tables' below values are read-only
