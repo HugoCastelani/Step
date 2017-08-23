@@ -175,7 +175,6 @@ public class AddNumberFragment extends Fragment {
             mValues.put(BlockedNumbers.COLUMN_ORIGINAL_NUMBER, phone.toString());
             getActivity().getContentResolver()
                     .insert(BlockedNumbers.CONTENT_URI, mValues);
-
         }
 
         getActivity().onBackPressed();
