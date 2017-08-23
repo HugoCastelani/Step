@@ -69,20 +69,6 @@ public class Phone extends Domain {
         this.area = area;
     }
 
-    @Override
-    public String toString() {
-        if (getCountry() == null) {
-            return getArea().getState().getCountry().getCode() +
-                    getArea().getCode() +
-                    getNumber() + "";
-
-        } else {
-
-            return getCountry().getCode() +
-                    getNumber() + "";
-        }
-    }
-
     /**
      * @return: returns a phone if it exists or null if it doesn't exist
      */
@@ -115,7 +101,7 @@ public class Phone extends Domain {
             }
 
             if (area == null) {
-                // if no area wasn't detected, we assume that it's the same as the user's number
+                // if no area was detected, we assume that it's the same as the user's number
                 final Phone thisUserPhone = LUserPhoneDAO.findThisUserPhone();
                 phone = new Phone(Long.parseLong(number), thisUserPhone.getArea());
             } else {

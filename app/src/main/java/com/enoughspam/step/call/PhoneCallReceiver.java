@@ -16,7 +16,6 @@ import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
-import com.enoughspam.step.util.VariousUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,26 +35,24 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     @Override
     @SuppressWarnings("deprecation")
     public void onReceive(Context context, Intent intent) {
-        if (!VariousUtils.isAboveMarshmallow()) {    // BlockedNumberProvider shouldn't do the work
-            mContext = context;
-            mIntent = intent;
-            mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mContext = context;
+        mIntent = intent;
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 
-            // mute until discover whether is number blocked
-            mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
+        // mute until discover whether is number blocked
+        mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
 
-            switch (intent.getAction()) {
-                case "android.intent.action.PHONE_STATE":
-                    handlePhoneCall();
-                    break;
-                case "android.provider.Telephony.SMS_RECEIVED":
-                    handleSms();
-                    break;
-                default: break;
-            }
-
-            mAudioManager.setStreamMute(AudioManager.STREAM_RING, false);
+        switch (intent.getAction()) {
+            case "android.intent.action.PHONE_STATE":
+                handlePhoneCall();
+                break;
+            case "android.provider.Telephony.SMS_RECEIVED":
+                handleSms();
+                break;
+            default: break;
         }
+
+        mAudioManager.setStreamMute(AudioManager.STREAM_RING, false);
     }
 
     private void handlePhoneCall() {

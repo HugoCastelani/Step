@@ -1,16 +1,13 @@
 package com.enoughspam.step.addNumber;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BlockedNumberContract.BlockedNumbers;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.TelecomManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +24,6 @@ import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.util.ThemeHandler;
-import com.enoughspam.step.util.VariousUtils;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
 
@@ -41,7 +37,6 @@ import java.util.List;
  */
 
 public class AddNumberFragment extends Fragment {
-    private ContentValues mValues;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -59,9 +54,6 @@ public class AddNumberFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.add_number_fragment, container, false);
-
-        // this variable is initialized here to speed up saveNumber() method
-        mValues = new ContentValues();
 
         initViews();
 
@@ -126,6 +118,7 @@ public class AddNumberFragment extends Fragment {
     }
 
     public void confirmNumber(@NonNull final Phone phone) {
+
         int countryCode;
         try {
             countryCode = phone.getCountry().getCode();
@@ -163,20 +156,6 @@ public class AddNumberFragment extends Fragment {
 
     protected void saveNumber(@NonNull final Phone phone) {
         UserPhoneDAO.create(new UserPhone(LUserDAO.getThisUser(), phone, false));
-
-        // add to BlockedNumberProvider if it's nougat or above
-        if (VariousUtils.isAboveMarshmallow()) {
-            TelecomManager telecomManager = (TelecomManager)
-                    getContext().getSystemService(getContext().TELECOM_SERVICE);
-
-            getContext().startActivity(telecomManager.createManageBlockedNumbersIntent(), null);
-
-            mValues.clear();
-            mValues.put(BlockedNumbers.COLUMN_ORIGINAL_NUMBER, phone.toString());
-            getActivity().getContentResolver()
-                    .insert(BlockedNumbers.CONTENT_URI, mValues);
-        }
-
         getActivity().onBackPressed();
     }
 }
