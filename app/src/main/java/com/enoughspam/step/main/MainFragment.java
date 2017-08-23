@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
     private void initViews() {
         final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
-        final MainAdapter adapter = new MainAdapter(getBlockedNumberList(), view);
+        final MainAdapter adapter = new MainAdapter(getBlockedNumberList(), this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 

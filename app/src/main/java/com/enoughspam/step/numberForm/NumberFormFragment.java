@@ -36,7 +36,6 @@ import com.enoughspam.step.util.ThemeHandler;
  */
 
 public class NumberFormFragment extends Fragment {
-
     private View view;
     private Fragment parentFragment;
 

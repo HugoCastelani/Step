@@ -1,9 +1,13 @@
 package com.enoughspam.step.main;
 
+import android.content.ContentValues;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.provider.BlockedNumberContract.BlockedNumbers;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.util.VariousUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +35,25 @@ import java.util.List;
  */
 
 public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyViewHolder> {
+    private ContentValues mValues;
 
     private final List<PhoneSection> mBlockedNumbersList;
-    private final View mView;
+    private final Fragment mFragment;
 
     public MainAdapter(@NonNull final List<PhoneSection> blockedNumbersList,
-                       @NonNull final View view) {
+                       @NonNull final Fragment fragment) {
         mBlockedNumbersList = blockedNumbersList;
-        mView = view;
+        this.mFragment = fragment;
+
+        // this variable is initialized here to speed up saveNumber() method
+        mValues = new ContentValues();
     }
 
     public void removeItem(@NonNegative final int absolutePosition) {
         final ItemCoord coord = getRelativePosition(absolutePosition);
         final List<Phone> phoneList = mBlockedNumbersList.get(coord.section()).getPhoneList();
 
-        final Resources resources = mView.getContext().getResources();
+        final Resources resources = mFragment.getContext().getResources();
 
         // store information for undo case
         Phone removedPhone = phoneList.get(coord.relativePos());
@@ -59,7 +68,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
             notifyItemRemoved(absolutePosition - 1);
         }
 
-        Snackbar.make(mView, resources.getString(R.string.removed_number), Snackbar.LENGTH_SHORT)
+        Snackbar.make(mFragment.getView(), resources.getString(R.string.removed_number), Snackbar.LENGTH_SHORT)
                 .setAction(resources.getString(R.string.undo), view -> {
                     // add items to adapter and list again
                     phoneList.add(coord.relativePos(), removedPhone);
@@ -75,8 +84,16 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
                         if (event != DISMISS_EVENT_ACTION) {    // if equals, it has just undone
-                            // finally remove from database
+                            // finally remove from shared preferences and/or database
                             UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), removedPhone.getId());
+
+                            if (VariousUtils.isAboveMarshmallow()) {
+                                mValues.clear();
+                                mValues.put(BlockedNumbers.COLUMN_ORIGINAL_NUMBER, removedPhone.toString());
+                                Uri uri = mFragment.getActivity().getContentResolver()
+                                        .insert(BlockedNumbers.CONTENT_URI, mValues);
+                                mFragment.getActivity().getContentResolver().delete(uri, null, null);
+                            }
                         }
                     }
                 })
