@@ -17,11 +17,11 @@ public class Domain {
         this.id = id;
     }
 
-    public int getId() {
+    public int getID() {
         return id;
     }
 
-    public void setId(@NonNegative final int id) {
+    public void setID(@NonNegative final int id) {
         this.id = id;
     }
 }

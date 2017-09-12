@@ -76,7 +76,7 @@ public class CountryDAO {
         return country;
     }
 
-    public static Country findByIso(@NonNull final String iso) {
+    public static Country findByISO(@NonNull final String iso) {
         final Cursor cursor = DAOHandler.getWideDatabase().query(
                 TABLE, null, ISO + " = ?", new String[] {iso},
                 null, null, null);

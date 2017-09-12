@@ -76,7 +76,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
                         super.onDismissed(transientBottomBar, event);
                         if (event != DISMISS_EVENT_ACTION) {    // if equals, it has just undone
                             // finally remove from database
-                            UserPhoneDAO.delete(LUserDAO.getThisUser().getId(), removedPhone.getId());
+                            UserPhoneDAO.delete(LUserDAO.getThisUser().getID(), removedPhone.getID());
                         }
                     }
                 })

@@ -23,7 +23,7 @@ public class LUserPhoneDAO {
     private LUserPhoneDAO() {}
 
     public static List<Phone> getPhoneList() {
-        final int id = LUserDAO.getThisUser().getId();
+        final int id = LUserDAO.getThisUser().getID();
 
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
                 UserPhoneDAO.TABLE, new String[] {UserPhoneDAO.PHONE_ID},
@@ -47,7 +47,7 @@ public class LUserPhoneDAO {
 
         final String[] parameters = new String[] {UserPhoneDAO.PHONE_ID};
         final String select = UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.IS_PROPERTY + " = ?";
-        final String[] arguments = new String[] {String.valueOf(user.getId()), "1"};
+        final String[] arguments = new String[] {String.valueOf(user.getID()), "1"};
 
         final Cursor cursor = DAOHandler.getWideDatabase().query(
                 UserPhoneDAO.TABLE, parameters, select, arguments, null, null, null);
@@ -69,7 +69,7 @@ public class LUserPhoneDAO {
 
             final Cursor cursor = DAOHandler.getLocalDatabase().query(UserPhoneDAO.TABLE, null,
                     UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.PHONE_ID + " = ?",
-                    new String[] {String.valueOf(userPhone.getUser().getId()), result},
+                    new String[] {String.valueOf(userPhone.getUser().getID()), result},
                     null, null, null);
 
             UserPhone matchingUserPhone = null;

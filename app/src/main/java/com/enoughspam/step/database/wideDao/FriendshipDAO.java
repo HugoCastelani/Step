@@ -34,15 +34,15 @@ public class FriendshipDAO {
     public static int create(@NonNull final Friendship friendship) {
         ContentValues values = new ContentValues();
 
-        values.put(USER_ADDED_ID, friendship.getAdded().getId());
-        values.put(USER_ADDING_ID, friendship.getAdding().getId());
+        values.put(USER_ADDED_ID, friendship.getAdded().getID());
+        values.put(USER_ADDING_ID, friendship.getAdding().getID());
 
         final int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
 
         if (id != -1) {
             values.put(ID, id);
             DAOHandler.getLocalDatabase().insert(TABLE, null, values);
-            LUserDAO.clone(friendship.getAdded().getId());
+            LUserDAO.clone(friendship.getAdded().getID());
         }
 
         return id;

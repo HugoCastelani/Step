@@ -41,7 +41,7 @@ public class DescriptionDAO {
         values.put(TREATMENT_ID, description.getTreatmentId());
 
         DAOHandler.getWideDatabase().update(TABLE, values,
-                ID + " = ?", new String[] {String.valueOf(description.getId())});
+                ID + " = ?", new String[] {String.valueOf(description.getID())});
     }
 
     public static Description findById(@NonNegative final int id) {

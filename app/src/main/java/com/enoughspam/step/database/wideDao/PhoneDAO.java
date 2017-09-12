@@ -47,7 +47,7 @@ public class PhoneDAO {
 
         if (phone.getArea().getCode() == 0) {
             values.put(NUMBER, phone.getNumber());
-            values.put(COUNTRY_ID, phone.getCountry().getId());
+            values.put(COUNTRY_ID, phone.getCountry().getID());
 
         } else {
 
@@ -98,7 +98,7 @@ public class PhoneDAO {
 
         } else {
 
-            final String countryId = String.valueOf(phone.getCountry().getId());
+            final String countryId = String.valueOf(phone.getCountry().getID());
 
             cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                     NUMBER + " = ? AND " + COUNTRY_ID + " = ? ", new String[] {number, countryId},
@@ -112,6 +112,6 @@ public class PhoneDAO {
         cursor.close();
 
         if (matchingPhone == null) return -1;
-        else return matchingPhone.getId();
+        else return matchingPhone.getID();
     }
 }

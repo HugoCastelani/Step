@@ -19,17 +19,17 @@ public class LPhoneDAO {
     private LPhoneDAO() {}
 
     public static int create(@NonNull final Phone phone) {
-        if (findById(phone.getId()) == null) {
+        if (findById(phone.getID()) == null) {
             final ContentValues values = new ContentValues();
 
             if (phone.getArea().getCode() == 0) {
-                values.put(PhoneDAO.ID, phone.getId());
+                values.put(PhoneDAO.ID, phone.getID());
                 values.put(PhoneDAO.NUMBER, phone.getNumber());
-                values.put(PhoneDAO.COUNTRY_ID, phone.getCountry().getId());
+                values.put(PhoneDAO.COUNTRY_ID, phone.getCountry().getID());
 
             } else {
 
-                values.put(PhoneDAO.ID, phone.getId());
+                values.put(PhoneDAO.ID, phone.getID());
                 values.put(PhoneDAO.NUMBER, phone.getNumber());
                 values.put(PhoneDAO.AREA_CODE, phone.getArea().getCode());
             }
@@ -66,7 +66,7 @@ public class LPhoneDAO {
 
         } else {
 
-            final String countryId = String.valueOf(phone.getCountry().getId());
+            final String countryId = String.valueOf(phone.getCountry().getID());
 
             cursor = DAOHandler.getLocalDatabase().query(PhoneDAO.TABLE, null,
                     PhoneDAO.NUMBER + " = ? AND " + PhoneDAO.COUNTRY_ID + " = ? ", new String[] {number, countryId},
@@ -80,6 +80,6 @@ public class LPhoneDAO {
         cursor.close();
 
         if (matchingPhone == null) return -1;
-        else return matchingPhone.getId();
+        else return matchingPhone.getID();
     }
 }

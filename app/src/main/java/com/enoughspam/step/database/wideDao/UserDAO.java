@@ -34,7 +34,7 @@ public class UserDAO {
 
     public static int create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
-        int id = user.getId();
+        int id = user.getID();
 
         values.put(SOCIAL_ID, user.getSocialId());
         values.put(NAME, user.getName());

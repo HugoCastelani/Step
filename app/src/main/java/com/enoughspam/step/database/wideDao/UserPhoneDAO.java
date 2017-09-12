@@ -43,7 +43,7 @@ public class UserPhoneDAO {
         }
 
         if (phoneId != -1) {
-            values.put(USER_ID, userPhone.getUser().getId());
+            values.put(USER_ID, userPhone.getUser().getID());
             values.put(PHONE_ID, phoneId);
             values.put(IS_PROPERTY, userPhone.isProperty());
 
