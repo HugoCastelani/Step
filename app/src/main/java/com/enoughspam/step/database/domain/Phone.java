@@ -79,31 +79,35 @@ public class Phone extends Domain {
         // any 0 left from country's code was removed
         number = String.valueOf(numberL);
 
-        final Country country = CountryDAO.findByIso(iso);
+        Country country = CountryDAO.findByISO(iso);
         Phone phone;
 
         // countries without mask don't have area code
         if (!country.getMask().isEmpty()) {
-            // find out number's area and country
-            StringBuilder areaCode = new StringBuilder(50);
-            Area area = null;
-
-            // find out how many digits the area's code has by first space
-            final int codeLength = country.getMask().indexOf(" ") + 1;
-
-            for (int i = 0; i < codeLength; i++) {
-                areaCode.append(number.charAt(i));    // add current position's digit
-
-                area = AreaDAO.findByCode(Integer.valueOf(areaCode.toString()));
-                if (area != null && area.getState().getCountry().getId() == country.getId()) {
-                    number = number.substring(i + 1, number.length());
-                }
-            }
+            Object[] methodReturn = findAreaByNumber(number, country);
+            Area area = (Area) methodReturn[0];
+            number = (String) methodReturn[1];
 
             if (area == null) {
-                // if no area was detected, we assume that it's the same as the user's number
-                final Phone thisUserPhone = LUserPhoneDAO.findThisUserPhone();
-                phone = new Phone(Long.parseLong(number), thisUserPhone.getArea());
+                // if no area was detected, there are two possibilities:
+                // 1. Android is crazy and giving us wrong ISO (happened to me in Lineage OS), so
+                // we're going to test if the user's phone can be found inside the actual number
+                // 2. In some Samsung devices, android hides the phone's area if it's
+                // the same as user's phone area, so that's what we're going to assume
+
+                final Area thisUserPhoneArea = LUserPhoneDAO.findThisUserPhone().getArea();
+                country = thisUserPhoneArea.getState().getCountry();
+
+                methodReturn = findAreaByNumber(number, country);
+                area = (Area) methodReturn[0];
+                number = (String) methodReturn[1];
+
+                if (area == null) {
+                    phone = new Phone(Long.parseLong(number), thisUserPhoneArea);
+                } else {
+                    phone = new Phone(Long.parseLong(number), area);
+                }
+
             } else {
                 phone = new Phone(Long.parseLong(number), area);
             }
@@ -114,5 +118,27 @@ public class Phone extends Domain {
         }
 
         return phone;
+    }
+
+    /**
+     * @return both area and new number
+     */
+    private static Object[] findAreaByNumber(@NonNull String number, @NonNull final Country country) {
+        // find out how many digits the area's code has by first space
+        final int codeLength = country.getMask().indexOf(" ");
+
+        StringBuilder areaCode = new StringBuilder(50);
+        Area area = null;
+
+        for (int i = 0; i < codeLength; i++) {
+            areaCode.append(number.charAt(i));    // add current position's digit
+
+            area = AreaDAO.findByCode(Integer.valueOf(areaCode.toString()));
+            if (area != null && area.getState().getCountry().getID() == country.getID()) {
+                number = number.substring(i + 1, number.length());
+            }
+        }
+
+        return new Object[] {area, number};
     }
 }
