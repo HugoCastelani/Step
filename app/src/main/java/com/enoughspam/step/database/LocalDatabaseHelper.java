@@ -15,9 +15,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
-    public static final int VERSION = 1;
+    public static final int VERSION = 3;
 
-    private SQLiteDatabase mSqLiteDatabase;
+    private SQLiteDatabase mSQLiteDatabase;
 
     public LocalDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -25,7 +25,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        mSqLiteDatabase = sqLiteDatabase;
+        mSQLiteDatabase = sqLiteDatabase;
         createTables();
     }
 
@@ -34,13 +34,15 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
     private void createTables() {
         // create user table
-        mSqLiteDatabase.execSQL("create table user (" +
+        mSQLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
-                "social_id varchar(30) not null, " +
-                "name varchar(50) not null);");
+                "name varchar(50) not null," +
+                "social_id varchar(50) not null, " +
+                "user_name varchar(50) not null," +
+                "photo_url varchar(500) not null);");
 
         // create friendship table
-        mSqLiteDatabase.execSQL("create table friendship (" +
+        mSQLiteDatabase.execSQL("create table friendship (" +
                 "id integer primary key not null," +
                 "user_added_id integer not null," +
                 "user_adding_id integer not null," +
@@ -48,7 +50,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(user_adding_id) references personal(id));");
 
         // creating phone table
-        mSqLiteDatabase.execSQL("create table phone (" +
+        mSQLiteDatabase.execSQL("create table phone (" +
                 "id integer primary key not null," +
                 "number bigint not null," +
                 "country_id integer," +
@@ -56,7 +58,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(country_id) references country(id)," +
                 "foreign key(area_code) references area(code));");
 
-        mSqLiteDatabase.execSQL("create table user_phone (" +
+        mSQLiteDatabase.execSQL("create table user_phone (" +
                 "user_id integer not null," +
                 "phone_id integer not null," +
                 "is_property tinyint not null," +
@@ -65,7 +67,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(phone_id) references phone(id));");
 
         // creating notification table
-        mSqLiteDatabase.execSQL("create table notification (" +
+        mSQLiteDatabase.execSQL("create table notification (" +
                 "id integer primary key not null," +
                 "phone_id integer not null," +
                 "notified_user_id integer not null," +
@@ -75,13 +77,13 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "foreign key(notifying_user_id) references personal(id));");
 
         // creating denunciation table
-        mSqLiteDatabase.execSQL("create table denunciation (" +
+        mSQLiteDatabase.execSQL("create table denunciation (" +
                 "id integer primary key not null," +
                 "phone_id integer not null," +
                 "foreign key(phone_id) references phone(id));");
 
         // creating denunciation/description table
-        mSqLiteDatabase.execSQL("create table denunciation_description (" +
+        mSQLiteDatabase.execSQL("create table denunciation_description (" +
                 "denunciation_id integer not null," +
                 "description_id integer not null," +
                 "primary key(denunciation_id, description_id)," +
