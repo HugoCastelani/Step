@@ -79,11 +79,16 @@ public class LoginIntroFragment extends SlideFragment implements
                 final GoogleSignInAccount account = result.getSignInAccount();
 
                 if (account.getId() != null) {
-                    final String socialId = account.getId() + GOOGLE_CODE;
-                    User user = UserDAO.findBySocialId(socialId);
+                    final String socialID = account.getId() + GOOGLE_CODE;
+                    User user = UserDAO.findBySocialId(socialID);
 
                     if (user == null) {
-                        user = new User(socialId, account.getDisplayName());
+                        user = new User(
+                                account.getDisplayName(),
+                                socialID,
+                                account.getGivenName(),
+                                account.getPhotoUrl().toString()
+                        );
                     }
 
                     UserDAO.create(user);
@@ -101,7 +106,13 @@ public class LoginIntroFragment extends SlideFragment implements
 
         if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
 
-            UserDAO.create(new User(Integer.MAX_VALUE, String.valueOf(Integer.MAX_VALUE), "Developer"));
+            UserDAO.create(new User(
+                    Integer.MAX_VALUE,
+                    "Developer",
+                    String.valueOf(Integer.MAX_VALUE),
+                    "Developer",
+                    "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
+            );
 
             ToastUtils.showShort("Developer account created");
 

@@ -41,7 +41,13 @@ public class MainActivity extends AbstractActivity {
         setContentView(R.layout.main_activity);
 
         if (LUserDAO.getThisUser() == null) {
-            UserDAO.create(new User(Integer.MAX_VALUE, String.valueOf(Integer.MAX_VALUE), "Developer"));
+            UserDAO.create(new User(
+                    Integer.MAX_VALUE,
+                    "Developer",
+                    String.valueOf(Integer.MAX_VALUE),
+                    "Developer",
+                    "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
+            );
         }
 
         initToolbar(false);

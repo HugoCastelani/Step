@@ -36,9 +36,10 @@ public class LUserDAO {
             final User user = UserDAO.findById(id);
             final ContentValues values = new ContentValues();
 
-            values.put(UserDAO.ID, user.getID());
-            values.put(UserDAO.SOCIAL_ID, user.getSocialId());
             values.put(UserDAO.NAME, user.getName());
+            values.put(UserDAO.SOCIAL_ID, user.getSocialID());
+            values.put(UserDAO.USER_NAME, user.getUserName());
+            values.put(UserDAO.PHOTO_URL, user.getPhotoURL());
 
             int userId = (int) DAOHandler.getLocalDatabase().insert(UserDAO.TABLE, null, values);
             if (userId != -1) {
