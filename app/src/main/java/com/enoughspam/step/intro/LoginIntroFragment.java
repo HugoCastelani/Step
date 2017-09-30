@@ -47,6 +47,7 @@ public class LoginIntroFragment extends SlideFragment implements
         final GoogleSignInOptions signInOptions = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestId()
+                .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -82,12 +83,19 @@ public class LoginIntroFragment extends SlideFragment implements
                     final String socialID = account.getId() + GOOGLE_CODE;
                     User user = UserDAO.findBySocialId(socialID);
 
+                    String photoURL;
+                    try {
+                        photoURL = account.getPhotoUrl().toString();
+                    } catch (NullPointerException e) {
+                        photoURL = "";
+                    }
+
                     if (user == null) {
                         user = new User(
                                 account.getDisplayName(),
                                 socialID,
-                                account.getGivenName(),
-                                account.getPhotoUrl().toString()
+                                account.getEmail().replace("@gmail.com", ""),
+                                photoURL
                         );
                     }
 
