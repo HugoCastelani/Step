@@ -93,7 +93,7 @@ public class AddNumberFragment extends Fragment {
             } else continue;
 
             // doesn't make sense show null numbers or outgoing calls
-            if (number == null || cursor.getInt(cursor.getColumnIndex
+            if (number == null || number.equals("") || cursor.getInt(cursor.getColumnIndex
                     (CallLog.Calls.TYPE)) == CallLog.Calls.OUTGOING_TYPE) {
                 continue;
             }
