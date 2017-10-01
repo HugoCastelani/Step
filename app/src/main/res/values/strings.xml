@@ -3,6 +3,7 @@
 
     <!-- main activity -->
     <string name="main_activity_label">Home</string>
+    <string name="no_registered_number">Não há nenhum número cadastrado...</string>
     <string name="press_back_again">Pressione o botão voltar novamente para sair</string>
     <string name="search_hint">Pesquisar</string>
     <string name="notifications_hint">Notificações</string>

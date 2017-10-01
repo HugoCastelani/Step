@@ -8,6 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
@@ -45,7 +46,8 @@ public class MainFragment extends Fragment {
     private void initViews() {
         final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
-        final MainAdapter adapter = new MainAdapter(getBlockedNumberList(), view);
+        final List<PhoneSection> phoneSectionList = getBlockedNumberList();
+        final MainAdapter adapter = new MainAdapter(phoneSectionList, view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
@@ -79,6 +81,18 @@ public class MainFragment extends Fragment {
 
         ListDecorator.init(getContext());
         ListDecorator.addAdaptableMargins(recyclerView);
+
+        final LinearLayout noRegisteredNumber = (LinearLayout) view.findViewById(R.id.main_no_registered_number);
+
+        int phoneCount = 0;
+        for (int i = 0; i < phoneSectionList.size(); i++) {
+            phoneCount += phoneSectionList.get(i).getPhoneList().size();
+        }
+
+        if (phoneCount == 0) {
+            recyclerView.setVisibility(View.GONE);
+            noRegisteredNumber.setVisibility(View.VISIBLE);
+        }
     }
 
     private List<PhoneSection> getBlockedNumberList() {
