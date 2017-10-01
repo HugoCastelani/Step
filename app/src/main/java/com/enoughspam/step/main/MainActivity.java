@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
@@ -34,6 +36,8 @@ public class MainActivity extends AbstractActivity {
     private static final int REQUEST_CODE_ADD_NUMBER = 3;
 
     private FloatingActionButton mFab;
+    private Snackbar mSnackbar;
+    private Drawer mNavDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class MainActivity extends AbstractActivity {
     @Override
     protected void initViews() {
         mFab = (FloatingActionButton) findViewById(R.id.main_fab);
+        mSnackbar = Snackbar.make(findViewById(R.id.content),
+                getResources().getString(R.string.press_back_again),
+                BaseTransientBottomBar.LENGTH_LONG);
     }
 
     @Override
@@ -102,7 +109,7 @@ public class MainActivity extends AbstractActivity {
                 .build();
 
         // navigation drawer itself
-        final Drawer navDrawer = new DrawerBuilder()
+        mNavDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(getToolbar())
                 .withSliderBackgroundColorRes(ThemeHandler.isDark() ?
@@ -118,11 +125,11 @@ public class MainActivity extends AbstractActivity {
         settingsDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
 
         // navigation drawer items
-        navDrawer.addItem(new PrimaryDrawerItem().withIdentifier(0).withName(R.string.main_activity_label).withIcon(homeDraw));
-        navDrawer.addItem(new PrimaryDrawerItem().withIdentifier(1).withName(R.string.settings_activity_label).withIcon(settingsDraw));
+        mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(0).withName(R.string.main_activity_label).withIcon(homeDraw));
+        mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(1).withName(R.string.settings_activity_label).withIcon(settingsDraw));
 
         // navigation drawer actions
-        navDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
+        mNavDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
             switch (position) {
                 case 1: break;
 
@@ -134,6 +141,17 @@ public class MainActivity extends AbstractActivity {
 
             return false;
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mNavDrawer.isDrawerOpen()) {
+            mNavDrawer.closeDrawer();
+        } else if (mSnackbar.isShown()) {
+            super.onBackPressed();
+        } else {
+            mSnackbar.show();
+        }
     }
 
     @Override
