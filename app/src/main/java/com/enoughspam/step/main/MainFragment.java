@@ -8,7 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
@@ -34,28 +34,46 @@ public class MainFragment extends Fragment {
 
     private View view;
 
+    private AestheticRecyclerView mRecyclerView;
+    private MainAdapter mAdapter;
+    private List<PhoneSection> mPhoneSectionList;
+
+    private ImageView mPlaceHolder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.main_fragment, container, false);
 
         initViews();
+        initActions();
 
         return view;
     }
 
     private void initViews() {
-        final AestheticRecyclerView recyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
+        // init recycler view
+        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
-        final List<PhoneSection> phoneSectionList = getBlockedNumberList();
-        final MainAdapter adapter = new MainAdapter(phoneSectionList, view);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext(),
+        mPhoneSectionList = getBlockedNumberList();
+        mAdapter = new MainAdapter(mPhoneSectionList, view);
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-        recyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ListDecorator.init(getContext());
+        ListDecorator.addAdaptableMargins(mRecyclerView);
+
+        // init place holder image view
+        mPlaceHolder = (ImageView) view.findViewById(R.id.main_place_holder);
+    }
+
+    private void initActions() {
+        // init recycler view's actions
+        final ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -63,7 +81,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                adapter.removeItem(viewHolder.getAdapterPosition());
+                mAdapter.removeItem(viewHolder.getAdapterPosition());
             }
 
             @Override
@@ -77,21 +95,17 @@ public class MainFragment extends Fragment {
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-        ListDecorator.init(getContext());
-        ListDecorator.addAdaptableMargins(recyclerView);
-
-        final LinearLayout noRegisteredNumber = (LinearLayout) view.findViewById(R.id.main_no_registered_number);
-
+        // init place holder's actions
         int phoneCount = 0;
-        for (int i = 0; i < phoneSectionList.size(); i++) {
-            phoneCount += phoneSectionList.get(i).getPhoneList().size();
+        for (int i = 0; i < mPhoneSectionList.size(); i++) {
+            phoneCount += mPhoneSectionList.get(i).getPhoneList().size();
         }
 
         if (phoneCount == 0) {
-            recyclerView.setVisibility(View.GONE);
-            noRegisteredNumber.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            mPlaceHolder.setVisibility(View.VISIBLE);
         }
     }
 
