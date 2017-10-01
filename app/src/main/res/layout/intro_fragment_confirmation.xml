@@ -12,7 +12,7 @@
         android:id="@+id/intro_confirmation_parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="@dimen/mi_baseline"
+        android:padding="@dimen/baseline"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -22,10 +22,10 @@
         <com.afollestad.aesthetic.AestheticImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/mi_baseline_quadruple"
-            android:layout_marginStart="@dimen/mi_baseline_quadruple"
-            android:layout_marginRight="@dimen/mi_baseline_quadruple"
-            android:layout_marginEnd="@dimen/mi_baseline_quadruple"
+            android:layout_marginLeft="@dimen/baseline_4x"
+            android:layout_marginStart="@dimen/baseline_4x"
+            android:layout_marginRight="@dimen/baseline_4x"
+            android:layout_marginEnd="@dimen/baseline_4x"
             android:gravity="center"
             android:adjustViewBounds="true"
             app:srcCompat="@drawable/intro_5"/>
@@ -33,7 +33,7 @@
         <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mi_baseline_double"
+            android:layout_marginTop="@dimen/baseline_2x"
             android:gravity="center"
             android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
@@ -43,7 +43,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mi_baseline"
+            android:layout_marginTop="@dimen/baseline"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="1">
