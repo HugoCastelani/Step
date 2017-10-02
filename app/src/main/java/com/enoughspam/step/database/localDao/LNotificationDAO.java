@@ -55,7 +55,7 @@ public class LNotificationDAO {
         outerLoop:
         for (int i = 0; i < notificationList.size(); i++) {
             final Notification notification = notificationList.get(i);
-            final String notifyingUserName = LUserDAO.findById(notification.getNotifyingUserId()).getName();
+            final String notifyingUserName = LUserDAO.findById(notification.getNotifyingUserId()).getUserName();
             final Phone phone = LPhoneDAO.findById(notification.getPhoneId());
 
             for (int j = 0; j < phoneSectionList.size(); j++) {

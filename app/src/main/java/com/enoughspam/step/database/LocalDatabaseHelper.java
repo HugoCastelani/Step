@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -36,7 +36,6 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         // create user table
         mSQLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
-                "name varchar(50) not null," +
                 "social_id varchar(50) not null, " +
                 "user_name varchar(50) not null," +
                 "photo_url varchar(500) not null);");

@@ -18,7 +18,6 @@ import com.enoughspam.step.database.domain.User;
 public class UserDAO {
     public static final String TABLE = "user";
     public static final String ID = "id";
-    public static final String NAME = "name";
     public static final String SOCIAL_ID = "social_id";
     public static final String USER_NAME = "user_name";
     public static final String PHOTO_URL = "photo_url";
@@ -28,7 +27,6 @@ public class UserDAO {
     public static User generate(@NonNull final Cursor cursor) {
         return new User(
                 cursor.getInt(cursor.getColumnIndex(ID)),
-                cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(SOCIAL_ID)),
                 cursor.getString(cursor.getColumnIndex(USER_NAME)),
                 cursor.getString(cursor.getColumnIndex(PHOTO_URL))
@@ -39,7 +37,6 @@ public class UserDAO {
         final ContentValues values = new ContentValues();
         int id = user.getID();
 
-        values.put(NAME, user.getName());
         values.put(SOCIAL_ID, user.getSocialID());
         values.put(USER_NAME, user.getUserName());
         values.put(PHOTO_URL, user.getPhotoURL());

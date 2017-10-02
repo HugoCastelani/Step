@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WideDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wide.db";
-    public static final int VERSION = 47;
+    public static final int VERSION = 49;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -85,7 +85,6 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
         // create user table
         mSQLiteDatabase.execSQL("create table user (" +
                 "id integer primary key not null," +
-                "name varchar(50) not null," +
                 "social_id varchar(50) not null, " +
                 "user_name varchar(50) not null," +
                 "photo_url varchar(500) not null);");
@@ -141,8 +140,8 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertAttributes() {
-        mSQLiteDatabase.execSQL("insert into user(id, name, social_id, user_name, photo_url) " +
-                                "values(1, 'Enough Spam! Official', '0', 'EnoughSpamOfficial', " +
+        mSQLiteDatabase.execSQL("insert into user(id, social_id, user_name, photo_url) " +
+                                "values(1, '0', 'EnoughSpamOfficial', " +
                                 "'https://image.ibb.co/iBoxR5/Icon2.png');");
 
         // !!!!!!!!!!! NEVER ADD A NEW ATTRIBUTE ON TOP OF THE TABLE AFTER APP IS ON THE AIR!!!!!!!!!!!

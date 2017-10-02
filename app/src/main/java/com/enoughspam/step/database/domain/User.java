@@ -12,40 +12,28 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  */
 
 public class User extends Domain {
-    private String name;
     private String socialID;
     private String userName;
     private String photoURL;
 
-    public User(@NonNegative final int id, @NonNull final String name,
-                @NonNull final String userName, @NonNull final String photoURL) {
-        super(id);
-        this.name = name;
-        this.userName = userName;
-        this.photoURL = photoURL;
-    }
-
-    public User(@NonNull final String name, @NonNull final String socialID,
-                @NonNull final String userName, @NonNull final String photoURL) {
-        this.name = name;
-        this.socialID = socialID;
-        this.userName = userName;
-        this.photoURL = photoURL;
-    }
-
-    public User(@NonNegative final int id, @NonNull final String name,
-                @NonNull final String socialID, @NonNull final String userName,
+    public User(@NonNegative final int id, @NonNull final String userName,
                 @NonNull final String photoURL) {
-        this(id, name, userName, photoURL);
+        super(id);
+        this.userName = userName;
+        this.photoURL = photoURL;
+    }
+
+    public User(@NonNull final String socialID, @NonNull final String userName,
+                @NonNull final String photoURL) {
         this.socialID = socialID;
+        this.userName = userName;
+        this.photoURL = photoURL;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(@NonNull final String name) {
-        this.name = name;
+    public User(@NonNegative final int id, @NonNull final String socialID,
+                @NonNull final String userName, @NonNull final String photoURL) {
+        this(id, userName, photoURL);
+        this.socialID = socialID;
     }
 
     public String getSocialID() {
