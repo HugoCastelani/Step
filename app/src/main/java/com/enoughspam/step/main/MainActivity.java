@@ -38,6 +38,7 @@ public class MainActivity extends AbstractActivity {
     private FloatingActionButton mFab;
     private Snackbar mSnackbar;
     private Drawer mNavDrawer;
+    private MainFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +90,11 @@ public class MainActivity extends AbstractActivity {
 
     @Override
     protected void initFragment() {
-        MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
-        if (mainFragment == null) {
-            mainFragment = new MainFragment();
+        mFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag("mainFragmentTag");
+        if (mFragment == null) {
+            mFragment = new MainFragment();
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.main_fragment_container, mainFragment, "mainFragmentTag");
+            fragmentTransaction.replace(R.id.main_fragment_container, mFragment, "mainFragmentTag");
             fragmentTransaction.commit();
         }
     }
@@ -166,5 +167,16 @@ public class MainActivity extends AbstractActivity {
             default: break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mFragment.isPhoneSectionListEmpty()) {
+            Snackbar.make(findViewById(R.id.content),
+                    getResources().getString(R.string.no_registered_number),
+                    BaseTransientBottomBar.LENGTH_LONG)
+                    .show();
+        }
     }
 }

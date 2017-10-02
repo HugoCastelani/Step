@@ -11,33 +11,17 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
 
-    <LinearLayout
-        android:id="@+id/main_no_registered_number"
+    <ImageView
+        android:id="@+id/main_place_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/baseline_4x"
+        android:layout_marginStart="@dimen/baseline_4x"
+        android:layout_marginRight="@dimen/baseline_4x"
+        android:layout_marginEnd="@dimen/baseline_4x"
         android:layout_gravity="center"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/baseline_6x"
-            android:layout_marginStart="@dimen/baseline_6x"
-            android:layout_marginRight="@dimen/baseline_6x"
-            android:layout_marginEnd="@dimen/baseline_6x"
-            android:adjustViewBounds="true"
-            android:src="@drawable/crying_face"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/baseline_2x"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:textColor="?android:textColorPrimary"
-            android:text="@string/no_registered_number"/>
-
-    </LinearLayout>
+        android:adjustViewBounds="true"
+        android:src="@drawable/place_holder"
+        android:visibility="gone"/>
 
 </FrameLayout>

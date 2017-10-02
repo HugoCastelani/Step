@@ -8,6 +8,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
@@ -31,7 +35,6 @@ import java.util.List;
  */
 
 public class MainFragment extends Fragment {
-
     private View view;
 
     private AestheticRecyclerView mRecyclerView;
@@ -55,7 +58,7 @@ public class MainFragment extends Fragment {
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
 
         mPhoneSectionList = getBlockedNumberList();
-        mAdapter = new MainAdapter(mPhoneSectionList, view);
+        mAdapter = new MainAdapter(mPhoneSectionList, this);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -98,12 +101,7 @@ public class MainFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         // init place holder's actions
-        int phoneCount = 0;
-        for (int i = 0; i < mPhoneSectionList.size(); i++) {
-            phoneCount += mPhoneSectionList.get(i).getPhoneList().size();
-        }
-
-        if (phoneCount == 0) {
+        if (isPhoneSectionListEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mPlaceHolder.setVisibility(View.VISIBLE);
         }
@@ -127,4 +125,51 @@ public class MainFragment extends Fragment {
         return phoneSectionList;
     }
 
+    public void showPlaceHolder() {
+        final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
+        fadeIn.setDuration(200);
+
+        // setting layout params instead of setting visibility gone to
+        // avoid a graphical glitch that happens in section name view
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(0, 0);
+        mRecyclerView.setLayoutParams(layoutParams);
+
+        mPlaceHolder.setVisibility(View.VISIBLE);
+
+        mPlaceHolder.startAnimation(fadeIn);
+    }
+
+    public void showRecyclerView() {
+        final AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+
+        fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
+        fadeOut.setDuration(200);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mPlaceHolder.setVisibility(View.GONE);
+
+                // setting layout params instead of setting visibility gone to
+                // avoid a graphical glitch that happens in section name view
+                final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams
+                        (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                mRecyclerView.setLayoutParams(layoutParams);
+            }
+        });
+
+        mPlaceHolder.startAnimation(fadeOut);
+    }
+
+    public boolean isPhoneSectionListEmpty() {
+        int phoneCount = 0;
+        for (int i = 0; i < mPhoneSectionList.size(); i++) {
+            phoneCount += mPhoneSectionList.get(i).getPhoneList().size();
+        }
+
+        return phoneCount == 0 ? true : false;
+    }
 }

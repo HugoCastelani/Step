@@ -32,19 +32,19 @@ import java.util.List;
 public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyViewHolder> {
 
     private final List<PhoneSection> mBlockedNumbersList;
-    private final View mView;
+    private final MainFragment mFragment;
 
     public MainAdapter(@NonNull final List<PhoneSection> blockedNumbersList,
-                       @NonNull final View view) {
+                       @NonNull final MainFragment fragment) {
         mBlockedNumbersList = blockedNumbersList;
-        mView = view;
+        mFragment = fragment;
     }
 
     public void removeItem(@NonNegative final int absolutePosition) {
         final ItemCoord coord = getRelativePosition(absolutePosition);
         final List<Phone> phoneList = mBlockedNumbersList.get(coord.section()).getPhoneList();
 
-        final Resources resources = mView.getContext().getResources();
+        final Resources resources = mFragment.getContext().getResources();
 
         // store information for undo case
         Phone removedPhone = phoneList.get(coord.relativePos());
@@ -57,11 +57,13 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         if (phoneList.isEmpty()) {
             mBlockedNumbersList.remove(coord.section());
             notifyItemRemoved(absolutePosition - 1);
+            mFragment.showPlaceHolder();
         }
 
-        Snackbar.make(mView, resources.getString(R.string.removed_number), Snackbar.LENGTH_SHORT)
+        Snackbar.make(mFragment.getView(), resources.getString(R.string.removed_number), Snackbar.LENGTH_LONG)
                 .setAction(resources.getString(R.string.undo), view -> {
                     // add items to adapter and list again
+                    mFragment.showRecyclerView();
                     phoneList.add(coord.relativePos(), removedPhone);
                     notifyItemInserted(absolutePosition);
 
