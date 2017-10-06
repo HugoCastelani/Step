@@ -3,9 +3,6 @@ package com.enoughspam.step.profile;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 
 import com.afollestad.aesthetic.AestheticButton;
 import com.afollestad.aesthetic.AestheticProgressBar;
@@ -13,6 +10,7 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.util.AnimUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -79,37 +77,7 @@ public class ProfileActivity extends AbstractActivity {
         Picasso.with(getBaseContext()).load(mUser.getPhotoURL()).into(mCircleImageView, new Callback() {
             @Override
             public void onSuccess() {
-                final AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
-                final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-
-                fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-                fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                fadeOut.setDuration(200);
-                fadeIn.setDuration(200);
-
-                fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {}
-                    @Override public void onAnimationRepeat(Animation animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                });
-
-                fadeIn.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {}
-                    @Override public void onAnimationRepeat(Animation animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mCircleImageView.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                mProgressBar.startAnimation(fadeOut);
-                mCircleImageView.startAnimation(fadeIn);
+                AnimUtils.fadeOutFadeIn(mProgressBar, mCircleImageView);
             }
 
             @Override public void onError() {}
