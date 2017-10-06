@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.enoughspam.step">
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" tools:ignore="ProtectedPermissions"/>
-
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.MODIFY_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
@@ -16,12 +17,12 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
 
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <uses-feature
         android:name="android.hardware.telephony"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:allowBackup="false"
@@ -30,11 +31,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <receiver android:name=".call.PhoneCallReceiver" >
-            <intent-filter android:priority="100" >
-                <action android:name="android.intent.action.PHONE_STATE"/>
-                <action android:name="android.provider.Telephony.SMS_SENT"/>
+        <receiver android:name=".call.PhoneCallReceiver">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.provider.Telephony.SMS_SENT" />
             </intent-filter>
         </receiver>
 
@@ -98,7 +98,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
-        <activity android:name=".intro.SplashScreenActivity"></activity>
+        <activity android:name=".intro.SplashScreenActivity" />
+        <activity android:name=".profile.ProfileActivity"></activity>
     </application>
 
 </manifest>

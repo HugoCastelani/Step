@@ -135,6 +135,15 @@
     <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
     <string name="unknown">Desconhecido</string>
 
+    <!-- profile activity -->
+    <string name="profile_activity_label">Meu perfil</string>
+    <string name="profile_add_friend">Adicionar aos amigos</string>
+    <string name="profile_friends">Amigos</string>
+    <string name="profile_delete_account">Deletar conta</string>
+    <string name="profile_signed_via_google">Logado via Google+</string>
+    <string name="profile_signed_via_facebook">Logado via Facebook</string>
+    <string name="profile_signed_via_twitter">Logado via Twitter</string>
+
     <!-- Color picker dialog -->
     <string name="select_color">Selecione uma cor</string>
     <string name="custom_button">Personalizar</string>
@@ -159,4 +168,7 @@
 
     <!-- Accessibility -->
     <string name="help">Help icon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

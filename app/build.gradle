@@ -49,6 +49,9 @@ dependencies {
     // blankj
     compile 'com.blankj:utilcode:1.7.1'
 
+    // hdodenhof
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
@@ -90,6 +93,9 @@ dependencies {
     // blankj
     compile 'com.blankj:utilcode:1.7.1'
 
+    // hdodenhof
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
 
@@ -108,6 +114,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.0.4'
     compile 'com.google.firebase:firebase-core:10.2.1'
     //compile 'com.google.firebase:firebase-auth:10.2.1'
+
+    // square
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
