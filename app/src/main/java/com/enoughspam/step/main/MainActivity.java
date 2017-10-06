@@ -16,6 +16,7 @@ import com.enoughspam.step.addNumber.AddNumberActivity;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.wideDao.UserDAO;
+import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -48,7 +49,6 @@ public class MainActivity extends AbstractActivity {
         if (LUserDAO.getThisUser() == null) {
             UserDAO.create(new User(
                     Integer.MAX_VALUE,
-                    "Developer",
                     String.valueOf(Integer.MAX_VALUE),
                     "Developer",
                     "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
@@ -124,22 +124,32 @@ public class MainActivity extends AbstractActivity {
         homeDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
         final Drawable settingsDraw = ContextCompat.getDrawable(this, R.drawable.ic_settings);
         settingsDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
+        final Drawable profileDraw = ContextCompat.getDrawable(this, R.drawable.ic_profile);
+        profileDraw.setColorFilter(ThemeHandler.getPrimaryText(), PorterDuff.Mode.SRC_IN);
 
         // navigation drawer items
         mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(0).withName(R.string.main_activity_label).withIcon(homeDraw));
         mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(1).withName(R.string.settings_activity_label).withIcon(settingsDraw));
+        mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(2).withName(R.string.profile_activity_label).withIcon(profileDraw));
 
         // navigation drawer actions
         mNavDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
+            Intent intent = null;
+
             switch (position) {
                 case 1: break;
 
                 case 2:
-                    final Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+                    intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    break;
+
+                case 3:
+                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent.putExtra("user", LUserDAO.getThisUser());
                     break;
             }
 
+            if (intent != null) startActivityForResult(intent, REQUEST_CODE_SETTINGS);
             return false;
         });
     }
