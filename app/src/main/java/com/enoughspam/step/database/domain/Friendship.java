@@ -15,11 +15,15 @@ public class Friendship {
     private User added;
     private User adding;
 
-    public Friendship(@NonNegative final int id, @NonNull final User added,
-                      @NonNull final User adding) {
-        this.id = id;
+    public Friendship(@NonNull final User added, @NonNull final User adding) {
         this.added = added;
         this.adding = adding;
+    }
+
+    public Friendship(@NonNegative final int id, @NonNull final User added,
+                      @NonNull final User adding) {
+        this(added, adding);
+        this.id = id;
     }
 
     public int getId() {

@@ -16,13 +16,15 @@ import com.enoughspam.step.database.wideDao.FriendshipDAO;
 public class LFriendshipDAO {
     private LFriendshipDAO() {}
 
-    public static Friendship findById(@NonNegative final int id) {
+    public static Friendship findByIDs(@NonNegative final int addedID, @NonNegative final int addingID) {
         Cursor cursor = DAOHandler.getLocalDatabase().query(
-                FriendshipDAO.TABLE, null, FriendshipDAO.ID + " = ?",
-                new String[] {String.valueOf(id)}, null, null, null);
+                FriendshipDAO.TABLE, null,
+                FriendshipDAO.USER_ADDED_ID + " = ? AND " + FriendshipDAO.USER_ADDING_ID + " = ?",
+                new String[] {String.valueOf(addedID), String.valueOf(addingID)},
+                null, null, null);
 
         Friendship friendship = null;
-        if (cursor.moveToFirst()) FriendshipDAO.generate(cursor);
+        if (cursor.moveToFirst()) friendship = FriendshipDAO.generate(cursor);
 
         return friendship;
     }

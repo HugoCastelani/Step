@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.localDao.LUserDAO;
@@ -26,8 +27,8 @@ public class FriendshipDAO {
     public static Friendship generate(@NonNull final Cursor cursor) {
         return new Friendship(
                 cursor.getInt(cursor.getColumnIndex(ID)),
-                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(ID))),
-                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(ID)))
+                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ADDED_ID))),
+                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ADDING_ID)))
         );
     }
 
@@ -48,10 +49,19 @@ public class FriendshipDAO {
         return id;
     }
 
-    public static void delete(@NonNull final int id) {
+    public static void delete(@NonNegative final int id) {
         DAOHandler.getWideDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)});
         DAOHandler.getLocalDatabase().delete(
                 TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+    }
+
+    public static void delete(@NonNegative final int addedID, @NonNegative final int addingID) {
+        DAOHandler.getWideDatabase().delete(
+                TABLE, USER_ADDED_ID + " = ? AND " + USER_ADDING_ID + " = ?",
+                new String[] {String.valueOf(addedID), String.valueOf(addingID)});
+        DAOHandler.getLocalDatabase().delete(
+                TABLE, USER_ADDED_ID + " = ? AND " + USER_ADDING_ID + " = ?",
+                new String[] {String.valueOf(addedID), String.valueOf(addingID)});
     }
 }
