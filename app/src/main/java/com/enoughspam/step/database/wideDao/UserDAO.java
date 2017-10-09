@@ -41,10 +41,8 @@ public class UserDAO {
         values.put(USER_NAME, user.getUserName());
         values.put(PHOTO_URL, user.getPhotoURL());
 
-        if (id == 0) {
+        if (id == 0) {    // there's no ID, so this user doesn't exist
             id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
-        } else {
-            values.put(ID, id);
         }
 
         if (id != -1) {

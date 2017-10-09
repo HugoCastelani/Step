@@ -114,7 +114,6 @@ public class LoginIntroFragment extends SlideFragment implements
         if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
 
             UserDAO.create(new User(
-                    Integer.MAX_VALUE,
                     String.valueOf(Integer.MAX_VALUE),
                     "Developer",
                     "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
