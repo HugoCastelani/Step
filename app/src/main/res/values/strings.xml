@@ -138,7 +138,7 @@
     <!-- profile activity -->
     <string name="profile_activity_label">Meu perfil</string>
     <string name="profile_add_friend">Adicionar aos amigos</string>
-    <string name="profile_friends">Amigos</string>
+    <string name="profile_remove_friend">Desfazer amizade</string>
     <string name="profile_delete_account">Deletar conta</string>
     <string name="profile_signed_via_google">Logado via Google+</string>
     <string name="profile_signed_via_facebook">Logado via Facebook</string>

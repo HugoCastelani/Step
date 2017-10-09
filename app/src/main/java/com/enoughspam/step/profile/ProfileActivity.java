@@ -9,7 +9,11 @@ import com.afollestad.aesthetic.AestheticProgressBar;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
+import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.localDao.LFriendshipDAO;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.wideDao.FriendshipDAO;
 import com.enoughspam.step.util.AnimUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -24,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AbstractActivity {
     private User mUser;
+    private User mThisUser;
 
     private CircleImageView mCircleImageView;
     private AestheticProgressBar mProgressBar;
@@ -37,6 +42,7 @@ public class ProfileActivity extends AbstractActivity {
         setContentView(R.layout.profile_activity);
 
         mUser = (User) getIntent().getExtras().getSerializable("user");
+        mThisUser = LUserDAO.getThisUser();
 
         initViews();
         initActions();
@@ -45,9 +51,6 @@ public class ProfileActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        // init button
-        mButton = (AestheticButton) findViewById(R.id.profile_delete_account);
-
         // init progress bar
         mProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
 
@@ -70,10 +73,14 @@ public class ProfileActivity extends AbstractActivity {
         }
 
         mSocialMedia.setText(socialMedia);
+
+        // init button
+        mButton = (AestheticButton) findViewById(R.id.profile_delete_account);
     }
 
     @Override
     protected void initActions() {
+        // init user photo and progress bar actions
         Picasso.with(getBaseContext()).load(mUser.getPhotoURL()).into(mCircleImageView, new Callback() {
             @Override
             public void onSuccess() {
@@ -82,6 +89,13 @@ public class ProfileActivity extends AbstractActivity {
 
             @Override public void onError() {}
         });
+
+        // init button actions
+        if (LFriendshipDAO.findByIDs(mUser.getID(), mThisUser.getID()) == null) {
+            setButtonAsAddable();
+        } else {
+            setButtonAsRemovable();
+        }
     }
 
     @Override
@@ -95,5 +109,21 @@ public class ProfileActivity extends AbstractActivity {
             fragmentTransaction.replace(R.id.profile_fragment_container, profileFragment, "profileFragmentTag");
             fragmentTransaction.commit();
         }
+    }
+
+    private void setButtonAsAddable() {
+        mButton.setText(getResources().getString(R.string.profile_add_friend));
+        mButton.setOnClickListener(view -> {
+            FriendshipDAO.create(new Friendship(mUser, mThisUser));
+            setButtonAsRemovable();
+        });
+    }
+
+    private void setButtonAsRemovable() {
+        mButton.setText(getResources().getString(R.string.profile_remove_friend));
+        mButton.setOnClickListener(view -> {
+            FriendshipDAO.delete(mUser.getID(), mThisUser.getID());
+            setButtonAsAddable();
+        });
     }
 }
