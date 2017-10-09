@@ -5,15 +5,13 @@ import android.support.annotation.NonNull;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 
-import java.io.Serializable;
-
 /**
  * Created by Hugo Castelani
  * Date: 27/06/17
  * Time: 17:02
  */
 
-public class User extends Domain implements Serializable {
+public class User extends Domain {
     private String socialID;
     private String userName;
     private String photoURL;
