@@ -7,7 +7,9 @@ import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Notification;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.wideDao.NotificationDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 
 import java.util.ArrayList;
@@ -49,29 +51,15 @@ public class LNotificationDAO {
     }
 
     public static List<PhoneSection> getFriendsBlockedList(@NonNegative final int id) {
-        List<Notification> notificationList = LNotificationDAO.getNotificationList(id);
+        List<User> friendList = LFriendshipDAO.findUserFriends(id);
         List<PhoneSection> phoneSectionList = new ArrayList<>();
 
-        outerLoop:
-        for (int i = 0; i < notificationList.size(); i++) {
-            final Notification notification = notificationList.get(i);
-            final String notifyingUserName = LUserDAO.findById(notification.getNotifyingUserId()).getUserName();
-            final Phone phone = LPhoneDAO.findById(notification.getPhoneId());
+        final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
+        for (int i = 0; i < friendList.size(); i++) {
+            final User tempUser = friendList.get(i);
+            final List<Phone> phoneList = UserPhoneDAO.getPhoneList(tempUser.getID());
 
-            for (int j = 0; j < phoneSectionList.size(); j++) {
-                final String userName = phoneSectionList.get(j).getUserName();
-
-                if (notifyingUserName.equals(userName)) {
-                    phoneSectionList.get(j).addPhone(phone);
-                    continue outerLoop;
-                }
-            }
-
-            final List<Phone> phoneList = new ArrayList<>();
-            final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
-
-            phoneList.add(phone);
-            phoneSectionList.add(new PhoneSection(prefix + notifyingUserName, phoneList));
+            phoneSectionList.add(new PhoneSection(prefix + tempUser.getUserName(), phoneList));
         }
 
         return phoneSectionList;
