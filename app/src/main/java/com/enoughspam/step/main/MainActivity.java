@@ -13,9 +13,7 @@ import android.support.v4.content.ContextCompat;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addNumber.AddNumberActivity;
-import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.wideDao.UserDAO;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
@@ -45,15 +43,6 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-        if (LUserDAO.getThisUser() == null) {
-            UserDAO.create(new User(
-                    Integer.MAX_VALUE,
-                    String.valueOf(Integer.MAX_VALUE),
-                    "Developer",
-                    "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
-            );
-        }
 
         initToolbar(false);
         initViews();
@@ -145,7 +134,7 @@ public class MainActivity extends AbstractActivity {
 
                 case 3:
                     intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    intent.putExtra("user", LUserDAO.getThisUser());
+                    intent.putExtra("user", LUserDAO.findById(1));
                     break;
             }
 

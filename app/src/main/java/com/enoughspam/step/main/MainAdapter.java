@@ -20,7 +20,6 @@ import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,12 +94,10 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         return mBlockedNumbersList.get(section).getPhoneList().size();
     }
 
-    List<AestheticTextView> headerList = new ArrayList<>();
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
         holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUserName());
         holder.mIsSwipeable = false;
-        headerList.add(holder.mBlockerOrNumber);
     }
 
     @Override

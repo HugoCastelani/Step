@@ -119,9 +119,6 @@ public class MainFragment extends Fragment {
         // friends' numbers
         phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(user.getID()));
 
-        // official numbers (its ID is 0)
-        phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(0));
-
         return phoneSectionList;
     }
 
