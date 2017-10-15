@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WideDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wide.db";
-    public static final int VERSION = 49;
+    public static final int VERSION = 51;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -140,10 +140,6 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertAttributes() {
-        mSQLiteDatabase.execSQL("insert into user(id, social_id, user_name, photo_url) " +
-                                "values(1, '0', 'EnoughSpamOfficial', " +
-                                "'https://image.ibb.co/iBoxR5/Icon2.png');");
-
         // !!!!!!!!!!! NEVER ADD A NEW ATTRIBUTE ON TOP OF THE TABLE AFTER APP IS ON THE AIR!!!!!!!!!!!
 
         // inserting description attributes
@@ -200,5 +196,21 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
         mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(35, 'Poços de Caldas, Pouso Alegre, Varginha e região', 4);");
         mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(37, 'Divinópolis, Itaúna e região', 4);");
         mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(38, 'Montes Claros e região', 4);");
+
+        mSQLiteDatabase.execSQL("insert into user(id, social_id, user_name, photo_url) " +
+                "values(1, '1', 'EnoughSpamOfficial', " +
+                "'https://image.ibb.co/iBoxR5/Icon2.png');");
+
+        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (1, '123456789', 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (2, '123456788', 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (3, '123456787', 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (4, '123456786', 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (5, '123456785', 31);");
+
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 1, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 2, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 3, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 4, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 5, 0);");
     }
 }

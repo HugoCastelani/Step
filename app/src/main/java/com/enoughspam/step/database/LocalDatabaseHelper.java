@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
-    public static final int VERSION = 4;
+    public static final int VERSION = 6;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -27,6 +27,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         mSQLiteDatabase = sqLiteDatabase;
         createTables();
+        insertAttributes();
     }
 
     @Override
@@ -88,5 +89,23 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "primary key(denunciation_id, description_id)," +
                 "foreign key(denunciation_id) references denunciation(id)," +
                 "foreign key(description_id) references description(id));");
+    }
+
+    private void insertAttributes() {
+        mSQLiteDatabase.execSQL("insert into user(id, social_id, user_name, photo_url) " +
+                "values(1, '1', 'EnoughSpamOfficial', " +
+                "'https://image.ibb.co/iBoxR5/Icon2.png');");
+
+        mSQLiteDatabase.execSQL("insert into phone(id, number, country_id, area_code) values (1, '123456789', 9, 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, country_id, area_code) values (2, '123456788', 9, 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, country_id, area_code) values (3, '123456787', 9, 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, country_id, area_code) values (4, '123456786', 9, 31);");
+        mSQLiteDatabase.execSQL("insert into phone(id, number, country_id, area_code) values (5, '123456785', 9, 31);");
+
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 1, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 2, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 3, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 4, 0);");
+        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 5, 0);");
     }
 }
