@@ -36,6 +36,10 @@ public class ProfileActivity extends AbstractActivity {
     private AestheticTextView mSocialMedia;
     private AestheticButton mButton;
 
+    protected User getUser() {
+        return mUser;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +55,11 @@ public class ProfileActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        // init progress bar
-        mProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
-
         // init user photo
         mCircleImageView = (CircleImageView) findViewById(R.id.profile_circle_view);
+
+        // init progress bar
+        mProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
 
         // init username text view
         mUserName = (AestheticTextView) findViewById(R.id.profile_user_name);
@@ -125,5 +129,9 @@ public class ProfileActivity extends AbstractActivity {
             FriendshipDAO.delete(mUser.getID(), mThisUser.getID());
             setButtonAsAddable();
         });
+    }
+
+    public void onBackPressed(View view) {
+        super.onBackPressed();
     }
 }

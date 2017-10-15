@@ -8,7 +8,7 @@
     <string name="search_hint">Pesquisar</string>
     <string name="notifications_hint">Notificações</string>
     <string name="my_numbers">Meus números</string>
-    <string name="numbers_of">Números de </string>
+    <string name="numbers_of">Números de @</string>
     <string name="official_numbers">Números oficiais</string>
     <string name="removed_number">Número removido</string>
 
