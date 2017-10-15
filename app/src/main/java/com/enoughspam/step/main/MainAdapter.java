@@ -97,7 +97,6 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
         holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUserName());
-        holder.mIsSwipeable = false;
     }
 
     @Override
@@ -115,6 +114,9 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         formattedNumber.append("+" + countryCode);
         formattedNumber.append(" " + areaCode);
         formattedNumber.append(" " + number);
+
+        // swipe is only allowed for user's numbers
+        if (section == 0) holder.mIsSwipeable = true;
 
         holder.mBlockerOrNumber.setText(formattedNumber);
 
@@ -157,7 +159,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
             super(itemView);
             mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
             mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
-            mIsSwipeable = true;
+            mIsSwipeable = false;
         }
     }
 }

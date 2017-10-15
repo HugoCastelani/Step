@@ -3,6 +3,9 @@ package com.enoughspam.step.numberForm;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -28,6 +31,11 @@ import com.enoughspam.step.intro.NumberIntroFragment;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
 import com.enoughspam.step.util.ThemeHandler;
+import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Hugo Castelani
@@ -41,6 +49,7 @@ public class NumberFormFragment extends Fragment {
 
     private LinearLayout mParentView;
     private Spinner mSpinner;
+    private List<String> mSpinnerList;
     private EditText mCountryCodeEditText;
     private EditText mPhoneNumberEditText;
     private ImageView mSendMessage;
@@ -89,6 +98,24 @@ public class NumberFormFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // init with current location
+        LocationServices.getFusedLocationProviderClient(getActivity())
+                .getLastLocation()
+                .addOnSuccessListener(getActivity(), location -> {
+                    if (location != null) {
+                        final String countryName = CountryDAO.findByISO(getCountryISO(location)).getName();
+
+                        int i;
+                        for (i = 0; i < mSpinnerList.size(); i++) {
+                            if (mSpinnerList.get(i).contains(countryName)) {
+                                mSpinner.setSelection(i);
+                                return;
+                            }
+                        }
+                    }
+                });
+
+
         mCountryCodeEditText.addTextChangedListener(textWatcher);
         mCountryCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -97,9 +124,7 @@ public class NumberFormFragment extends Fragment {
             }
         });
 
-        mSendMessage.setOnClickListener(v -> {
-            validateNumber();
-        });
+        mSendMessage.setOnClickListener(v -> validateNumber());
 
         mPhoneNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -110,11 +135,23 @@ public class NumberFormFragment extends Fragment {
     }
 
     private ArrayAdapter<String> createSpinnerAdapter() {
+        mSpinnerList = CountryDAO.getColumnList(CountryDAO.NAME);
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
-                CountryDAO.getColumnList(CountryDAO.NAME)
+                mSpinnerList
         );
+    }
+
+    private String getCountryISO(@NonNull final Location location) {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                return addresses.get(0).getCountryCode();
+            }
+        } catch (IOException ignored) {}
+        return null;
     }
 
     public void validateNumber() {

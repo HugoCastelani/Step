@@ -56,7 +56,8 @@ public class PermissionIntroFragment extends SlideFragment {
                             Manifest.permission.SEND_SMS,
                             Manifest.permission.READ_CONTACTS,
                             Manifest.permission.READ_CALL_LOG,
-                            Manifest.permission.MODIFY_AUDIO_SETTINGS)
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
 
                     .subscribe(granted -> {
                         if (granted) {
