@@ -63,7 +63,7 @@ public class ProfileActivity extends AbstractActivity {
 
         // init username text view
         mUserName = (AestheticTextView) findViewById(R.id.profile_user_name);
-        mUserName.setText("@" + mUser.getUserName());
+        mUserName.setText("@" + mUser.getUsername());
 
         // init social media text view
         mSocialMedia = (AestheticTextView) findViewById(R.id.profile_social_media);
@@ -85,7 +85,7 @@ public class ProfileActivity extends AbstractActivity {
     @Override
     protected void initActions() {
         // init user photo and progress bar actions
-        Picasso.with(getBaseContext()).load(mUser.getPhotoURL()).into(mCircleImageView, new Callback() {
+        Picasso.with(getBaseContext()).load(mUser.getPicURL()).into(mCircleImageView, new Callback() {
             @Override
             public void onSuccess() {
                 AnimUtils.fadeOutFadeIn(mProgressBar, mCircleImageView);

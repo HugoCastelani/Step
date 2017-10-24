@@ -1,13 +1,17 @@
 package com.enoughspam.step.database.wideDao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.localDao.LUserDAO;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Hugo Castelani
@@ -16,75 +20,119 @@ import com.enoughspam.step.database.domain.User;
  */
 
 public class UserDAO {
-    public static final String TABLE = "user";
-    public static final String ID = "id";
-    public static final String SOCIAL_ID = "social_id";
-    public static final String USER_NAME = "user_name";
-    public static final String PHOTO_URL = "photo_url";
+    private static final String NODE = "users";
+    private static DatabaseReference database;
 
     private UserDAO() {}
 
-    public static User generate(@NonNull final Cursor cursor) {
-        return new User(
-                cursor.getInt(cursor.getColumnIndex(ID)),
-                cursor.getString(cursor.getColumnIndex(SOCIAL_ID)),
-                cursor.getString(cursor.getColumnIndex(USER_NAME)),
-                cursor.getString(cursor.getColumnIndex(PHOTO_URL))
-        );
+    private static DatabaseReference getDatabase() {
+        if (database == null) {
+            database = FirebaseDatabase.getInstance().getReference(NODE);
+        }
+        return database;
     }
 
-    public static int create(@NonNull final User user) {
-        final ContentValues values = new ContentValues();
-        int id = user.getID();
+    public static void create(@NonNull final User user) {
+        exists(user, retrievedUser -> {
+            if (retrievedUser != null) {
+                LUserDAO.create(retrievedUser);
 
-        values.put(SOCIAL_ID, user.getSocialID());
-        values.put(USER_NAME, user.getUserName());
-        values.put(PHOTO_URL, user.getPhotoURL());
+            } else {
 
-        if (id == 0) {    // there's no ID, so this user doesn't exist
-            id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
-        }
+                Query query = getDatabase().orderByChild("id").limitToLast(1);
 
-        if (id != -1) {
-            values.put(ID, id);
-            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
-        }
+                final ChildEventListener childEventListener = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                        user.setID(dataSnapshot.getValue(User.class).getID() + 1);
+                        getDatabase().push().setValue(user);
+                        LUserDAO.create(user);
+                        query.removeEventListener(this);
+                    }
 
-        PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
-                .edit().putInt("user_id", id).apply();
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                };
 
-        return id;
+                query.addChildEventListener(childEventListener);
+            }
+        });
+    }
+
+    public static void exists(@NonNull final User user, @NonNull final UserListener listener) {
+        getDatabase().orderByChild("socialID")
+                .equalTo(user.getSocialID())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                            dataSnapshot.getChildren().iterator().hasNext()) {
+
+                            getDatabase().orderByChild("socialID")
+                                    .equalTo(user.getSocialID())
+                                    .limitToFirst(1)
+                                    .addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                            listener.onUserRetrieved(
+                                                    dataSnapshot.getValue(User.class)
+                                            );
+                                        }
+
+                                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                        @Override public void onCancelled(DatabaseError databaseError) {}
+                                    });
+
+                        } else {
+
+                            listener.onUserRetrieved(null);
+                        }
+                    }
+
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 
     public static void delete(@NonNegative final int id) {
-        DAOHandler.getWideDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
-        DAOHandler.getLocalDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+        getDatabase().orderByChild("id")
+                .equalTo(id)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        getDatabase().child(dataSnapshot.getKey()).removeValue();
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+
+        LUserDAO.delete(id);
     }
 
-    public static User findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(
-                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
+    public static void findByID(@NonNegative final int id, @NonNull final UserListener listener) {
+        getDatabase().orderByChild("id")
+                .equalTo(id)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final User user = dataSnapshot.getValue(User.class);
+                        listener.onUserRetrieved(user);
+                    }
 
-        User user = null;
-
-        if (cursor.moveToFirst()) user = generate(cursor);
-
-        cursor.close();
-        return user;
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 
-    public static User findBySocialId(@NonNull final String socialId) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(
-                TABLE, null, SOCIAL_ID + " = ?", new String[] {socialId},
-                null, null, null);
-
-        User user = null;
-        if (cursor.moveToFirst()) user = generate(cursor);
-
-        cursor.close();
-        return user;
+    public interface UserListener {
+        void onUserRetrieved(@NonNull final User retrievedUser);
     }
 }

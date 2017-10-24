@@ -1,6 +1,7 @@
 package com.enoughspam.step.database.domain.abstracts;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * Time: 19:25
  */
 
+@IgnoreExtraProperties
 public class Domain implements Serializable {
     private int id;
 

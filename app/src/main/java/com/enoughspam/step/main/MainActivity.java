@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addNumber.AddNumberActivity;
-import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.wideDao.UserDAO;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
@@ -43,6 +43,7 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
 
         initToolbar(false);
         initViews();
@@ -123,22 +124,23 @@ public class MainActivity extends AbstractActivity {
 
         // navigation drawer actions
         mNavDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
-            Intent intent = null;
-
             switch (position) {
                 case 1: break;
 
                 case 2:
-                    intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    final Intent intent1 = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivityForResult(intent1, REQUEST_CODE_SETTINGS);
                     break;
 
                 case 3:
-                    intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    intent.putExtra("user", LUserDAO.findById(1));
+                    UserDAO.findByID(1, retrievedUser -> {
+                        final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
+                        intent2.putExtra("user", retrievedUser);
+                        startActivityForResult(intent2, REQUEST_CODE_SETTINGS);
+                    });
                     break;
             }
 
-            if (intent != null) startActivityForResult(intent, REQUEST_CODE_SETTINGS);
             return false;
         });
     }

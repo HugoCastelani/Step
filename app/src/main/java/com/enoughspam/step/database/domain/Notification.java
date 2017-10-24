@@ -14,6 +14,8 @@ public class Notification extends Domain {
     private int notifiedUserId;
     private int notifyingUserId;
 
+    public Notification() {}
+
     public Notification(@NonNegative final int id, @NonNegative final int phoneId,
                         @NonNegative final int notifiedUserId, @NonNegative final int notifyingUserId) {
         super(id);

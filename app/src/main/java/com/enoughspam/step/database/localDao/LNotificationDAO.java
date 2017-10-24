@@ -9,7 +9,6 @@ import com.enoughspam.step.database.domain.Notification;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.wideDao.NotificationDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 
 import java.util.ArrayList;
@@ -57,9 +56,9 @@ public class LNotificationDAO {
         final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
         for (int i = 0; i < friendList.size(); i++) {
             final User tempUser = friendList.get(i);
-            final List<Phone> phoneList = UserPhoneDAO.getPhoneList(tempUser.getID());
+            final List<Phone> phoneList = LUserPhoneDAO.getPhoneList(tempUser.getID());
 
-            phoneSectionList.add(new PhoneSection(prefix + tempUser.getUserName(), phoneList));
+            phoneSectionList.add(new PhoneSection(prefix + tempUser.getUsername(), phoneList));
         }
 
         return phoneSectionList;

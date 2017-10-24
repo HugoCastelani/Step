@@ -13,26 +13,28 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 
 public class User extends Domain {
     private String socialID;
-    private String userName;
-    private String photoURL;
+    private String username;
+    private String picURL;
 
-    public User(@NonNegative final int id, @NonNull final String userName,
-                @NonNull final String photoURL) {
+    public User() {}
+
+    public User(@NonNegative final int id, @NonNull final String username,
+                @NonNull final String picURL) {
         super(id);
-        this.userName = userName;
-        this.photoURL = photoURL;
+        this.username = username;
+        this.picURL = picURL;
     }
 
-    public User(@NonNull final String socialID, @NonNull final String userName,
-                @NonNull final String photoURL) {
+    public User(@NonNull final String socialID, @NonNull final String username,
+                @NonNull final String picURL) {
         this.socialID = socialID;
-        this.userName = userName;
-        this.photoURL = photoURL;
+        this.username = username;
+        this.picURL = picURL;
     }
 
     public User(@NonNegative final int id, @NonNull final String socialID,
-                @NonNull final String userName, @NonNull final String photoURL) {
-        this(id, userName, photoURL);
+                @NonNull final String username, @NonNull final String picURL) {
+        this(id, username, picURL);
         this.socialID = socialID;
     }
 
@@ -44,19 +46,19 @@ public class User extends Domain {
         this.socialID = socialID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(@NonNull final String userName) {
-        this.userName = userName;
+    public void setUsername(@NonNull final String username) {
+        this.username = username;
     }
 
-    public String getPhotoURL() {
-        return photoURL;
+    public String getPicURL() {
+        return picURL;
     }
 
-    public void setPhotoURL(@NonNull final String photoURL) {
-        this.photoURL = photoURL;
+    public void setPicURL(@NonNull final String picURL) {
+        this.picURL = picURL;
     }
 }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "845619460186-4vtuc0odsikik4sq1vrvhnggr1ufi5n3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enoughspam.step",
+            "certificate_hash": "4dc1166eab3eb270c9188df67cb7baafa012fdad"
+          }
+        },
+        {
           "client_id": "845619460186-t8110j16fmlo8qlm36t03belikj5rkkp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

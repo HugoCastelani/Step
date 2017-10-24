@@ -4,9 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
+import com.enoughspam.step.database.localDao.AreaDAO;
+import com.enoughspam.step.database.localDao.CountryDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
-import com.enoughspam.step.database.wideDao.AreaDAO;
-import com.enoughspam.step.database.wideDao.CountryDAO;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by Hugo Castelani
@@ -17,24 +18,36 @@ import com.enoughspam.step.database.wideDao.CountryDAO;
 public class Phone extends Domain {
     private long number;
     private Country country;
+    private int countryID;
     private Area area;
+    private int areaID;
+
+    // this variable joins number and area/country ID to enable finding existence at PhoneDAO
+    private String numberACID;
+
+    public Phone() {}
 
     public Phone(@NonNegative final long number, @NonNull final Area area) {
         this.number = number;
-        this.area = area;
+        setArea(area);
+        setNumberAID();
+        countryID = -1;
     }
 
     // some countries don't have area
     public Phone(@NonNegative final long number, @NonNull final Country country) {
         this.number = number;
-        this.country = country;
+        setCountry(country);
+        setNumberCID();
+        areaID = -1;
     }
 
     public Phone(@NonNegative final int id, @NonNegative final long number,
                  @NonNull final Area area) {
         super(id);
         this.number = number;
-        this.area = area;
+        setArea(area);
+        countryID = -1;
     }
 
     // some countries don't have area
@@ -42,7 +55,8 @@ public class Phone extends Domain {
                  @NonNull final Country country) {
         super(id);
         this.number = number;
-        this.country = country;
+        setCountry(country);
+        areaID = -1;
     }
 
     public long getNumber() {
@@ -53,20 +67,52 @@ public class Phone extends Domain {
         this.number = number;
     }
 
+    @Exclude
     public Country getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public int getCountryID() {
+        return countryID;
     }
 
+    public void setCountry(Country country) {
+        this.country = country;
+        setCountryID(country.getID());
+    }
+
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
+    }
+
+    public void setNumberAID() {
+        numberACID = Long.toString(getNumber()) + getAreaID();
+    }
+
+    public void setNumberCID() {
+        numberACID = Long.toString(getNumber()) + getCountryID();
+    }
+
+    public String getNumberACID() {
+        return numberACID;
+    }
+
+    @Exclude
     public Area getArea() {
         return area;
     }
 
+    public int getAreaID() {
+        return areaID;
+    }
+
     public void setArea(Area area) {
         this.area = area;
+        setAreaID(area.getID());
+    }
+
+    public void setAreaID(int areaID) {
+        this.areaID = areaID;
     }
 
     /**

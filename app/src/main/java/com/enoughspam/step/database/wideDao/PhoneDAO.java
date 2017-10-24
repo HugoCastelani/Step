@@ -1,12 +1,17 @@
 package com.enoughspam.step.database.wideDao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.localDao.LPhoneDAO;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Hugo Castelani
@@ -15,103 +20,119 @@ import com.enoughspam.step.database.domain.Phone;
  */
 
 public class PhoneDAO {
-
-    public static final String TABLE = "phone";
-    public static final String ID = "id";
-    public static final String NUMBER = "number";
-    public static final String COUNTRY_ID = "country_id";
-    public static final String AREA_CODE = "area_code";
+    private static final String NODE = "phones";
+    private static DatabaseReference database;
 
     private PhoneDAO() {}
 
-    public static Phone generate(@NonNull final Cursor cursor) {
-        if (cursor.getInt(cursor.getColumnIndex(AREA_CODE)) == 0) {
-            return new Phone(
-                    cursor.getInt(cursor.getColumnIndex(ID)),
-                    cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    CountryDAO.findById(cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)))
-            );
-
-        } else {
-
-            return new Phone(
-                    cursor.getInt(cursor.getColumnIndex(ID)),
-                    cursor.getLong(cursor.getColumnIndex(NUMBER)),
-                    AreaDAO.findByCode(cursor.getInt(cursor.getColumnIndex(AREA_CODE)))
-            );
+    private static DatabaseReference getDatabase() {
+        if (database == null) {
+            database = FirebaseDatabase.getInstance().getReference(NODE);
         }
+        return database;
     }
 
-    public static int create(@NonNull final Phone phone) {
-        final ContentValues values = new ContentValues();
+    public static void create(@NonNull final Phone phone, @NonNull final PhoneListener listener) {
+        exists(phone, retrievedPhone -> {
+            if (retrievedPhone != null) {
+                listener.onPhoneRetrieved(retrievedPhone);
+                LPhoneDAO.create(retrievedPhone);
 
-        if (phone.getArea().getCode() == 0) {
-            values.put(NUMBER, phone.getNumber());
-            values.put(COUNTRY_ID, phone.getCountry().getID());
+            } else {
 
-        } else {
+                final Query query = getDatabase().orderByChild("id").limitToLast(1);
 
-            values.put(NUMBER, phone.getNumber());
-            values.put(AREA_CODE, phone.getArea().getCode());
-        }
+                final ChildEventListener childEventListener = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                        phone.setID(dataSnapshot.getValue(Phone.class).getID() + 1);
+                        getDatabase().push().setValue(phone);
+                        listener.onPhoneRetrieved(phone);
+                        LPhoneDAO.create(phone);
+                        query.removeEventListener(this);
+                    }
 
-        final int id = (int) DAOHandler.getWideDatabase().insert(TABLE, null, values);
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                };
 
-        if (id != -1) {
-            values.put(ID, id);
-            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
-        }
-
-        return id;
+                query.addChildEventListener(childEventListener);
+            }
+        });
     }
 
-    public static Phone findById(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(
-                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
+    public static void delete(@NonNegative final int id) {
+        getDatabase().orderByChild("id")
+                .equalTo(id)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        getDatabase().child(dataSnapshot.getKey()).removeValue();
+                        LPhoneDAO.delete(id);
+                    }
 
-        Phone phone = null;
-
-        if (cursor.moveToFirst()) phone = generate(cursor);
-
-        cursor.close();
-        return phone;
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 
-    public static void delete(@NonNull final int id) {
-        DAOHandler.getWideDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
-        DAOHandler.getLocalDatabase().delete(
-                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+    public static void findByID(@NonNegative final int id, @NonNull final PhoneListener listener) {
+        getDatabase().orderByChild("id")
+                .equalTo(id)
+                .limitToFirst(1)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final Phone phone = dataSnapshot.getValue(Phone.class);
+                        listener.onPhoneRetrieved(phone);
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 
-    public static int exists(@NonNull final Phone phone) {
-        final String number = String.valueOf(phone.getNumber());
-        Cursor cursor;
+    private static void exists(@NonNull final Phone phone, @NonNull final PhoneListener listener) {
+        getDatabase().orderByChild("numberACID")
+                .equalTo(phone.getNumberACID())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                                dataSnapshot.getChildren().iterator().hasNext()) {
 
-        if (phone.getCountry() == null) {
-            final String areaCode = String.valueOf(phone.getArea().getCode());
+                            getDatabase().orderByChild("numberACID")
+                                    .equalTo(phone.getNumberACID())
+                                    .limitToFirst(1)
+                                    .addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                            listener.onPhoneRetrieved(dataSnapshot.getValue(Phone.class));
+                                        }
 
-            cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                    NUMBER + " = ? AND " + AREA_CODE + " = ?", new String[] {number, areaCode},
-                    null, null, null);
+                                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                        @Override public void onCancelled(DatabaseError databaseError) {}
+                                    });
 
-        } else {
+                        } else {
 
-            final String countryId = String.valueOf(phone.getCountry().getID());
+                            listener.onPhoneRetrieved(null);
+                        }
+                    }
 
-            cursor = DAOHandler.getWideDatabase().query(TABLE, null,
-                    NUMBER + " = ? AND " + COUNTRY_ID + " = ? ", new String[] {number, countryId},
-                    null, null, null);
-        }
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+    }
 
-        Phone matchingPhone = null;
-
-        if (cursor.moveToFirst()) matchingPhone = generate(cursor);
-
-        cursor.close();
-
-        if (matchingPhone == null) return -1;
-        else return matchingPhone.getID();
+    public interface PhoneListener {
+        void onPhoneRetrieved(@NonNull final Phone retrievedPhone);
     }
 }

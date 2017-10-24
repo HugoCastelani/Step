@@ -10,7 +10,6 @@ import com.afollestad.aesthetic.AestheticToolbar;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.util.ThemeHandler;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -31,7 +30,6 @@ public abstract class AbstractActivity extends AestheticActivity {
         super.onCreate(savedInstanceState);
 
         Utils.init(this);
-        DAOHandler.init(this);
 
         if (Aesthetic.isFirstTime()) initAesthetic();
         else updateTheme();

@@ -1,13 +1,17 @@
 package com.enoughspam.step.database.wideDao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.localDao.LUserPhoneDAO;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,57 +23,87 @@ import java.util.List;
  */
 
 public class UserPhoneDAO {
-
-    public static final String TABLE = "user_phone";
-    public static final String USER_ID = "user_id";
-    public static final String PHONE_ID = "phone_id";
-    public static final String IS_PROPERTY = "is_property";
+    private static final String NODE = "userPhones";
+    private static DatabaseReference database;
 
     private UserPhoneDAO() {}
 
-    public static UserPhone generate(@NonNull final Cursor cursor) {
-        return new UserPhone(
-                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ID))),
-                PhoneDAO.findById(cursor.getInt(cursor.getColumnIndex(PHONE_ID))),
-                cursor.getInt(cursor.getColumnIndex(IS_PROPERTY)) == 1
-        );
+    private static DatabaseReference getDatabase() {
+        if (database == null) {
+            database = FirebaseDatabase.getInstance().getReference(NODE);
+        }
+        return database;
     }
 
-    public static int create(@NonNull final UserPhone userPhone) {
-        final ContentValues values = new ContentValues();
-
-        int phoneId;
-        final int possiblePhoneId = PhoneDAO.exists(userPhone.getPhone());
-        if (possiblePhoneId != -1) {
-            phoneId = possiblePhoneId;
-        } else {
-            phoneId = PhoneDAO.create(userPhone.getPhone());
-        }
-
-        if (phoneId != -1) {
-            values.put(USER_ID, userPhone.getUser().getID());
-            values.put(PHONE_ID, phoneId);
-            values.put(IS_PROPERTY, userPhone.isProperty());
-
-            DAOHandler.getWideDatabase().insert(TABLE, null, values);
-            return (int) DAOHandler.getLocalDatabase().insert(TABLE, null, values);
-        }
-
-        return phoneId;
+    public static void create(@NonNull final UserPhone userPhone) {
+        PhoneDAO.create(userPhone.getPhone(), retrievedPhone -> {
+            userPhone.setPhoneID(retrievedPhone.getID());
+            exists(userPhone, retrievedBoolean -> {
+                if (!retrievedBoolean) {
+                    getDatabase().push().setValue(userPhone);
+                }
+                LUserPhoneDAO.create(userPhone);
+            });
+        });
     }
 
-    public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {
-        DAOHandler.getWideDatabase().delete(TABLE,
-                USER_ID + " = ? AND " + PHONE_ID + " = ?",
-                new String[] {String.valueOf(userId), String.valueOf(phoneId)});
+    private static void exists(@NonNull final UserPhone userPhone, @NonNull final BooleanListener listener) {
+        getDatabase().orderByChild("userIDPhoneID")
+                .equalTo(userPhone.getUserIDPhoneID())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                            dataSnapshot.getChildren().iterator().hasNext()) {
+                            listener.onBooleanRetrieved(true);
 
-        DAOHandler.getLocalDatabase().delete(TABLE,
-                USER_ID + " = ? AND " + PHONE_ID + " = ?",
-                new String[] {String.valueOf(userId), String.valueOf(phoneId)});
+                        } else {
+
+                            listener.onBooleanRetrieved(false);
+                        }
+                    }
+
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+    }
+
+    public static void findUserByID(@NonNegative final int userID, @NonNull final UserPhoneListener listener) {
+        getDatabase().orderByChild("userID")
+                .equalTo(userID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
+                        listener.onUserPhoneRetrieved(userPhone);
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+    }
+
+    public static void delete(@NonNegative final int userID, @NonNegative final int phoneID) {
+        getDatabase().orderByChild("userIDPhoneID")
+                .equalTo(String.valueOf(userID) + phoneID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        getDatabase().child(dataSnapshot.getKey()).removeValue();
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+
+        LUserPhoneDAO.delete(userID, phoneID);
     }
 
     public static List<Phone> getPhoneList(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getLocalDatabase().query(
+        /*final Cursor cursor = DAOHandler.getLocalDatabase().query(
                 UserPhoneDAO.TABLE, new String[] {UserPhoneDAO.PHONE_ID},
                 UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.IS_PROPERTY + " = ?",
                 new String[] {String.valueOf(id), "0"}, null, null, null);
@@ -77,12 +111,21 @@ public class UserPhoneDAO {
         final List<Phone> phoneList = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            phoneList.add(PhoneDAO.findById(
+            phoneList.add(PhoneDAO.findByID(
                     cursor.getInt(cursor.getColumnIndex(UserPhoneDAO.PHONE_ID)))
             );
         }
 
-        cursor.close();
+        cursor.close();*/
+        final List<Phone> phoneList = new ArrayList<>();
         return phoneList;
+    }
+
+    public interface UserPhoneListener {
+        void onUserPhoneRetrieved(@NonNull final UserPhone retrievedUserPhone);
+    }
+
+    public interface BooleanListener {
+        void onBooleanRetrieved(final boolean retrievedBoolean);
     }
 }

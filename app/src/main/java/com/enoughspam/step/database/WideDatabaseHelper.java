@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WideDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wide.db";
-    public static final int VERSION = 51;
+    public static final int VERSION = 52;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -25,58 +25,12 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         mSQLiteDatabase = sqLiteDatabase;
         createTables();
-        insertAttributes();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {}
 
     private void createTables() {
-
-        /**
-         * Low access index tables
-         * Tables' below values are infrequently modified
-         */
-
-        // creating suspicious treatment table
-        mSQLiteDatabase.execSQL("create table suspicious_treatment (" +
-                "id integer primary key not null," +
-                "treatment varchar(20) not null);");
-
-        /**
-         * Static tables
-         * Tables' below values are read-only
-         */
-
-        // creating country table
-        mSQLiteDatabase.execSQL("create table country (" +
-                "id integer primary key not null," +
-                "code integer not null," +
-                "name varchar(50) not null," +
-                "iso char(2) not null," +
-                "mask varchar(25) not null)");
-
-        // creating state table
-        mSQLiteDatabase.execSQL("create table state (" +
-                "id integer primary key not null," +
-                "name varchar(50) not null," +
-                "country_id integer not null," +
-                "foreign key(country_id) references country(id));");
-
-        // creating area code table
-        mSQLiteDatabase.execSQL("create table area (" +
-                "code integer primary key not null," +
-                "name varchar(50) not null," +
-                "state_id integer not null," +
-                "foreign key(state_id) references state(id));");
-
-        // creating description table
-        mSQLiteDatabase.execSQL("create table description (" +
-                "id integer primary key not null," +
-                "description varchar(50) not null," +
-                "treatment_id integer not null," +
-                "foreign key(treatment_id) references suspicious_treatment(id));");
-
         /**
          * Dynamic tables
          * Tables' below values are constantly modified
@@ -137,80 +91,5 @@ public class WideDatabaseHelper extends SQLiteOpenHelper {
                 "primary key(denunciation_id, description_id)," +
                 "foreign key(denunciation_id) references denunciation(id)," +
                 "foreign key(description_id) references description(id));");
-    }
-
-    private void insertAttributes() {
-        // !!!!!!!!!!! NEVER ADD A NEW ATTRIBUTE ON TOP OF THE TABLE AFTER APP IS ON THE AIR!!!!!!!!!!!
-
-        // inserting description attributes
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(0, 'Companhia bancária', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(1, 'Telemarketing', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(2, 'Oferta utópica', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(3, 'Oferta indesejada', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(4, 'Oferta repetitiva', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(5, 'Prisioneiro', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(6, 'Golpe', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(7, 'Chantagem', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(8, 'Questões pessoais', 0);");
-
-        // inserting suspicious treatment attributes
-        mSQLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(0, 'Silenciar');");
-        mSQLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
-
-        // inserting countries
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(1, 1, 'United States', 'US', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(2, 1, 'Canada', 'CA', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(3, 1, 'República Dominicana', 'DO', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(4, 1, 'Puerto Rico', 'PR', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(5, 7, 'Россия', 'RU', '999 999 9999');");   // Russia
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(6, 7, 'Қазақстан', 'KZ', '999 999 99 99');");   // Kazakhstan
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(7, 20, 'مَصر\u200E\u200E', 'EG', '99 9999 9999');");    // Egypt
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(8, 39, 'Italia', 'IT', '');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(9, 55, 'Brasil', 'BR', '99 99999 9999');");
-
-        // inserting states
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(1, 'São Paulo', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(2, 'Rio de Janeiro', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(3, 'Espírito Santo', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(4, 'Minas Gerais', 9);");
-
-        // inserting areas
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(11, 'Região metropolitana de São Paulo', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(12, 'São José dos Campos e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(13, 'Região retropolitana da Baixada Santista', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(14, 'Bauru, Jaú, Marília, Botucatu e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(15, 'Sorocaba e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(16, 'Ribeirão Preto, São Carlos, Araraquara e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(17, 'São José do Rio Preto e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(18, 'Presidente Prudente, Araçatuba e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(19, 'Região metropolitana de Campinas', 1);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(22, 'Campos dos Goytacazes e Região', 2);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(21, 'Região metropolitana do Rio de Janeiro', 2);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(24, 'Volta Redonda, Petrópolis e região', 2);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(27, 'Região metropolitana de Vitória', 3);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(28, 'Cachoeiro de Itapemirim e região', 3);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(31, 'Região metropolitana de Belo Horizonte', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(32, 'Juiz de Fora e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(33, 'Governador Valadares e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(34, 'Uberlândia e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(35, 'Poços de Caldas, Pouso Alegre, Varginha e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(37, 'Divinópolis, Itaúna e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(code, name, state_id) values(38, 'Montes Claros e região', 4);");
-
-        mSQLiteDatabase.execSQL("insert into user(id, social_id, user_name, photo_url) " +
-                "values(1, '1', 'EnoughSpamOfficial', " +
-                "'https://image.ibb.co/iBoxR5/Icon2.png');");
-
-        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (1, '123456789', 31);");
-        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (2, '123456788', 31);");
-        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (3, '123456787', 31);");
-        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (4, '123456786', 31);");
-        mSQLiteDatabase.execSQL("insert into phone(id, number, area_code) values (5, '123456785', 31);");
-
-        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 1, 0);");
-        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 2, 0);");
-        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 3, 0);");
-        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 4, 0);");
-        mSQLiteDatabase.execSQL("insert into user_phone(user_id, phone_id, is_property) values (1, 5, 0);");
     }
 }

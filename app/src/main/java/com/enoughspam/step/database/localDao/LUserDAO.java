@@ -3,6 +3,7 @@ package com.enoughspam.step.database.localDao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
@@ -16,39 +17,67 @@ import com.enoughspam.step.database.wideDao.UserDAO;
  */
 
 public class LUserDAO {
+    public static final String TABLE = "user";
+    public static final String ID = "id";
+    public static final String SOCIAL_ID = "social_id";
+    public static final String USER_NAME = "user_name";
+    public static final String PHOTO_URL = "photo_url";
+
     private LUserDAO() {}
 
-    public static User findById(@NonNegative final int id) {
+    public static User generate(@NonNull final Cursor cursor) {
+        return new User(
+                cursor.getInt(cursor.getColumnIndex(ID)),
+                cursor.getString(cursor.getColumnIndex(SOCIAL_ID)),
+                cursor.getString(cursor.getColumnIndex(USER_NAME)),
+                cursor.getString(cursor.getColumnIndex(PHOTO_URL))
+        );
+    }
+
+    public static void create(@NonNull final User user) {
+        final ContentValues values = new ContentValues();
+
+        values.put(ID, user.getID());
+        values.put(SOCIAL_ID, user.getSocialID());
+        values.put(USER_NAME, user.getUsername());
+        values.put(PHOTO_URL, user.getPicURL());
+
+        DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+
+        PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                .edit().putInt("user_id", user.getID()).apply();
+    }
+
+    public static User findByID(@NonNegative final int id) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                UserDAO.TABLE, null, UserDAO.ID + " = ?", new String[] {String.valueOf(id)},
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
         User area = null;
 
-        if (cursor.moveToFirst()) area = UserDAO.generate(cursor);
+        if (cursor.moveToFirst()) area = generate(cursor);
 
         cursor.close();
         return area;
     }
 
-    public static int clone(@NonNegative final int id) {
-        if (findById(id) == null) {
-            final User user = UserDAO.findById(id);
-            final ContentValues values = new ContentValues();
+    public static void delete(@NonNegative final int id) {
+        DAOHandler.getLocalDatabase().delete(TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+    }
 
-            values.put(UserDAO.SOCIAL_ID, user.getSocialID());
-            values.put(UserDAO.USER_NAME, user.getUserName());
-            values.put(UserDAO.PHOTO_URL, user.getPhotoURL());
+    public static void clone(@NonNegative final int id) {
+        if (findByID(id) == null) {
+            UserDAO.findByID(id, retrievedUser -> {
+                final ContentValues values = new ContentValues();
 
-            int userId = (int) DAOHandler.getLocalDatabase().insert(UserDAO.TABLE, null, values);
-            if (userId != -1) {
-                user.setID(userId);
-            }
+                values.put(ID, retrievedUser.getID());
+                values.put(SOCIAL_ID, retrievedUser.getSocialID());
+                values.put(USER_NAME, retrievedUser.getUsername());
+                values.put(PHOTO_URL, retrievedUser.getPicURL());
 
-            return userId;
+                DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+            });
         }
-
-        return -1;
     }
 
     public static User getThisUser() {
@@ -56,12 +85,12 @@ public class LUserDAO {
                 .getInt("user_id", 0);
 
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                UserDAO.TABLE, null, UserDAO.ID + " = ?", new String[] {String.valueOf(id)},
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
         User user = null;
 
-        if (cursor.moveToFirst()) user = UserDAO.generate(cursor);
+        if (cursor.moveToFirst()) user = generate(cursor);
 
         cursor.close();
         return user;

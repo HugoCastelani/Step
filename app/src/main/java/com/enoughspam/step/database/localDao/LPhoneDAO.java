@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
-import com.enoughspam.step.database.wideDao.PhoneDAO;
 
 /**
  * Created by Hugo Castelani
@@ -16,66 +15,92 @@ import com.enoughspam.step.database.wideDao.PhoneDAO;
  */
 
 public class LPhoneDAO {
+    public static final String TABLE = "phone";
+    public static final String ID = "id";
+    public static final String NUMBER = "number";
+    public static final String COUNTRY_ID = "country_id";
+    public static final String AREA_ID = "area_id";
+
     private LPhoneDAO() {}
 
-    public static int create(@NonNull final Phone phone) {
-        if (findById(phone.getID()) == null) {
-            final ContentValues values = new ContentValues();
+    public static Phone generate(@NonNull final Cursor cursor) {
+        if (cursor.getInt(cursor.getColumnIndex(AREA_ID)) == -1) {
+            return new Phone(
+                    cursor.getInt(cursor.getColumnIndex(ID)),
+                    cursor.getLong(cursor.getColumnIndex(NUMBER)),
+                    CountryDAO.findByID(cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)))
+            );
 
-            if (phone.getArea().getCode() == 0) {
-                values.put(PhoneDAO.ID, phone.getID());
-                values.put(PhoneDAO.NUMBER, phone.getNumber());
-                values.put(PhoneDAO.COUNTRY_ID, phone.getCountry().getID());
+        } else {
 
-            } else {
-
-                values.put(PhoneDAO.ID, phone.getID());
-                values.put(PhoneDAO.NUMBER, phone.getNumber());
-                values.put(PhoneDAO.AREA_CODE, phone.getArea().getCode());
-            }
-
-            return (int) DAOHandler.getLocalDatabase().insert(PhoneDAO.TABLE, null, values);
+            return new Phone(
+                    cursor.getInt(cursor.getColumnIndex(ID)),
+                    cursor.getLong(cursor.getColumnIndex(NUMBER)),
+                    AreaDAO.findByID(cursor.getInt(cursor.getColumnIndex(AREA_ID)))
+            );
         }
-
-        return -1;
     }
 
-    public static Phone findById(@NonNegative final int id) {
+    public static void create(@NonNull final Phone phone) {
+        final ContentValues values = new ContentValues();
+        values.put(ID, phone.getID());
+        values.put(NUMBER, phone.getNumber());
+
+        if (phone.getAreaID() == -1) {
+            values.put(COUNTRY_ID, phone.getCountryID());
+        } else {
+            values.put(AREA_ID, phone.getAreaID());
+        }
+
+        final int id = (int) DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+
+        values.put(ID, id);
+        DAOHandler.getLocalDatabase().insert(TABLE, null, values);
+    }
+
+    public static Phone findByID(@NonNegative final int id) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                PhoneDAO.TABLE, null, PhoneDAO.ID + " = ?", new String[] {String.valueOf(id)},
+                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
         Phone phone = null;
 
-        if (cursor.moveToFirst()) phone = PhoneDAO.generate(cursor);
+        if (cursor.moveToFirst()) phone = generate(cursor);
 
         cursor.close();
         return phone;
+    }
+
+    public static void delete(@NonNull final int id) {
+        DAOHandler.getLocalDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
+        DAOHandler.getLocalDatabase().delete(
+                TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
     public static int exists(@NonNull final Phone phone) {
         final String number = String.valueOf(phone.getNumber());
         Cursor cursor;
 
-        if (phone.getCountry() == null) {
+        if (phone.getCountryID() == -1) {
             final String areaCode = String.valueOf(phone.getArea().getCode());
 
-            cursor = DAOHandler.getLocalDatabase().query(PhoneDAO.TABLE, null,
-                    PhoneDAO.NUMBER + " = ? AND " + PhoneDAO.AREA_CODE + " = ?", new String[] {number, areaCode},
+            cursor = DAOHandler.getLocalDatabase().query(TABLE, null,
+                    NUMBER + " = ? AND " + AREA_ID + " = ?", new String[] {number, areaCode},
                     null, null, null);
 
         } else {
 
             final String countryId = String.valueOf(phone.getCountry().getID());
 
-            cursor = DAOHandler.getLocalDatabase().query(PhoneDAO.TABLE, null,
-                    PhoneDAO.NUMBER + " = ? AND " + PhoneDAO.COUNTRY_ID + " = ? ", new String[] {number, countryId},
+            cursor = DAOHandler.getLocalDatabase().query(TABLE, null,
+                    NUMBER + " = ? AND " + COUNTRY_ID + " = ? ", new String[] {number, countryId},
                     null, null, null);
         }
 
         Phone matchingPhone = null;
 
-        if (cursor.moveToFirst()) matchingPhone = PhoneDAO.generate(cursor);
+        if (cursor.moveToFirst()) matchingPhone = generate(cursor);
 
         cursor.close();
 

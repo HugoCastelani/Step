@@ -81,7 +81,6 @@ public class LoginIntroFragment extends SlideFragment implements
 
                 if (account.getId() != null) {
                     final String socialID = account.getId() + GOOGLE_CODE;
-                    User user = UserDAO.findBySocialId(socialID);
 
                     String photoURL;
                     try {
@@ -90,13 +89,11 @@ public class LoginIntroFragment extends SlideFragment implements
                         photoURL = "";
                     }
 
-                    if (user == null) {
-                        user = new User(
-                                socialID,
-                                account.getEmail().replace("@gmail.com", ""),
-                                photoURL
-                        );
-                    }
+                    User user = new User(
+                            socialID,
+                            account.getEmail().replace("@gmail.com", ""),
+                            photoURL
+                    );
 
                     UserDAO.create(user);
 

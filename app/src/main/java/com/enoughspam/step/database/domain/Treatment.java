@@ -14,6 +14,8 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 public class Treatment extends Domain {
     private String treatment;
 
+    public Treatment() {}
+
     public Treatment(@NonNegative final int id, @NonNull final String treatment) {
         super(id);
         this.treatment = treatment;

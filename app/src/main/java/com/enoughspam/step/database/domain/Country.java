@@ -17,6 +17,8 @@ public class Country extends Domain {
     private String iso;
     private String mask;
 
+    public Country() {}
+
     public Country(@NonNegative final int id, @NonNegative final int code,
                    @NonNull final String name, @NonNull final String iso,
                    @NonNull final String mask) {
@@ -43,7 +45,7 @@ public class Country extends Domain {
         this.name = name;
     }
 
-    public String getIso() {
+    public String getISO() {
         return iso;
     }
 

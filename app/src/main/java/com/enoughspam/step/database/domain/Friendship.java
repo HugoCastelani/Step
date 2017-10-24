@@ -15,6 +15,8 @@ public class Friendship {
     private User added;
     private User adding;
 
+    public Friendship() {}
+
     public Friendship(@NonNull final User added, @NonNull final User adding) {
         this.added = added;
         this.adding = adding;

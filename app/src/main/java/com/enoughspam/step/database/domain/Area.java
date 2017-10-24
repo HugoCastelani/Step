@@ -3,6 +3,8 @@ package com.enoughspam.step.database.domain;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.domain.abstracts.Domain;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by Hugo Castelani
@@ -10,16 +12,20 @@ import com.enoughspam.step.annotation.NonNegative;
  * Time: 13:10
  */
 
-public class Area {
+public class Area extends Domain {
     private int code;
     private String name;
     private State state;
+    private int stateID;
 
-    public Area(@NonNegative final int code, @NonNull final String name,
-                @NonNull final State state) {
+    public Area() {}
+
+    public Area(@NonNegative final int id, @NonNegative final int code,
+                @NonNull final String name, @NonNull final State state) {
+        super(id);
         this.code = code;
         this.name = name;
-        this.state = state;
+        setState(state);
     }
 
     public int getCode() {
@@ -38,11 +44,21 @@ public class Area {
         this.name = name;
     }
 
+    @Exclude
     public State getState() {
         return state;
     }
 
+    public int getStateID() {
+        return stateID;
+    }
+
     public void setState(@NonNull final State state) {
         this.state = state;
+        setStateID(state.getID());
+    }
+
+    private void setStateID(@NonNegative final int stateID) {
+        this.stateID = stateID;
     }
 }

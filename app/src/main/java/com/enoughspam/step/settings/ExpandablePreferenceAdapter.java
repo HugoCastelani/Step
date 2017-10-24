@@ -10,7 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Description;
-import com.enoughspam.step.database.wideDao.DescriptionDAO;
+import com.enoughspam.step.database.localDao.DescriptionDAO;
 import com.enoughspam.step.database.wideDao.TreatmentDAO;
 import com.enoughspam.step.util.ThemeHandler;
 
@@ -68,12 +68,12 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
      */
 
     private int getSelectedTreatment(@NonNegative int position) {
-        return (DescriptionDAO.findById(position).getTreatmentId());
+        return (DescriptionDAO.findByID(position).getTreatmentID());
     }
 
     private void setSelectedTreatment(@NonNegative int position, @NonNegative int selected) {
-        final Description description = DescriptionDAO.findById(position);
-        description.setTreatmentId(selected);
+        final Description description = DescriptionDAO.findByID(position);
+        description.setTreatmentID(selected);
         DescriptionDAO.update(description);
     }
 

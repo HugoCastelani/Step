@@ -26,7 +26,9 @@ public class MainIntroActivity extends IntroActivity {
         super.onCreate(savedInstanceState);
 
         Utils.init(this);
-        DAOHandler.init(this);
+        DAOHandler.init(getBaseContext());
+        DAOHandler.syncStaticTables(() -> {});
+
         if (Aesthetic.isFirstTime()) initAesthetic();
 
         KeyboardVisibilityEvent.setEventListener(

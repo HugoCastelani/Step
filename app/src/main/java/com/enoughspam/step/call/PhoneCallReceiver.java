@@ -11,7 +11,6 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
-import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.localDao.LUserDAO;
@@ -63,7 +62,6 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         // NullPointerException is going to be thrown if it's an outcoming call
         final boolean isBlocked;
         try {
-            DAOHandler.init(mContext);
             final Phone phone = Phone.generateObject(number, iso);
             isBlocked = LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), phone, false));
         } catch (NullPointerException e) {

@@ -36,7 +36,7 @@ public class ProfileFragment extends Fragment {
     private AestheticRecyclerView mRecyclerView;
     private ImageView mPlaceHolder;
 
-    List<PhoneSection> mPhoneSectionList;;
+    List<PhoneSection> mPhoneSectionList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +69,7 @@ public class ProfileFragment extends Fragment {
         ListDecorator.addAdaptableMargins(mRecyclerView);
 
         // init place holder image view
-        mPlaceHolder = (ImageView) view.findViewById(R.id.main_place_holder);
+        mPlaceHolder = (ImageView) view.findViewById(R.id.profile_place_holder);
     }
 
     private void initActions() {
@@ -84,7 +84,7 @@ public class ProfileFragment extends Fragment {
 
         // user's numbers
         phoneSectionList.add(new PhoneSection(
-                getResources().getString(R.string.numbers_of) + mUser.getUserName(),
+                getResources().getString(R.string.numbers_of) + mUser.getUsername(),
                 UserPhoneDAO.getPhoneList(mUser.getID())));
 
         // friends' numbers

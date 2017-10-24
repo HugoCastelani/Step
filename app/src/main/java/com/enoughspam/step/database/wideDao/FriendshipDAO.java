@@ -25,11 +25,20 @@ public class FriendshipDAO {
     private FriendshipDAO() {}
 
     public static Friendship generate(@NonNull final Cursor cursor) {
-        return new Friendship(
-                cursor.getInt(cursor.getColumnIndex(ID)),
-                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ADDED_ID))),
-                UserDAO.findById(cursor.getInt(cursor.getColumnIndex(USER_ADDING_ID)))
+        final Friendship friendship = new Friendship();
+        friendship.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+
+        UserDAO.findByID(
+                cursor.getInt(cursor.getColumnIndex(USER_ADDED_ID)),
+                retrievedUser -> friendship.setAdded(retrievedUser)
         );
+
+        UserDAO.findByID(
+                cursor.getInt(cursor.getColumnIndex(USER_ADDING_ID)),
+                retrievedUser -> friendship.setAdding(retrievedUser)
+        );
+
+        return friendship;
     }
 
     public static int create(@NonNull final Friendship friendship) {

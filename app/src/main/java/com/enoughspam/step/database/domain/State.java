@@ -2,6 +2,7 @@ package com.enoughspam.step.database.domain;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
+import com.google.firebase.database.Exclude;
 
 /**
  * Created by Hugo Castelani
@@ -12,12 +13,15 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 public class State extends Domain {
     private String name;
     private Country country;
+    private int countryID;
+
+    public State() {}
 
     public State(@NonNegative final int id, @NonNegative final String name,
                  @NonNegative final Country country) {
         super(id);
         this.name = name;
-        this.country = country;
+        setCountry(country);
     }
 
     public String getName() {
@@ -28,11 +32,21 @@ public class State extends Domain {
         this.name = name;
     }
 
+    @Exclude
     public Country getCountry() {
         return country;
     }
 
+    public int getCountryID() {
+        return countryID;
+    }
+
     public void setCountry(@NonNegative final Country country) {
         this.country = country;
+        setCountryID(country.getID());
+    }
+
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
     }
 }

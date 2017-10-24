@@ -40,7 +40,10 @@ public class LFriendshipDAO {
 
         final List<User> userList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            userList.add(UserDAO.findById(cursor.getInt(cursor.getColumnIndex(FriendshipDAO.ID))));
+            UserDAO.findByID(
+                    cursor.getInt(cursor.getColumnIndex(FriendshipDAO.ID)),
+                    retrievedUser -> userList.add(retrievedUser)
+            );
         }
 
         return userList;

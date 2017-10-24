@@ -8,7 +8,7 @@ import android.widget.Spinner;
 import com.azimolabs.maskformatter.MaskFormatter;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Country;
-import com.enoughspam.step.database.wideDao.CountryDAO;
+import com.enoughspam.step.database.localDao.CountryDAO;
 
 import java.util.List;
 
