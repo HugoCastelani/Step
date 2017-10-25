@@ -13,13 +13,10 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.LNotificationDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,9 +51,7 @@ public class ProfileFragment extends Fragment {
         // init recycler view
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.profile_recycler_view);
 
-        mPhoneSectionList = getBlockedNumberList();
-
-        ProfileAdapter mAdapter = new ProfileAdapter(mPhoneSectionList);
+        ProfileAdapter mAdapter = new ProfileAdapter(mUser);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -73,32 +68,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initActions() {
-        if (isPhoneSectionListEmpty()) {
+        /*if (isPhoneSectionListEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mPlaceHolder.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
-    private List<PhoneSection> getBlockedNumberList() {
-        final List<PhoneSection> phoneSectionList = new ArrayList<>();
-
-        // user's numbers
-        phoneSectionList.add(new PhoneSection(
-                getResources().getString(R.string.numbers_of) + mUser.getUsername(),
-                UserPhoneDAO.getPhoneList(mUser.getID())));
-
-        // friends' numbers
-        phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(mUser.getID()));
-
-        return phoneSectionList;
-    }
-
-    public boolean isPhoneSectionListEmpty() {
-        int phoneCount = 0;
-        for (int i = 0; i < mPhoneSectionList.size(); i++) {
-            phoneCount += mPhoneSectionList.get(i).getPhoneList().size();
-        }
-
-        return phoneCount == 0 ? true : false;
-    }
+    //phoneSectionList.addAll(FriendshipDAO.getFriendsBlockedList(mUser.getID()));
 }

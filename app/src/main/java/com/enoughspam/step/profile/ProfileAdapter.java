@@ -10,9 +10,15 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.wideDao.FriendshipDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,9 +29,62 @@ import java.util.List;
 
 public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.MyViewHolder> {
     private final List<PhoneSection> mBlockedNumbersList;
+    private UserPhoneDAO.ListListener mListListener;
 
-    public ProfileAdapter(@NonNull final List<PhoneSection> blockedNumbersList) {
-        mBlockedNumbersList = blockedNumbersList;
+    public ProfileAdapter(@NonNull final User user) {
+        mBlockedNumbersList = new ArrayList<>();
+        UserPhoneDAO.getPhoneList(user.getID(), getListListener());
+        FriendshipDAO.getFriendsBlockedList(user.getID(), getListListener());
+    }
+
+    private UserPhoneDAO.ListListener getListListener() {
+        if (mListListener == null) {
+            mListListener = new UserPhoneDAO.ListListener<UserPhone>() {
+                final String sPrefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
+
+                @Override
+                public void onItemAdded(@NonNull UserPhone userPhone) {
+                    final String newPhoneSectionUsername = sPrefix + userPhone.getUser().getUsername();
+
+                    int i;
+                    for (i = 0; i < mBlockedNumbersList.size(); i++) {
+                        final PhoneSection phoneSection = mBlockedNumbersList.get(i);
+                        if (phoneSection.getUsername().equals(newPhoneSectionUsername)) {
+                            phoneSection.addPhone(userPhone.getPhone());
+                            break;
+                        }
+                    }
+
+                    if (i == mBlockedNumbersList.size()) {    // user isn't in list
+                        final List<Phone> newPhoneList = new ArrayList<>();
+                        newPhoneList.add(userPhone.getPhone());
+
+                        mBlockedNumbersList.add(new PhoneSection(
+                                newPhoneSectionUsername,
+                                newPhoneList
+                        ));
+                    }
+
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemRemoved(@NonNull UserPhone userPhone) {
+                    for (int i = 0; i < mBlockedNumbersList.size(); i++) {
+                        final List<Phone> phoneList = mBlockedNumbersList.get(i).getPhoneList();
+
+                        for (int j = 0; j < phoneList.size(); j++) {
+                            if (phoneList.get(j).getID() == userPhone.getPhoneID()) {
+                                phoneList.remove(j);
+                                notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        return mListListener;
     }
 
     @Override
@@ -40,7 +99,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.
 
     @Override
     public void onBindHeaderViewHolder(ProfileAdapter.MyViewHolder holder, int section, boolean expanded) {
-        holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUserName());
+        holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUsername());
     }
 
     @Override
