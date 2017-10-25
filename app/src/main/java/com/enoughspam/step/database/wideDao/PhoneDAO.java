@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.localDao.AreaDAO;
+import com.enoughspam.step.database.localDao.CountryDAO;
 import com.enoughspam.step.database.localDao.LPhoneDAO;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -88,6 +90,13 @@ public class PhoneDAO {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         final Phone phone = dataSnapshot.getValue(Phone.class);
+
+                        if (phone.getCountryID() == -1) {
+                            phone.setArea(AreaDAO.findByID(phone.getAreaID()));
+                        } else {
+                            phone.setCountry(CountryDAO.findByID(phone.getCountryID()));
+                        }
+
                         listener.onPhoneRetrieved(phone);
                     }
 

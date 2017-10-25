@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.wideDao.UserDAO;
 
 /**
  * Created by Hugo Castelani
@@ -65,18 +64,16 @@ public class LUserDAO {
         DAOHandler.getLocalDatabase().delete(TABLE, ID + " = ?", new String[] {String.valueOf(id)});
     }
 
-    public static void clone(@NonNegative final int id) {
-        if (findByID(id) == null) {
-            UserDAO.findByID(id, retrievedUser -> {
-                final ContentValues values = new ContentValues();
+    public static void clone(@NonNull final User user) {
+        if (findByID(user.getID()) == null) {
+            final ContentValues values = new ContentValues();
 
-                values.put(ID, retrievedUser.getID());
-                values.put(SOCIAL_ID, retrievedUser.getSocialID());
-                values.put(USER_NAME, retrievedUser.getUsername());
-                values.put(PHOTO_URL, retrievedUser.getPicURL());
+            values.put(ID, user.getID());
+            values.put(SOCIAL_ID, user.getSocialID());
+            values.put(USER_NAME, user.getUsername());
+            values.put(PHOTO_URL, user.getPicURL());
 
-                DAOHandler.getLocalDatabase().insert(TABLE, null, values);
-            });
+            DAOHandler.getLocalDatabase().insert(TABLE, null, values);
         }
     }
 

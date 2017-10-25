@@ -3,7 +3,6 @@ package com.enoughspam.step.database.wideDao;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.google.firebase.database.ChildEventListener;
@@ -13,9 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Hugo Castelani
  * Date: 29/07/17
@@ -24,15 +20,15 @@ import java.util.List;
 
 public class UserPhoneDAO {
     private static final String NODE = "userPhones";
-    private static DatabaseReference database;
+    private static DatabaseReference sDatabase;
 
     private UserPhoneDAO() {}
 
     private static DatabaseReference getDatabase() {
-        if (database == null) {
-            database = FirebaseDatabase.getInstance().getReference(NODE);
+        if (sDatabase == null) {
+            sDatabase = FirebaseDatabase.getInstance().getReference(NODE);
         }
-        return database;
+        return sDatabase;
     }
 
     public static void create(@NonNull final UserPhone userPhone) {
@@ -102,27 +98,55 @@ public class UserPhoneDAO {
         LUserPhoneDAO.delete(userID, phoneID);
     }
 
-    public static List<Phone> getPhoneList(@NonNegative final int id) {
-        /*final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                UserPhoneDAO.TABLE, new String[] {UserPhoneDAO.PHONE_ID},
-                UserPhoneDAO.USER_ID + " = ? AND " + UserPhoneDAO.IS_PROPERTY + " = ?",
-                new String[] {String.valueOf(id), "0"}, null, null, null);
+    public static void getPhoneList(@NonNegative final int userID, @NonNull final ListListener listener) {
+        UserDAO.findByID(userID, retrievedUser ->
 
-        final List<Phone> phoneList = new ArrayList<>();
+            getDatabase().orderByChild("userID")
+                    .equalTo(userID)
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
+                            if (!userPhone.isProperty()) {
+                                userPhoneGenerator(userPhone, retrievedUserPhone ->
+                                        listener.onItemAdded(retrievedUserPhone)
+                                );
+                            }
+                        }
 
-        while (cursor.moveToNext()) {
-            phoneList.add(PhoneDAO.findByID(
-                    cursor.getInt(cursor.getColumnIndex(UserPhoneDAO.PHONE_ID)))
-            );
-        }
+                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
+                            if (!userPhone.isProperty()) {
+                                userPhoneGenerator(userPhone, retrievedUserPhone ->
+                                        listener.onItemRemoved(retrievedUserPhone)
+                                );
+                            }
+                        }
 
-        cursor.close();*/
-        final List<Phone> phoneList = new ArrayList<>();
-        return phoneList;
+                        private void userPhoneGenerator(@NonNull final UserPhone userPhone,
+                                                        @NonNull final UserPhoneListener userPhoneListener) {
+                            PhoneDAO.findByID(userPhone.getPhoneID(), retrievedPhone ->
+                                    userPhoneListener.onUserPhoneRetrieved(
+                                            new UserPhone(retrievedUser, retrievedPhone, userPhone.isProperty())
+                                    )
+                            );
+                        }
+
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    })
+
+        );
     }
 
     public interface UserPhoneListener {
         void onUserPhoneRetrieved(@NonNull final UserPhone retrievedUserPhone);
+    }
+
+    public interface ListListener<T> {
+        void onItemAdded(@NonNull final T item);
+        void onItemRemoved(@NonNull final T item);
     }
 
     public interface BooleanListener {
