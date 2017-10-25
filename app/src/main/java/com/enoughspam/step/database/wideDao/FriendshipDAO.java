@@ -82,7 +82,7 @@ public class FriendshipDAO {
 
     public static void findUserFriends(@NonNegative final int userID,
                                        @NonNull final UserPhoneDAO.ListListener listener) {
-        getDatabase().child("adding")
+        getDatabase().orderByChild("addingID")
                 .equalTo(userID)
                 .addChildEventListener(new ChildEventListener() {
                     @Override

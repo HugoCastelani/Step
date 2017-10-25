@@ -107,7 +107,7 @@ public class UserPhoneDAO {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
-                            if (!userPhone.isProperty()) {
+                            if (!userPhone.getIsProperty()) {
                                 userPhoneGenerator(userPhone, retrievedUserPhone ->
                                         listener.onItemAdded(retrievedUserPhone)
                                 );
@@ -116,7 +116,7 @@ public class UserPhoneDAO {
 
                         @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
                             final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
-                            if (!userPhone.isProperty()) {
+                            if (!userPhone.getIsProperty()) {
                                 userPhoneGenerator(userPhone, retrievedUserPhone ->
                                         listener.onItemRemoved(retrievedUserPhone)
                                 );
@@ -127,7 +127,7 @@ public class UserPhoneDAO {
                                                         @NonNull final UserPhoneListener userPhoneListener) {
                             PhoneDAO.findByID(userPhone.getPhoneID(), retrievedPhone ->
                                     userPhoneListener.onUserPhoneRetrieved(
-                                            new UserPhone(retrievedUser, retrievedPhone, userPhone.isProperty())
+                                            new UserPhone(retrievedUser, retrievedPhone, userPhone.getIsProperty())
                                     )
                             );
                         }

@@ -44,7 +44,7 @@ public class LUserPhoneDAO {
 
             values.put(USER_ID, userPhone.getUser().getID());
             values.put(PHONE_ID, userPhone.getPhone().getID());
-            values.put(IS_PROPERTY, userPhone.isProperty());
+            values.put(IS_PROPERTY, userPhone.getIsProperty());
 
             DAOHandler.getLocalDatabase().insert(TABLE, null, values);
         }

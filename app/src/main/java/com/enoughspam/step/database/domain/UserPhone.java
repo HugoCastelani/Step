@@ -75,7 +75,7 @@ public class UserPhone {
         }
     }
 
-    public boolean isProperty() {
+    public boolean getIsProperty() {
         return isProperty;
     }
 
