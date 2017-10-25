@@ -60,5 +60,8 @@ public class Area extends Domain {
 
     private void setStateID(@NonNegative final int stateID) {
         this.stateID = stateID;
+        if (state != null) {
+            state.setID(stateID);
+        }
     }
 }

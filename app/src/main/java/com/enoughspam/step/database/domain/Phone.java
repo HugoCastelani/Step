@@ -78,23 +78,16 @@ public class Phone extends Domain {
 
     public void setCountry(Country country) {
         this.country = country;
-        setCountryID(country.getID());
+        this.countryID = country.getID();
+        setNumberCID();
     }
 
     public void setCountryID(int countryID) {
         this.countryID = countryID;
-    }
-
-    public void setNumberAID() {
-        numberACID = Long.toString(getNumber()) + getAreaID();
-    }
-
-    public void setNumberCID() {
-        numberACID = Long.toString(getNumber()) + getCountryID();
-    }
-
-    public String getNumberACID() {
-        return numberACID;
+        if (country != null) {
+            country.setID(countryID);
+        }
+        setNumberCID();
     }
 
     @Exclude
@@ -108,11 +101,28 @@ public class Phone extends Domain {
 
     public void setArea(Area area) {
         this.area = area;
-        setAreaID(area.getID());
+        this.areaID = area.getID();
+        setNumberAID();
     }
 
     public void setAreaID(int areaID) {
         this.areaID = areaID;
+        if (area != null) {
+            area.setID(areaID);
+        }
+        setNumberAID();
+    }
+
+    public void setNumberAID() {
+        numberACID = Long.toString(getNumber()) + getAreaID();
+    }
+
+    public void setNumberCID() {
+        numberACID = Long.toString(getNumber()) + getCountryID();
+    }
+
+    public String getNumberACID() {
+        return numberACID;
     }
 
     /**

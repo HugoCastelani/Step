@@ -43,10 +43,13 @@ public class State extends Domain {
 
     public void setCountry(@NonNegative final Country country) {
         this.country = country;
-        setCountryID(country.getID());
+        countryID = country.getID();
     }
 
     public void setCountryID(int countryID) {
         this.countryID = countryID;
+        if (country != null) {
+            country.setID(countryID);
+        }
     }
 }

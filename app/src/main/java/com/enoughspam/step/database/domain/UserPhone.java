@@ -48,7 +48,9 @@ public class UserPhone {
 
     public void setUserID(@NonNegative final int userID) {
         this.userID = userID;
-        user.setID(userID);
+        if (user != null) {
+            user.setID(userID);
+        }
     }
 
     @Exclude
@@ -68,7 +70,9 @@ public class UserPhone {
     public void setPhoneID(@NonNegative final int phoneID) {
         this.phoneID = phoneID;
         setUserIDPhoneID();
-        phone.setID(phoneID);
+        if (phone != null) {
+            phone.setID(phoneID);
+        }
     }
 
     public boolean isProperty() {
