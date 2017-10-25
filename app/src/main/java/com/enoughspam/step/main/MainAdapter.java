@@ -96,7 +96,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
 
     @Override
     public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
-        holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUserName());
+        holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUsername());
     }
 
     @Override
@@ -147,7 +147,6 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
     }
 
     private void showBottomSheet() {
-
     }
 
     public static class MyViewHolder extends SectionedViewHolder {

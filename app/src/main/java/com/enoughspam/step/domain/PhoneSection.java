@@ -13,20 +13,20 @@ import java.util.List;
  */
 
 public class PhoneSection {
-    private String userName;
+    private String username;
     private List<Phone> phoneList;
 
-    public PhoneSection(String userName, List<Phone> phoneList) {
-        this.userName = userName;
+    public PhoneSection(String username, List<Phone> phoneList) {
+        this.username = username;
         this.phoneList = phoneList;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(@NonNull final String userName) {
-        this.userName = userName;
+    public void setUsername(@NonNull final String username) {
+        this.username = username;
     }
 
     public List<Phone> getPhoneList() {

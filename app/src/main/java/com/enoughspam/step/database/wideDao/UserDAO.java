@@ -104,6 +104,7 @@ public class UserDAO {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         getDatabase().child(dataSnapshot.getKey()).removeValue();
+                        LUserDAO.delete(id);
                     }
 
                     @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}

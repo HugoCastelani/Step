@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
@@ -63,7 +62,6 @@ public class StateDAO {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listener.onAnswerRetrieved();
-                Log.e("StateDAO", "Children addition finished");
             }
 
             @Override public void onCancelled(DatabaseError databaseError) {}
@@ -82,12 +80,8 @@ public class StateDAO {
                         values.put(COUNTRY_ID, state.getCountryID());
 
                         localDatabase.insert(TABLE, null, values);
-                        Log.e("StateDAO", "State was added");
-                        return;
                     }
                 }
-
-                Log.e("StateDAO", "State was not added");
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}

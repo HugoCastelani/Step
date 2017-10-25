@@ -15,7 +15,6 @@ import java.util.List;
  */
 
 public class TreatmentDAO {
-
     public static final String TABLE = "suspicious_treatment";
     public static final String ID = "id";
     public static final String TREATMENT = "treatment";
@@ -23,7 +22,7 @@ public class TreatmentDAO {
     protected TreatmentDAO() {}
 
     public static List<String> getColumnList(@NonNull final String column) {
-        final Cursor cursor = DAOHandler.getWideDatabase().query(
+        final Cursor cursor = DAOHandler.getLocalDatabase().query(
                 TABLE, new String[] {column}, null, null, null, null, null);
 
         final List<String> stringList = new ArrayList<>();

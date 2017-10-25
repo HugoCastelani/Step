@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.LNotificationDAO;
+import com.enoughspam.step.database.localDao.LFriendshipDAO;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
@@ -109,7 +108,6 @@ public class MainFragment extends Fragment {
 
     private List<PhoneSection> getBlockedNumberList() {
         final List<PhoneSection> phoneSectionList = new ArrayList<>();
-        final User user = LUserDAO.getThisUser();
 
         // user's numbers
         phoneSectionList.add(new PhoneSection(
@@ -117,7 +115,7 @@ public class MainFragment extends Fragment {
                 LUserPhoneDAO.getPhoneList(LUserDAO.getThisUser().getID())));
 
         // friends' numbers
-        phoneSectionList.addAll(LNotificationDAO.getFriendsBlockedList(user.getID()));
+        phoneSectionList.addAll(LFriendshipDAO.getFriendsBlockedList(LUserDAO.getThisUser().getID()));
 
         return phoneSectionList;
     }

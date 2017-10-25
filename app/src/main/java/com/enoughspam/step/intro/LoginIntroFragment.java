@@ -84,8 +84,7 @@ public class LoginIntroFragment extends SlideFragment implements
         } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
 
         if (error != null) {
-            Snackbar.make(view, getResources().getString(R.string.sign_in_error) +
-                    error, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, getResources().getString(R.string.sign_in_error) + error, Snackbar.LENGTH_LONG).show();
         }
     }
 
