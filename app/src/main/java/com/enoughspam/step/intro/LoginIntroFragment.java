@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.wideDao.UserDAO;
@@ -29,6 +28,9 @@ public class LoginIntroFragment extends SlideFragment implements
     private static final int GOOGLE_CODE = 1;
 
     private View view;
+    private SignInButton mGoogleButton;
+    private TextView mGoogleButtonText;
+
     private boolean mCanGoForward = false;
 
     private GoogleApiClient mGoogleApiClient;
@@ -37,15 +39,19 @@ public class LoginIntroFragment extends SlideFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_login, container, false);
 
-        final SignInButton googleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
+        initViews();
+        initActions();
 
-        final TextView textView = (TextView) googleButton.getChildAt(0);
-        textView.setText(R.string.sign_in_google);
+        return view;
+    }
 
-        googleButton.setOnClickListener(v -> onGoogleButtonClick());
+    private void initViews() {
+        mGoogleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
 
-        final GoogleSignInOptions signInOptions = new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        mGoogleButtonText = (TextView) mGoogleButton.getChildAt(0);
+        mGoogleButtonText.setText(R.string.sign_in_google);
+
+        final GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestId()
                 .requestEmail()
                 .build();
@@ -54,13 +60,13 @@ public class LoginIntroFragment extends SlideFragment implements
                 .enableAutoManage(getActivity(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
                 .build();
-
-        return view;
     }
 
-    private void onGoogleButtonClick() {
-        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
+    private void initActions() {
+        mGoogleButton.setOnClickListener(v -> {
+            final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
+        });
     }
 
     @Override
@@ -74,60 +80,13 @@ public class LoginIntroFragment extends SlideFragment implements
         final String error;
 
         if (requestCode == GOOGLE_SIGN_IN) {
-
-            final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                final GoogleSignInAccount account = result.getSignInAccount();
-
-                if (account.getId() != null) {
-                    final String socialID = account.getId() + GOOGLE_CODE;
-
-                    String photoURL;
-                    try {
-                        photoURL = account.getPhotoUrl().toString();
-                    } catch (NullPointerException e) {
-                        photoURL = "";
-                    }
-
-                    User user = new User(
-                            socialID,
-                            account.getEmail().replace("@gmail.com", ""),
-                            photoURL
-                    );
-
-                    UserDAO.create(user);
-
-                    mCanGoForward = true;
-                    canGoForward();
-                    nextSlide();
-                    return;
-
-                } else error = getResources().getString(R.string.sign_in_error_empty_id);
-
-            } else error = "\n" + result.getStatus().toString();
-
+            error = handleGoogleLogin(data);
         } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
 
-        if (error.equals("\nStatus{statusCode=DEVELOPER_ERROR, resolution=null}")) {
-
-            UserDAO.create(new User(
-                    String.valueOf(Integer.MAX_VALUE),
-                    "Developer",
-                    "https://avatars2.githubusercontent.com/u/12227090?v=4&u=4e4f6b901dd9e753d6f56a5a9d18aa7b7884c4a4&s=400")
-            );
-
-            ToastUtils.showShort("Developer account created");
-
-            mCanGoForward = true;
-            canGoForward();
-            nextSlide();
-
-        } else {
-
+        if (error != null) {
             Snackbar.make(view, getResources().getString(R.string.sign_in_error) +
                     error, Snackbar.LENGTH_LONG).show();
         }
-
     }
 
     @Override
@@ -151,5 +110,38 @@ public class LoginIntroFragment extends SlideFragment implements
         super.onDestroy();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
+    }
+
+    private String handleGoogleLogin(@NonNull final Intent data) {
+        final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+        if (result.isSuccess()) {
+            final GoogleSignInAccount account = result.getSignInAccount();
+
+            if (account.getId() != null) {
+                final String socialID = account.getId() + GOOGLE_CODE;
+
+                String photoURL;
+                try {
+                    photoURL = account.getPhotoUrl().toString();
+                } catch (NullPointerException e) {
+                    photoURL = "";
+                }
+
+                User user = new User(
+                        socialID,
+                        account.getEmail().replace("@gmail.com", ""),
+                        photoURL
+                );
+
+                UserDAO.create(user);
+
+                mCanGoForward = true;
+                canGoForward();
+                nextSlide();
+                return null;
+
+            } else return getResources().getString(R.string.sign_in_error_empty_id);
+
+        } else return "\n" + result.getStatus().toString();
     }
 }
