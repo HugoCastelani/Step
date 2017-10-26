@@ -30,9 +30,9 @@ public class ProfileActivity extends AbstractActivity {
     private User mUser;
     private User mThisUser;
 
-    private CircleImageView mCircleImageView;
-    private AestheticProgressBar mProgressBar;
-    private AestheticTextView mUserName;
+    private CircleImageView mUserPic;
+    private AestheticProgressBar mUserPicProgressBar;
+    private AestheticTextView mUsername;
     private AestheticTextView mSocialMedia;
     private AestheticButton mButton;
 
@@ -56,14 +56,14 @@ public class ProfileActivity extends AbstractActivity {
     @Override
     protected void initViews() {
         // init user photo
-        mCircleImageView = (CircleImageView) findViewById(R.id.profile_circle_view);
+        mUserPic = (CircleImageView) findViewById(R.id.profile_circle_view);
 
         // init progress bar
-        mProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
+        mUserPicProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
 
         // init username text view
-        mUserName = (AestheticTextView) findViewById(R.id.profile_user_name);
-        mUserName.setText("@" + mUser.getUsername());
+        mUsername = (AestheticTextView) findViewById(R.id.profile_user_name);
+        mUsername.setText("@" + mUser.getUsername());
 
         // init social media text view
         mSocialMedia = (AestheticTextView) findViewById(R.id.profile_social_media);
@@ -85,10 +85,10 @@ public class ProfileActivity extends AbstractActivity {
     @Override
     protected void initActions() {
         // init user photo and progress bar actions
-        Picasso.with(getBaseContext()).load(mUser.getPicURL()).into(mCircleImageView, new Callback() {
+        Picasso.with(getBaseContext()).load(mUser.getPicURL()).into(mUserPic, new Callback() {
             @Override
             public void onSuccess() {
-                AnimUtils.fadeOutFadeIn(mProgressBar, mCircleImageView);
+                AnimUtils.fadeOutFadeIn(mUserPicProgressBar, mUserPic);
             }
 
             @Override public void onError() {}

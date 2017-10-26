@@ -33,6 +33,7 @@ public class MainActivity extends AbstractActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
     private static final int REQUEST_CODE_ADD_NUMBER = 3;
+    private static final int REQUEST_CODE_PROFILE = 4;
 
     private FloatingActionButton mFab;
     private Snackbar mSnackbar;
@@ -136,7 +137,7 @@ public class MainActivity extends AbstractActivity {
                     UserDAO.findByID(1, retrievedUser -> {
                         final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
                         intent2.putExtra("user", retrievedUser);
-                        startActivityForResult(intent2, REQUEST_CODE_SETTINGS);
+                        startActivityForResult(intent2, REQUEST_CODE_PROFILE);
                     });
                     break;
             }
@@ -163,6 +164,9 @@ public class MainActivity extends AbstractActivity {
                 recreate();
                 break;
             case REQUEST_CODE_ADD_NUMBER:
+                recreate();
+                break;
+            case REQUEST_CODE_PROFILE:
                 recreate();
                 break;
             default: break;

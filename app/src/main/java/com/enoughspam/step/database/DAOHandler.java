@@ -10,6 +10,7 @@ import com.enoughspam.step.database.localDao.CountryDAO;
 import com.enoughspam.step.database.localDao.DescriptionDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.database.localDao.StateDAO;
+import com.enoughspam.step.database.wideDao.FriendshipDAO;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -88,6 +89,8 @@ public class DAOHandler {
             @Override
             public void onAnswerRetrieved() {
                 if (++count == 1) {
+                    FriendshipDAO.sync(this);
+                } else if (count == 2) {
                     listener.onAnswerRetrieved();
                 }
             }

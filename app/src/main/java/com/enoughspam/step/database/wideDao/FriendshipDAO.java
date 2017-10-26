@@ -3,14 +3,17 @@ package com.enoughspam.step.database.wideDao;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.localDao.LFriendshipDAO;
+import com.enoughspam.step.database.localDao.LUserDAO;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -101,14 +104,43 @@ public class FriendshipDAO {
     }
 
     public static void getFriendsBlockedList(@NonNegative final int userID,
-                                             @NonNull final UserPhoneDAO.ListListener listener) {
+                                             @NonNull final UserPhoneDAO.ListListener listListener,
+                                             @NonNull final DAOHandler.AnswerListener answerListener) {
         findUserFriends(userID, new UserPhoneDAO.ListListener<User>() {
             @Override
             public void onItemAdded(@NonNull User user) {
-                UserPhoneDAO.getPhoneList(user.getID(), listener);
+                UserPhoneDAO.getUserPhoneList(user.getID(), listListener, answerListener);
             }
 
             @Override public void onItemRemoved(@NonNull User user) {}
         });
+    }
+
+    public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
+        final Query query = getDatabase().orderByChild("addingID").equalTo(LUserDAO.getThisUser().getID());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listener.onAnswerRetrieved();
+            }
+
+            @Override public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        query.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        UserDAO.findByID(
+                                dataSnapshot.getValue(Friendship.class).getAddedID(),
+                                retrievedUser -> LUserDAO.clone(retrievedUser)
+                        );
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 }

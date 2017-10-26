@@ -52,12 +52,12 @@ public class LUserDAO {
                 TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
-        User area = null;
+        User user = null;
 
-        if (cursor.moveToFirst()) area = generate(cursor);
+        if (cursor.moveToFirst()) user = generate(cursor);
 
         cursor.close();
-        return area;
+        return user;
     }
 
     public static void delete(@NonNegative final int id) {

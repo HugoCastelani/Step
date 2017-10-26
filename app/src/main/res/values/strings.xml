@@ -135,6 +135,9 @@
     <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
     <string name="unknown">Desconhecido</string>
 
+    <!-- splash screen activity -->
+    <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>
+
     <!-- profile activity -->
     <string name="profile_activity_label">Meu perfil</string>
     <string name="profile_add_friend">Adicionar aos amigos</string>

@@ -1,8 +1,10 @@
 package com.enoughspam.step.database.wideDao;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.google.firebase.database.ChildEventListener;
@@ -10,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -63,7 +66,7 @@ public class UserPhoneDAO {
                 });
     }
 
-    public static void findUserByID(@NonNegative final int userID, @NonNull final UserPhoneListener listener) {
+    public static void findByUserID(@NonNegative final int userID, @NonNull final UserPhoneListener listener) {
         getDatabase().orderByChild("userID")
                 .equalTo(userID)
                 .addChildEventListener(new ChildEventListener() {
@@ -98,27 +101,41 @@ public class UserPhoneDAO {
         LUserPhoneDAO.delete(userID, phoneID);
     }
 
-    public static void getPhoneList(@NonNegative final int userID, @NonNull final ListListener listener) {
-        UserDAO.findByID(userID, retrievedUser ->
+    public static void getUserPhoneList(@NonNegative final int userID,
+                                        @NonNull final ListListener listListener,
+                                        @Nullable final DAOHandler.AnswerListener answerListener) {
+        UserDAO.findByID(userID, retrievedUser -> {
 
-            getDatabase().orderByChild("userID")
-                    .equalTo(userID)
-                    .addChildEventListener(new ChildEventListener() {
+            final Query query = getDatabase().orderByChild("userID").equalTo(userID);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (answerListener != null) {
+                        answerListener.onAnswerRetrieved();
+                    }
+                }
+
+                @Override public void onCancelled(DatabaseError databaseError) {}
+            });
+
+            query.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
                             if (!userPhone.getIsProperty()) {
                                 userPhoneGenerator(userPhone, retrievedUserPhone ->
-                                        listener.onItemAdded(retrievedUserPhone)
+                                        listListener.onItemAdded(retrievedUserPhone)
                                 );
                             }
                         }
 
-                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
                             final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
                             if (!userPhone.getIsProperty()) {
                                 userPhoneGenerator(userPhone, retrievedUserPhone ->
-                                        listener.onItemRemoved(retrievedUserPhone)
+                                        listListener.onItemRemoved(retrievedUserPhone)
                                 );
                             }
                         }
@@ -132,12 +149,20 @@ public class UserPhoneDAO {
                             );
                         }
 
-                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                        @Override public void onCancelled(DatabaseError databaseError) {}
-                    })
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        }
 
-        );
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+
+        });
     }
 
     public interface UserPhoneListener {

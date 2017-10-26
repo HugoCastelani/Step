@@ -13,11 +13,8 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
-
-import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -32,8 +29,6 @@ public class ProfileFragment extends Fragment {
 
     private AestheticRecyclerView mRecyclerView;
     private ImageView mPlaceHolder;
-
-    List<PhoneSection> mPhoneSectionList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +60,9 @@ public class ProfileFragment extends Fragment {
 
         // init place holder image view
         mPlaceHolder = (ImageView) view.findViewById(R.id.profile_place_holder);
+
+        // init place holder image view
+        mPlaceHolder = (ImageView) view.findViewById(R.id.profile_place_holder);
     }
 
     private void initActions() {
@@ -73,6 +71,4 @@ public class ProfileFragment extends Fragment {
             mPlaceHolder.setVisibility(View.VISIBLE);
         }*/
     }
-
-    //phoneSectionList.addAll(FriendshipDAO.getFriendsBlockedList(mUser.getID()));
 }

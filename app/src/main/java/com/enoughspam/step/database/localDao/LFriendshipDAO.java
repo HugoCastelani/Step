@@ -68,12 +68,14 @@ public class LFriendshipDAO {
                 USER_ADDING_ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);
 
-        final List<User> userList = new ArrayList<>();
+        final List<User> friendList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            LUserDAO.findByID(cursor.getInt(cursor.getColumnIndex(USER_ADDED_ID)));
+            friendList.add(LUserDAO.findByID(
+                    cursor.getInt(cursor.getColumnIndex(USER_ADDED_ID))
+            ));
         }
 
-        return userList;
+        return friendList;
     }
 
     public static List<PhoneSection> getFriendsBlockedList(@NonNegative final int id) {

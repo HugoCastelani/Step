@@ -10,7 +10,6 @@ import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.database.wideDao.PhoneDAO;
-import com.enoughspam.step.database.wideDao.UserDAO;
 import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ public class LUserPhoneDAO {
         if (!exists(userPhone)) {
             final ContentValues values = new ContentValues();
 
-            values.put(USER_ID, userPhone.getUser().getID());
-            values.put(PHONE_ID, userPhone.getPhone().getID());
+            values.put(USER_ID, userPhone.getUserID());
+            values.put(PHONE_ID, userPhone.getPhoneID());
             values.put(IS_PROPERTY, userPhone.getIsProperty());
 
             DAOHandler.getLocalDatabase().insert(TABLE, null, values);
@@ -60,10 +59,10 @@ public class LUserPhoneDAO {
         return false;
     }
 
-    public static void delete(@NonNegative final int userId, @NonNegative final int phoneId) {
+    public static void delete(@NonNegative final int userID, @NonNegative final int phoneID) {
         DAOHandler.getLocalDatabase().delete(TABLE,
                 USER_ID + " = ? AND " + PHONE_ID + " = ?",
-                new String[] {String.valueOf(userId), String.valueOf(phoneId)});
+                new String[] {String.valueOf(userID), String.valueOf(phoneID)});
     }
 
     public static List<Phone> getPhoneList(@NonNegative final int id) {
@@ -105,41 +104,55 @@ public class LUserPhoneDAO {
     }
 
     public static boolean isBlocked(@NonNull final UserPhone userPhone) {
-        final String result = String.valueOf(LPhoneDAO.exists(userPhone.getPhone()));
+        final String phoneID = String.valueOf(LPhoneDAO.exists(userPhone.getPhone()));
 
-        if (!result.equals("-1")) {
+        if (!phoneID.equals("-1")) {
 
-            final Cursor cursor = DAOHandler.getLocalDatabase().query(TABLE, null,
-                    USER_ID + " = ? AND " + PHONE_ID + " = ?",
-                    new String[] {String.valueOf(userPhone.getUser().getID()), result},
-                    null, null, null);
+            List<User> userList = LFriendshipDAO.findUserFriends(userPhone.getUserID());
+            userList.add(0, userPhone.getUser());
 
-            UserPhone matchingUserPhone = null;
+            for (int i = 0; i < userList.size(); i++) {
+                final Cursor cursor = DAOHandler.getLocalDatabase().query(TABLE, null,
+                        USER_ID + " = ? AND " + PHONE_ID + " = ?",
+                        new String[] {String.valueOf(userList.get(i).getID()), phoneID},
+                        null, null, null);
 
-            if (cursor.moveToFirst()) matchingUserPhone = LUserPhoneDAO.generate(cursor);
+                UserPhone matchingUserPhone = null;
 
-            cursor.close();
+                if (cursor.moveToFirst()) matchingUserPhone = LUserPhoneDAO.generate(cursor);
 
-            if (matchingUserPhone == null) return false;
-            else return true;
+                cursor.close();
 
-        } else return false;
+                if (matchingUserPhone != null) return true;
+            }
+        }
+
+        return false;
     }
 
     // this one can be fucking long
     public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
-        List<User> friendList = LFriendshipDAO.findUserFriends(LUserDAO.getThisUser().getID());
-        for (final User friend : friendList) {
-            UserPhoneDAO.findUserByID(friend.getID(), retrievedUserPhone -> {
-                PhoneDAO.findByID(retrievedUserPhone.getPhoneID(), retrievedPhone ->
-                    LPhoneDAO.create(retrievedPhone)
-                );
-                UserDAO.findByID(retrievedUserPhone.getUserID(), retrievedUser ->
-                    LUserDAO.create(retrievedUser)
-                );
-                LUserPhoneDAO.create(retrievedUserPhone);
-            });
+        List<User> userList = LFriendshipDAO.findUserFriends(LUserDAO.getThisUser().getID());
+        userList.add(0, LUserDAO.getThisUser());
+
+        for (int i = 0; i < userList.size(); i++) {
+            DAOHandler.AnswerListener answerListener = null;
+            if (i == userList.size() - 1) {
+                answerListener = () -> listener.onAnswerRetrieved();
+            }
+
+            UserPhoneDAO.getUserPhoneList(userList.get(i).getID(), new UserPhoneDAO.ListListener<UserPhone>() {
+                @Override
+                public void onItemAdded(@NonNull UserPhone userPhone) {
+                    PhoneDAO.findByID(userPhone.getPhoneID(), LPhoneDAO::create);
+                    create(userPhone);
+                }
+
+                @Override
+                public void onItemRemoved(@NonNull UserPhone userPhone) {
+                    LPhoneDAO.delete(userPhone.getPhoneID());
+                }
+            }, answerListener);
         }
-        listener.onAnswerRetrieved();
     }
 }

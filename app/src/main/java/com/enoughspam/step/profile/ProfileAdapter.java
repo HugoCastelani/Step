@@ -29,12 +29,15 @@ import java.util.List;
 
 public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.MyViewHolder> {
     private final List<PhoneSection> mBlockedNumbersList;
+
     private UserPhoneDAO.ListListener mListListener;
+    private DAOHandler.AnswerListener mAnswerListener;
 
     public ProfileAdapter(@NonNull final User user) {
         mBlockedNumbersList = new ArrayList<>();
-        UserPhoneDAO.getPhoneList(user.getID(), getListListener());
-        FriendshipDAO.getFriendsBlockedList(user.getID(), getListListener());
+
+        UserPhoneDAO.getUserPhoneList(user.getID(), getListListener(), getAnswerListener());
+        FriendshipDAO.getFriendsBlockedList(user.getID(), getListListener(), getAnswerListener());
     }
 
     private UserPhoneDAO.ListListener getListListener() {
@@ -85,6 +88,23 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.
         }
 
         return mListListener;
+    }
+
+    private DAOHandler.AnswerListener getAnswerListener() {
+        if (mAnswerListener == null) {
+            mAnswerListener = new DAOHandler.AnswerListener() {
+                int count = 0;
+
+                @Override
+                public void onAnswerRetrieved() {
+                    if (++count == 2) {
+                        // hide progressbar and show rv
+                    }
+                }
+            };
+        }
+
+        return mAnswerListener;
     }
 
     @Override
