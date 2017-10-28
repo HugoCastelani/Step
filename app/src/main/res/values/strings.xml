@@ -137,6 +137,7 @@
 
     <!-- splash screen activity -->
     <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>
+    <string name="splash_screen_no_internet_connection">Sem conexão à internet</string>
 
     <!-- profile activity -->
     <string name="profile_activity_label">Meu perfil</string>

@@ -33,6 +33,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <receiver android:name=".call.PhoneCallReceiver">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PHONE_STATE" />
@@ -40,7 +41,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="search.SearchActivity">
+        <activity
+            android:name="search.SearchActivity"
+            android:label="@string/main_activity_label">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -49,22 +52,16 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".main.MainActivity"
             android:label="@string/main_activity_label">
-
-            <!--
-            intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter
-            -->
 
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value="search.SearchActivity" />
         </activity>
+
         <activity
             android:name=".intro.MainIntroActivity"
             android:screenOrientation="portrait"
@@ -74,15 +71,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!--
-            intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter
-            -->
         </activity>
+
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/settings_activity_label"
@@ -91,6 +81,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
+
         <activity
             android:name=".addNumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
@@ -100,8 +91,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
+
         <activity android:name=".intro.SplashScreenActivity" />
-        <activity android:name=".profile.ProfileActivity"></activity>
+        <activity android:name=".profile.ProfileActivity"/>
     </application>
 
 </manifest>
