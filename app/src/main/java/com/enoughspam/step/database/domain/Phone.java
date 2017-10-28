@@ -30,16 +30,16 @@ public class Phone extends Domain {
     public Phone(@NonNegative final long number, @NonNull final Area area) {
         this.number = number;
         setArea(area);
-        setNumberAID();
         countryID = -1;
+        setNumberACID();
     }
 
     // some countries don't have area
     public Phone(@NonNegative final long number, @NonNull final Country country) {
         this.number = number;
         setCountry(country);
-        setNumberCID();
         areaID = -1;
+        setNumberACID();
     }
 
     public Phone(@NonNegative final int id, @NonNegative final long number,
@@ -79,7 +79,7 @@ public class Phone extends Domain {
     public void setCountry(Country country) {
         this.country = country;
         this.countryID = country.getID();
-        setNumberCID();
+        setNumberACID();
     }
 
     public void setCountryID(int countryID) {
@@ -87,7 +87,7 @@ public class Phone extends Domain {
         if (country != null) {
             country.setID(countryID);
         }
-        setNumberCID();
+        setNumberACID();
     }
 
     @Exclude
@@ -102,7 +102,7 @@ public class Phone extends Domain {
     public void setArea(Area area) {
         this.area = area;
         this.areaID = area.getID();
-        setNumberAID();
+        setNumberACID();
     }
 
     public void setAreaID(int areaID) {
@@ -110,15 +110,11 @@ public class Phone extends Domain {
         if (area != null) {
             area.setID(areaID);
         }
-        setNumberAID();
+        setNumberACID();
     }
 
-    public void setNumberAID() {
-        numberACID = Long.toString(getNumber()) + getAreaID();
-    }
-
-    public void setNumberCID() {
-        numberACID = Long.toString(getNumber()) + getCountryID();
+    public void setNumberACID() {
+        numberACID = Long.toString(getNumber()) + getAreaID() + getCountryID();
     }
 
     public String getNumberACID() {
