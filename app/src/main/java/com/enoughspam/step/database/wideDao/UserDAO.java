@@ -3,13 +3,13 @@ package com.enoughspam.step.database.wideDao;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.localDao.LUserDAO;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -21,15 +21,15 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UserDAO {
     private static final String NODE = "users";
-    private static DatabaseReference database;
+    private static DatabaseReference sDatabase;
 
     private UserDAO() {}
 
     private static DatabaseReference getDatabase() {
-        if (database == null) {
-            database = FirebaseDatabase.getInstance().getReference(NODE);
+        if (sDatabase == null) {
+            sDatabase = DAOHandler.getFirebaseDatabase(NODE);
         }
-        return database;
+        return sDatabase;
     }
 
     public static void create(@NonNull final User user) {

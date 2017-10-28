@@ -12,7 +12,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -30,7 +29,7 @@ public class FriendshipDAO {
 
     private static DatabaseReference getDatabase() {
         if (sDatabase == null) {
-            sDatabase = FirebaseDatabase.getInstance().getReference(NODE);
+            sDatabase = DAOHandler.getFirebaseDatabase(NODE);
         }
 
         return sDatabase;
@@ -117,6 +116,8 @@ public class FriendshipDAO {
     }
 
     public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
+        testConnection(listener);
+
         final Query query = getDatabase().orderByChild("addingID").equalTo(LUserDAO.getThisUser().getID());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,6 +141,22 @@ public class FriendshipDAO {
                     @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                     @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
                     @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+    }
+
+    private static void testConnection(@NonNull final DAOHandler.AnswerListener listener) {
+        DAOHandler.getFirebaseDatabase(".info/connected")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final boolean isConnected = dataSnapshot.getValue(Boolean.class);
+
+                        if (!isConnected) {
+                            listener.onAnswerRetrieved();
+                        }
+                    }
+
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
     }
