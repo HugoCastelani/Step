@@ -2,18 +2,11 @@ package com.enoughspam.step.database.localDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.Area;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.enoughspam.step.database.localDao.abstracts.GenericHybridDAO;
 
 /**
  * Created by Hugo Castelani
@@ -21,89 +14,57 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 15:10
  */
 
-public class AreaDAO {
-    public static final String TABLE = "area";
-    public static final String ID = "id";
+public class AreaDAO extends GenericHybridDAO<Area> {
+    private static AreaDAO instance;
+
     public static final String CODE = "code";
     public static final String NAME = "name";
     public static final String STATE_ID = "state_id";
 
-    public static final String NODE = "areas";
+    @Override
+    protected void prepareFields() {
+        table = "area";
+        node = "areas";
+        aClass = Area.class;
+    }
 
     private AreaDAO() {}
 
-    public static Area generate(@NonNull final Cursor cursor) {
+    public static AreaDAO get() {
+        if (instance == null) instance = new AreaDAO();
+        return instance;
+    }
+
+    @Override
+    protected Area generate(@NonNull final Cursor cursor) {
         return new Area(
-                cursor.getInt(cursor.getColumnIndex(ID)),
+                cursor.getInt(cursor.getColumnIndex(id)),
                 cursor.getInt(cursor.getColumnIndex(CODE)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
-                StateDAO.findByID(cursor.getInt(cursor.getColumnIndex(STATE_ID)))
+                StateDAO.get().findByColumn(StateDAO.id,
+                        cursor.getString(cursor.getColumnIndex(STATE_ID)))
         );
     }
 
-    public static Area findByID(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
+    @Override
+    public AreaDAO create(@NonNull final Area area) {
+        ContentValues values = new ContentValues();
 
-        Area area = null;
+        values.put(id, area.getID());
+        values.put(CODE, area.getCode());
+        values.put(NAME, area.getName());
+        values.put(STATE_ID, area.getStateID());
 
-        if (cursor.moveToFirst()) area = generate(cursor);
-
-        cursor.close();
-        return area;
+        DAOHandler.getLocalDatabase().insert(table, null, values);
+        return instance;
     }
 
-    public static Area findByCode(@NonNegative final int code) {
-        final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                TABLE, null, CODE + " = ?", new String[] {String.valueOf(code)},
-                null, null, null);
-
-        Area area = null;
-
-        if (cursor.moveToFirst()) area = generate(cursor);
-
-        cursor.close();
-        return area;
+    public AreaDAO update(@NonNull final Area area) {
+        throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
-    public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
-        final DatabaseReference database = DAOHandler.getFirebaseDatabase(NODE);
-        final SQLiteDatabase localDatabase = DAOHandler.getLocalDatabase();
-
-        Query query = database.orderByChild("id");
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onAnswerRetrieved();
-            }
-
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        });
-
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                final Area area = dataSnapshot.getValue(Area.class);
-
-                if (area.getID() != 0) {
-                    if (findByID(area.getID()) == null) {
-                        ContentValues values = new ContentValues();
-                        values.put(ID, area.getID());
-                        values.put(CODE, area.getCode());
-                        values.put(NAME, area.getName());
-                        values.put(STATE_ID, area.getStateID());
-
-                        localDatabase.insert(TABLE, null, values);
-                    }
-                }
-            }
-
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        });
+    @Override
+    public int exists(@NonNull Area area) {
+        throw new UnsupportedOperationException("You shouldn't do this.");
     }
 }

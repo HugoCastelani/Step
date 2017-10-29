@@ -2,18 +2,11 @@ package com.enoughspam.step.database.localDao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
 import com.enoughspam.step.database.domain.State;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.enoughspam.step.database.localDao.abstracts.GenericHybridDAO;
 
 /**
  * Created by Hugo Castelani
@@ -21,73 +14,55 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 13:59
  */
 
-public class StateDAO {
-    public static final String TABLE = "state";
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String COUNTRY_ID = "country_id";
+public class StateDAO extends GenericHybridDAO<State> {
+    private static StateDAO instance;
 
-    public static final String NODE = "states";
+    private static final String NAME = "name";
+    private static final String COUNTRY_ID = "country_id";
+
+    @Override
+    protected void prepareFields() {
+        table = "state";
+        node = "states";
+        aClass = State.class;
+    }
 
     private StateDAO() {}
 
-    public static State generate(@NonNull final Cursor cursor) {
+    public static StateDAO get() {
+        if (instance == null) instance = new StateDAO();
+        return instance;
+    }
+
+    @Override
+    public State generate(@NonNull final Cursor cursor) {
         return new State(
-                cursor.getInt(cursor.getColumnIndex(ID)),
+                cursor.getInt(cursor.getColumnIndex(id)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
-                CountryDAO.findByID(cursor.getInt(cursor.getColumnIndex(COUNTRY_ID)))
+                CountryDAO.get().findByColumn(CountryDAO.id,
+                        cursor.getString(cursor.getColumnIndex(COUNTRY_ID)))
         );
     }
 
-    public static State findByID(@NonNegative final int id) {
-        final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                TABLE, null, ID + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
+    @Override
+    public StateDAO create(@NonNull final State state) {
+        ContentValues values = new ContentValues();
 
-        State state = null;
+        values.put(id, state.getID());
+        values.put(NAME, state.getName());
+        values.put(COUNTRY_ID, state.getCountryID());
 
-        if (cursor.moveToFirst()) state = generate(cursor);
-
-        cursor.close();
-        return state;
+        DAOHandler.getLocalDatabase().insert(table, null, values);
+        return instance;
     }
 
-    public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
-        final DatabaseReference database = DAOHandler.getFirebaseDatabase(NODE);
-        final SQLiteDatabase localDatabase = DAOHandler.getLocalDatabase();
+    @Override
+    public StateDAO update(@NonNull State state) {
+        throw new UnsupportedOperationException("You shouldn't do this.");
+    }
 
-        Query query = database.orderByChild("id");
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onAnswerRetrieved();
-            }
-
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        });
-
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                final State state = dataSnapshot.getValue(State.class);
-
-                if (state.getID() != 0) {
-                    if (findByID(state.getID()) == null) {
-                        ContentValues values = new ContentValues();
-                        values.put(ID, state.getID());
-                        values.put(NAME, state.getName());
-                        values.put(COUNTRY_ID, state.getCountryID());
-
-                        localDatabase.insert(TABLE, null, values);
-                    }
-                }
-            }
-
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        });
+    @Override
+    public int exists(@NonNull State state) {
+        throw new UnsupportedOperationException("You shouldn't do this.");
     }
 }

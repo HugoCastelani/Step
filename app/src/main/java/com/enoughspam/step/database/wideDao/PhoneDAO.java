@@ -38,7 +38,7 @@ public class PhoneDAO {
         exists(phone, retrievedPhone -> {
             if (retrievedPhone != null) {
                 listener.onPhoneRetrieved(retrievedPhone);
-                LPhoneDAO.create(retrievedPhone);
+                LPhoneDAO.get().create(retrievedPhone);
 
             } else {
 
@@ -50,7 +50,7 @@ public class PhoneDAO {
                         phone.setID(dataSnapshot.getValue(Phone.class).getID() + 1);
                         getDatabase().push().setValue(phone);
                         listener.onPhoneRetrieved(phone);
-                        LPhoneDAO.create(phone);
+                        LPhoneDAO.get().create(phone);
                         query.removeEventListener(this);
                     }
 
@@ -65,14 +65,14 @@ public class PhoneDAO {
         });
     }
 
-    public static void delete(@NonNegative final int id) {
+    public static void delete(@NonNegative final Integer id) {
         getDatabase().orderByChild("id")
                 .equalTo(id)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         getDatabase().child(dataSnapshot.getKey()).removeValue();
-                        LPhoneDAO.delete(id);
+                        LPhoneDAO.get().delete(id);
                     }
 
                     @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -82,7 +82,7 @@ public class PhoneDAO {
                 });
     }
 
-    public static void findByID(@NonNegative final int id, @NonNull final PhoneListener listener) {
+    public static void findByID(@NonNegative final Integer id, @NonNull final PhoneListener listener) {
         getDatabase().orderByChild("id")
                 .equalTo(id)
                 .limitToFirst(1)
@@ -92,9 +92,11 @@ public class PhoneDAO {
                         final Phone phone = dataSnapshot.getValue(Phone.class);
 
                         if (phone.getCountryID() == -1) {
-                            phone.setArea(AreaDAO.findByID(phone.getAreaID()));
+                            phone.setArea(AreaDAO.get().findByColumn(AreaDAO.id,
+                                    String.valueOf(phone.getAreaID())));
                         } else {
-                            phone.setCountry(CountryDAO.findByID(phone.getCountryID()));
+                            phone.setCountry(CountryDAO.get().findByColumn(AreaDAO.id,
+                                    String.valueOf(phone.getCountryID())));
                         }
 
                         listener.onPhoneRetrieved(phone);

@@ -8,10 +8,10 @@ import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.localDao.LFriendshipDAO;
 import com.enoughspam.step.database.localDao.LUserDAO;
+import com.enoughspam.step.database.localDao.abstracts.GenericWideDAO;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -21,32 +21,61 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 21:57
  */
 
-public class FriendshipDAO {
-    public static final String NODE = "friendships";
-    private static DatabaseReference sDatabase;
+public class FriendshipDAO extends GenericWideDAO<Friendship> {
+    private static FriendshipDAO instance;
+
+    @Override
+    protected void prepareFields() {
+        node = "friendships";
+    }
 
     private FriendshipDAO() {}
 
-    private static DatabaseReference getDatabase() {
-        if (sDatabase == null) {
-            sDatabase = DAOHandler.getFirebaseDatabase(NODE);
-        }
-
-        return sDatabase;
+    public static FriendshipDAO get() {
+        if (instance == null) instance = new FriendshipDAO();
+        return instance;
     }
 
-    public static void create(@NonNull final Friendship friendship) {
+    @Override
+    public FriendshipDAO create(@NonNull final Friendship friendship) {
         exists(friendship, retrievedBoolean -> {
             if (!retrievedBoolean) {
-                getDatabase().push().setValue(friendship);
+                getReference().push().setValue(friendship);
             }
-            LFriendshipDAO.create(friendship);
+            LFriendshipDAO.get().create(friendship);
         });
+
+        return instance;
     }
 
-    private static void exists(@NonNull final Friendship friendship,
+    @Override
+    public GenericWideDAO update(@NonNull Friendship friendship) {
+        throw new UnsupportedOperationException("You shouldn't do this.");
+    }
+
+    @Override
+    public FriendshipDAO delete(@NonNegative final Integer addedID, @NonNegative final Integer addingID) {
+        getReference().orderByChild("addedIDAddingID")
+                .equalTo(String.valueOf(addedID) + addingID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        getReference().child(dataSnapshot.getKey()).removeValue();
+                        LFriendshipDAO.get().delete(addedID, addingID);
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+
+        return instance;
+    }
+
+    public FriendshipDAO exists(@NonNull final Friendship friendship,
                               @NonNull final UserPhoneDAO.BooleanListener listener) {
-        getDatabase().orderByChild("addedIDAddingID")
+        getReference().orderByChild("addedIDAddingID")
                 .equalTo(friendship.getAddedIDAddingID())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -63,62 +92,13 @@ public class FriendshipDAO {
 
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
+
+        return instance;
     }
 
-    public static void delete(@NonNegative final int addedID, @NonNegative final int addingID) {
-        getDatabase().orderByChild("addedIDAddingID")
-                .equalTo(String.valueOf(addedID) + addingID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        getDatabase().child(dataSnapshot.getKey()).removeValue();
-                        LFriendshipDAO.delete(addedID, addingID);
-                    }
-
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
-    }
-
-    public static void findUserFriends(@NonNegative final int userID,
-                                       @NonNull final UserPhoneDAO.ListListener listener) {
-        getDatabase().orderByChild("addingID")
-                .equalTo(userID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        UserDAO.findByID(
-                                dataSnapshot.getValue(Friendship.class).getAddedID(),
-                                retrievedUser -> listener.onItemAdded(retrievedUser)
-                        );
-                    }
-
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
-    }
-
-    public static void getFriendsBlockedList(@NonNegative final int userID,
-                                             @NonNull final UserPhoneDAO.ListListener listListener,
-                                             @NonNull final DAOHandler.AnswerListener answerListener) {
-        findUserFriends(userID, new UserPhoneDAO.ListListener<User>() {
-            @Override
-            public void onItemAdded(@NonNull User user) {
-                UserPhoneDAO.getUserPhoneList(user.getID(), listListener, answerListener);
-            }
-
-            @Override public void onItemRemoved(@NonNull User user) {}
-        });
-    }
-
-    public static void sync(@NonNull final DAOHandler.AnswerListener listener) {
-        testConnection(listener);
-
-        final Query query = getDatabase().orderByChild("addingID").equalTo(LUserDAO.getThisUser().getID());
+    public FriendshipDAO sync(@NonNull final DAOHandler.AnswerListener listener) {
+        final Query query = getReference().orderByChild("addingID")
+                .equalTo(LUserDAO.get().getThisUser().getID());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -130,11 +110,33 @@ public class FriendshipDAO {
         });
 
         query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                UserDAO.get().findByID(
+                        dataSnapshot.getValue(Friendship.class).getAddedID(),
+                        retrievedUser -> LUserDAO.get().clone(retrievedUser)
+                );
+            }
+
+            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        return instance;
+    }
+
+    public FriendshipDAO findUserFriends(@NonNegative final Integer userID,
+                                       @NonNull final UserPhoneDAO.ListListener listener) {
+        getReference().orderByChild("addingID")
+                .equalTo(userID)
+                .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        UserDAO.findByID(
+                        UserDAO.get().findByID(
                                 dataSnapshot.getValue(Friendship.class).getAddedID(),
-                                retrievedUser -> LUserDAO.clone(retrievedUser)
+                                retrievedUser -> listener.onItemAdded(retrievedUser)
                         );
                     }
 
@@ -143,21 +145,22 @@ public class FriendshipDAO {
                     @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
+
+        return instance;
     }
 
-    private static void testConnection(@NonNull final DAOHandler.AnswerListener listener) {
-        DAOHandler.getFirebaseDatabase(".info/connected")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final boolean isConnected = dataSnapshot.getValue(Boolean.class);
+    public FriendshipDAO getFriendsBlockedList(@NonNegative final Integer userID,
+                                             @NonNull final UserPhoneDAO.ListListener listListener,
+                                             @NonNull final DAOHandler.AnswerListener answerListener) {
+        findUserFriends(userID, new UserPhoneDAO.ListListener<User>() {
+            @Override
+            public void onItemAdded(@NonNull User user) {
+                UserPhoneDAO.get().getUserPhoneList(user.getID(), listListener, answerListener);
+            }
 
-                        if (!isConnected) {
-                            listener.onAnswerRetrieved();
-                        }
-                    }
+            @Override public void onItemRemoved(@NonNull User user) {}
+        });
 
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
+        return instance;
     }
 }

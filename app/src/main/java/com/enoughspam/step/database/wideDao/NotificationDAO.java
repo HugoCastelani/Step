@@ -50,7 +50,7 @@ public class NotificationDAO {
         return id;
     }
 
-    public static Notification findById(@NonNegative final int id) {
+    public static Notification findByID(@NonNegative final int id) {
         final Cursor cursor = DAOHandler.getWideDatabase().query(TABLE, null,
                 ID + " = ?", new String[] {String.valueOf(id)},
                 null, null, null);

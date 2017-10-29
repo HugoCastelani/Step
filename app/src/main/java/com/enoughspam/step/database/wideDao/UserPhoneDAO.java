@@ -5,14 +5,20 @@ import android.support.annotation.Nullable;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
+import com.enoughspam.step.database.localDao.LFriendshipDAO;
+import com.enoughspam.step.database.localDao.LPhoneDAO;
+import com.enoughspam.step.database.localDao.LUserDAO;
 import com.enoughspam.step.database.localDao.LUserPhoneDAO;
+import com.enoughspam.step.database.localDao.abstracts.GenericWideDAO;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -20,33 +26,63 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 15:30
  */
 
-public class UserPhoneDAO {
-    private static final String NODE = "userPhones";
-    private static DatabaseReference sDatabase;
+public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
+    private static UserPhoneDAO instance;
+
+    @Override
+    protected void prepareFields() {
+        node = "userPhones";
+    }
 
     private UserPhoneDAO() {}
 
-    private static DatabaseReference getDatabase() {
-        if (sDatabase == null) {
-            sDatabase = DAOHandler.getFirebaseDatabase(NODE);
-        }
-        return sDatabase;
+    public static UserPhoneDAO get() {
+        if (instance == null) instance = new UserPhoneDAO();
+        return instance;
     }
 
-    public static void create(@NonNull final UserPhone userPhone) {
+    @Override
+    public UserPhoneDAO create(@NonNull final UserPhone userPhone) {
         PhoneDAO.create(userPhone.getPhone(), retrievedPhone -> {
             userPhone.setPhoneID(retrievedPhone.getID());
             exists(userPhone, retrievedBoolean -> {
                 if (!retrievedBoolean) {
-                    getDatabase().push().setValue(userPhone);
+                    getReference().push().setValue(userPhone);
                 }
-                LUserPhoneDAO.create(userPhone);
+                LUserPhoneDAO.get().create(userPhone);
             });
         });
+
+        return instance;
     }
 
-    private static void exists(@NonNull final UserPhone userPhone, @NonNull final BooleanListener listener) {
-        getDatabase().orderByChild("userIDPhoneID")
+    @Override
+    public GenericWideDAO update(@NonNull UserPhone userPhone) {
+        throw new UnsupportedOperationException("You shouldn't do this");
+    }
+
+    @Override
+    public UserPhoneDAO delete(@NonNegative final Integer userID, @NonNegative final Integer phoneID) {
+        getReference().orderByChild("userIDPhoneID")
+                .equalTo(String.valueOf(userID) + phoneID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        getReference().child(dataSnapshot.getKey()).removeValue();
+                        LUserPhoneDAO.get().delete(userID, phoneID);
+                    }
+
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+
+        return instance;
+    }
+
+    public UserPhoneDAO exists(@NonNull final UserPhone userPhone, @NonNull final BooleanListener listener) {
+        getReference().orderByChild("userIDPhoneID")
                 .equalTo(userPhone.getUserIDPhoneID())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -63,49 +99,48 @@ public class UserPhoneDAO {
 
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
+
+        return instance;
     }
 
-    public static void findByUserID(@NonNegative final int userID, @NonNull final UserPhoneListener listener) {
-        getDatabase().orderByChild("userID")
-                .equalTo(userID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
-                        listener.onUserPhoneRetrieved(userPhone);
-                    }
+    @Override
+    // this one can be fucking long
+    public UserPhoneDAO sync(@NonNull final DAOHandler.AnswerListener listener) {
+        List<User> userList = LFriendshipDAO.get().findUserFriends(
+                LUserDAO.get().getThisUser().getID());
+        userList.add(0, LUserDAO.get().getThisUser());
 
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
+        for (int i = 0; i < userList.size(); i++) {
+            DAOHandler.AnswerListener answerListener = null;
+            if (i == userList.size() - 1) {
+                answerListener = () -> listener.onAnswerRetrieved();
+            }
+
+            getUserPhoneList(userList.get(i).getID(),
+                    new UserPhoneDAO.ListListener<UserPhone>() {
+                        @Override
+                        public void onItemAdded(@NonNull UserPhone userPhone) {
+                            PhoneDAO.findByID(userPhone.getPhoneID(),
+                                    retrievedPhone -> LPhoneDAO.get().create(retrievedPhone));
+                            create(userPhone);
+                        }
+
+                        @Override
+                        public void onItemRemoved(@NonNull UserPhone userPhone) {
+                            LPhoneDAO.get().delete(userPhone.getPhoneID());
+                        }
+                    }, answerListener);
+        }
+
+        return instance;
     }
 
-    public static void delete(@NonNegative final int userID, @NonNegative final int phoneID) {
-        getDatabase().orderByChild("userIDPhoneID")
-                .equalTo(String.valueOf(userID) + phoneID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        getDatabase().child(dataSnapshot.getKey()).removeValue();
-                    }
-
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
-
-        LUserPhoneDAO.delete(userID, phoneID);
-    }
-
-    public static void getUserPhoneList(@NonNegative final int userID,
+    public UserPhoneDAO getUserPhoneList(@NonNegative final Integer userID,
                                         @NonNull final ListListener listListener,
                                         @Nullable final DAOHandler.AnswerListener answerListener) {
-        UserDAO.findByID(userID, retrievedUser -> {
+        UserDAO.get().findByID(userID, retrievedUser -> {
 
-            final Query query = getDatabase().orderByChild("userID").equalTo(userID);
+            final Query query = getReference().orderByChild("userID").equalTo(userID);
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -148,20 +183,14 @@ public class UserPhoneDAO {
                             );
                         }
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
                     });
 
         });
+
+        return instance;
     }
 
     public interface UserPhoneListener {

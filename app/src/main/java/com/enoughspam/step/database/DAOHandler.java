@@ -4,13 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.enoughspam.step.database.localDao.AreaDAO;
 import com.enoughspam.step.database.localDao.CountryDAO;
 import com.enoughspam.step.database.localDao.DescriptionDAO;
-import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 import com.enoughspam.step.database.localDao.StateDAO;
 import com.enoughspam.step.database.wideDao.FriendshipDAO;
+import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +32,11 @@ public class DAOHandler {
 
     public static void init(@NonNull final Context context) {
         sContext = context;
+    }
+
+    public static Context getContext() {
+        if (sContext != null) return sContext;
+        throw new NullPointerException("You should call init method first.");
     }
 
     public static void finish() {
@@ -76,10 +82,10 @@ public class DAOHandler {
             }
         };
 
-        CountryDAO.sync(innerListener);
-        StateDAO.sync(innerListener);
-        AreaDAO.sync(innerListener);
-        DescriptionDAO.sync(innerListener);
+        CountryDAO.get().sync(innerListener);
+        StateDAO.get().sync(innerListener);
+        AreaDAO.get().sync(innerListener);
+        DescriptionDAO.get().sync(innerListener);
     }
 
     public static void syncDynamicTables(@NonNull final AnswerListener listener) {
@@ -89,19 +95,15 @@ public class DAOHandler {
             @Override
             public void onAnswerRetrieved() {
                 if (++count == 1) {
-                    FriendshipDAO.sync(this);
+                    UserPhoneDAO.get().sync(this);
                 } else if (count == 2) {
                     listener.onAnswerRetrieved();
                 }
+                Log.e("SyncDynamicTables", "Count: " + count);
             }
         };
 
-        LUserPhoneDAO.sync(innerListener);
-    }
-
-    public static Context getContext() {
-        if (sContext != null) return sContext;
-        throw new NullPointerException("You should call init method first.");
+        FriendshipDAO.get().sync(innerListener);
     }
 
     public interface AnswerListener {
