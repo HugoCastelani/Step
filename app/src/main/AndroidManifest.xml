@@ -10,17 +10,14 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
-
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
-
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -42,20 +39,17 @@
         </receiver>
 
         <activity
-            android:name=".search.SearchActivity"
-            android:label="@string/main_activity_label">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-
-        <activity
             android:name=".main.MainActivity"
-            android:label="@string/main_activity_label">
+            android:label="@string/main_activity_label"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".search.SearchActivity"
+            android:label="@string/main_activity_label"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
 
         <activity
@@ -72,6 +66,7 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/settings_activity_label"
+            android:theme="@style/AppTheme">
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -81,15 +76,15 @@
         <activity
             android:name=".addNumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
-            android:parentActivityName=".main.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
 
-        <activity android:name=".intro.SplashScreenActivity" />
-        <activity android:name=".profile.ProfileActivity"/>
+        <activity android:name=".intro.SplashScreenActivity" android:theme="@style/AppTheme" />
+        <activity android:name=".profile.ProfileActivity" android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

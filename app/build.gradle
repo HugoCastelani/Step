@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.enoughspam.step"
@@ -67,10 +67,13 @@ dependencies {
     }
 
     // google
-    compile 'com.google.android.gms:play-services-auth:11.0.4'
-    compile 'com.google.firebase:firebase-core:10.2.1'
-    compile 'com.google.firebase:firebase-database:10.2.1'
-    //compile 'com.google.firebase:firebase-auth:10.2.1'
+    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    compile 'com.google.android.gms:play-services-location:11.4.2'
+    compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.google.firebase:firebase-database:11.4.2'
+
+    // squareup
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
@@ -131,5 +134,6 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

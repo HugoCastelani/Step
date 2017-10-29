@@ -48,7 +48,6 @@ public class MainActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-
         initToolbar(false);
         initViews();
         initActions();
@@ -162,8 +161,9 @@ public class MainActivity extends AbstractActivity {
                 final Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     @Override
