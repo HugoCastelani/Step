@@ -10,41 +10,41 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  */
 
 public class Notification extends Domain {
-    private int phoneId;
-    private int notifiedUserId;
-    private int notifyingUserId;
+    private Integer phoneId;
+    private Integer notifiedUserId;
+    private Integer notifyingUserId;
 
     public Notification() {}
 
-    public Notification(@NonNegative final int id, @NonNegative final int phoneId,
-                        @NonNegative final int notifiedUserId, @NonNegative final int notifyingUserId) {
+    public Notification(@NonNegative final Integer id, @NonNegative final Integer phoneId,
+                        @NonNegative final Integer notifiedUserId, @NonNegative final Integer notifyingUserId) {
         super(id);
         this.phoneId = phoneId;
         this.notifiedUserId = notifiedUserId;
         this.notifyingUserId = notifyingUserId;
     }
 
-    public int getPhoneId() {
+    public Integer getPhoneId() {
         return phoneId;
     }
 
-    public void setPhoneId(@NonNegative final int phoneId) {
+    public void setPhoneId(@NonNegative final Integer phoneId) {
         this.phoneId = phoneId;
     }
 
-    public int getNotifiedUserId() {
+    public Integer getNotifiedUserId() {
         return notifiedUserId;
     }
 
-    public void setNotifiedUserId(@NonNegative final int notifiedUserId) {
+    public void setNotifiedUserId(@NonNegative final Integer notifiedUserId) {
         this.notifiedUserId = notifiedUserId;
     }
 
-    public int getNotifyingUserId() {
+    public Integer getNotifyingUserId() {
         return notifyingUserId;
     }
 
-    public void setNotifyingUserId(@NonNegative final int notifyingUserId) {
+    public void setNotifyingUserId(@NonNegative final Integer notifyingUserId) {
         this.notifyingUserId = notifyingUserId;
     }
 }

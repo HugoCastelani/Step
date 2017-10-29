@@ -13,11 +13,11 @@ import com.google.firebase.database.Exclude;
 public class State extends Domain {
     private String name;
     private Country country;
-    private int countryID;
+    private Integer countryID;
 
     public State() {}
 
-    public State(@NonNegative final int id, @NonNegative final String name,
+    public State(@NonNegative final Integer id, @NonNegative final String name,
                  @NonNegative final Country country) {
         super(id);
         this.name = name;
@@ -37,7 +37,7 @@ public class State extends Domain {
         return country;
     }
 
-    public int getCountryID() {
+    public Integer getCountryID() {
         return countryID;
     }
 
@@ -46,7 +46,7 @@ public class State extends Domain {
         countryID = country.getID();
     }
 
-    public void setCountryID(int countryID) {
+    public void setCountryID(Integer countryID) {
         this.countryID = countryID;
         if (country != null) {
             country.setID(countryID);

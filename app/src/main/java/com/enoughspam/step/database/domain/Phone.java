@@ -18,11 +18,11 @@ import com.google.firebase.database.Exclude;
 public class Phone extends Domain {
     private long number;
     private Country country;
-    private int countryID;
+    private Integer countryID;
     private Area area;
-    private int areaID;
+    private Integer areaID;
 
-    // this variable joins number and area/country ID to enable finding existence at PhoneDAO
+    // this variable joins number and area/country id to enable finding existence at PhoneDAO
     private String numberACID;
 
     public Phone() {}
@@ -42,7 +42,7 @@ public class Phone extends Domain {
         setNumberACID();
     }
 
-    public Phone(@NonNegative final int id, @NonNegative final long number,
+    public Phone(@NonNegative final Integer id, @NonNegative final long number,
                  @NonNull final Area area) {
         super(id);
         this.number = number;
@@ -51,7 +51,7 @@ public class Phone extends Domain {
     }
 
     // some countries don't have area
-    public Phone(@NonNegative final int id, @NonNegative final long number,
+    public Phone(@NonNegative final Integer id, @NonNegative final long number,
                  @NonNull final Country country) {
         super(id);
         this.number = number;
@@ -72,7 +72,7 @@ public class Phone extends Domain {
         return country;
     }
 
-    public int getCountryID() {
+    public Integer getCountryID() {
         return countryID;
     }
 
@@ -82,7 +82,7 @@ public class Phone extends Domain {
         setNumberACID();
     }
 
-    public void setCountryID(int countryID) {
+    public void setCountryID(Integer countryID) {
         this.countryID = countryID;
         if (country != null) {
             country.setID(countryID);
@@ -95,7 +95,7 @@ public class Phone extends Domain {
         return area;
     }
 
-    public int getAreaID() {
+    public Integer getAreaID() {
         return areaID;
     }
 
@@ -105,7 +105,7 @@ public class Phone extends Domain {
         setNumberACID();
     }
 
-    public void setAreaID(int areaID) {
+    public void setAreaID(Integer areaID) {
         this.areaID = areaID;
         if (area != null) {
             area.setID(areaID);
@@ -131,7 +131,7 @@ public class Phone extends Domain {
         // any 0 left from country's code was removed
         number = String.valueOf(numberL);
 
-        Country country = CountryDAO.findByISO(iso);
+        Country country = CountryDAO.get().findByColumn(CountryDAO.ISO, iso);
         Phone phone;
 
         // countries without mask don't have area code
@@ -147,7 +147,7 @@ public class Phone extends Domain {
                 // 2. In some Samsung devices, android hides the phone's area if it's
                 // the same as user's phone area, so that's what we're going to assume
 
-                final Area thisUserPhoneArea = LUserPhoneDAO.findThisUserPhone().getArea();
+                final Area thisUserPhoneArea = LUserPhoneDAO.get().findThisUserPhone().getArea();
                 country = thisUserPhoneArea.getState().getCountry();
 
                 methodReturn = findAreaByNumber(number, country);
@@ -185,7 +185,7 @@ public class Phone extends Domain {
         for (int i = 0; i < codeLength; i++) {
             areaCode.append(number.charAt(i));    // add current position's digit
 
-            area = AreaDAO.findByCode(Integer.valueOf(areaCode.toString()));
+            area = AreaDAO.get().findByColumn(AreaDAO.CODE, areaCode.toString());
             if (area != null && area.getState().getCountry().getID() == country.getID()) {
                 number = number.substring(i + 1, number.length());
             }

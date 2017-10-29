@@ -13,19 +13,19 @@ import java.io.Serializable;
 
 @IgnoreExtraProperties
 public class Domain implements Serializable {
-    private int id;
+    private Integer id;
 
     public Domain() {}
 
-    public Domain(@NonNegative final int id) {
+    public Domain(@NonNegative final Integer id) {
         this.id = id;
     }
 
-    public int getID() {
+    public Integer getID() {
         return id;
     }
 
-    public void setID(@NonNegative final int id) {
+    public void setID(@NonNegative final Integer id) {
         this.id = id;
     }
 }

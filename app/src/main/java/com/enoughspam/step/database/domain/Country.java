@@ -12,14 +12,14 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  */
 
 public class Country extends Domain {
-    private int code;
+    private Integer code;
     private String name;
     private String iso;
     private String mask;
 
     public Country() {}
 
-    public Country(@NonNegative final int id, @NonNegative final int code,
+    public Country(@NonNegative final Integer id, @NonNegative final Integer code,
                    @NonNull final String name, @NonNull final String iso,
                    @NonNull final String mask) {
         super(id);
@@ -29,11 +29,11 @@ public class Country extends Domain {
         this.mask = mask;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(@NonNegative final int code) {
+    public void setCode(@NonNegative final Integer code) {
         this.code = code;
     }
 

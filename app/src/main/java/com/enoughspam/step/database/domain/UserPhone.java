@@ -13,12 +13,12 @@ import com.google.firebase.database.Exclude;
 
 public class UserPhone {
     private User user;
-    private int userID;
+    private Integer userID;
     private Phone phone;
-    private int phoneID;
+    private Integer phoneID;
     private boolean isProperty;
 
-    // this variable joins user's ID phone's ID to enable finding existence at UserPhoneDAO
+    // this variable joins user's id phone's id to enable finding existence at UserPhoneDAO
     private String userIDPhoneID;
 
     public UserPhone() {}
@@ -36,7 +36,7 @@ public class UserPhone {
         return user;
     }
 
-    public int getUserID() {
+    public Integer getUserID() {
         return userID;
     }
 
@@ -46,7 +46,7 @@ public class UserPhone {
         setUserIDPhoneID();
     }
 
-    public void setUserID(@NonNegative final int userID) {
+    public void setUserID(@NonNegative final Integer userID) {
         this.userID = userID;
         if (user != null) {
             user.setID(userID);
@@ -58,7 +58,7 @@ public class UserPhone {
         return phone;
     }
 
-    public int getPhoneID() {
+    public Integer getPhoneID() {
         return phoneID;
     }
 
@@ -67,7 +67,7 @@ public class UserPhone {
         setPhoneID(phone.getID());
     }
 
-    public void setPhoneID(@NonNegative final int phoneID) {
+    public void setPhoneID(@NonNegative final Integer phoneID) {
         this.phoneID = phoneID;
         setUserIDPhoneID();
         if (phone != null) {

@@ -16,7 +16,7 @@ public class Treatment extends Domain {
 
     public Treatment() {}
 
-    public Treatment(@NonNegative final int id, @NonNull final String treatment) {
+    public Treatment(@NonNegative final Integer id, @NonNull final String treatment) {
         super(id);
         this.treatment = treatment;
     }

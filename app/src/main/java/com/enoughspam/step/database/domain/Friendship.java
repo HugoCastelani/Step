@@ -13,9 +13,9 @@ import com.google.firebase.database.Exclude;
 
 public class Friendship {
     private User added;
-    private int addedID;
+    private Integer addedID;
     private User adding;
-    private int addingID;
+    private Integer addingID;
 
     private String addedIDAddingID;
 
@@ -32,7 +32,7 @@ public class Friendship {
         return added;
     }
 
-    public int getAddedID() {
+    public Integer getAddedID() {
         return addedID;
     }
 
@@ -42,12 +42,16 @@ public class Friendship {
         setAddedIDAddingID();
     }
 
-    public void setAddedID(@NonNegative final int addedID) {
+    public void setAddedID(@NonNegative final Integer addedID) {
         this.addedID = addedID;
         if (added != null) {
             added.setID(addedID);
         }
         setAddedIDAddingID();
+    }
+
+    public Integer getAddingID() {
+        return addingID;
     }
 
     @Exclude
@@ -61,12 +65,13 @@ public class Friendship {
         setAddedIDAddingID();
     }
 
-    public void setAddingID(@NonNegative final int addingID) {
+    public void setAddingID(@NonNegative final Integer addingID) {
         this.addingID = addingID;
         if (adding != null) {
             adding.setID(addingID);
         }
-        setAddedIDAddingID();
+        // some fucking how, this call can't be done
+        //setAddedIDAddingID();
     }
 
     public String getAddedIDAddingID() {

@@ -13,12 +13,12 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 
 public class Description extends Domain {
     private String description;
-    private int treatmentID;
+    private Integer treatmentID;
 
     public Description() {}
 
-    public Description(@NonNegative final int id, @NonNull final String description,
-                       @NonNegative final int treatmentID) {
+    public Description(@NonNegative final Integer id, @NonNull final String description,
+                       @NonNegative final Integer treatmentID) {
         super(id);
         this.description = description;
         this.treatmentID = treatmentID;
@@ -32,11 +32,11 @@ public class Description extends Domain {
         this.description = description;
     }
 
-    public int getTreatmentID() {
+    public Integer getTreatmentID() {
         return treatmentID;
     }
 
-    public void setTreatmentID(@NonNegative final int treatmentID) {
+    public void setTreatmentID(@NonNegative final Integer treatmentID) {
         this.treatmentID = treatmentID;
     }
 }

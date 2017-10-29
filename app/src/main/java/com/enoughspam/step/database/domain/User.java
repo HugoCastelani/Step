@@ -18,7 +18,7 @@ public class User extends Domain {
 
     public User() {}
 
-    public User(@NonNegative final int id, @NonNull final String username,
+    public User(@NonNegative final Integer id, @NonNull final String username,
                 @NonNull final String picURL) {
         super(id);
         this.username = username;
@@ -32,7 +32,7 @@ public class User extends Domain {
         this.picURL = picURL;
     }
 
-    public User(@NonNegative final int id, @NonNull final String socialID,
+    public User(@NonNegative final Integer id, @NonNull final String socialID,
                 @NonNull final String username, @NonNull final String picURL) {
         this(id, username, picURL);
         this.socialID = socialID;

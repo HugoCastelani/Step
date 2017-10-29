@@ -13,14 +13,14 @@ import com.google.firebase.database.Exclude;
  */
 
 public class Area extends Domain {
-    private int code;
+    private Integer code;
     private String name;
     private State state;
-    private int stateID;
+    private Integer stateID;
 
     public Area() {}
 
-    public Area(@NonNegative final int id, @NonNegative final int code,
+    public Area(@NonNegative final Integer id, @NonNegative final Integer code,
                 @NonNull final String name, @NonNull final State state) {
         super(id);
         this.code = code;
@@ -28,11 +28,11 @@ public class Area extends Domain {
         setState(state);
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(@NonNegative final int code) {
+    public void setCode(@NonNegative final Integer code) {
         this.code = code;
     }
 
@@ -49,7 +49,7 @@ public class Area extends Domain {
         return state;
     }
 
-    public int getStateID() {
+    public Integer getStateID() {
         return stateID;
     }
 
@@ -58,7 +58,7 @@ public class Area extends Domain {
         setStateID(state.getID());
     }
 
-    private void setStateID(@NonNegative final int stateID) {
+    private void setStateID(@NonNegative final Integer stateID) {
         this.stateID = stateID;
         if (state != null) {
             state.setID(stateID);
