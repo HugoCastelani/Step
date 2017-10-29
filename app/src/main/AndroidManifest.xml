@@ -42,7 +42,7 @@
         </receiver>
 
         <activity
-            android:name="search.SearchActivity"
+            android:name=".search.SearchActivity"
             android:label="@string/main_activity_label">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -56,10 +56,6 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/main_activity_label">
-
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value="search.SearchActivity" />
         </activity>
 
         <activity

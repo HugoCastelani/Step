@@ -46,7 +46,7 @@ public class ProfileActivity extends AbstractActivity {
         setContentView(R.layout.profile_activity);
 
         mUser = (User) getIntent().getExtras().getSerializable("user");
-        mThisUser = LUserDAO.getThisUser();
+        mThisUser = LUserDAO.get().getThisUser();
 
         initViews();
         initActions();
@@ -95,7 +95,7 @@ public class ProfileActivity extends AbstractActivity {
         });
 
         // init button actions
-        if (LFriendshipDAO.findByIDs(mUser.getID(), mThisUser.getID()) == null) {
+        if (LFriendshipDAO.get().findByIDs(mUser.getID(), mThisUser.getID()) == null) {
             setButtonAsAddable();
         } else {
             setButtonAsRemovable();
@@ -118,7 +118,7 @@ public class ProfileActivity extends AbstractActivity {
     private void setButtonAsAddable() {
         mButton.setText(getResources().getString(R.string.profile_add_friend));
         mButton.setOnClickListener(view -> {
-            FriendshipDAO.create(new Friendship(mUser, mThisUser));
+            FriendshipDAO.get().create(new Friendship(mUser, mThisUser));
             setButtonAsRemovable();
         });
     }
@@ -126,7 +126,7 @@ public class ProfileActivity extends AbstractActivity {
     private void setButtonAsRemovable() {
         mButton.setText(getResources().getString(R.string.profile_remove_friend));
         mButton.setOnClickListener(view -> {
-            FriendshipDAO.delete(mUser.getID(), mThisUser.getID());
+            FriendshipDAO.get().delete(mUser.getID(), mThisUser.getID());
             setButtonAsAddable();
         });
     }

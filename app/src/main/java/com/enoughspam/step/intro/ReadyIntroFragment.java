@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.main.MainActivity;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class ReadyIntroFragment extends SlideFragment {
@@ -24,7 +23,7 @@ public class ReadyIntroFragment extends SlideFragment {
     // temporary
     @Override
     public void onDestroy() {
-        final Intent intent = new Intent(getActivity(), MainActivity.class);
+        final Intent intent = new Intent(getActivity(), SplashScreenActivity.class);
         startActivity(intent);
         getActivity().finish();
         super.onDestroy();

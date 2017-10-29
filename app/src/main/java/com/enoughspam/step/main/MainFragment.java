@@ -112,10 +112,11 @@ public class MainFragment extends Fragment {
         // user's numbers
         phoneSectionList.add(new PhoneSection(
                 getResources().getString(R.string.my_numbers),
-                LUserPhoneDAO.getPhoneList(LUserDAO.getThisUser().getID())));
+                LUserPhoneDAO.get().getPhoneList(LUserDAO.get().getThisUser().getID())));
 
         // friends' numbers
-        phoneSectionList.addAll(LFriendshipDAO.getFriendsBlockedList(LUserDAO.getThisUser().getID()));
+        phoneSectionList.addAll(LFriendshipDAO.get()
+                .getFriendsBlockedList(LUserDAO.get().getThisUser().getID()));
 
         return phoneSectionList;
     }

@@ -77,7 +77,7 @@ public class NumberIntroFragment extends SlideFragment {
                 .negativeText(R.string.cancel_button)
                 .onPositive((dialog, which) -> {
 
-                    UserPhoneDAO.create(new UserPhone(LUserDAO.getThisUser(), phone, true));
+                    UserPhoneDAO.get().create(new UserPhone(LUserDAO.get().getThisUser(), phone, true));
 
                     sendMessage();
                     mCanGoForward = true;
@@ -91,14 +91,14 @@ public class NumberIntroFragment extends SlideFragment {
     private void sendMessage() {
         final int MAX_VALUE = 999999;
         final int MIN_VALUE = 111111;
-        //String sCode = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
+        //String CODE = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
         final String code = Integer.toString(123456);
         final String cryptoPass = Integer.toString(new Random().nextInt((MAX_VALUE - MIN_VALUE) + 1) + MIN_VALUE);
 
         MessageCodeHandler.sPassword = cryptoPass;
         MessageCodeHandler.sCode = MessageCodeHandler.encryptIt(code);
 
-        // PhoneUtils.sendSmsSilent(mCountryCode + mMergePhoneNumber, sCode);
+        // PhoneUtils.sendSmsSilent(mCountryCode + mMergePhoneNumber, CODE);
     }
 
     @Override

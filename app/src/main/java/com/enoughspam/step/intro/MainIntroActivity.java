@@ -27,7 +27,6 @@ public class MainIntroActivity extends IntroActivity {
 
         Utils.init(this);
         DAOHandler.init(getBaseContext());
-        DAOHandler.syncStaticTables(() -> {});
 
         if (Aesthetic.isFirstTime()) initAesthetic();
 

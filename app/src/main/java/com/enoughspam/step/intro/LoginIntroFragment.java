@@ -132,7 +132,7 @@ public class LoginIntroFragment extends SlideFragment implements
                         photoURL
                 );
 
-                UserDAO.create(user);
+                UserDAO.get().create(user);
 
                 mCanGoForward = true;
                 canGoForward();

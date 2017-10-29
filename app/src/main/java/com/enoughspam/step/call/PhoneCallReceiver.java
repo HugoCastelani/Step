@@ -63,7 +63,8 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         final boolean isBlocked;
         try {
             final Phone phone = Phone.generateObject(number, iso);
-            isBlocked = LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), phone, false));
+            isBlocked = LUserPhoneDAO.get().isBlocked(
+                    new UserPhone(LUserDAO.get().getThisUser(), phone, false));
         } catch (NullPointerException e) {
             return;
         }

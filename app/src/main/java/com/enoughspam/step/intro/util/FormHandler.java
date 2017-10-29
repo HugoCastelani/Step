@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.azimolabs.maskformatter.MaskFormatter;
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.localDao.CountryDAO;
 
@@ -31,11 +30,11 @@ public class FormHandler {
         mPhoneNumberEditText = phoneNumberEditText;
     }
 
-    public void updateSpinnerSelection(@NonNegative final int countryCode) {
-        final Country matchingCountry = CountryDAO.findByCode(countryCode);
+    public void updateSpinnerSelection(@NonNull final String countryCode) {
+        final Country matchingCountry = CountryDAO.get().findByColumn(CountryDAO.CODE, countryCode);
 
         if (matchingCountry != null) {
-            final List<String> countryList = CountryDAO.getColumnList(CountryDAO.NAME);
+            final List<String> countryList = CountryDAO.get().getColumnStringList(CountryDAO.NAME);
 
             final int matchingPosition = countryList.indexOf(matchingCountry.getName());
             mSpinner.setSelection(matchingPosition);
@@ -43,27 +42,13 @@ public class FormHandler {
     }
 
     public void updateCountryCode(@NonNull final String countryName) {
-        mCountryCodeEditText.setText(CountryDAO.findCodeByName(countryName));
+        mCountryCodeEditText.setText(String.valueOf(CountryDAO.get()
+                .findByColumn(CountryDAO.NAME, countryName).getCode()));
     }
 
-    public void updatePhoneNumberMask(@NonNull final String countryName) {
-        final Country matchingCountry = CountryDAO.findByName(countryName);
-
-        removeMaskFormatterIfExists();
-
-        if (matchingCountry != null) {
-            final String mask = matchingCountry.getMask();
-            if (!mask.isEmpty()) {
-                mMaskFormatter = new MaskFormatter(matchingCountry.getMask(), mPhoneNumberEditText);
-                mPhoneNumberEditText.addTextChangedListener(mMaskFormatter);
-            }
-        }
-
-        finishUpdating();
-    }
-
-    public void updatePhoneNumberMask(@NonNegative final int countryCode) {
-        final Country matchingCountry = CountryDAO.findByCode(countryCode);
+    public void updatePhoneNumberMask(@NonNull final String column, @NonNull final String value) {
+        // value might be code or name
+        final Country matchingCountry = CountryDAO.get().findByColumn(column, value);
 
         removeMaskFormatterIfExists();
 

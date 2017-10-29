@@ -1,7 +1,5 @@
 package com.enoughspam.step.main;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -11,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +17,7 @@ import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addNumber.AddNumberActivity;
 import com.enoughspam.step.database.wideDao.UserDAO;
 import com.enoughspam.step.profile.ProfileActivity;
+import com.enoughspam.step.search.SearchActivity;
 import com.enoughspam.step.settings.SettingsActivity;
 import com.enoughspam.step.util.ThemeHandler;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -139,7 +137,7 @@ public class MainActivity extends AbstractActivity {
                     break;
 
                 case 3:
-                    UserDAO.findByID(1, retrievedUser -> {
+                    UserDAO.get().findByID(1, retrievedUser -> {
                         final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
                         intent2.putExtra("user", retrievedUser);
                         startActivityForResult(intent2, REQUEST_CODE_PROFILE);
@@ -154,15 +152,18 @@ public class MainActivity extends AbstractActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) item.getActionView();
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                final Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
     }
 
     @Override

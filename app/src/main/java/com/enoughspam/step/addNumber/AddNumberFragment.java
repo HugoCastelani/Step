@@ -107,7 +107,7 @@ public class AddNumberFragment extends Fragment {
             if (phone == null) continue;    // number doesn't exist
 
             // check if number is already blocked
-            if (LUserPhoneDAO.isBlocked(new UserPhone(LUserDAO.getThisUser(), phone, false))) {
+            if (LUserPhoneDAO.get().isBlocked(new UserPhone(LUserDAO.get().getThisUser(), phone, false))) {
                 continue;
             }
 
@@ -155,7 +155,7 @@ public class AddNumberFragment extends Fragment {
     }
 
     protected void saveNumber(@NonNull final Phone phone) {
-        UserPhoneDAO.create(new UserPhone(LUserDAO.getThisUser(), phone, false));
+        UserPhoneDAO.get().create(new UserPhone(LUserDAO.get().getThisUser(), phone, false));
         getActivity().onBackPressed();
     }
 }

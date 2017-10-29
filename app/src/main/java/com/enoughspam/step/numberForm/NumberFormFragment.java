@@ -90,7 +90,7 @@ public class NumberFormFragment extends Fragment {
                 textWatcher.setPaused(true);
                 final String itemName = mSpinner.getSelectedItem().toString();
                 handler.updateCountryCode(itemName);
-                handler.updatePhoneNumberMask(itemName);
+                handler.updatePhoneNumberMask(CountryDAO.NAME, itemName);
                 textWatcher.setPaused(false);
             }
 
@@ -103,7 +103,8 @@ public class NumberFormFragment extends Fragment {
                 .getLastLocation()
                 .addOnSuccessListener(getActivity(), location -> {
                     if (location != null) {
-                        final String countryName = CountryDAO.findByISO(getCountryISO(location)).getName();
+                        final String countryName = CountryDAO.get().findByColumn(
+                                CountryDAO.ISO, getCountryISO(location)).getName();
 
                         int i;
                         for (i = 0; i < mSpinnerList.size(); i++) {
@@ -135,7 +136,7 @@ public class NumberFormFragment extends Fragment {
     }
 
     private ArrayAdapter<String> createSpinnerAdapter() {
-        mSpinnerList = CountryDAO.getColumnList(CountryDAO.NAME);
+        mSpinnerList = CountryDAO.get().getColumnStringList(CountryDAO.NAME);
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
@@ -158,7 +159,7 @@ public class NumberFormFragment extends Fragment {
         mParentView.requestFocus();
         mError = "";
 
-        // country sCode edittext input treatment
+        // country CODE edittext input treatment
         mCountryCode = mCountryCodeEditText.getText().toString();
 
         if (mCountryCode.isEmpty()) {
@@ -184,7 +185,7 @@ public class NumberFormFragment extends Fragment {
             return;
         }
 
-        final Country country = CountryDAO.findByCode(Integer.parseInt(mCountryCode));
+        final Country country = CountryDAO.get().findByColumn(CountryDAO.CODE, mCountryCode);
 
         if (country != null) {
             final int spaceIndex = mPhoneNumber.indexOf(' ');
@@ -193,7 +194,8 @@ public class NumberFormFragment extends Fragment {
 
             if (spaceIndex != -1) {
                 final long phoneNumberL = Long.parseLong(mMergePhoneNumber.substring(spaceIndex));
-                final Area area = AreaDAO.findByCode(Integer.parseInt(mPhoneNumber.substring(0, spaceIndex)));
+                final Area area = AreaDAO.get().findByColumn(AreaDAO.CODE,
+                        mPhoneNumber.substring(0, spaceIndex));
 
                 if (area == null) {
                     mError = getResources().getString(R.string.area_code_error);

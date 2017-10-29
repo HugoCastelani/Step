@@ -36,8 +36,8 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.
     public ProfileAdapter(@NonNull final User user) {
         mBlockedNumbersList = new ArrayList<>();
 
-        UserPhoneDAO.getUserPhoneList(user.getID(), getListListener(), getAnswerListener());
-        FriendshipDAO.getFriendsBlockedList(user.getID(), getListListener(), getAnswerListener());
+        UserPhoneDAO.get().getUserPhoneList(user.getID(), getListListener(), getAnswerListener());
+        FriendshipDAO.get().getFriendsBlockedList(user.getID(), getListListener(), getAnswerListener());
     }
 
     private UserPhoneDAO.ListListener getListListener() {

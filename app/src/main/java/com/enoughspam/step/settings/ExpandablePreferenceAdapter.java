@@ -28,7 +28,7 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
     private final List<String> mTreatmentStringList;
 
     public ExpandablePreferenceAdapter() {
-        mDescriptionStringList = DescriptionDAO.getColumnList(DescriptionDAO.DESCRIPTION);
+        mDescriptionStringList = DescriptionDAO.get().getColumnStringList(DescriptionDAO.DESCRIPTION);
         mTreatmentStringList = TreatmentDAO.getColumnList(TreatmentDAO.TREATMENT);
     }
 
@@ -63,18 +63,20 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
     }
 
     /*
-     * ID isn't automatically generated in description and suspicious_treatment
+     * id isn't automatically generated in description and suspicious_treatment
      * tables, so it doesn't start with 1, which allows me to use list's positions
      */
 
     private int getSelectedTreatment(@NonNegative int position) {
-        return (DescriptionDAO.findByID(position).getTreatmentID());
+        return (DescriptionDAO.get().findByColumn(DescriptionDAO.id, String.valueOf(position))
+                .getTreatmentID());
     }
 
     private void setSelectedTreatment(@NonNegative int position, @NonNegative int selected) {
-        final Description description = DescriptionDAO.findByID(position);
+        final Description description = DescriptionDAO.get()
+                .findByColumn(DescriptionDAO.id, String.valueOf(position));
         description.setTreatmentID(selected);
-        DescriptionDAO.update(description);
+        DescriptionDAO.get().update(description);
     }
 
     @Override
