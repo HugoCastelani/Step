@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.wideDao.UserDAO;
+import com.enoughspam.step.util.Listeners;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -132,11 +133,18 @@ public class LoginIntroFragment extends SlideFragment implements
                         photoURL
                 );
 
-                UserDAO.get().create(user);
+                UserDAO.get().create(user, new Listeners.AnswerListener() {
+                    @Override
+                    public void onAnswerRetrieved() {
+                        mCanGoForward = true;
+                        canGoForward();
+                        nextSlide();
+                    }
 
-                mCanGoForward = true;
-                canGoForward();
-                nextSlide();
+                    @Override
+                    public void onError() {}
+                });
+
                 return null;
 
             } else return getResources().getString(R.string.sign_in_error_empty_id);

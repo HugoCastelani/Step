@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addNumber.AddNumberActivity;
-import com.enoughspam.step.database.wideDao.UserDAO;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.search.SearchActivity;
 import com.enoughspam.step.settings.SettingsActivity;
@@ -136,11 +135,9 @@ public class MainActivity extends AbstractActivity {
                     break;
 
                 case 3:
-                    UserDAO.get().findByID(1, retrievedUser -> {
-                        final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
-                        intent2.putExtra("user", retrievedUser);
-                        startActivityForResult(intent2, REQUEST_CODE_PROFILE);
-                    });
+                    final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent2.putExtra("user_key", "-Kwk6q46QWGzxvgi_OW4");
+                    startActivityForResult(intent2, REQUEST_CODE_PROFILE);
                     break;
             }
 

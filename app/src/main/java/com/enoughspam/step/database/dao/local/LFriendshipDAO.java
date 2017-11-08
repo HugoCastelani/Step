@@ -1,4 +1,4 @@
-package com.enoughspam.step.database.localDao;
+package com.enoughspam.step.database.dao.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,12 +6,13 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
 import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.abstracts.GenericLocalDAO;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.util.Listeners;
 
 import java.util.ArrayList;
 
@@ -24,8 +25,8 @@ import java.util.ArrayList;
 public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
     private static LFriendshipDAO instance;
 
-    public static final String USER_ADDED_ID = "user_added_id";
-    public static final String USER_ADDING_ID = "user_adding_id";
+    public static final String USER_ADDED_KEY = "user_added_key";
+    public static final String USER_ADDING_KEY = "user_adding_key";
 
     @Override
     protected void prepareFields() {
@@ -42,22 +43,20 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
     @Override
     public Friendship generate(@NonNull final Cursor cursor) {
         return new Friendship(
-            LUserDAO.get().findByColumn(LUserDAO.id,
-                    cursor.getString(cursor.getColumnIndex(USER_ADDED_ID))),
-            LUserDAO.get().findByColumn(LUserDAO.id,
-                    cursor.getString(cursor.getColumnIndex(USER_ADDING_ID)))
+                cursor.getString(cursor.getColumnIndex(USER_ADDED_KEY)),
+                cursor.getString(cursor.getColumnIndex(USER_ADDING_KEY))
         );
     }
 
     @Override
     public LFriendshipDAO create(@NonNull final Friendship friendship) {
-        if (findByIDs(friendship.getAddedID(), friendship.getAddingID()) == null) {
+        if (findByIDs(friendship.getAddedKey(), friendship.getAddingKey()) == null) {
 
-            LUserDAO.get().clone(friendship.getAdded());
+            LUserDAO.get().clone(friendship.getAddedUser());
             ContentValues values = new ContentValues();
 
-            values.put(USER_ADDED_ID, friendship.getAddedID());
-            values.put(USER_ADDING_ID, friendship.getAddingID());
+            values.put(USER_ADDED_KEY, friendship.getAddedKey());
+            values.put(USER_ADDING_KEY, friendship.getAddingKey());
 
             DAOHandler.getLocalDatabase().insert(table, null, values);
         }
@@ -69,29 +68,29 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
-    @Override @Deprecated
-    public LFriendshipDAO delete(@NonNegative final Integer id) {
-        throw new UnsupportedOperationException("You shouldn't do this. Call overloaded method" +
-                " with two parameters instead.");
-    }
-
-    public LFriendshipDAO delete(@NonNegative final Integer addedID, @NonNegative final Integer addingID) {
+    @Override
+    public LFriendshipDAO delete(@NonNegative final String addedKey) {
         DAOHandler.getLocalDatabase().delete(
-                table, USER_ADDED_ID + " = ? AND " + USER_ADDING_ID + " = ?",
-                new String[] {addedID.toString(), addingID.toString()});
+                table, USER_ADDED_KEY + " = ? AND " + USER_ADDING_KEY + " = ?",
+                new String[] {addedKey, LUserDAO.get().getThisUserKey()});
         return instance;
     }
 
     @Override @Deprecated
-    public int exists(@NonNull Friendship friendship) {
+    public String exists(@NonNull Friendship friendship) {
         throw new UnsupportedOperationException("You shouldn't do this. Call findByIDs()" +
                 " method instead.");
     }
 
-    public Friendship findByIDs(@NonNegative final Integer addedID, @NonNegative final Integer addingID) {
+    @Override
+    public GenericLocalDAO<Friendship> sync(@NonNull Listeners.AnswerListener listener) {
+        throw new UnsupportedOperationException("Support this, Hugo.");
+    }
+
+    public Friendship findByIDs(@NonNull final String addedKey, @NonNegative final String addingKey) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
-                USER_ADDED_ID + " = ? AND " + USER_ADDING_ID + " = ?",
-                new String[] {addedID.toString(), addingID.toString()}, null, null, null);
+                USER_ADDED_KEY + " = ? AND " + USER_ADDING_KEY + " = ?",
+                new String[] {addedKey, addingKey}, null, null, null);
 
         Friendship friendship = null;
         if (cursor.moveToFirst()) friendship = generate(cursor);
@@ -99,28 +98,28 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
         return friendship;
     }
 
-    public ArrayList<User> findUserFriends(@NonNegative final Integer id) {
+    public ArrayList<User> findUserFriends(@NonNegative final String key) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
-                USER_ADDING_ID + " = ?", new String[] {id.toString()}, null, null, null);
+                USER_ADDING_KEY + " = ?", new String[] {key}, null, null, null);
 
         final ArrayList<User> friendList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            friendList.add(LUserDAO.get().findByColumn(LUserDAO.id,
-                    cursor.getString(cursor.getColumnIndex(USER_ADDED_ID))
+            friendList.add(LUserDAO.get().findByColumn(LUserDAO.key,
+                    cursor.getString(cursor.getColumnIndex(USER_ADDED_KEY))
             ));
         }
 
         return friendList;
     }
 
-    public ArrayList<PhoneSection> getFriendsBlockedList(@NonNegative final Integer id) {
-        ArrayList<User> friendList = findUserFriends(id);
+    public ArrayList<PhoneSection> getFriendsBlockedList(@NonNegative final String key) {
+        ArrayList<User> friendList = findUserFriends(key);
         ArrayList<PhoneSection> phoneSectionList = new ArrayList<>();
 
         final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
         for (int i = 0; i < friendList.size(); i++) {
             final User tempUser = friendList.get(i);
-            final ArrayList<Phone> phoneList = LUserPhoneDAO.get().getPhoneList(tempUser.getID());
+            final ArrayList<Phone> phoneList = LUserPhoneDAO.get().getPhoneList(tempUser.getKey());
 
             phoneSectionList.add(new PhoneSection(prefix + tempUser.getUsername(), phoneList));
         }

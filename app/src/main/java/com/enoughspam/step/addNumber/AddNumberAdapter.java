@@ -162,9 +162,9 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                 } else {
 
                     if (areaCode != -1) {
-                        mFragment.saveNumber(new Phone(number, call.getPhone().getArea()));
+                        mFragment.saveNumber(new Phone(number, call.getPhone().getArea().getKey(), "-1"));
                     } else {
-                        mFragment.saveNumber(new Phone(number, call.getPhone().getCountry()));
+                        mFragment.saveNumber(new Phone(number, "-1", call.getPhone().getCountry().getKey()));
                     }
                 }
             });

@@ -19,14 +19,14 @@ public class Country extends Domain {
 
     public Country() {}
 
-    public Country(@NonNegative final Integer id, @NonNegative final Integer code,
+    public Country(@NonNegative final String key, @NonNegative final Integer code,
                    @NonNull final String name, @NonNull final String iso,
                    @NonNull final String mask) {
-        super(id);
-        this.code = code;
-        this.name = name;
-        this.iso = iso;
-        this.mask = mask;
+        super(key);
+        setCode(code);
+        setName(name);
+        setISO(iso);
+        setMask(mask);
     }
 
     public Integer getCode() {
@@ -49,7 +49,7 @@ public class Country extends Domain {
         return iso;
     }
 
-    public void setIso(@NonNull final String iso) {
+    public void setISO(@NonNull final String iso) {
         this.iso = iso;
     }
 

@@ -56,7 +56,7 @@ public class ExpandablePreference extends Preference {
         final AestheticRecyclerView recyclerView = (AestheticRecyclerView)
                 view.findViewById(R.id.preference_expandable_recycler_view);
 
-        final ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter();
+        final ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 

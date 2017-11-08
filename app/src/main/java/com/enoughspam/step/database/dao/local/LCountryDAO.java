@@ -1,12 +1,12 @@
-package com.enoughspam.step.database.localDao;
+package com.enoughspam.step.database.dao.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.dao.abstracts.GenericHybridDAO;
 import com.enoughspam.step.database.domain.Country;
-import com.enoughspam.step.database.localDao.abstracts.GenericHybridDAO;
 
 /**
  * Created by Hugo Castelani
@@ -14,8 +14,8 @@ import com.enoughspam.step.database.localDao.abstracts.GenericHybridDAO;
  * Time: 16:59
  */
 
-public class CountryDAO extends GenericHybridDAO<Country> {
-    private static CountryDAO instance;
+public class LCountryDAO extends GenericHybridDAO<Country> {
+    private static LCountryDAO instance;
 
     public static final String CODE = "code";
     public static final String NAME = "name";
@@ -29,17 +29,17 @@ public class CountryDAO extends GenericHybridDAO<Country> {
         aClass = Country.class;
     }
 
-    private CountryDAO() {}
+    private LCountryDAO() {}
 
-    public static CountryDAO get() {
-        if (instance == null) instance = new CountryDAO();
+    public static LCountryDAO get() {
+        if (instance == null) instance = new LCountryDAO();
         return instance;
     }
 
     @Override
     protected Country generate(@NonNull final Cursor cursor) {
         return new Country(
-                cursor.getInt(cursor.getColumnIndex(id)),
+                cursor.getString(cursor.getColumnIndex(key)),
                 cursor.getInt(cursor.getColumnIndex(CODE)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(ISO)),
@@ -48,25 +48,27 @@ public class CountryDAO extends GenericHybridDAO<Country> {
     }
 
     @Override
-    public CountryDAO create(@NonNull final Country country) {
-        ContentValues values = new ContentValues();
+    public LCountryDAO create(@NonNull final Country country) {
+        final ContentValues values = new ContentValues();
 
-        values.put(id, country.getID());
+        values.put(key, country.getKey());
         values.put(CODE, country.getCode());
         values.put(NAME, country.getName());
         values.put(ISO, country.getISO());
         values.put(MASK, country.getMask());
 
         DAOHandler.getLocalDatabase().insert(table, null, values);
-        return instance;
+
+        return this;
     }
 
-    public CountryDAO update(@NonNull final Country country) {
+    @Override @Deprecated
+    public LCountryDAO update(@NonNull final Country country) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
-    @Override
-    public int exists(@NonNull Country country) {
+    @Override @Deprecated
+    public String exists(@NonNull Country country) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 }

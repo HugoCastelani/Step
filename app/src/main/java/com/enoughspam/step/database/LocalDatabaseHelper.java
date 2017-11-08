@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
-    public static final int VERSION = 13;
+    public static final int VERSION = 15;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -27,7 +27,6 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         mSQLiteDatabase = sqLiteDatabase;
         createTables();
-        insertAttributes();
     }
 
     @Override
@@ -35,23 +34,13 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
     private void createTables() {
         /**
-         * Low access index tables
-         * Tables' below values are infrequently modified
-         */
-
-        // creating suspicious treatment table
-        mSQLiteDatabase.execSQL("create table suspicious_treatment (" +
-                "id integer primary key not null," +
-                "treatment varchar(20) not null);");
-
-        /**
          * Static tables
          * Tables' below values are read-only
          */
 
         // creating country table
         mSQLiteDatabase.execSQL("create table country (" +
-                "id integer primary key not null," +
+                "key varchar(100) primary key not null," +
                 "code integer not null," +
                 "name varchar(50) not null," +
                 "iso char(2) not null," +
@@ -59,25 +48,18 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
         // creating state table
         mSQLiteDatabase.execSQL("create table state (" +
-                "id integer primary key not null," +
+                "key varchar(100) primary key not null," +
                 "name varchar(50) not null," +
-                "country_id integer not null," +
-                "foreign key(country_id) references country(id));");
+                "country_key varchar(100) not null," +
+                "foreign key(country_key) references country(key));");
 
         // creating area code table
         mSQLiteDatabase.execSQL("create table area (" +
-                "id integer primary key not null," +
+                "key varchar(100) primary key not null," +
                 "code integer not null," +
                 "name varchar(50) not null," +
-                "state_id integer not null," +
-                "foreign key(state_id) references state(id));");
-
-        // creating description table
-        mSQLiteDatabase.execSQL("create table description (" +
-                "id integer primary key not null," +
-                "description varchar(50) not null," +
-                "treatment_id integer not null," +
-                "foreign key(treatment_id) references suspicious_treatment(id));");
+                "state_key varchar(100) not null," +
+                "foreign key(state_key) references state(key));");
 
         /**
          * Dynamic tables
@@ -86,114 +68,44 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
         // create user table
         mSQLiteDatabase.execSQL("create table user (" +
-                "id integer primary key not null," +
-                "social_id varchar(50) not null, " +
+                "key varchar(100) primary key not null," +
+                "social_key varchar(50) not null, " +
                 "user_name varchar(50) not null," +
                 "photo_url varchar(500) not null);");
 
         // create friendship table
         mSQLiteDatabase.execSQL("create table friendship (" +
-                "user_added_id integer not null," +
-                "user_adding_id integer not null," +
-                "foreign key(user_added_id) references user(id)," +
-                "foreign key(user_adding_id) references personal(id));");
+                "user_added_key varchar(100) not null," +
+                "user_adding_key varchar(100) not null," +
+                "foreign key(user_added_key) references user(key)," +
+                "foreign key(user_adding_key) references user(key));");
 
         // creating phone table
         mSQLiteDatabase.execSQL("create table phone (" +
-                "id integer primary key not null," +
+                "key varchar(100) primary key not null," +
                 "number bigint not null," +
-                "country_id integer," +
-                "area_id integer," +
-                "foreign key(country_id) references country(id)," +
-                "foreign key(area_id) references area(id));");
+                "country_key varchar(100)," +
+                "area_key varchar(100)," +
+                "foreign key(country_key) references country(key)," +
+                "foreign key(area_key) references area(key));");
 
         mSQLiteDatabase.execSQL("create table user_phone (" +
-                "user_id integer not null," +
-                "phone_id integer not null," +
+                "user_key varchar(100) not null," +
+                "phone_key varchar(100) not null," +
                 "is_property tinyint not null," +
-                "primary key(user_id, phone_id)," +
-                "foreign key(user_id) references user(id)," +
-                "foreign key(phone_id) references phone(id));");
+                "is_notification tinyint not null," +
+                "primary key(user_key, phone_key)," +
+                "foreign key(user_key) references user(key)," +
+                "foreign key(phone_key) references phone(key));");
 
         // creating notification table
         mSQLiteDatabase.execSQL("create table notification (" +
-                "id integer primary key not null," +
-                "phone_id integer not null," +
-                "notified_user_id integer not null," +
-                "notifying_user_id integer not null," +
-                "foreign key(phone_id) references phone(id)," +
-                "foreign key(notified_user_id) references user(id)," +
-                "foreign key(notifying_user_id) references personal(id));");
-
-        // creating denunciation table
-        mSQLiteDatabase.execSQL("create table denunciation (" +
-                "id integer primary key not null," +
-                "phone_id integer not null," +
-                "foreign key(phone_id) references phone(id));");
-
-        // creating denunciation/description table
-        mSQLiteDatabase.execSQL("create table denunciation_description (" +
-                "denunciation_id integer not null," +
-                "description_id integer not null," +
-                "primary key(denunciation_id, description_id)," +
-                "foreign key(denunciation_id) references denunciation(id)," +
-                "foreign key(description_id) references description(id));");
-    }
-
-    private void insertAttributes() {
-        // inserting description attributes
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(0, 'Companhia bancária', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(1, 'Telemarketing', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(2, 'Oferta utópica', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(3, 'Oferta indesejada', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(4, 'Oferta repetitiva', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(5, 'Prisioneiro', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(6, 'Golpe', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(7, 'Chantagem', 0);");
-        mSQLiteDatabase.execSQL("insert into description(id, description, treatment_id) values(8, 'Questões pessoais', 0);");
-
-        // inserting suspicious treatment attributes
-        mSQLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(0, 'Silenciar');");
-        mSQLiteDatabase.execSQL("insert into suspicious_treatment(id, treatment) values(1, 'Bloquear');");
-
-        // inserting countries
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(1, 1, 'United States', 'US', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(2, 1, 'Canada', 'CA', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(3, 1, 'República Dominicana', 'DO', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(4, 1, 'Puerto Rico', 'PR', '999 999 9999');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(5, 7, 'Россия', 'RU', '999 999 9999');");   // Russia
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(6, 7, 'Қазақстан', 'KZ', '999 999 99 99');");   // Kazakhstan
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(7, 20, 'مَصر\u200E\u200E', 'EG', '99 9999 9999');");    // Egypt
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(8, 39, 'Italia', 'IT', '');");
-        mSQLiteDatabase.execSQL("insert into country(id, code, name, iso, mask) values(9, 55, 'Brasil', 'BR', '99 99999 9999');");
-
-        // inserting states
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(1, 'São Paulo', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(2, 'Rio de Janeiro', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(3, 'Espírito Santo', 9);");
-        mSQLiteDatabase.execSQL("insert into state(id, name, country_id) values(4, 'Minas Gerais', 9);");
-
-        // inserting areas
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(1, 11, 'Região metropolitana de São Paulo', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(2, 12, 'São José dos Campos e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(3, 13, 'Região retropolitana da Baixada Santista', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(4, 14, 'Bauru, Jaú, Marília, Botucatu e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(5, 15, 'Sorocaba e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(6, 16, 'Ribeirão Preto, São Carlos, Araraquara e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(7, 17, 'São José do Rio Preto e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(8, 18, 'Presidente Prudente, Araçatuba e região', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(9, 19, 'Região metropolitana de Campinas', 1);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(10, 22, 'Campos dos Goytacazes e Região', 2);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(11, 21, 'Região metropolitana do Rio de Janeiro', 2);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(12, 24, 'Volta Redonda, Petrópolis e região', 2);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(13, 27, 'Região metropolitana de Vitória', 3);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(14, 28, 'Cachoeiro de Itapemirim e região', 3);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(15, 31, 'Região metropolitana de Belo Horizonte', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(16, 32, 'Juiz de Fora e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(17, 33, 'Governador Valadares e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(18, 34, 'Uberlândia e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(19, 35, 'Poços de Caldas, Pouso Alegre, Varginha e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(20, 37, 'Divinópolis, Itaúna e região', 4);");
-        mSQLiteDatabase.execSQL("insert into area(id, code, name, state_id) values(21, 38, 'Montes Claros e região', 4);");
+                "phone_key varchar(100) not null," +
+                "notified_user_key varchar(100) not null," +
+                "notifying_user_key varchar(100) not null," +
+                "primary key(phone_key, notified_user_key, notifying_user_key)," +
+                "foreign key(phone_key) references phone(key)," +
+                "foreign key(notified_user_key) references user(key)," +
+                "foreign key(notifying_user_key) references user(key));");
     }
 }

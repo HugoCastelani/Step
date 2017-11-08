@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.wide.PhoneDAO;
+import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
 import com.enoughspam.step.numberForm.NumberFormFragment;
+import com.enoughspam.step.util.Listeners;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 import java.util.Random;
@@ -46,7 +48,6 @@ public class NumberIntroFragment extends SlideFragment {
     }
 
     public void confirmNumber(@NonNull final Phone phone) {
-
         int countryCode;
         try {
             countryCode = phone.getCountry().getCode();
@@ -75,17 +76,49 @@ public class NumberIntroFragment extends SlideFragment {
                 .content(formattedPhoneNumber + getResources().getString(R.string.confirmation_dialog_content))
                 .positiveText(R.string.yes_button)
                 .negativeText(R.string.cancel_button)
-                .onPositive((dialog, which) -> {
+                .onPositive((dialog, which) ->
 
-                    UserPhoneDAO.get().create(new UserPhone(LUserDAO.get().getThisUser(), phone, true));
+                    PhoneDAO.get().create(phone, new Listeners.PhoneListener() {
+                        @Override
+                        public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
 
-                    sendMessage();
-                    mCanGoForward = true;
-                    canGoForward();
-                    nextSlide();
+                            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(),
+                                    retrievedPhone.getKey(), true, false);
 
-                })
-                .show();
+                            userPhone.loadPhoneWidely(new Listeners.AnswerListener() {
+                                @Override
+                                public void onAnswerRetrieved() {
+                                    UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
+                                        @Override
+                                        public void alreadyAdded() {
+                                            done();
+                                        }
+
+                                        @Override
+                                        public void properlyAdded() {
+                                            done();
+                                        }
+
+                                        private void done() {
+                                            sendMessage();
+                                            mCanGoForward = true;
+                                            canGoForward();
+                                            nextSlide();
+                                        }
+
+                                        @Override public void error() {}
+                                    }, false);
+                                }
+
+                                @Override public void onError() {}
+                            });
+
+                        }
+
+                        @Override public void onError() {}
+                    })
+
+                ).show();
     }
 
     private void sendMessage() {

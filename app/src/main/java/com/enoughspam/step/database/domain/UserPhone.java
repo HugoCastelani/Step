@@ -2,8 +2,13 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.local.LPhoneDAO;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.wide.PhoneDAO;
+import com.enoughspam.step.database.dao.wide.UserDAO;
+import com.enoughspam.step.util.Listeners;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
  * Created by Hugo Castelani
@@ -11,83 +16,129 @@ import com.google.firebase.database.Exclude;
  * Time: 15:36
  */
 
+@IgnoreExtraProperties
 public class UserPhone {
-    private User user;
-    private Integer userID;
-    private Phone phone;
-    private Integer phoneID;
+    private String userKey;
+    private String phoneKey;
     private boolean isProperty;
-
-    // this variable joins user's id phone's id to enable finding existence at UserPhoneDAO
-    private String userIDPhoneID;
+    private boolean isNotification;
 
     public UserPhone() {}
 
-    public UserPhone(@NonNull final User user, @NonNull final Phone phone,
-                     final boolean isProperty) {
-        setUser(user);
-        setPhone(phone);
-        setUserIDPhoneID();
-        this.isProperty = isProperty;
+    public UserPhone(@NonNull final String userKey, @NonNull final String phoneKey,
+                     final boolean isProperty, final boolean isNotification) {
+        setUserKey(userKey);
+        setPhoneKey(phoneKey);
+        setProperty(isProperty);
+        setNotification(isNotification);
     }
 
-    @Exclude
-    public User getUser() {
-        return user;
+    public String getUserKey() {
+        return userKey;
     }
 
-    public Integer getUserID() {
-        return userID;
+    public void setUserKey(@NonNull final String userKey) {
+        this.userKey = userKey;
     }
 
-    public void setUser(@NonNull final User user) {
-        this.user = user;
-        setUserID(user.getID());
-        setUserIDPhoneID();
+    public String getPhoneKey() {
+        return phoneKey;
     }
 
-    public void setUserID(@NonNegative final Integer userID) {
-        this.userID = userID;
-        if (user != null) {
-            user.setID(userID);
-        }
-    }
-
-    @Exclude
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public Integer getPhoneID() {
-        return phoneID;
-    }
-
-    public void setPhone(@NonNull final Phone phone) {
-        this.phone = phone;
-        setPhoneID(phone.getID());
-    }
-
-    public void setPhoneID(@NonNegative final Integer phoneID) {
-        this.phoneID = phoneID;
-        setUserIDPhoneID();
-        if (phone != null) {
-            phone.setID(phoneID);
-        }
+    public void setPhoneKey(@NonNull final String phoneKey) {
+        this.phoneKey = phoneKey;
     }
 
     public boolean getIsProperty() {
         return isProperty;
     }
 
-    public void setIsProperty(final boolean isProperty) {
-        this.isProperty = isProperty;
+    public void setProperty(final boolean property) {
+        isProperty = property;
     }
 
-    public void setUserIDPhoneID() {
-        userIDPhoneID = Integer.toString(getUserID()) + getPhoneID();
+    public boolean getIsNotification() {
+        return isNotification;
     }
 
-    public String getUserIDPhoneID() {
-        return userIDPhoneID;
+    public void setNotification(final boolean notification) {
+        isNotification = notification;
+    }
+
+    private User user;
+    private Phone phone;
+
+    public UserPhone setUser(@NonNull final User user) {
+        this.user = user;
+        return this;
+    }
+
+    @Exclude
+    public User getUser() {
+        if (user == null) {
+            throw new UnsupportedOperationException("You must load user before getting it");
+        } else {
+            return user;
+        }
+    }
+
+    @Exclude
+    public UserPhone loadUserLocally() {
+        user = LUserDAO.get().findByColumn(LUserDAO.key, userKey);
+        return this;
+    }
+
+    @Exclude
+    public UserPhone loadUserWidely(@NonNull final Listeners.AnswerListener listener) {
+        UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
+            @Override
+            public void onUserRetrieved(@NonNull User retrievedUser) {
+                user = retrievedUser;
+                listener.onAnswerRetrieved();
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
+        });
+        return this;
+    }
+
+    public UserPhone setPhone(@NonNull final Phone phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    @Exclude
+    public Phone getPhone() {
+        if (phone == null) {
+            throw new UnsupportedOperationException("You must load phone before getting it");
+        } else {
+            return phone;
+        }
+    }
+
+    @Exclude
+    public UserPhone loadPhoneLocally() {
+        phone =  LPhoneDAO.get().findByColumn(LPhoneDAO.key, phoneKey);
+        return this;
+    }
+
+    @Exclude
+    public UserPhone loadPhoneWidely(@NonNull final Listeners.AnswerListener listener) {
+        PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
+            @Override
+            public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                phone = retrievedPhone;
+                listener.onAnswerRetrieved();
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
+        });
+        return this;
     }
 }

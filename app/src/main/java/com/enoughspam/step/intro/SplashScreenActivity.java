@@ -5,12 +5,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.main.MainActivity;
+import com.enoughspam.step.util.Listeners;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,12 +24,13 @@ public class SplashScreenActivity extends AbstractActivity {
         setContentView(R.layout.splash_screen_activity);
 
         DAOHandler.init(getBaseContext());
+        Utils.init(getBaseContext());
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                if (isConnected()) {
-                    DAOHandler.AnswerListener listener = new DAOHandler.AnswerListener() {
+                if (NetworkUtils.isConnected()) {
+                    Listeners.AnswerListener listener = new Listeners.AnswerListener() {
                         int count = 0;
 
                         @Override
@@ -36,6 +39,8 @@ public class SplashScreenActivity extends AbstractActivity {
                                 startMainActivity();
                             }
                         }
+
+                        @Override public void onError() {}
                     };
 
                     DAOHandler.syncStaticTables(listener);
@@ -65,19 +70,6 @@ public class SplashScreenActivity extends AbstractActivity {
         final Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private boolean isConnected() {
-        final Runtime runtime = Runtime.getRuntime();
-        try {
-            final Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException e) { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
-        return false;
     }
 
     @Override

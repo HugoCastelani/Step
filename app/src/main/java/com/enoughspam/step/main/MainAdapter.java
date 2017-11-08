@@ -15,10 +15,10 @@ import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.util.Listeners;
 
 import java.util.List;
 
@@ -77,8 +77,10 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
                         super.onDismissed(transientBottomBar, event);
                         if (event != DISMISS_EVENT_ACTION) {    // if equals, it has just undone
                             // finally remove from database
-                            UserPhoneDAO.get().delete(LUserDAO.get().getThisUser().getID(),
-                                    removedPhone.getID());
+                            UserPhoneDAO.get().delete(removedPhone.getKey(), new Listeners.AnswerListener() {
+                                @Override public void onAnswerRetrieved() {}
+                                @Override public void onError() {}
+                            });
                         }
                     }
                 })

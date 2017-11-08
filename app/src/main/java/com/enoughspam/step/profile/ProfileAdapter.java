@@ -10,13 +10,13 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
-import com.enoughspam.step.database.wideDao.FriendshipDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.util.Listeners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +30,18 @@ import java.util.List;
 public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.MyViewHolder> {
     private final List<PhoneSection> mBlockedNumbersList;
 
-    private UserPhoneDAO.ListListener mListListener;
-    private DAOHandler.AnswerListener mAnswerListener;
+    private Listeners.ListListener mListListener;
+    private Listeners.AnswerListener mAnswerListener;
 
     public ProfileAdapter(@NonNull final User user) {
         mBlockedNumbersList = new ArrayList<>();
 
-        UserPhoneDAO.get().getUserPhoneList(user.getID(), getListListener(), getAnswerListener());
-        FriendshipDAO.get().getFriendsBlockedList(user.getID(), getListListener(), getAnswerListener());
+        UserPhoneDAO.get().getUserPhoneList(user.getKey(), getListListener(), getAnswerListener());
     }
 
-    private UserPhoneDAO.ListListener getListListener() {
+    private Listeners.ListListener getListListener() {
         if (mListListener == null) {
-            mListListener = new UserPhoneDAO.ListListener<UserPhone>() {
+            mListListener = new Listeners.ListListener<UserPhone>() {
                 final String sPrefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
 
                 @Override
@@ -71,35 +70,24 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.
                     notifyDataSetChanged();
                 }
 
-                @Override
-                public void onItemRemoved(@NonNull UserPhone userPhone) {
-                    for (int i = 0; i < mBlockedNumbersList.size(); i++) {
-                        final List<Phone> phoneList = mBlockedNumbersList.get(i).getPhoneList();
-
-                        for (int j = 0; j < phoneList.size(); j++) {
-                            if (phoneList.get(j).getID() == userPhone.getPhoneID()) {
-                                phoneList.remove(j);
-                                notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
+                @Override public void onItemRemoved(@NonNull UserPhone userPhone) {}
             };
         }
 
         return mListListener;
     }
 
-    private DAOHandler.AnswerListener getAnswerListener() {
+    private Listeners.AnswerListener getAnswerListener() {
         if (mAnswerListener == null) {
-            mAnswerListener = new DAOHandler.AnswerListener() {
-                int count = 0;
-
+            mAnswerListener = new Listeners.AnswerListener() {
                 @Override
                 public void onAnswerRetrieved() {
-                    if (++count == 2) {
-                        // hide progressbar and show rv
-                    }
+                    // hide progressbardialog and show rv
+                }
+
+                @Override
+                public void onError() {
+                    // show snackbar with error and close activity
                 }
             };
         }

@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,18 +19,22 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.addNumber.extra.CustomLinearLayoutManager;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
+import com.enoughspam.step.database.dao.wide.PhoneDAO;
+import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.localDao.LUserPhoneDAO;
-import com.enoughspam.step.database.wideDao.UserPhoneDAO;
 import com.enoughspam.step.domain.Call;
+import com.enoughspam.step.util.Listeners;
 import com.enoughspam.step.util.ThemeHandler;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Hugo Castelani
@@ -107,7 +113,10 @@ public class AddNumberFragment extends Fragment {
             if (phone == null) continue;    // number doesn't exist
 
             // check if number is already blocked
-            if (LUserPhoneDAO.get().isBlocked(new UserPhone(LUserDAO.get().getThisUser(), phone, false))) {
+            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), "", false, false);
+            userPhone.setPhone(phone);
+
+            if (LUserPhoneDAO.get().isBlocked(userPhone)) {
                 continue;
             }
 
@@ -155,7 +164,84 @@ public class AddNumberFragment extends Fragment {
     }
 
     protected void saveNumber(@NonNull final Phone phone) {
-        UserPhoneDAO.get().create(new UserPhone(LUserDAO.get().getThisUser(), phone, false));
-        getActivity().onBackPressed();
+        PhoneDAO.get().create(phone, new Listeners.PhoneListener() {
+            @Override
+            public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                UserPhoneDAO.get().create(
+                        new UserPhone(LUserDAO.get().getThisUserKey(),
+                                retrievedPhone.getKey(), false, false),
+
+                        new Listeners.UserPhoneAnswerListener() {
+                            @Override
+                            public void alreadyAdded() {
+                                new MaterialDialog.Builder(getActivity())
+                                        .title(R.string.something_went_wrong)
+                                        .content(getResources().getString(R.string.number_already_added))
+                                        .backgroundColor(ThemeHandler.getBackground())
+                                        .positiveText(R.string.yes_button)
+                                        .positiveColor(ThemeHandler.getAccent())
+                                        .negativeText(R.string.cancel_button)
+                                        .negativeColor(ThemeHandler.getAccent())
+                                        .onPositive((dialog, which) -> forceSaveNumber(retrievedPhone))
+                                        .show();
+                            }
+
+                            @Override
+                            public void properlyAdded() {
+                                getActivity().onBackPressed();
+                            }
+
+                            @Override
+                            public void error() {
+                                showSnackAndClose(R.string.something_went_wrong);
+                            }
+                        },
+
+                        false
+                );
+            }
+
+            @Override
+            public void onError() {
+                showSnackAndClose(R.string.something_went_wrong);
+            }
+        });
+    }
+
+    protected void forceSaveNumber(@NonNull final Phone phone) {
+        UserPhoneDAO.get().create(
+                new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false),
+
+                new Listeners.UserPhoneAnswerListener() {
+                    @Override
+                    public void alreadyAdded() {
+                        showSnackAndClose(R.string.something_went_wrong);
+                    }
+
+                    @Override
+                    public void properlyAdded() {
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void error() {
+                        showSnackAndClose(R.string.something_went_wrong);
+                    }
+                },
+
+                true
+        );
+    }
+
+    private void showSnackAndClose(@StringRes final int message) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().onBackPressed();
+            }
+        }, Snackbar.LENGTH_LONG);
+
+        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 }

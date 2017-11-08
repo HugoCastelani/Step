@@ -2,8 +2,9 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
  * Created by Hugo Castelani
@@ -11,74 +12,41 @@ import com.google.firebase.database.Exclude;
  * Time: 21:58
  */
 
+@IgnoreExtraProperties
 public class Friendship {
-    private User added;
-    private Integer addedID;
-    private User adding;
-    private Integer addingID;
-
-    private String addedIDAddingID;
+    private String addedKey;
+    private String addingKey;
 
     public Friendship() {}
 
-    public Friendship(@NonNull final User added, @NonNull final User adding) {
-        setAdded(added);
-        setAdding(adding);
-        setAddedIDAddingID();
+    public Friendship(@NonNull final String addedKey, @NonNull final String addingKey) {
+        setAddedKey(addedKey);
+        setAddingKey(addingKey);
+    }
+
+    public String getAddedKey() {
+        return addedKey;
+    }
+
+    public void setAddedKey(@NonNull final String addedKey) {
+        this.addedKey = addedKey;
+    }
+
+    public String getAddingKey() {
+        return addingKey;
+    }
+
+    public void setAddingKey(@NonNull final String addingKey) {
+        this.addingKey = addingKey;
     }
 
     @Exclude
-    public User getAdded() {
-        return added;
-    }
-
-    public Integer getAddedID() {
-        return addedID;
-    }
-
-    public void setAdded(@NonNull final User added) {
-        this.added = added;
-        addedID = added.getID();
-        setAddedIDAddingID();
-    }
-
-    public void setAddedID(@NonNegative final Integer addedID) {
-        this.addedID = addedID;
-        if (added != null) {
-            added.setID(addedID);
-        }
-        setAddedIDAddingID();
-    }
-
-    public Integer getAddingID() {
-        return addingID;
+    public User getAddedUser() {
+        return LUserDAO.get().findByColumn(LUserDAO.key, addedKey);
     }
 
     @Exclude
-    public User getAdding() {
-        return adding;
-    }
-
-    public void setAdding(@NonNull final User adding) {
-        this.adding = adding;
-        addingID = adding.getID();
-        setAddedIDAddingID();
-    }
-
-    public void setAddingID(@NonNegative final Integer addingID) {
-        this.addingID = addingID;
-        if (adding != null) {
-            adding.setID(addingID);
-        }
-        // some fucking how, this call can't be done
-        //setAddedIDAddingID();
-    }
-
-    public String getAddedIDAddingID() {
-        return addedIDAddingID;
-    }
-
-    public void setAddedIDAddingID() {
-        addedIDAddingID = Integer.toString(addedID) + addingID;
+    public User getAddingUser() {
+        return LUserDAO.get().findByColumn(LUserDAO.key, addingKey);
     }
 }

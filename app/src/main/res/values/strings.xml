@@ -13,12 +13,19 @@
 
     <!-- search activity -->
     <string name="search_activity_label">Pesquisar</string>
+    <string name="search_no_results">Sem resultados</string>
 
     <!-- intro activity -->
-    <string name="title_1">Chega de Spam!\nServiço Anti-Spam</string>
-    <string name="description_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de
+    <string name="title_1_1">Chega de Spam!\nServiço Anti-Spam</string>
+    <string name="description_1_1">O Chega de Spam! possui uma incrível rede com a capacidade de dizimar spammers de
         celular, como companhias bancárias, prisioneiros, golpistas e chantagistas.
     </string>
+
+    <string name="title_1_2">@string/splash_screen_no_internet_connection</string>
+    <string name="description_1_2">O aplicativo não pode realizar seu cadastro sem internet. Conecte-se a uma rede
+        Wi-Fi ou ative seus dados móveis para poder continuar.</string>
+
+    <string name="description_1_3">Preparando o aplicativo...</string>
 
     <string name="title_2">Conceda as permissões</string>
     <string name="description_2">Nos dê as permissões para podermos botar pra quebrar! Não iremos requisitar informações
@@ -83,10 +90,12 @@
     <string name="select_database_network_substring">Selecionar as redes nas quais o aplicativo fará o download de
         atualizações do banco de dados
     </string>
+
     <string-array name="network_list_titles">
         <item>Wi-Fi</item>
         <item>Dados móveis</item>
     </string-array>
+
     <string-array name="network_list_values">
         <item>0</item>
         <item>1</item>
@@ -97,11 +106,13 @@
     <string name="select_services_block_substring">Selecionar os serviços que farão uso da função de bloqueio do
         aplicativo
     </string>
+
     <string-array name="service_list_titles">
         <item>Ligações</item>
         <item>Mensagens</item>
         <item>Whatsapp</item>
     </string-array>
+
     <string-array name="service_list_values">
         <item>0</item>
         <item>1</item>
@@ -112,10 +123,44 @@
     <string name="select_suspicious_treatment_substring">Selecionar o que o aplicativo deverá fazer ao receber ligações
         ou mensagens de números com determinados tipos de denúncia
     </string>
-    <string name="select_suspicious_treatment_help">Pois bem, além da polícia federal, ninguém gostaria de receber um
+    <string name="select_suspicious_treatment_help">Pois bem, além da polícia federal, ninguém gostaria de receber uma
         ligação de falso sequestro, mas algumas pessoas não se importam com ofertas de bancos e operadoras, conseguindo
         até fazer bom uso delas.
     </string>
+
+    <string-array name="treatment_list_titles">
+        <item>Silenciar</item>
+        <item>Bloquear</item>
+    </string-array>
+
+    <string-array name="treatment_list_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="description_list_titles">
+        <item>Companhia bancária</item>
+        <item>Telemarketing</item>
+        <item>Oferta utópica</item>
+        <item>Oferta indesejada</item>
+        <item>Oferta repetitiva</item>
+        <item>Prisioneiro</item>
+        <item>Golpe</item>
+        <item>Chantagem</item>
+        <item>Questões pessoais</item>
+    </string-array>
+
+    <string-array name="description_list_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
 
     <string name="select_feedback_options">Feedback pós-chamada</string>
     <string name="select_feedback_options_substring">Selecionar se quer ou não que apareça a tela de feedback
@@ -136,6 +181,7 @@
     <string name="add_manually">Adicionar manualmente</string>
     <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
     <string name="unknown">Desconhecido</string>
+    <string name="number_already_added">Esse número já está na sua lista bloqueio. Deseja sobrescrevê-lo?</string>
 
     <!-- splash screen activity -->
     <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>
@@ -150,7 +196,7 @@
     <string name="profile_signed_via_facebook">Logado via Facebook</string>
     <string name="profile_signed_via_twitter">Logado via Twitter</string>
 
-    <!-- Color picker dialog -->
+    <!-- color picker dialog -->
     <string name="select_color">Selecione uma cor</string>
     <string name="custom_button">Personalizar</string>
     <string name="presets_button">Pré-definidas</string>
@@ -174,7 +220,4 @@
 
     <!-- Accessibility -->
     <string name="help">Help icon</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

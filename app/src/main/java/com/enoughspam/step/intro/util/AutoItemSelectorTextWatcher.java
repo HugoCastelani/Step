@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.enoughspam.step.database.localDao.CountryDAO;
+import com.enoughspam.step.database.dao.local.LCountryDAO;
 
 /**
  * Created by Hugo Castelani
@@ -39,7 +39,7 @@ public class AutoItemSelectorTextWatcher implements TextWatcher {
     public void afterTextChanged(Editable s) {
         if (!isPaused()) {
             mHandler.updateSpinnerSelection(s.toString());
-            mHandler.updatePhoneNumberMask(CountryDAO.CODE, s.toString());
+            mHandler.updatePhoneNumberMask(LCountryDAO.CODE, s.toString());
         }
     }
 }

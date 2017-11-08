@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import com.afollestad.aesthetic.Aesthetic;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 
@@ -51,10 +51,12 @@ public class MainIntroActivity extends IntroActivity {
             finish();
         }
 
+        setButtonBackFunction(BUTTON_BACK_FUNCTION_BACK);
+
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
-                .fragment(R.layout.intro_fragment_about)
+                .fragment(new AboutIntroFragment())
                 .build());
 
         addSlide(new FragmentSlide.Builder()

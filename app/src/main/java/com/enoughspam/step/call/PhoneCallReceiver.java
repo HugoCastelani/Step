@@ -11,10 +11,10 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.localDao.LUserPhoneDAO;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,9 +62,9 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         // NullPointerException is going to be thrown if it's an outcoming call
         final boolean isBlocked;
         try {
-            final Phone phone = Phone.generateObject(number, iso);
-            isBlocked = LUserPhoneDAO.get().isBlocked(
-                    new UserPhone(LUserDAO.get().getThisUser(), phone, false));
+            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), "", false, false);
+            userPhone.setPhone(Phone.generateObject(number, iso));
+            isBlocked = LUserPhoneDAO.get().isBlocked(userPhone);
         } catch (NullPointerException e) {
             return;
         }

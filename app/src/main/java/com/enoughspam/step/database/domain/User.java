@@ -2,7 +2,6 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 
 /**
@@ -12,38 +11,33 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  */
 
 public class User extends Domain {
-    private String socialID;
+    private String socialKey;
     private String username;
     private String picURL;
 
     public User() {}
 
-    public User(@NonNegative final Integer id, @NonNull final String username,
+    public User(@NonNull final String socialKey, @NonNull final String username,
                 @NonNull final String picURL) {
-        super(id);
-        this.username = username;
-        this.picURL = picURL;
+        setSocialKey(socialKey);
+        setUsername(username);
+        setPicURL(picURL);
     }
 
-    public User(@NonNull final String socialID, @NonNull final String username,
-                @NonNull final String picURL) {
-        this.socialID = socialID;
-        this.username = username;
-        this.picURL = picURL;
-    }
-
-    public User(@NonNegative final Integer id, @NonNull final String socialID,
+    public User(@NonNull final String key, @NonNull final String socialKey,
                 @NonNull final String username, @NonNull final String picURL) {
-        this(id, username, picURL);
-        this.socialID = socialID;
+        super(key);
+        setSocialKey(socialKey);
+        setUsername(username);
+        setPicURL(picURL);
     }
 
-    public String getSocialID() {
-        return socialID;
+    public String getSocialKey() {
+        return socialKey;
     }
 
-    public void setSocialID(@NonNull final String socialID) {
-        this.socialID = socialID;
+    public void setSocialKey(@NonNull final String socialKey) {
+        this.socialKey = socialKey;
     }
 
     public String getUsername() {

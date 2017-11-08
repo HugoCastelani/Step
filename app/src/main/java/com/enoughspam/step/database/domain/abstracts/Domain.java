@@ -1,6 +1,7 @@
 package com.enoughspam.step.database.domain.abstracts;
 
-import com.enoughspam.step.annotation.NonNegative;
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
@@ -13,19 +14,19 @@ import java.io.Serializable;
 
 @IgnoreExtraProperties
 public class Domain implements Serializable {
-    private Integer id;
+    protected String key;
 
     public Domain() {}
 
-    public Domain(@NonNegative final Integer id) {
-        this.id = id;
+    public Domain(@NonNull String key) {
+        this.key = key;
     }
 
-    public Integer getID() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
-    public void setID(@NonNegative final Integer id) {
-        this.id = id;
+    public void setKey(@NonNull String key) {
+        this.key = key;
     }
 }

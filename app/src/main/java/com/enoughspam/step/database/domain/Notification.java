@@ -1,7 +1,10 @@
 package com.enoughspam.step.database.domain;
 
-import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domain.abstracts.Domain;
+import android.support.annotation.NonNull;
+
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
  * Created by Hugo Castelani
@@ -9,42 +12,52 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  * Time: 16:05
  */
 
-public class Notification extends Domain {
-    private Integer phoneId;
-    private Integer notifiedUserId;
-    private Integer notifyingUserId;
+@IgnoreExtraProperties
+public class Notification {
+    private String phoneKey;
+    private String notifiedKey;
+    private String notifyingKey;
 
     public Notification() {}
 
-    public Notification(@NonNegative final Integer id, @NonNegative final Integer phoneId,
-                        @NonNegative final Integer notifiedUserId, @NonNegative final Integer notifyingUserId) {
-        super(id);
-        this.phoneId = phoneId;
-        this.notifiedUserId = notifiedUserId;
-        this.notifyingUserId = notifyingUserId;
+    public Notification(@NonNull String phoneKey, @NonNull String notifiedKey,
+                        @NonNull String notifyingKey) {
+        setPhoneKey(phoneKey);
+        setNotifiedKey(notifiedKey);
+        setNotifyingKey(notifyingKey);
     }
 
-    public Integer getPhoneId() {
-        return phoneId;
+    public String getPhoneKey() {
+        return phoneKey;
     }
 
-    public void setPhoneId(@NonNegative final Integer phoneId) {
-        this.phoneId = phoneId;
+    public void setPhoneKey(@NonNull String phoneKey) {
+        this.phoneKey = phoneKey;
     }
 
-    public Integer getNotifiedUserId() {
-        return notifiedUserId;
+    public String getNotifiedKey() {
+        return notifiedKey;
     }
 
-    public void setNotifiedUserId(@NonNegative final Integer notifiedUserId) {
-        this.notifiedUserId = notifiedUserId;
+    public void setNotifiedKey(@NonNull String notifiedKey) {
+        this.notifiedKey = notifiedKey;
     }
 
-    public Integer getNotifyingUserId() {
-        return notifyingUserId;
+    public String getNotifyingKey() {
+        return notifyingKey;
     }
 
-    public void setNotifyingUserId(@NonNegative final Integer notifyingUserId) {
-        this.notifyingUserId = notifyingUserId;
+    public void setNotifyingKey(@NonNull String notifyingKey) {
+        this.notifyingKey = notifyingKey;
+    }
+
+    @Exclude
+    public User getNotifiedUser() {
+        return LUserDAO.get().findByColumn(LUserDAO.key, notifiedKey);
+    }
+
+    @Exclude
+    public User getNotifyingUser() {
+        return LUserDAO.get().findByColumn(LUserDAO.key, notifyingKey);
     }
 }

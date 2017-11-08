@@ -1,6 +1,9 @@
 package com.enoughspam.step.database.domain;
 
+import android.support.annotation.NonNull;
+
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 import com.google.firebase.database.Exclude;
 
@@ -12,44 +15,35 @@ import com.google.firebase.database.Exclude;
 
 public class State extends Domain {
     private String name;
-    private Country country;
-    private Integer countryID;
+    private String countryKey;
 
     public State() {}
 
-    public State(@NonNegative final Integer id, @NonNegative final String name,
-                 @NonNegative final Country country) {
-        super(id);
-        this.name = name;
-        setCountry(country);
+    public State(@NonNull final String key, @NonNegative final String name,
+                 @NonNegative final String countryKey) {
+        super(key);
+        setName(name);
+        setCountryKey(countryKey);
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(@NonNegative final String name) {
+    public void setName(@NonNull final String name) {
         this.name = name;
+    }
+
+    public String getCountryKey() {
+        return countryKey;
+    }
+
+    public void setCountryKey(String countryKey) {
+        this.countryKey = countryKey;
     }
 
     @Exclude
     public Country getCountry() {
-        return country;
-    }
-
-    public Integer getCountryID() {
-        return countryID;
-    }
-
-    public void setCountry(@NonNegative final Country country) {
-        this.country = country;
-        countryID = country.getID();
-    }
-
-    public void setCountryID(Integer countryID) {
-        this.countryID = countryID;
-        if (country != null) {
-            country.setID(countryID);
-        }
+        return LCountryDAO.get().findByColumn(LCountryDAO.key, countryKey);
     }
 }

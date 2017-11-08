@@ -6,8 +6,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.azimolabs.maskformatter.MaskFormatter;
+import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.Country;
-import com.enoughspam.step.database.localDao.CountryDAO;
 
 import java.util.List;
 
@@ -31,10 +31,10 @@ public class FormHandler {
     }
 
     public void updateSpinnerSelection(@NonNull final String countryCode) {
-        final Country matchingCountry = CountryDAO.get().findByColumn(CountryDAO.CODE, countryCode);
+        final Country matchingCountry = LCountryDAO.get().findByColumn(LCountryDAO.CODE, countryCode);
 
         if (matchingCountry != null) {
-            final List<String> countryList = CountryDAO.get().getColumnStringList(CountryDAO.NAME);
+            final List<String> countryList = LCountryDAO.get().getColumnStringList(LCountryDAO.NAME);
 
             final int matchingPosition = countryList.indexOf(matchingCountry.getName());
             mSpinner.setSelection(matchingPosition);
@@ -42,13 +42,13 @@ public class FormHandler {
     }
 
     public void updateCountryCode(@NonNull final String countryName) {
-        mCountryCodeEditText.setText(String.valueOf(CountryDAO.get()
-                .findByColumn(CountryDAO.NAME, countryName).getCode()));
+        mCountryCodeEditText.setText(String.valueOf(LCountryDAO.get()
+                .findByColumn(LCountryDAO.NAME, countryName).getCode()));
     }
 
     public void updatePhoneNumberMask(@NonNull final String column, @NonNull final String value) {
         // value might be code or name
-        final Country matchingCountry = CountryDAO.get().findByColumn(column, value);
+        final Country matchingCountry = LCountryDAO.get().findByColumn(column, value);
 
         removeMaskFormatterIfExists();
 

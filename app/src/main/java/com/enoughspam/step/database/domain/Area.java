@@ -3,6 +3,7 @@ package com.enoughspam.step.database.domain;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.local.LStateDAO;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 import com.google.firebase.database.Exclude;
 
@@ -15,17 +16,16 @@ import com.google.firebase.database.Exclude;
 public class Area extends Domain {
     private Integer code;
     private String name;
-    private State state;
-    private Integer stateID;
+    private String stateKey;
 
     public Area() {}
 
-    public Area(@NonNegative final Integer id, @NonNegative final Integer code,
-                @NonNull final String name, @NonNull final State state) {
-        super(id);
-        this.code = code;
-        this.name = name;
-        setState(state);
+    public Area(@NonNull final String key, @NonNegative final Integer code,
+                @NonNull final String name, @NonNull final String stateKey) {
+        super(key);
+        setCode(code);
+        setName(name);
+        setStateKey(stateKey);
     }
 
     public Integer getCode() {
@@ -44,24 +44,16 @@ public class Area extends Domain {
         this.name = name;
     }
 
+    public String getStateKey() {
+        return stateKey;
+    }
+
+    public void setStateKey(@NonNull final String stateKey) {
+        this.stateKey = stateKey;
+    }
+
     @Exclude
     public State getState() {
-        return state;
-    }
-
-    public Integer getStateID() {
-        return stateID;
-    }
-
-    public void setState(@NonNull final State state) {
-        this.state = state;
-        setStateID(state.getID());
-    }
-
-    private void setStateID(@NonNegative final Integer stateID) {
-        this.stateID = stateID;
-        if (state != null) {
-            state.setID(stateID);
-        }
+        return LStateDAO.get().findByColumn(LStateDAO.key, stateKey);
     }
 }

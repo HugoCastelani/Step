@@ -2,7 +2,6 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 
 /**
@@ -13,15 +12,15 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
 
 public class Description extends Domain {
     private String description;
-    private Integer treatmentID;
+    private String treatmentKey;
 
     public Description() {}
 
-    public Description(@NonNegative final Integer id, @NonNull final String description,
-                       @NonNegative final Integer treatmentID) {
-        super(id);
+    public Description(@NonNull final String key, @NonNull final String description,
+                       @NonNull final String treatmentKey) {
+        super(key);
         this.description = description;
-        this.treatmentID = treatmentID;
+        this.treatmentKey = treatmentKey;
     }
 
     public String getDescription() {
@@ -32,11 +31,11 @@ public class Description extends Domain {
         this.description = description;
     }
 
-    public Integer getTreatmentID() {
-        return treatmentID;
+    public String getTreatmentKey() {
+        return treatmentKey;
     }
 
-    public void setTreatmentID(@NonNegative final Integer treatmentID) {
-        this.treatmentID = treatmentID;
+    public void setTreatmentKey(@NonNull final String treatmentKey) {
+        this.treatmentKey = treatmentKey;
     }
 }

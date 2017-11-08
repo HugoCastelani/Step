@@ -22,11 +22,11 @@ import android.widget.Spinner;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.addNumber.AddNumberFragment;
+import com.enoughspam.step.database.dao.local.LAreaDAO;
+import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
-import com.enoughspam.step.database.localDao.AreaDAO;
-import com.enoughspam.step.database.localDao.CountryDAO;
 import com.enoughspam.step.intro.NumberIntroFragment;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
@@ -90,7 +90,7 @@ public class NumberFormFragment extends Fragment {
                 textWatcher.setPaused(true);
                 final String itemName = mSpinner.getSelectedItem().toString();
                 handler.updateCountryCode(itemName);
-                handler.updatePhoneNumberMask(CountryDAO.NAME, itemName);
+                handler.updatePhoneNumberMask(LCountryDAO.NAME, itemName);
                 textWatcher.setPaused(false);
             }
 
@@ -103,8 +103,8 @@ public class NumberFormFragment extends Fragment {
                 .getLastLocation()
                 .addOnSuccessListener(getActivity(), location -> {
                     if (location != null) {
-                        final String countryName = CountryDAO.get().findByColumn(
-                                CountryDAO.ISO, getCountryISO(location)).getName();
+                        final String countryName = LCountryDAO.get().findByColumn(
+                                LCountryDAO.ISO, getCountryISO(location)).getName();
 
                         int i;
                         for (i = 0; i < mSpinnerList.size(); i++) {
@@ -136,7 +136,7 @@ public class NumberFormFragment extends Fragment {
     }
 
     private ArrayAdapter<String> createSpinnerAdapter() {
-        mSpinnerList = CountryDAO.get().getColumnStringList(CountryDAO.NAME);
+        mSpinnerList = LCountryDAO.get().getColumnStringList(LCountryDAO.NAME);
         return new ArrayAdapter<>(
                 getActivity(),
                 R.layout.custom_simple_spinner_dropdown_item,
@@ -185,7 +185,7 @@ public class NumberFormFragment extends Fragment {
             return;
         }
 
-        final Country country = CountryDAO.get().findByColumn(CountryDAO.CODE, mCountryCode);
+        final Country country = LCountryDAO.get().findByColumn(LCountryDAO.CODE, mCountryCode);
 
         if (country != null) {
             final int spaceIndex = mPhoneNumber.indexOf(' ');
@@ -194,7 +194,7 @@ public class NumberFormFragment extends Fragment {
 
             if (spaceIndex != -1) {
                 final long phoneNumberL = Long.parseLong(mMergePhoneNumber.substring(spaceIndex));
-                final Area area = AreaDAO.get().findByColumn(AreaDAO.CODE,
+                final Area area = LAreaDAO.get().findByColumn(LAreaDAO.CODE,
                         mPhoneNumber.substring(0, spaceIndex));
 
                 if (area == null) {
@@ -203,19 +203,13 @@ public class NumberFormFragment extends Fragment {
 
                 } else {
 
-                    phone = new Phone(
-                            phoneNumberL,
-                            area
-                    );
+                    phone = new Phone(phoneNumberL, area.getKey(), "");
                 }
 
             } else {
 
                 final long phoneNumberL = Long.parseLong(mMergePhoneNumber);
-                phone = new Phone(
-                        phoneNumberL,
-                        country
-                );
+                phone = new Phone(phoneNumberL, "", country.getKey());
             }
 
             if (mError.isEmpty()) {

@@ -1,6 +1,7 @@
 package com.enoughspam.step.profile;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -9,12 +10,12 @@ import com.afollestad.aesthetic.AestheticProgressBar;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.database.domain.Friendship;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.wide.UserDAO;
+import com.enoughspam.step.database.dao.wide.UserFriendDAO;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.LFriendshipDAO;
-import com.enoughspam.step.database.localDao.LUserDAO;
-import com.enoughspam.step.database.wideDao.FriendshipDAO;
 import com.enoughspam.step.util.AnimUtils;
+import com.enoughspam.step.util.Listeners;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -45,12 +46,22 @@ public class ProfileActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
 
-        mUser = (User) getIntent().getExtras().getSerializable("user");
-        mThisUser = LUserDAO.get().getThisUser();
+        UserDAO.get().findByKey(getIntent().getExtras().getString("user_key"), new Listeners.UserListener() {
+            @Override
+            public void onUserRetrieved(@NonNull User retrievedUser) {
+                mUser = retrievedUser;
+                mThisUser = LUserDAO.get().getThisUser();
 
-        initViews();
-        initActions();
-        initFragment();
+                initViews();
+                initActions();
+                initFragment();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
@@ -69,7 +80,7 @@ public class ProfileActivity extends AbstractActivity {
         mSocialMedia = (AestheticTextView) findViewById(R.id.profile_social_media);
 
         CharSequence socialMedia = "";
-        switch (mUser.getSocialID().charAt(mUser.getSocialID().length() - 1)) {    // last char
+        switch (mUser.getSocialKey().charAt(mUser.getSocialKey().length() - 1)) {    // last char
             case '1':    // google code
                 socialMedia = getResources().getText(R.string.profile_signed_via_google);
                 break;
@@ -95,11 +106,13 @@ public class ProfileActivity extends AbstractActivity {
         });
 
         // init button actions
-        if (LFriendshipDAO.get().findByIDs(mUser.getID(), mThisUser.getID()) == null) {
-            setButtonAsAddable();
-        } else {
-            setButtonAsRemovable();
-        }
+        UserFriendDAO.get().exists(mUser, retrievedBoolean -> {
+            if (retrievedBoolean) {
+                setButtonAsRemovable();
+            } else {
+                setButtonAsAddable();
+            }
+        });
     }
 
     @Override
@@ -117,18 +130,30 @@ public class ProfileActivity extends AbstractActivity {
 
     private void setButtonAsAddable() {
         mButton.setText(getResources().getString(R.string.profile_add_friend));
-        mButton.setOnClickListener(view -> {
-            FriendshipDAO.get().create(new Friendship(mUser, mThisUser));
-            setButtonAsRemovable();
-        });
+        mButton.setOnClickListener(view ->
+            UserFriendDAO.get().create(mUser, new Listeners.AnswerListener() {
+                @Override
+                public void onAnswerRetrieved() {
+                    setButtonAsRemovable();
+                }
+
+                @Override public void onError() {}
+            })
+        );
     }
 
     private void setButtonAsRemovable() {
         mButton.setText(getResources().getString(R.string.profile_remove_friend));
-        mButton.setOnClickListener(view -> {
-            FriendshipDAO.get().delete(mUser.getID(), mThisUser.getID());
-            setButtonAsAddable();
-        });
+        mButton.setOnClickListener(view ->
+            UserFriendDAO.get().delete(mUser.getKey(), new Listeners.AnswerListener() {
+                @Override
+                public void onAnswerRetrieved() {
+                    setButtonAsAddable();
+                }
+
+                @Override public void onError() {}
+            })
+        );
     }
 
     public void onBackPressed(View view) {

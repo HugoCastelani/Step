@@ -2,7 +2,6 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 
 /**
@@ -16,8 +15,8 @@ public class Treatment extends Domain {
 
     public Treatment() {}
 
-    public Treatment(@NonNegative final Integer id, @NonNull final String treatment) {
-        super(id);
+    public Treatment(@NonNull final String key, @NonNull final String treatment) {
+        super(key);
         this.treatment = treatment;
     }
 

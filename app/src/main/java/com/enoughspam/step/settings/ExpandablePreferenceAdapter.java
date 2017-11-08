@@ -1,5 +1,7 @@
 package com.enoughspam.step.settings;
 
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +11,9 @@ import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
-import com.enoughspam.step.database.domain.Description;
-import com.enoughspam.step.database.localDao.DescriptionDAO;
-import com.enoughspam.step.database.wideDao.TreatmentDAO;
 import com.enoughspam.step.util.ThemeHandler;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,19 +23,25 @@ import java.util.List;
  */
 
 public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
+    private View mView;
 
-    private final List<String> mDescriptionStringList;
-    private final List<String> mTreatmentStringList;
+    private List<String> mDescriptionStringList;
+    private List<String> mTreatmentStringList;
 
-    public ExpandablePreferenceAdapter() {
-        mDescriptionStringList = DescriptionDAO.get().getColumnStringList(DescriptionDAO.DESCRIPTION);
-        mTreatmentStringList = TreatmentDAO.getColumnList(TreatmentDAO.TREATMENT);
+    public ExpandablePreferenceAdapter(@NonNull final View view) {
+        mView = view;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.preference_expandable_item, parent, false);
+
+        mDescriptionStringList = Arrays.asList(
+                view.getResources().getStringArray(R.array.description_list_titles));
+        mTreatmentStringList = Arrays.asList(
+                view.getResources().getStringArray(R.array.treatment_list_titles));
+
         return new MyViewHolder(view);
     }
 
@@ -62,21 +68,17 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
         );
     }
 
-    /*
-     * id isn't automatically generated in description and suspicious_treatment
-     * tables, so it doesn't start with 1, which allows me to use list's positions
-     */
+    // send selected treatment to shared preferences
 
-    private int getSelectedTreatment(@NonNegative int position) {
-        return (DescriptionDAO.get().findByColumn(DescriptionDAO.id, String.valueOf(position))
-                .getTreatmentID());
+    private int getSelectedTreatment(@NonNegative final int selectedDescription) {
+        return PreferenceManager.getDefaultSharedPreferences(mView.getContext())
+                .getInt("description_" + selectedDescription, -1);
     }
 
-    private void setSelectedTreatment(@NonNegative int position, @NonNegative int selected) {
-        final Description description = DescriptionDAO.get()
-                .findByColumn(DescriptionDAO.id, String.valueOf(position));
-        description.setTreatmentID(selected);
-        DescriptionDAO.get().update(description);
+    private void setSelectedTreatment(@NonNegative final int selectedDescription,
+                                      @NonNegative final int selectedTreatment) {
+        PreferenceManager.getDefaultSharedPreferences(mView.getContext())
+                .edit().putInt("description_" + selectedDescription, selectedTreatment).apply();
     }
 
     @Override

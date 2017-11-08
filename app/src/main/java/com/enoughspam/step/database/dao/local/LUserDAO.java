@@ -1,13 +1,14 @@
-package com.enoughspam.step.database.localDao;
+package com.enoughspam.step.database.dao.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.DAOHandler;
+import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.localDao.abstracts.GenericLocalDAO;
+import com.enoughspam.step.util.Listeners;
 
 /**
  * Created by Hugo Castelani
@@ -18,7 +19,7 @@ import com.enoughspam.step.database.localDao.abstracts.GenericLocalDAO;
 public class LUserDAO extends GenericLocalDAO<User> {
     private static LUserDAO instance;
 
-    public static final String SOCIAL_ID = "social_id";
+    public static final String SOCIAL_KEY = "social_key";
     public static final String USER_NAME = "user_name";
     public static final String PHOTO_URL = "photo_url";
 
@@ -37,25 +38,27 @@ public class LUserDAO extends GenericLocalDAO<User> {
     @Override
     public User generate(@NonNull final Cursor cursor) {
         return new User(
-                cursor.getInt(cursor.getColumnIndex(id)),
-                cursor.getString(cursor.getColumnIndex(SOCIAL_ID)),
+                cursor.getString(cursor.getColumnIndex(key)),
+                cursor.getString(cursor.getColumnIndex(SOCIAL_KEY)),
                 cursor.getString(cursor.getColumnIndex(USER_NAME)),
                 cursor.getString(cursor.getColumnIndex(PHOTO_URL))
         );
     }
 
+    @Override
     public LUserDAO create(@NonNull final User user) {
         final ContentValues values = new ContentValues();
 
-        values.put(id, user.getID());
-        values.put(SOCIAL_ID, user.getSocialID());
+        values.put(instance.key, user.getKey());
+        values.put(SOCIAL_KEY, user.getSocialKey());
         values.put(USER_NAME, user.getUsername());
         values.put(PHOTO_URL, user.getPicURL());
 
         DAOHandler.getLocalDatabase().insert(table, null, values);
 
         PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
-                .edit().putInt("user_id", user.getID()).apply();
+                .edit().putString("user_key", user.getKey()).apply();
+
         return instance;
     }
 
@@ -63,28 +66,33 @@ public class LUserDAO extends GenericLocalDAO<User> {
     public GenericLocalDAO<User> update(@NonNull User user) {
         final ContentValues values = new ContentValues();
 
-        values.put(id, user.getID());
-        values.put(SOCIAL_ID, user.getSocialID());
+        values.put(key, user.getKey());
+        values.put(SOCIAL_KEY, user.getSocialKey());
         values.put(USER_NAME, user.getUsername());
         values.put(PHOTO_URL, user.getPicURL());
 
         DAOHandler.getLocalDatabase().update(
-                table, values, id + " = ?", new String[] {String.valueOf(id)});
+                table, values, key + " = ?", new String[] {String.valueOf(key)});
 
         return instance;
     }
 
     @Override
-    public int exists(@NonNull User user) {
+    public String exists(@NonNull User user) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
+    @Override
+    public GenericLocalDAO<User> sync(@NonNull Listeners.AnswerListener listener) {
+        throw new UnsupportedOperationException("Support this, Hugo.");
+    }
+
     public LUserDAO clone(@NonNull final User user) {
-        if (findByColumn(id, user.getID().toString()) == null) {
+        if (findByColumn(key, user.getKey()) == null) {
             final ContentValues values = new ContentValues();
 
-            values.put(id, user.getID());
-            values.put(SOCIAL_ID, user.getSocialID());
+            values.put(key, user.getKey());
+            values.put(SOCIAL_KEY, user.getSocialKey());
             values.put(USER_NAME, user.getUsername());
             values.put(PHOTO_URL, user.getPicURL());
 
@@ -94,12 +102,11 @@ public class LUserDAO extends GenericLocalDAO<User> {
     }
 
     public User getThisUser() {
-        final int id = PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
-                .getInt("user_id", 0);
+        final String key = PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                .getString("user_key", "-1");
 
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
-                table, null, instance.id + " = ?", new String[] {String.valueOf(id)},
-                null, null, null);
+                table, null, instance.key + " = ?", new String[] {key}, null, null, null);
 
         User user = null;
 
@@ -107,5 +114,10 @@ public class LUserDAO extends GenericLocalDAO<User> {
 
         cursor.close();
         return user;
+    }
+
+    public String getThisUserKey() {
+        return PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                .getString("user_key", "-1");
     }
 }
