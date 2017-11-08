@@ -49,6 +49,7 @@ public class UserDAO extends GenericWideDAO<User> {
                     public void onUserRetrieved(@NonNull User retrievedUser) {
                         if (retrievedUser != null) {
                             LUserDAO.get().create(retrievedUser);
+                            listener.onAnswerRetrieved();
 
                         } else {
 

@@ -2,6 +2,8 @@ package com.enoughspam.step.intro;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,40 +87,45 @@ public class NumberIntroFragment extends SlideFragment {
                             final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(),
                                     retrievedPhone.getKey(), true, false);
 
-                            userPhone.loadPhoneWidely(new Listeners.AnswerListener() {
+                            userPhone.getUser(null);
+                            userPhone.setPhone(retrievedPhone);
+
+                            UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
                                 @Override
-                                public void onAnswerRetrieved() {
-                                    UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
-                                        @Override
-                                        public void alreadyAdded() {
-                                            done();
-                                        }
-
-                                        @Override
-                                        public void properlyAdded() {
-                                            done();
-                                        }
-
-                                        private void done() {
-                                            sendMessage();
-                                            mCanGoForward = true;
-                                            canGoForward();
-                                            nextSlide();
-                                        }
-
-                                        @Override public void error() {}
-                                    }, false);
+                                public void alreadyAdded() {
+                                    done();
                                 }
 
-                                @Override public void onError() {}
-                            });
+                                @Override
+                                public void properlyAdded() {
+                                    done();
+                                }
+
+                                private void done() {
+                                    sendMessage();
+                                    mCanGoForward = true;
+                                    canGoForward();
+                                    nextSlide();
+                                }
+
+                                @Override public void error() {
+                                    showSnackbar(R.string.something_went_wrong);
+                                }
+                            }, false);
 
                         }
 
-                        @Override public void onError() {}
+                        @Override public void onError() {
+                            showSnackbar(R.string.something_went_wrong);
+                        }
                     })
 
                 ).show();
+    }
+
+    private void showSnackbar(@StringRes final int message) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 
     private void sendMessage() {

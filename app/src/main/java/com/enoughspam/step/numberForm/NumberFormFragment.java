@@ -203,13 +203,13 @@ public class NumberFormFragment extends Fragment {
 
                 } else {
 
-                    phone = new Phone(phoneNumberL, area.getKey(), "");
+                    phone = new Phone(phoneNumberL, area.getKey(), "-1");
                 }
 
             } else {
 
                 final long phoneNumberL = Long.parseLong(mMergePhoneNumber);
-                phone = new Phone(phoneNumberL, "", country.getKey());
+                phone = new Phone(phoneNumberL, "-1", country.getKey());
             }
 
             if (mError.isEmpty()) {

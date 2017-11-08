@@ -114,6 +114,7 @@ public class AddNumberFragment extends Fragment {
 
             // check if number is already blocked
             final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), "", false, false);
+            userPhone.setUser(LUserDAO.get().getThisUser());
             userPhone.setPhone(phone);
 
             if (LUserPhoneDAO.get().isBlocked(userPhone)) {

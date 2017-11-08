@@ -54,9 +54,9 @@ public class AddNumberActivity extends AbstractActivity {
                 final Phone phone = callList.get(i).getPhone();
 
                 if (phone.getCountry() == null) {
-                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), phone.getArea().getKey(), ""));
+                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), phone.getArea().getKey(), "-1"));
                 } else {
-                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), "", phone.getCountry().getKey()));
+                    mAddNumberFragment.saveNumber(new Phone(phone.getNumber(), "-1", phone.getCountry().getKey()));
                 }
             }
         });

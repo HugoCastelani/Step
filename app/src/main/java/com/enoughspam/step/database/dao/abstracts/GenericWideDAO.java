@@ -3,6 +3,7 @@ package com.enoughspam.step.database.dao.abstracts;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.util.Listeners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,11 +19,13 @@ import com.google.firebase.database.ValueEventListener;
 public abstract class GenericWideDAO<T> {
     private DatabaseReference reference;
     protected String node;
+    protected String userNode;
 
     // must set node
     protected abstract void prepareFields();
 
     public GenericWideDAO() {
+        userNode = "users/" + LUserDAO.get().getThisUserKey();
         prepareFields();
     }
 

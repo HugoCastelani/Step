@@ -1,6 +1,7 @@
 package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.enoughspam.step.database.dao.local.LPhoneDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
@@ -70,75 +71,72 @@ public class UserPhone {
 
     public UserPhone setUser(@NonNull final User user) {
         this.user = user;
-        return this;
-    }
 
-    @Exclude
-    public User getUser() {
-        if (user == null) {
-            throw new UnsupportedOperationException("You must load user before getting it");
-        } else {
-            return user;
+        final String key = user.getKey();
+        if (key != null && !key.isEmpty()) {
+            setUserKey(key);
         }
-    }
 
-    @Exclude
-    public UserPhone loadUserLocally() {
-        user = LUserDAO.get().findByColumn(LUserDAO.key, userKey);
         return this;
     }
 
     @Exclude
-    public UserPhone loadUserWidely(@NonNull final Listeners.AnswerListener listener) {
-        UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
-            @Override
-            public void onUserRetrieved(@NonNull User retrievedUser) {
-                user = retrievedUser;
-                listener.onAnswerRetrieved();
-            }
+    public User getUser(@Nullable final Listeners.UserListener listener) {
+        if (user == null) {
+            if (listener == null) {
+                user = LUserDAO.get().findByColumn(LUserDAO.key, userKey);
 
-            @Override
-            public void onError() {
-                listener.onError();
+            } else {
+
+                UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
+                    @Override
+                    public void onUserRetrieved(@NonNull User retrievedUser) {
+                        user = retrievedUser;
+                        listener.onUserRetrieved(user);
+                    }
+
+                    @Override
+                    public void onError() {
+                        listener.onError();
+                    }
+                });
             }
-        });
-        return this;
+        }
+
+        return user;
     }
 
     public UserPhone setPhone(@NonNull final Phone phone) {
         this.phone = phone;
-        return this;
-    }
 
-    @Exclude
-    public Phone getPhone() {
-        if (phone == null) {
-            throw new UnsupportedOperationException("You must load phone before getting it");
-        } else {
-            return phone;
+        final String key = phone.getKey();
+        if (key != null && !key.isEmpty()) {
+            setPhoneKey(key);
         }
-    }
 
-    @Exclude
-    public UserPhone loadPhoneLocally() {
-        phone =  LPhoneDAO.get().findByColumn(LPhoneDAO.key, phoneKey);
         return this;
     }
 
     @Exclude
-    public UserPhone loadPhoneWidely(@NonNull final Listeners.AnswerListener listener) {
-        PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
-            @Override
-            public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
-                phone = retrievedPhone;
-                listener.onAnswerRetrieved();
-            }
+    public Phone getPhone(@Nullable final Listeners.PhoneListener listener) {
+        if (phone == null) {
+            if (listener == null) {
+                phone = LPhoneDAO.get().findByColumn(LUserDAO.key, userKey);
 
-            @Override
-            public void onError() {
-                listener.onError();
+            } else {
+
+                PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
+                    @Override
+                    public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                        phone = retrievedPhone;
+                        listener.onPhoneRetrieved(phone);
+                    }
+
+                    @Override public void onError() {listener.onError();}
+                });
             }
-        });
-        return this;
+        }
+
+        return phone;
     }
 }

@@ -52,7 +52,7 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
     public LFriendshipDAO create(@NonNull final Friendship friendship) {
         if (findByIDs(friendship.getAddedKey(), friendship.getAddingKey()) == null) {
 
-            LUserDAO.get().clone(friendship.getAddedUser());
+            LUserDAO.get().clone(friendship.getAddedUser(null));    // user was already set
             ContentValues values = new ContentValues();
 
             values.put(USER_ADDED_KEY, friendship.getAddedKey());

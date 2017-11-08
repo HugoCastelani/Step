@@ -62,6 +62,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
             values.put(USER_KEY, userPhone.getUserKey());
             values.put(PHONE_KEY, userPhone.getPhoneKey());
             values.put(IS_PROPERTY, userPhone.getIsProperty());
+            values.put(IS_NOTIFICATION, userPhone.getIsNotification());
 
             DAOHandler.getLocalDatabase().insert(table, null, values);
         }
@@ -161,12 +162,12 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
     }
 
     public boolean isBlocked(@NonNull final UserPhone userPhone) {
-        final String phoneKey = LPhoneDAO.get().exists(userPhone.getPhone());
+        final String phoneKey = LPhoneDAO.get().exists(userPhone.getPhone(null));
 
         if (!phoneKey.equals("-1")) {
 
             List<User> userList = LFriendshipDAO.get().findUserFriends(userPhone.getUserKey());
-            userList.add(0, userPhone.getUser());
+            userList.add(0, userPhone.getUser(null));
 
             for (int i = 0; i < userList.size(); i++) {
                 final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,

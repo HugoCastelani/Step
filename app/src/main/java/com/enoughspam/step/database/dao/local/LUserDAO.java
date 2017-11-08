@@ -47,17 +47,19 @@ public class LUserDAO extends GenericLocalDAO<User> {
 
     @Override
     public LUserDAO create(@NonNull final User user) {
-        final ContentValues values = new ContentValues();
+        if (findByColumn(SOCIAL_KEY, user.getSocialKey()) == null) {
+            final ContentValues values = new ContentValues();
 
-        values.put(instance.key, user.getKey());
-        values.put(SOCIAL_KEY, user.getSocialKey());
-        values.put(USER_NAME, user.getUsername());
-        values.put(PHOTO_URL, user.getPicURL());
+            values.put(instance.key, user.getKey());
+            values.put(SOCIAL_KEY, user.getSocialKey());
+            values.put(USER_NAME, user.getUsername());
+            values.put(PHOTO_URL, user.getPicURL());
 
-        DAOHandler.getLocalDatabase().insert(table, null, values);
+            DAOHandler.getLocalDatabase().insert(table, null, values);
 
-        PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
-                .edit().putString("user_key", user.getKey()).apply();
+            PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
+                    .edit().putString("user_key", user.getKey()).apply();
+        }
 
         return instance;
     }

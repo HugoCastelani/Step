@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
-import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.util.Listeners;
@@ -26,7 +25,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
 
     @Override
     protected void prepareFields() {
-        node = "users/" + LUserDAO.get().getThisUserKey() + "/phones";
+        node = userNode + "/phones";
     }
 
     private NotificationDAO() {}
@@ -40,7 +39,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
     public NotificationDAO create(@NonNull final UserPhone userPhone,
                                   @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
+        isNodeValid(userNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
                 final ArrayList<String> keyList = new ArrayList<>();
@@ -133,7 +132,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
     public NotificationDAO delete(@NonNegative final String phoneKey,
                                   @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
+        isNodeValid(userNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
                 final Query query = getReference().orderByChild("phoneKey").equalTo(phoneKey);

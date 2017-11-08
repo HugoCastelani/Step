@@ -46,20 +46,20 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<ProfileAdapter.
 
                 @Override
                 public void onItemAdded(@NonNull UserPhone userPhone) {
-                    final String newPhoneSectionUsername = sPrefix + userPhone.getUser().getUsername();
+                    final String newPhoneSectionUsername = sPrefix + userPhone.getUser(null).getUsername();
 
                     int i;
                     for (i = 0; i < mBlockedNumbersList.size(); i++) {
                         final PhoneSection phoneSection = mBlockedNumbersList.get(i);
                         if (phoneSection.getUsername().equals(newPhoneSectionUsername)) {
-                            phoneSection.addPhone(userPhone.getPhone());
+                            phoneSection.addPhone(userPhone.getPhone(null));
                             break;
                         }
                     }
 
                     if (i == mBlockedNumbersList.size()) {    // user isn't in list
                         final List<Phone> newPhoneList = new ArrayList<>();
-                        newPhoneList.add(userPhone.getPhone());
+                        newPhoneList.add(userPhone.getPhone(null));
 
                         mBlockedNumbersList.add(new PhoneSection(
                                 newPhoneSectionUsername,

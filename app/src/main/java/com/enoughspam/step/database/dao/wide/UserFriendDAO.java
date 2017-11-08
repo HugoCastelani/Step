@@ -28,7 +28,7 @@ public class UserFriendDAO extends GenericWideDAO<User> {
 
     @Override
     protected void prepareFields() {
-        node = "users/" + LUserDAO.get().getThisUserKey() + "/friends";
+        node = userNode + "/friends";
     }
 
     public static UserFriendDAO get() {
@@ -42,7 +42,7 @@ public class UserFriendDAO extends GenericWideDAO<User> {
     public UserFriendDAO create(@NonNull final User user,
                                 @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, isValid -> {
+        isNodeValid(userNode, isValid -> {
             if (isValid) {
 
                 exists(user, doesExist -> {
@@ -51,10 +51,14 @@ public class UserFriendDAO extends GenericWideDAO<User> {
                         getReference().push().setValue(new InnerUser(user.getKey()))
                                 .addOnFailureListener(e -> listener.onError())
                                 .addOnSuccessListener(aVoid -> {
-                                    LFriendshipDAO.get().create(new Friendship(
-                                            user.getKey(),
-                                            LUserDAO.get().getThisUserKey()
-                                    ));
+                                    final User thisUser = LUserDAO.get().getThisUser();
+                                    final Friendship friendship = new Friendship(user.getKey(),
+                                            thisUser.getKey());
+
+                                    friendship.setAddedUser(user);
+                                    friendship.setAddingUser(thisUser);
+
+                                    LFriendshipDAO.get().create(friendship);
                                     listener.onAnswerRetrieved();
                                 });
                     }
@@ -77,7 +81,7 @@ public class UserFriendDAO extends GenericWideDAO<User> {
     public UserFriendDAO delete(@NonNull final String key,
                                 @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
+        isNodeValid(userNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
                 final Query query = getReference().orderByChild("friendKey").equalTo(key);
@@ -123,7 +127,7 @@ public class UserFriendDAO extends GenericWideDAO<User> {
     public UserFriendDAO exists(@NonNull final User friend,
                                 @NonNull final Listeners.BooleanListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
+        isNodeValid(userNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
                 final Query query = getReference().orderByChild("friendKey").equalTo(friend.getKey());
@@ -153,21 +157,22 @@ public class UserFriendDAO extends GenericWideDAO<User> {
         return instance;
     }
 
-    @Override @Deprecated
+    @Override
     public UserFriendDAO sync(@NonNull Listeners.AnswerListener listener) {
-        return null;
+        // LETS WORK THIS OUT
+        return instance;
     }
 
     public UserFriendDAO getUserFriendList(@NonNull final String userKey,
                                            @NonNull final Listeners.ListListener<String> listListener,
                                            @NonNull final Listeners.AnswerListener answerListener) {
 
-        final String thisNode = "users/" + userKey + "/friends";
+        final String userNode = "users/" + userKey;
 
-        isNodeValid(thisNode, retrievedBoolean -> {
+        isNodeValid(userNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
-                final Query query = DAOHandler.getFirebaseDatabase(thisNode).orderByChild("userKey");
+                final Query query = DAOHandler.getFirebaseDatabase(userNode).orderByChild("userKey");
 
                 final ChildEventListener childEventListener = new ChildEventListener() {
                     @Override
