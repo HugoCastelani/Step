@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.addNumber.AddNumberActivity;
+import com.enoughspam.step.addnumber.AddNumberActivity;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.search.SearchActivity;
 import com.enoughspam.step.settings.SettingsActivity;

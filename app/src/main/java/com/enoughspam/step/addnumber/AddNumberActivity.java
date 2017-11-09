@@ -1,9 +1,10 @@
-package com.enoughspam.step.addNumber;
+package com.enoughspam.step.addnumber;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.database.domain.Phone;
@@ -15,7 +16,8 @@ import java.util.List;
 
 public class AddNumberActivity extends AbstractActivity {
 
-    private FloatingActionButton mFab;
+    private MaterialDialog mProgressDialog;
+    private FloatingActionButton mFAB;
     private AddNumberFragment mAddNumberFragment;
 
     @Override
@@ -42,12 +44,18 @@ public class AddNumberActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        mFab = (FloatingActionButton) findViewById(R.id.add_number_fab);
+        mProgressDialog = new MaterialDialog.Builder(this)
+                .title(R.string.adding_number)
+                .content(R.string.please_wait)
+                .progress(true, 0)
+                .build();
+
+        mFAB = (FloatingActionButton) findViewById(R.id.add_number_fab);
     }
 
     @Override
     protected void initActions() {
-        mFab.setOnClickListener(view -> {
+        mFAB.setOnClickListener(view -> {
             final List<Call> callList = mAddNumberFragment.getAdapter().getSelectedItems();
 
             for (int i = 0; i < callList.size(); i++) {
@@ -64,6 +72,7 @@ public class AddNumberActivity extends AbstractActivity {
 
     @Override
     protected void initFragment() {
+        // i'll init add number fragment, but won't use it right now
         mAddNumberFragment = (AddNumberFragment) getSupportFragmentManager()
                 .findFragmentByTag("addNumberFragmentTag");
         if (mAddNumberFragment == null) {
@@ -74,11 +83,19 @@ public class AddNumberActivity extends AbstractActivity {
         }
     }
 
-    public void showFab() {
-        mFab.show();
+    public void showProgressDialog() {
+        mProgressDialog.show();
     }
 
-    public void hideFab() {
-        mFab.hide();
+    public void hideProgressDialog() {
+        mProgressDialog.hide();
+    }
+
+    public void showFAB() {
+        mFAB.show();
+    }
+
+    public void hideFAB() {
+        mFAB.hide();
     }
 }

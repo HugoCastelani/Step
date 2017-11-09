@@ -74,7 +74,7 @@
         </activity>
 
         <activity
-            android:name=".addNumber.AddNumberActivity"
+            android:name=".addnumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
             android:theme="@style/AppTheme"
             android:parentActivityName=".main.MainActivity">

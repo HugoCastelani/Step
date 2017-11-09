@@ -1,4 +1,4 @@
-package com.enoughspam.step.addNumber;
+package com.enoughspam.step.addnumber;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,7 @@ import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
-import com.enoughspam.step.numberForm.NumberFormFragment;
+import com.enoughspam.step.singlefragments.NumberFormFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,13 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
     private final List<Call> mCallList;
     private final AddNumberFragment mFragment;
+    private final AddNumberActivity mActivity;
 
     public AddNumberAdapter(@NonNull final List<Call> callList,
                             @NonNull final AddNumberFragment fragment) {
         mCallList = callList;
         mFragment = fragment;
+        mActivity = (AddNumberActivity) fragment.getActivity();
     }
 
     @Override
@@ -120,7 +122,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                     if (aViewHolder.mParent.isSelected()) {
                         if (mSelectedViews == 1) {
                             mSelectionMode = false;
-                            ((AddNumberActivity) mFragment.getActivity()).hideFab();
+                            mActivity.hideFAB();
                         }
                         aViewHolder.mParent.setSelected(false);
                         mSelectedViews--;
@@ -136,7 +138,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                     mSelectionMode = true;
                     aViewHolder.mParent.setSelected(true);
                     mSelectedViews++;
-                    ((AddNumberActivity) mFragment.getActivity()).showFab();
+                    mActivity.showFAB();
                 }
 
                 return true;
@@ -148,7 +150,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
                     if (aViewHolder.mParent.isSelected()) {
                         if (mSelectedViews == 1) {
                             mSelectionMode = false;
-                            ((AddNumberActivity) mFragment.getActivity()).hideFab();
+                            mActivity.hideFAB();
                         }
                         aViewHolder.mParent.setSelected(false);
                         mSelectedViews--;
@@ -161,6 +163,7 @@ public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
                 } else {
 
+                    mActivity.showProgressDialog();
                     if (areaCode != -1) {
                         mFragment.saveNumber(new Phone(number, call.getPhone().getArea().getKey(), "-1"));
                     } else {

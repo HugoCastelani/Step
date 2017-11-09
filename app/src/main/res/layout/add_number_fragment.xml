@@ -9,6 +9,14 @@
         android:id="@+id/add_number_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         android:scrollbars="vertical"/>
+
+    <com.afollestad.aesthetic.AestheticProgressBar
+        android:id="@+id/add_number_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

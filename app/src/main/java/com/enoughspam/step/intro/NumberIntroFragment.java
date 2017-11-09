@@ -17,7 +17,7 @@ import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.intro.util.MessageCodeHandler;
-import com.enoughspam.step.numberForm.NumberFormFragment;
+import com.enoughspam.step.singlefragments.NumberFormFragment;
 import com.enoughspam.step.util.Listeners;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 

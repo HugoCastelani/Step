@@ -1,4 +1,4 @@
-package com.enoughspam.step.addNumber;
+package com.enoughspam.step.addnumber;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,12 +13,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.addNumber.extra.CustomLinearLayoutManager;
+import com.enoughspam.step.addnumber.extra.CustomLinearLayoutManager;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.database.dao.wide.PhoneDAO;
@@ -26,6 +27,7 @@ import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.domain.Call;
+import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
 import com.enoughspam.step.util.ThemeHandler;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
@@ -44,8 +46,11 @@ import java.util.TimerTask;
 
 public class AddNumberFragment extends Fragment {
 
+    private AddNumberActivity mActivity;
+
     private View view;
     private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
     private CustomLinearLayoutManager mLayoutManager;
     private AddNumberAdapter mAdapter;
 
@@ -61,12 +66,15 @@ public class AddNumberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.add_number_fragment, container, false);
 
+        mActivity = (AddNumberActivity) getActivity();
         initViews();
 
         return view;
     }
 
     private void initViews() {
+        mProgressBar = (ProgressBar) view.findViewById(R.id.add_number_progress_bar);
+
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.add_number_recycler_view);
 
         mAdapter = new AddNumberAdapter(getCallList(), this);
@@ -152,7 +160,7 @@ public class AddNumberFragment extends Fragment {
             formattedPhoneNumber = "+" + countryCode + " " + areaCode + " " + number + "\n";
         }
 
-        new MaterialDialog.Builder(getActivity())
+        new MaterialDialog.Builder(mActivity)
                 .title(R.string.confirmation_dialog_title)
                 .content(formattedPhoneNumber + getResources().getString(R.string.confirmation_dialog_content))
                 .backgroundColor(ThemeHandler.getBackground())
@@ -175,7 +183,7 @@ public class AddNumberFragment extends Fragment {
                         new Listeners.UserPhoneAnswerListener() {
                             @Override
                             public void alreadyAdded() {
-                                new MaterialDialog.Builder(getActivity())
+                                new MaterialDialog.Builder(mActivity)
                                         .title(R.string.something_went_wrong)
                                         .content(getResources().getString(R.string.number_already_added))
                                         .backgroundColor(ThemeHandler.getBackground())
@@ -189,7 +197,8 @@ public class AddNumberFragment extends Fragment {
 
                             @Override
                             public void properlyAdded() {
-                                getActivity().onBackPressed();
+                                mActivity.hideProgressDialog();
+                                mActivity.onBackPressed();
                             }
 
                             @Override
@@ -221,7 +230,8 @@ public class AddNumberFragment extends Fragment {
 
                     @Override
                     public void properlyAdded() {
-                        getActivity().onBackPressed();
+                        mActivity.hideProgressDialog();
+                        mActivity.onBackPressed();
                     }
 
                     @Override
@@ -234,15 +244,19 @@ public class AddNumberFragment extends Fragment {
         );
     }
 
+    public void showRecyclerView() {
+        AnimUtils.fadeOutFadeIn(mProgressBar, mRecyclerView);
+    }
+
     private void showSnackAndClose(@StringRes final int message) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                getActivity().onBackPressed();
+                mActivity.onBackPressed();
             }
         }, Snackbar.LENGTH_LONG);
 
-        Snackbar.make(getActivity().findViewById(android.R.id.content),
+        Snackbar.make(mActivity.findViewById(android.R.id.content),
                 getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 }

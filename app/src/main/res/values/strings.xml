@@ -182,6 +182,8 @@
     <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
     <string name="unknown">Desconhecido</string>
     <string name="number_already_added">Esse número já está na sua lista bloqueio. Deseja sobrescrevê-lo?</string>
+    <string name="adding_number">Adicionando número</string>
+    <string name="please_wait">Por favor, espere...</string>
 
     <!-- splash screen activity -->
     <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>

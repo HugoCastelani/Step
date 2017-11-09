@@ -1,11 +1,8 @@
-package com.enoughspam.step.numberForm;
+package com.enoughspam.step.singlefragments;
 
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -20,8 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.blankj.utilcode.util.LocationUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.addNumber.AddNumberFragment;
+import com.enoughspam.step.addnumber.AddNumberFragment;
 import com.enoughspam.step.database.dao.local.LAreaDAO;
 import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.Area;
@@ -33,9 +31,7 @@ import com.enoughspam.step.intro.util.FormHandler;
 import com.enoughspam.step.util.ThemeHandler;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Hugo Castelani
@@ -103,19 +99,25 @@ public class NumberFormFragment extends Fragment {
                 .getLastLocation()
                 .addOnSuccessListener(getActivity(), location -> {
                     if (location != null) {
-                        final String countryName = LCountryDAO.get().findByColumn(
-                                LCountryDAO.ISO, getCountryISO(location)).getName();
+                        final String countryISO = LocationUtils
+                                .getAddress(location.getLatitude(), location.getLongitude())
+                                .getCountryCode();
+
+                        final String countryName = LCountryDAO.get()
+                                .findByColumn(LCountryDAO.ISO, countryISO).getName();
 
                         int i;
                         for (i = 0; i < mSpinnerList.size(); i++) {
                             if (mSpinnerList.get(i).contains(countryName)) {
                                 mSpinner.setSelection(i);
+                                if (parentFragment instanceof AddNumberFragment) {
+                                    ((AddNumberFragment) parentFragment).showRecyclerView();
+                                }
                                 return;
                             }
                         }
                     }
                 });
-
 
         mCountryCodeEditText.addTextChangedListener(textWatcher);
         mCountryCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -142,17 +144,6 @@ public class NumberFormFragment extends Fragment {
                 R.layout.custom_simple_spinner_dropdown_item,
                 mSpinnerList
         );
-    }
-
-    private String getCountryISO(@NonNull final Location location) {
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                return addresses.get(0).getCountryCode();
-            }
-        } catch (IOException ignored) {}
-        return null;
     }
 
     public void validateNumber() {
@@ -229,11 +220,9 @@ public class NumberFormFragment extends Fragment {
 
     private void confirmNumber(@NonNull final Phone phone) {
         if (parentFragment instanceof NumberIntroFragment) {
-            ((NumberIntroFragment) parentFragment)
-                    .confirmNumber(phone);
+            ((NumberIntroFragment) parentFragment).confirmNumber(phone);
         } else {
-            ((AddNumberFragment) parentFragment)
-                    .confirmNumber(phone);
+            ((AddNumberFragment) parentFragment).confirmNumber(phone);
         }
     }
 }
