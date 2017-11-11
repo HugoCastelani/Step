@@ -10,6 +10,7 @@
     <string name="numbers_of">Números de @</string>
     <string name="official_numbers">Números oficiais</string>
     <string name="removed_number">Número removido</string>
+    <string name="search_user">Procurar por usuário...</string>
 
     <!-- search activity -->
     <string name="search_activity_label">Pesquisar</string>
@@ -182,7 +183,7 @@
     <string name="add_call_history">Adicionar a partir do histórico de chamadas</string>
     <string name="unknown">Desconhecido</string>
     <string name="number_already_added">Esse número já está na sua lista bloqueio. Deseja sobrescrevê-lo?</string>
-    <string name="adding_number">Adicionando número</string>
+    <string name="adding_number">Adicionando o número</string>
     <string name="please_wait">Por favor, espere...</string>
 
     <!-- splash screen activity -->
