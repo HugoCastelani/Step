@@ -3,7 +3,6 @@ package com.enoughspam.step.database.dao.wide;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LPhoneDAO;
@@ -262,7 +261,7 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
         return instance;
     }
 
-    public UserPhoneDAO getUserPhoneList(@NonNegative final String userKey,
+    public UserPhoneDAO getUserPhoneList(@NonNull final String userKey,
                                          @NonNull final Listeners.ListListener listListener,
                                          @Nullable final Listeners.AnswerListener answerListener) {
 
@@ -302,6 +301,8 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
             @Override public void onCancelled(DatabaseError databaseError) {}
         };
 
+        query.addChildEventListener(childEventListener);
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -315,8 +316,6 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
 
             @Override public void onCancelled(DatabaseError databaseError) {}
         });
-
-        query.addChildEventListener(childEventListener);
 
         return instance;
     }

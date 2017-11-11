@@ -1,7 +1,6 @@
 package com.enoughspam.step.profile;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -10,8 +9,6 @@ import com.afollestad.aesthetic.AestheticProgressBar;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.database.dao.local.LUserDAO;
-import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.dao.wide.UserFriendDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.util.AnimUtils;
@@ -29,7 +26,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AbstractActivity {
     private User mUser;
-    private User mThisUser;
 
     private CircleImageView mUserPic;
     private AestheticProgressBar mUserPicProgressBar;
@@ -46,22 +42,11 @@ public class ProfileActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
 
-        UserDAO.get().findByKey(getIntent().getExtras().getString("user_key"), new Listeners.UserListener() {
-            @Override
-            public void onUserRetrieved(@NonNull User retrievedUser) {
-                mUser = retrievedUser;
-                mThisUser = LUserDAO.get().getThisUser();
+        mUser = (User) getIntent().getExtras().getSerializable("user");
 
-                initViews();
-                initActions();
-                initFragment();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+        initViews();
+        initActions();
+        initFragment();
     }
 
     @Override
@@ -74,7 +59,7 @@ public class ProfileActivity extends AbstractActivity {
 
         // init username text view
         mUsername = (AestheticTextView) findViewById(R.id.profile_user_name);
-        mUsername.setText("@" + mUser.getUsername());
+        mUsername.setText(mUser.getUsername());
 
         // init social media text view
         mSocialMedia = (AestheticTextView) findViewById(R.id.profile_social_media);

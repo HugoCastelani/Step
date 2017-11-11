@@ -192,4 +192,52 @@ public class UserDAO extends GenericWideDAO<User> {
 
         return instance;
     }
+
+    public UserDAO filterByUsername(@NonNull final String username,
+                                    @NonNull final Listeners.ListListener<User> listListener,
+                                    @NonNull final Listeners.AnswerListener answerListener) {
+
+        isNodeValid(node, retrievedBoolean -> {
+            if (retrievedBoolean) {
+
+                final Query query = getReference().orderByChild("username");
+
+                final ChildEventListener childEventListener = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final User user = dataSnapshot.getValue(User.class);
+
+                        if (user.getUsername().toLowerCase().startsWith(username.toLowerCase())) {
+                            listListener.onItemAdded(user);
+                        }
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        listListener.onItemRemoved(dataSnapshot.getValue(User.class));
+                    }
+
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                };
+
+                query.addChildEventListener(childEventListener);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        answerListener.onAnswerRetrieved();
+                        query.removeEventListener(childEventListener);
+                        query.removeEventListener(this);
+                    }
+
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                });
+
+            } else answerListener.onError();
+        });
+
+        return instance;
+    }
 }
