@@ -184,7 +184,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
             final ToolbarViewHolder viewHolder = (ToolbarViewHolder) holder;
 
-            viewHolder.mUsername.setText(mUser.getUsername());
+            viewHolder.mUsername.setText("@" + mUser.getUsername());
 
             CharSequence socialMedia = "";
             switch (mUser.getSocialKey().charAt(mUser.getSocialKey().length() - 1)) {    // last char

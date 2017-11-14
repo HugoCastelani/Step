@@ -66,7 +66,13 @@ public class SearchActivity extends AbstractActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                adapter.setQuery(editable.toString());
+                String query = editable.toString();
+
+                if (query.length() > 0 && query.charAt(0) == '@') {
+                    query = query.replaceFirst("@", "");
+                }
+
+                adapter.setQuery(query);
             }
         });
     }
