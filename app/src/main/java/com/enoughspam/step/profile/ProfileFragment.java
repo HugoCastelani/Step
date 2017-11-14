@@ -59,7 +59,7 @@ public class ProfileFragment extends Fragment {
     private void initViews() {
         // init progress dialog
         mAddingProgressDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.profile_adding_friend)
+                .title(R.string.profile_following)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)

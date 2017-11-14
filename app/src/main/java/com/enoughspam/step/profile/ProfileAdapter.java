@@ -14,7 +14,7 @@ import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.wide.UserFriendDAO;
+import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
 import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
@@ -209,7 +209,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
             });
 
             // init button actions
-            UserFriendDAO.get().exists(mUser, retrievedBoolean -> {
+            UserFollowerDAO.get().exists(mUser, retrievedBoolean -> {
                 if (retrievedBoolean) {
                     setButtonAsRemovable(viewHolder.mButton);
                 } else {
@@ -220,11 +220,11 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
     }
 
     private void setButtonAsAddable(@NonNull final AestheticButton button) {
-        button.setText(mFragment.getResources().getString(R.string.profile_add_friend));
+        button.setText(mFragment.getResources().getString(R.string.profile_follow));
         button.setOnClickListener(view -> {
             mFragment.showAddingProgressDialog();
 
-            UserFriendDAO.get().create(mUser, new Listeners.AnswerListener() {
+            UserFollowerDAO.get().create(mUser, new Listeners.AnswerListener() {
                 @Override
                 public void onAnswerRetrieved() {
                     setButtonAsRemovable(button);
@@ -241,11 +241,11 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
     }
 
     private void setButtonAsRemovable(@NonNull final AestheticButton button) {
-        button.setText(mFragment.getResources().getString(R.string.profile_remove_friend));
+        button.setText(mFragment.getResources().getString(R.string.profile_unfollow));
         button.setOnClickListener(view -> {
             mFragment.showRemovingProgressDialog();
 
-            UserFriendDAO.get().delete(mUser.getKey(), new Listeners.AnswerListener() {
+            UserFollowerDAO.get().delete(mUser.getKey(), new Listeners.AnswerListener() {
                 @Override
                 public void onAnswerRetrieved() {
                     setButtonAsAddable(button);

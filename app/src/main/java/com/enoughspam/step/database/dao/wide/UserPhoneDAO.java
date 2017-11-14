@@ -127,16 +127,16 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
         return instance;
     }
 
-    public UserPhoneDAO createOfUser(@NonNull final User friend,
+    public UserPhoneDAO createOfUser(@NonNull final User follower,
                                      @NonNull final Listeners.AnswerListener listener) {
 
-        final String friendNode = "users/" + friend.getKey() + "/phones";
-        isNodeValid(friendNode, retrievedBoolean -> {
+        final String followerNode = "users/" + follower.getKey() + "/phones";
+        isNodeValid(followerNode, retrievedBoolean -> {
             if (retrievedBoolean) {
 
                 // get only his own numbers
-                final Query query = DAOHandler.getFirebaseDatabase(friendNode)
-                        .orderByChild("userKey").equalTo(friend.getKey());
+                final Query query = DAOHandler.getFirebaseDatabase(followerNode)
+                        .orderByChild("userKey").equalTo(follower.getKey());
 
                 final ChildEventListener childEventListener = new ChildEventListener() {
                     @Override
@@ -225,9 +225,14 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
         return instance;
     }
 
+    private UserPhoneDAO deletePhoneFromFollowers() {
+
+        return instance;
+    }
+
     @Override
-    public GenericWideDAO delete(@NonNull String key1, @NonNull String key2,
-                                 @NonNull Listeners.AnswerListener listener) {
+    public UserPhoneDAO delete(@NonNull String key1, @NonNull String key2,
+                               @NonNull Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("You shouldn't do this. Use method with one " +
                 "parameter instead.");
     }

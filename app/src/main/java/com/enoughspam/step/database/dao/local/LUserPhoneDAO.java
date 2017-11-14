@@ -195,7 +195,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
 
         if (!phoneKey.equals("-1")) {
 
-            List<User> userList = LFriendshipDAO.get().findUserFriends(userPhone.getUserKey());
+            List<User> userList = LRelationshipDAO.get().findUserFriends(userPhone.getUserKey());
             userList.add(0, userPhone.getUser(null));
 
             for (int i = 0; i < userList.size(); i++) {

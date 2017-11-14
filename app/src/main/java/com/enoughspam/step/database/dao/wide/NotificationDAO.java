@@ -3,12 +3,14 @@ package com.enoughspam.step.database.dao.wide;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.annotation.NonNegative;
+import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.util.Listeners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -44,7 +46,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
 
                 final ArrayList<String> keyList = new ArrayList<>();
 
-                UserFriendDAO.get().getUserFriendList(
+                UserFollowerDAO.get().getUserFollowersList(
                         userPhone.getUserKey(),
 
                         new Listeners.ListListener<String>() {
@@ -59,7 +61,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
                         new Listeners.AnswerListener() {
                             @Override
                             public void onAnswerRetrieved() {
-                                sendPhoneToFriends(keyList, userPhone, listener);
+                                sendPhoneToFollowers(keyList, userPhone, listener);
                             }
 
                             @Override
@@ -75,48 +77,61 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
         return instance;
     }
 
-    private NotificationDAO sendPhoneToFriends(@NonNull final ArrayList<String> keyList,
-                                    @NonNull final UserPhone userPhone,
-                                    @NonNull final Listeners.AnswerListener listener) {
+    private NotificationDAO sendPhoneToFollowers(@NonNull final ArrayList<String> keyList,
+                                                 @NonNull final UserPhone userPhone,
+                                                 @NonNull final Listeners.AnswerListener listener) {
 
-        for (int i = 0; i < keyList.size(); i++) {
-            final Query query = getReference().orderByChild("phoneKey").equalTo(userPhone.getPhoneKey());
+        final int[] i = new int[1];
+        for (i[0] = 0; i[0] < keyList.size(); i[0]++) {
 
-            if (i == keyList.size() - 1) {
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot == null || dataSnapshot.getChildren() == null ||
-                            !dataSnapshot.getChildren().iterator().hasNext()) {
-                            // phone doesn't exist
-                            getReference().push().setValue(userPhone);
-                        }
+            final String followerNode = "users/" + keyList.get(i[0]) + "/phones";
 
-                        // last query
-                        listener.onAnswerRetrieved();
-                        query.removeEventListener(this);
+            isNodeValid(followerNode, retrievedBoolean -> {
+                if (retrievedBoolean) {
+
+                    final DatabaseReference innerReference = DAOHandler.getFirebaseDatabase(followerNode);
+
+                    final Query query = innerReference.orderByChild("phoneKey")
+                            .equalTo(userPhone.getPhoneKey());
+
+                    if (i[0] == keyList.size() - 1) {
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot == null || dataSnapshot.getChildren() == null ||
+                                    !dataSnapshot.getChildren().iterator().hasNext()) {
+                                    // phone doesn't exist
+                                    innerReference.push().setValue(userPhone);
+                                }
+
+                                // last query
+                                listener.onAnswerRetrieved();
+                                query.removeEventListener(this);
+                            }
+
+                            @Override public void onCancelled(DatabaseError databaseError) {}
+                        });
+
+                    } else {
+
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot == null || dataSnapshot.getChildren() == null ||
+                                        !dataSnapshot.getChildren().iterator().hasNext()) {
+                                    // phone doesn't exist
+                                    innerReference.push().setValue(userPhone);
+                                }
+
+                                query.removeEventListener(this);
+                            }
+
+                            @Override public void onCancelled(DatabaseError databaseError) {}
+                        });
                     }
 
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
-
-            } else {
-
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot == null || dataSnapshot.getChildren() == null ||
-                            !dataSnapshot.getChildren().iterator().hasNext()) {
-                            // phone doesn't exist
-                            getReference().push().setValue(userPhone);
-                        }
-
-                        query.removeEventListener(this);
-                    }
-
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
-            }
+                }
+            });
         }
 
         return instance;

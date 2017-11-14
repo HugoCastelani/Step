@@ -5,11 +5,10 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
-import com.enoughspam.step.database.domain.Friendship;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.database.domain.Relationship;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.Listeners;
@@ -22,41 +21,41 @@ import java.util.ArrayList;
  * Time: 23:14
  */
 
-public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
-    private static LFriendshipDAO instance;
+public class LRelationshipDAO extends GenericLocalDAO<Relationship> {
+    private static LRelationshipDAO instance;
 
-    public static final String USER_ADDED_KEY = "user_added_key";
-    public static final String USER_ADDING_KEY = "user_adding_key";
+    public static final String USER_FOLLOWED_KEY = "user_followed_key";
+    public static final String USER_FOLLOWER_KEY = "user_follower_key";
 
     @Override
     protected void prepareFields() {
-        table = "friendship";
+        table = "relationship";
     }
 
-    private LFriendshipDAO() {}
+    private LRelationshipDAO() {}
 
-    public static LFriendshipDAO get() {
-        if (instance == null) instance = new LFriendshipDAO();
+    public static LRelationshipDAO get() {
+        if (instance == null) instance = new LRelationshipDAO();
         return instance;
     }
 
     @Override
-    public Friendship generate(@NonNull final Cursor cursor) {
-        return new Friendship(
-                cursor.getString(cursor.getColumnIndex(USER_ADDED_KEY)),
-                cursor.getString(cursor.getColumnIndex(USER_ADDING_KEY))
+    public Relationship generate(@NonNull final Cursor cursor) {
+        return new Relationship(
+                cursor.getString(cursor.getColumnIndex(USER_FOLLOWED_KEY)),
+                cursor.getString(cursor.getColumnIndex(USER_FOLLOWER_KEY))
         );
     }
 
     @Override
-    public LFriendshipDAO create(@NonNull final Friendship friendship) {
-        if (findByIDs(friendship.getAddedKey(), friendship.getAddingKey()) == null) {
+    public LRelationshipDAO create(@NonNull final Relationship relationship) {
+        if (findByIDs(relationship.getFollowedKey(), relationship.getFollowerKey()) == null) {
 
-            LUserDAO.get().clone(friendship.getAddedUser(null));    // user was already set
+            LUserDAO.get().clone(relationship.getFollowedUser(null));    // user was already set
             ContentValues values = new ContentValues();
 
-            values.put(USER_ADDED_KEY, friendship.getAddedKey());
-            values.put(USER_ADDING_KEY, friendship.getAddingKey());
+            values.put(USER_FOLLOWED_KEY, relationship.getFollowedKey());
+            values.put(USER_FOLLOWER_KEY, relationship.getFollowerKey());
 
             DAOHandler.getLocalDatabase().insert(table, null, values);
         }
@@ -64,55 +63,57 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
     }
 
     @Override @Deprecated
-    public LFriendshipDAO update(@NonNull Friendship friendship) {
+    public LRelationshipDAO update(@NonNull Relationship relationship) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
     @Override
-    public LFriendshipDAO delete(@NonNegative final String addedKey) {
+    public LRelationshipDAO delete(@NonNull final String addedKey) {
         DAOHandler.getLocalDatabase().delete(
-                table, USER_ADDED_KEY + " = ? AND " + USER_ADDING_KEY + " = ?",
+                table, USER_FOLLOWED_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
                 new String[] {addedKey, LUserDAO.get().getThisUserKey()});
         return instance;
     }
 
     @Override @Deprecated
-    public String exists(@NonNull Friendship friendship) {
+    public String exists(@NonNull Relationship relationship) {
         throw new UnsupportedOperationException("You shouldn't do this. Call findByKeys()" +
                 " method instead.");
     }
 
     @Override
-    public GenericLocalDAO<Friendship> sync(@NonNull Listeners.AnswerListener listener) {
+    public GenericLocalDAO<Relationship> sync(@NonNull Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("Support this, Hugo.");
     }
 
-    public Friendship findByIDs(@NonNull final String addedKey, @NonNegative final String addingKey) {
+    public Relationship findByIDs(@NonNull final String followedKey,
+                                  @NonNull final String followerKey) {
+
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
-                USER_ADDED_KEY + " = ? AND " + USER_ADDING_KEY + " = ?",
-                new String[] {addedKey, addingKey}, null, null, null);
+                USER_FOLLOWED_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
+                new String[] {followedKey, followerKey}, null, null, null);
 
-        Friendship friendship = null;
-        if (cursor.moveToFirst()) friendship = generate(cursor);
+        Relationship relationship = null;
+        if (cursor.moveToFirst()) relationship = generate(cursor);
 
-        return friendship;
+        return relationship;
     }
 
-    public ArrayList<User> findUserFriends(@NonNegative final String key) {
+    public ArrayList<User> findUserFriends(@NonNull final String key) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
-                USER_ADDING_KEY + " = ?", new String[] {key}, null, null, null);
+                USER_FOLLOWER_KEY + " = ?", new String[] {key}, null, null, null);
 
         final ArrayList<User> friendList = new ArrayList<>();
         while (cursor.moveToNext()) {
             friendList.add(LUserDAO.get().findByColumn(LUserDAO.key,
-                    cursor.getString(cursor.getColumnIndex(USER_ADDED_KEY))
+                    cursor.getString(cursor.getColumnIndex(USER_FOLLOWED_KEY))
             ));
         }
 
         return friendList;
     }
 
-    public ArrayList<PhoneSection> getFriendsBlockedList(@NonNegative final String key) {
+    public ArrayList<PhoneSection> getFriendsBlockedList(@NonNull final String key) {
         ArrayList<User> friendList = findUserFriends(key);
         ArrayList<PhoneSection> phoneSectionList = new ArrayList<>();
 

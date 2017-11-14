@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
-    public static final int VERSION = 15;
+    public static final int VERSION = 17;
 
     private SQLiteDatabase mSQLiteDatabase;
 
@@ -74,11 +74,11 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 "photo_url varchar(500) not null);");
 
         // create friendship table
-        mSQLiteDatabase.execSQL("create table friendship (" +
-                "user_added_key varchar(100) not null," +
-                "user_adding_key varchar(100) not null," +
-                "foreign key(user_added_key) references user(key)," +
-                "foreign key(user_adding_key) references user(key));");
+        mSQLiteDatabase.execSQL("create table relationship (" +
+                "user_followed_key varchar(100) not null," +
+                "user_follower_key varchar(100) not null," +
+                "foreign key(user_followed_key) references user(key)," +
+                "foreign key(user_follower_key) references user(key));");
 
         // creating phone table
         mSQLiteDatabase.execSQL("create table phone (" +
