@@ -78,7 +78,7 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
 
     @Override @Deprecated
     public String exists(@NonNull Friendship friendship) {
-        throw new UnsupportedOperationException("You shouldn't do this. Call findByIDs()" +
+        throw new UnsupportedOperationException("You shouldn't do this. Call findByKeys()" +
                 " method instead.");
     }
 
@@ -116,7 +116,7 @@ public class LFriendshipDAO extends GenericLocalDAO<Friendship> {
         ArrayList<User> friendList = findUserFriends(key);
         ArrayList<PhoneSection> phoneSectionList = new ArrayList<>();
 
-        final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_of);
+        final String prefix = DAOHandler.getContext().getResources().getString(R.string.numbers_prefix);
         for (int i = 0; i < friendList.size(); i++) {
             final User tempUser = friendList.get(i);
             final ArrayList<Phone> phoneList = LUserPhoneDAO.get().getPhoneList(tempUser.getKey());

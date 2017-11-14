@@ -59,7 +59,8 @@ public class UserFriendDAO extends GenericWideDAO<User> {
                                     friendship.setAddingUser(thisUser);
 
                                     LFriendshipDAO.get().create(friendship);
-                                    listener.onAnswerRetrieved();
+
+                                    UserPhoneDAO.get().createOfUser(user, listener);
                                 });
                     }
 
@@ -91,7 +92,9 @@ public class UserFriendDAO extends GenericWideDAO<User> {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         getReference().child(dataSnapshot.getKey()).removeValue()
                                 .addOnFailureListener(e -> listener.onError())
-                                .addOnSuccessListener(aVoid -> LFriendshipDAO.get().delete(key));
+                                .addOnSuccessListener(aVoid ->
+                                        LFriendshipDAO.get().delete(key)
+                                );
                     }
 
                     @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -99,6 +102,8 @@ public class UserFriendDAO extends GenericWideDAO<User> {
                     @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 };
+
+                query.addChildEventListener(childEventListener);
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

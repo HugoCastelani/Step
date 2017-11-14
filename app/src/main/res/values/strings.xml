@@ -7,7 +7,8 @@
     <string name="press_back_again">Pressione o botão voltar novamente para sair</string>
     <string name="notifications_hint">Notificações</string>
     <string name="my_numbers">Meus números</string>
-    <string name="numbers_of">Números de @</string>
+    <string name="numbers_prefix">Números de @</string>
+    <string name="numbers_suffix"></string>
     <string name="official_numbers">Números oficiais</string>
     <string name="removed_number">Número removido</string>
     <string name="search_user">Procurar por usuário...</string>
@@ -184,7 +185,9 @@
     <string name="unknown">Desconhecido</string>
     <string name="number_already_added">Esse número já está na sua lista bloqueio. Deseja sobrescrevê-lo?</string>
     <string name="adding_number">Adicionando o número</string>
+    <string name="adding_numbers">Adicionando os números</string>
     <string name="please_wait">Por favor, espere...</string>
+    <string name="adding_number_error">Erro ao adicionar o número</string>
 
     <!-- splash screen activity -->
     <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>
@@ -193,11 +196,16 @@
     <!-- profile activity -->
     <string name="profile_activity_label">Meu perfil</string>
     <string name="profile_add_friend">Adicionar aos amigos</string>
+    <string name="profile_adding_friend">Adicionando aos amigos</string>
     <string name="profile_remove_friend">Desfazer amizade</string>
+    <string name="profile_removing_friend">Desfazendo a amizade</string>
     <string name="profile_delete_account">Deletar conta</string>
     <string name="profile_signed_via_google">Logado via Google+</string>
     <string name="profile_signed_via_facebook">Logado via Facebook</string>
     <string name="profile_signed_via_twitter">Logado via Twitter</string>
+    <string name="profile_error_user_pic">Não foi possível baixar a foto do usuário</string>
+    <string name="profile_error_add_user">Não foi possível adicionar o usuário</string>
+    <string name="profile_error_remove_user">Não foi possível remover o usuário</string>
 
     <!-- color picker dialog -->
     <string name="select_color">Selecione uma cor</string>

@@ -53,19 +53,48 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
         );
     }
 
-    @Override
+    @Override @Deprecated
     public LUserPhoneDAO create(@NonNull final UserPhone userPhone) {
-        if (findByIDs(userPhone.getUserKey(), userPhone.getPhoneKey()) == null) {
+        throw new UnsupportedOperationException("You shouldn't do this. Call overloaded method" +
+                " with two parameters instead.");
+    }
 
-            final ContentValues values = new ContentValues();
+    public LUserPhoneDAO create(@NonNull final UserPhone userPhone,
+                                @NonNull final Listeners.AnswerListener listener,
+                                @NonNull final Boolean force) {
 
-            values.put(USER_KEY, userPhone.getUserKey());
-            values.put(PHONE_KEY, userPhone.getPhoneKey());
-            values.put(IS_PROPERTY, userPhone.getIsProperty());
-            values.put(IS_NOTIFICATION, userPhone.getIsNotification());
+        if (force || findByColumn(PHONE_KEY, userPhone.getPhoneKey()) == null) {
 
-            DAOHandler.getLocalDatabase().insert(table, null, values);
-        }
+            if (findByKeys(userPhone.getUserKey(), userPhone.getPhoneKey()) == null) {
+                Listeners.AnswerListener innerListener = new Listeners.AnswerListener() {
+                    Integer count = 0;
+
+                    @Override
+                    public void onAnswerRetrieved() {
+                        if (++count == 2) {
+                            final ContentValues values = new ContentValues();
+
+                            values.put(USER_KEY, userPhone.getUserKey());
+                            values.put(PHONE_KEY, userPhone.getPhoneKey());
+                            values.put(IS_PROPERTY, userPhone.getIsProperty());
+                            values.put(IS_NOTIFICATION, userPhone.getIsNotification());
+
+                            DAOHandler.getLocalDatabase().insert(table, null, values);
+                            listener.onAnswerRetrieved();
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        listener.onError();
+                    }
+                };
+
+                LUserDAO.get().loadLocally(userPhone.getUserKey(), innerListener);
+                LPhoneDAO.get().loadLocally(userPhone.getPhoneKey(), innerListener);
+            }
+
+        } else listener.onAnswerRetrieved();
 
         return instance;
     }
@@ -101,7 +130,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
 
     @Override @Deprecated
     public String exists(@NonNull UserPhone userPhone) {
-        throw new UnsupportedOperationException("You shouldn't do this. Call findByIDs()" +
+        throw new UnsupportedOperationException("You shouldn't do this. Call findByKeys()" +
                 " method instead.");
     }
 
@@ -110,7 +139,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
         throw new UnsupportedOperationException("Support this, Hugo.");
     }
 
-    public UserPhone findByIDs(@NonNull final String userKey, @NonNull final String phoneKey) {
+    public UserPhone findByKeys(@NonNull final String userKey, @NonNull final String phoneKey) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
                 USER_KEY + " = ? AND " + PHONE_KEY + " = ?",
                 new String[] {userKey, phoneKey}, null, null, null);

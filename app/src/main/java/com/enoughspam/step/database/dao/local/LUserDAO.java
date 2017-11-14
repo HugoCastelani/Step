@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
+import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.util.Listeners;
 
@@ -100,6 +101,26 @@ public class LUserDAO extends GenericLocalDAO<User> {
 
             DAOHandler.getLocalDatabase().insert(table, null, values);
         }
+        return instance;
+    }
+
+    public LUserDAO loadLocally(@NonNull final String userKey,
+                                @NonNull final Listeners.AnswerListener listener) {
+        if (findByColumn(LUserDAO.key, userKey) == null) {
+            UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
+                @Override
+                public void onUserRetrieved(@NonNull User retrievedUser) {
+                    create(retrievedUser);
+                    listener.onAnswerRetrieved();
+                }
+
+                @Override
+                public void onError() {
+                    listener.onError();
+                }
+            });
+        } else listener.onAnswerRetrieved();
+
         return instance;
     }
 

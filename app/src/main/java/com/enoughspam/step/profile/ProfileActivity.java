@@ -4,19 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.afollestad.aesthetic.AestheticButton;
-import com.afollestad.aesthetic.AestheticProgressBar;
-import com.afollestad.aesthetic.AestheticTextView;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
-import com.enoughspam.step.database.dao.wide.UserFriendDAO;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.util.AnimUtils;
-import com.enoughspam.step.util.Listeners;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Hugo Castelani
@@ -26,12 +16,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AbstractActivity {
     private User mUser;
-
-    private CircleImageView mUserPic;
-    private AestheticProgressBar mUserPicProgressBar;
-    private AestheticTextView mUsername;
-    private AestheticTextView mSocialMedia;
-    private AestheticButton mButton;
 
     protected User getUser() {
         return mUser;
@@ -50,55 +34,10 @@ public class ProfileActivity extends AbstractActivity {
     }
 
     @Override
-    protected void initViews() {
-        // init user photo
-        mUserPic = (CircleImageView) findViewById(R.id.profile_circle_view);
-
-        // init progress bar
-        mUserPicProgressBar = (AestheticProgressBar) findViewById(R.id.profile_progress_bar);
-
-        // init username text view
-        mUsername = (AestheticTextView) findViewById(R.id.profile_user_name);
-        mUsername.setText(mUser.getUsername());
-
-        // init social media text view
-        mSocialMedia = (AestheticTextView) findViewById(R.id.profile_social_media);
-
-        CharSequence socialMedia = "";
-        switch (mUser.getSocialKey().charAt(mUser.getSocialKey().length() - 1)) {    // last char
-            case '1':    // google code
-                socialMedia = getResources().getText(R.string.profile_signed_via_google);
-                break;
-            default: mSocialMedia.setVisibility(View.GONE);
-        }
-
-        mSocialMedia.setText(socialMedia);
-
-        // init button
-        mButton = (AestheticButton) findViewById(R.id.profile_delete_account);
-    }
+    protected void initViews() {}
 
     @Override
-    protected void initActions() {
-        // init user photo and progress bar actions
-        Picasso.with(getBaseContext()).load(mUser.getPicURL()).into(mUserPic, new Callback() {
-            @Override
-            public void onSuccess() {
-                AnimUtils.fadeOutFadeIn(mUserPicProgressBar, mUserPic);
-            }
-
-            @Override public void onError() {}
-        });
-
-        // init button actions
-        UserFriendDAO.get().exists(mUser, retrievedBoolean -> {
-            if (retrievedBoolean) {
-                setButtonAsRemovable();
-            } else {
-                setButtonAsAddable();
-            }
-        });
-    }
+    protected void initActions() {}
 
     @Override
     protected void initFragment() {
@@ -111,34 +50,6 @@ public class ProfileActivity extends AbstractActivity {
             fragmentTransaction.replace(R.id.profile_fragment_container, profileFragment, "profileFragmentTag");
             fragmentTransaction.commit();
         }
-    }
-
-    private void setButtonAsAddable() {
-        mButton.setText(getResources().getString(R.string.profile_add_friend));
-        mButton.setOnClickListener(view ->
-            UserFriendDAO.get().create(mUser, new Listeners.AnswerListener() {
-                @Override
-                public void onAnswerRetrieved() {
-                    setButtonAsRemovable();
-                }
-
-                @Override public void onError() {}
-            })
-        );
-    }
-
-    private void setButtonAsRemovable() {
-        mButton.setText(getResources().getString(R.string.profile_remove_friend));
-        mButton.setOnClickListener(view ->
-            UserFriendDAO.get().delete(mUser.getKey(), new Listeners.AnswerListener() {
-                @Override
-                public void onAnswerRetrieved() {
-                    setButtonAsAddable();
-                }
-
-                @Override public void onError() {}
-            })
-        );
     }
 
     public void onBackPressed(View view) {

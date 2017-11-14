@@ -101,6 +101,12 @@ public class UserPhone {
                     }
                 });
             }
+
+        } else {
+
+            if (listener != null) {
+                listener.onUserRetrieved(user);
+            }
         }
 
         return user;
@@ -134,6 +140,12 @@ public class UserPhone {
 
                     @Override public void onError() {listener.onError();}
                 });
+            }
+
+        } else {
+
+            if (listener != null) {
+                listener.onPhoneRetrieved(phone);
             }
         }
 

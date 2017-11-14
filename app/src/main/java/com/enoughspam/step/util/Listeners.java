@@ -13,6 +13,10 @@ import com.enoughspam.step.database.domain.UserPhone;
  */
 
 public class Listeners {
+    public interface ObjectListener<T> {
+        void onObjectRetrieved(@NonNull final T retrievedObject);
+    }
+
     public interface PhoneListener {
         void onPhoneRetrieved(@NonNull final Phone retrievedPhone);
         void onError();

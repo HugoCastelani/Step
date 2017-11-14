@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,8 +33,6 @@ import com.enoughspam.step.util.decorator.ListDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Hugo Castelani
@@ -168,11 +164,26 @@ public class AddNumberFragment extends Fragment {
                 .positiveColor(ThemeHandler.getAccent())
                 .negativeText(R.string.cancel_button)
                 .negativeColor(ThemeHandler.getAccent())
-                .onPositive((dialog, which) -> saveNumber(phone))
+                .onPositive((dialog, which) -> {
+                        mActivity.showNumberProgressDialog();
+                        saveNumber(phone, new Listeners.AnswerListener() {
+                            @Override
+                            public void onAnswerRetrieved() {
+                                mActivity.hideNumberProgressDialog();
+                            }
+
+                            @Override
+                            public void onError() {
+                                mActivity.showSnackAndClose(R.string.something_went_wrong);
+                            }
+                        });
+                })
                 .show();
     }
 
-    protected void saveNumber(@NonNull final Phone phone) {
+    protected void saveNumber(@NonNull final Phone phone,
+                              @NonNull final Listeners.AnswerListener listener) {
+
         PhoneDAO.get().create(phone, new Listeners.PhoneListener() {
             @Override
             public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
@@ -191,19 +202,19 @@ public class AddNumberFragment extends Fragment {
                                         .positiveColor(ThemeHandler.getAccent())
                                         .negativeText(R.string.cancel_button)
                                         .negativeColor(ThemeHandler.getAccent())
-                                        .onPositive((dialog, which) -> forceSaveNumber(retrievedPhone))
+                                        .onPositive((dialog, which) ->
+                                                forceSaveNumber(retrievedPhone, listener))
                                         .show();
                             }
 
                             @Override
                             public void properlyAdded() {
-                                mActivity.hideProgressDialog();
-                                mActivity.onBackPressed();
+                                listener.onAnswerRetrieved();
                             }
 
                             @Override
                             public void error() {
-                                showSnackAndClose(R.string.something_went_wrong);
+                                listener.onError();
                             }
                         },
 
@@ -213,30 +224,30 @@ public class AddNumberFragment extends Fragment {
 
             @Override
             public void onError() {
-                showSnackAndClose(R.string.something_went_wrong);
+                mActivity.showSnackAndClose(R.string.something_went_wrong);
             }
         });
     }
 
-    protected void forceSaveNumber(@NonNull final Phone phone) {
+    protected void forceSaveNumber(@NonNull final Phone phone,
+                                   @NonNull final Listeners.AnswerListener listener) {
         UserPhoneDAO.get().create(
                 new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false),
 
                 new Listeners.UserPhoneAnswerListener() {
                     @Override
                     public void alreadyAdded() {
-                        showSnackAndClose(R.string.something_went_wrong);
+                        listener.onError();
                     }
 
                     @Override
                     public void properlyAdded() {
-                        mActivity.hideProgressDialog();
-                        mActivity.onBackPressed();
+                        listener.onAnswerRetrieved();
                     }
 
                     @Override
                     public void error() {
-                        showSnackAndClose(R.string.something_went_wrong);
+                        listener.onError();
                     }
                 },
 
@@ -246,17 +257,5 @@ public class AddNumberFragment extends Fragment {
 
     public void showRecyclerView() {
         AnimUtils.fadeOutFadeIn(mProgressBar, mRecyclerView);
-    }
-
-    private void showSnackAndClose(@StringRes final int message) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mActivity.onBackPressed();
-            }
-        }, Snackbar.LENGTH_LONG);
-
-        Snackbar.make(mActivity.findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 }

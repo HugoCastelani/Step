@@ -34,7 +34,8 @@ public class MainActivity extends AbstractActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
     private static final int REQUEST_CODE_ADD_NUMBER = 3;
-    private static final int REQUEST_CODE_PROFILE = 4;
+    private static final int REQUEST_CODE_ACCOUNT = 4;
+    private static final int REQUEST_CODE_SEARCH = 5;
 
     private FloatingActionButton mFab;
     private Snackbar mSnackbar;
@@ -136,7 +137,7 @@ public class MainActivity extends AbstractActivity {
                 case 3:
                     /*final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
                     intent2.putExtra("user_key", "-Kwk6q46QWGzxvgi_OW4");
-                    startActivityForResult(intent2, REQUEST_CODE_PROFILE);*/
+                    startActivityForResult(intent2, REQUEST_CODE_ACCOUNT);*/
                     break;
             }
 
@@ -155,7 +156,7 @@ public class MainActivity extends AbstractActivity {
         switch (item.getItemId()) {
             case R.id.action_search:
                 final Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_SEARCH);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -176,16 +177,9 @@ public class MainActivity extends AbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_SETTINGS:
-                recreate();
+            case REQUEST_CODE_ACCOUNT:
                 break;
-            case REQUEST_CODE_ADD_NUMBER:
-                recreate();
-                break;
-            case REQUEST_CODE_PROFILE:
-                recreate();
-                break;
-            default: break;
+            default: recreate();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

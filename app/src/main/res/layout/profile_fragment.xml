@@ -5,11 +5,19 @@
     android:layout_height="match_parent"
     tools:context="com.enoughspam.step.profile.ProfileFragment">
 
+    <com.afollestad.aesthetic.AestheticProgressBar
+        android:id="@+id/profile_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <com.afollestad.aesthetic.AestheticRecyclerView
         android:id="@+id/profile_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/profile_place_holder"

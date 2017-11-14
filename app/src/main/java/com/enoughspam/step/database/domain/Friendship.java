@@ -81,6 +81,12 @@ public class Friendship {
                     }
                 });
             }
+
+        } else {
+
+            if (listener != null) {
+                listener.onUserRetrieved(addedUser);
+            }
         }
 
         return addedUser;
@@ -115,6 +121,12 @@ public class Friendship {
                         listener.onError();
                     }
                 });
+            }
+
+        } else {
+
+            if (listener != null) {
+                listener.onUserRetrieved(addingUser);
             }
         }
 

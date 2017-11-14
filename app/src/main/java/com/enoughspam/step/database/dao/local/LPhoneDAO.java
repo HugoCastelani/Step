@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
+import com.enoughspam.step.database.dao.wide.PhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.util.Listeners;
 
@@ -109,8 +110,28 @@ public class LPhoneDAO extends GenericLocalDAO<Phone> {
         else return matchingPhone.getKey();
     }
 
+    public LPhoneDAO loadLocally(@NonNull final String phoneKey,
+                                 @NonNull final Listeners.AnswerListener listener) {
+        if (findByColumn(LPhoneDAO.key, phoneKey) == null) {
+            PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
+                @Override
+                public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                    create(retrievedPhone);
+                    listener.onAnswerRetrieved();
+                }
+
+                @Override
+                public void onError() {
+                    listener.onError();
+                }
+            });
+        } else listener.onAnswerRetrieved();
+
+        return instance;
+    }
+
     @Override
-    public GenericLocalDAO<Phone> sync(@NonNull Listeners.AnswerListener listener) {
+    public LPhoneDAO sync(@NonNull Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("Support this, Hugo.");
     }
 }
