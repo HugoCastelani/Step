@@ -351,7 +351,8 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                         .orderByChild("isNotification").equalTo(false);
 
                 final Integer[] waitingFor = new Integer[] {0, 0};
-                query.addChildEventListener(new ChildEventListener() {
+
+                final ChildEventListener childEventListener = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         final UserPhone userPhone = dataSnapshot.getValue(UserPhone.class);
@@ -385,6 +386,21 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                     @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
                     @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                     @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override public void onCancelled(DatabaseError databaseError) {}
+                };
+
+                query.addChildEventListener(childEventListener);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (waitingFor[0] == 0) {
+                            answerListener.onAnswerRetrieved();
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
+                    }
+
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
 
