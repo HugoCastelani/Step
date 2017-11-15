@@ -1,75 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay">
+    android:gravity="center_horizontal"
+    android:padding="@dimen/toolbar_padding"
+    android:background="@color/md_white_1000"
+    android:elevation="4dp"
+    android:orientation="vertical">
 
-    <com.afollestad.aesthetic.AestheticToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+    <com.afollestad.aesthetic.AestheticImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
+        android:layout_gravity="start"
+        android:background="?selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        android:onClick="onBackPressed"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="@dimen/toolbar_padding"
-            android:layout_marginRight="@dimen/toolbar_padding"
-            android:layout_marginEnd="@dimen/toolbar_padding"
-            android:layout_marginBottom="@dimen/toolbar_padding"
-            android:orientation="vertical">
+    <com.afollestad.aesthetic.AestheticProgressBar
+        android:id="@+id/profile_progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"/>
 
-            <com.afollestad.aesthetic.AestheticImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_back"
-                android:onClick="onBackPressed"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_circle_view"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:elevation="8dp"
+        android:visibility="gone"/>
 
-            <com.afollestad.aesthetic.AestheticProgressBar
-                android:id="@+id/profile_progress_bar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"/>
+    <com.afollestad.aesthetic.AestheticTextView
+        android:id="@+id/profile_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/toolbar_padding"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="24sp"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_circle_view"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:elevation="8dp"
-                android:visibility="gone"/>
+    <com.afollestad.aesthetic.AestheticTextView
+        android:id="@+id/profile_social_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/toolbar_padding"
+        android:textColor="?android:textColorPrimary"
+        android:text="Logado via Google+"/>
 
-            <com.afollestad.aesthetic.AestheticTextView
-                android:id="@+id/profile_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toolbar_padding"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="24sp"/>
+    <com.afollestad.aesthetic.AestheticButton
+        android:id="@+id/profile_delete_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/toolbar_padding"
+        android:text="@string/profile_follow"/>
 
-            <com.afollestad.aesthetic.AestheticTextView
-                android:id="@+id/profile_social_media"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toolbar_padding"
-                android:textColor="?android:textColorPrimary"
-                android:text="Logado via Google+"/>
-
-            <com.afollestad.aesthetic.AestheticButton
-                android:id="@+id/profile_delete_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toolbar_padding"
-                android:text="@string/profile_follow"/>
-
-        </LinearLayout>
-
-    </com.afollestad.aesthetic.AestheticToolbar>
-
-</android.support.design.widget.AppBarLayout>
+</LinearLayout>

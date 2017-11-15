@@ -41,6 +41,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     private ProfileFragment mFragment;
     private User mUser;
+    private Boolean isFollowing;
 
     private List<PhoneSection> mBlockedNumbersList;
 
@@ -52,6 +53,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
         mUser = user;
         mFragment = fragment;
 
+        UserFollowerDAO.get().exists(mUser, retrievedBoolean -> isFollowing = retrievedBoolean);
         UserPhoneDAO.get().getUserPhoneList(user.getKey(), getListListener(), getAnswerListener());
     }
 
@@ -209,13 +211,11 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
             });
 
             // init button actions
-            UserFollowerDAO.get().exists(mUser, retrievedBoolean -> {
-                if (retrievedBoolean) {
-                    setButtonAsRemovable(viewHolder.mButton);
-                } else {
-                    setButtonAsAddable(viewHolder.mButton);
-                }
-            });
+            if (isFollowing) {
+                setButtonAsRemovable(viewHolder.mButton);
+            } else {
+                setButtonAsAddable(viewHolder.mButton);
+            }
         }
     }
 
