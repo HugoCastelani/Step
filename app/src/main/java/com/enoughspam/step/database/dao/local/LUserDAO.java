@@ -51,7 +51,7 @@ public class LUserDAO extends GenericLocalDAO<User> {
         if (findByColumn(SOCIAL_KEY, user.getSocialKey()) == null) {
             final ContentValues values = new ContentValues();
 
-            values.put(instance.key, user.getKey());
+            values.put(key, user.getKey());
             values.put(SOCIAL_KEY, user.getSocialKey());
             values.put(USER_NAME, user.getUsername());
             values.put(PHOTO_URL, user.getPicURL());

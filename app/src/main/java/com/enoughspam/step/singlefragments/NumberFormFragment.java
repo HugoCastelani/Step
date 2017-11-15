@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.blankj.utilcode.util.LocationUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.addnumber.AddNumberFragment;
 import com.enoughspam.step.database.dao.local.LAreaDAO;
@@ -28,6 +27,7 @@ import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.intro.NumberIntroFragment;
 import com.enoughspam.step.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.intro.util.FormHandler;
+import com.enoughspam.step.util.LocationUtils;
 import com.enoughspam.step.util.ThemeHandler;
 import com.google.android.gms.location.LocationServices;
 

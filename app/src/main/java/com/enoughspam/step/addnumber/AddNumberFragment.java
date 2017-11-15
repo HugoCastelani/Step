@@ -81,8 +81,7 @@ public class AddNumberFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        ListDecorator.init(getContext());
-        ListDecorator.addAdaptableMargins(mRecyclerView);
+        ListDecorator.addAdaptableMargins(mRecyclerView, -1);
     }
 
     private List<Call> getCallList() {

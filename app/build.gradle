@@ -49,8 +49,16 @@ dependencies {
     // blankj
     compile 'com.blankj:utilcode:1.7.1'
 
+    // google
+    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    compile 'com.google.android.gms:play-services-location:11.4.2'
+    compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.google.firebase:firebase-database:11.4.2'
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     // hdodenhof
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
     // hein richreimer
     compile 'com.heinrichreimersoftware:material-intro:1.6.2'
@@ -65,12 +73,6 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
         transitive = true
     }
-
-    // google
-    compile 'com.google.android.gms:play-services-auth:11.4.2'
-    compile 'com.google.android.gms:play-services-location:11.4.2'
-    compile 'com.google.firebase:firebase-core:11.4.2'
-    compile 'com.google.firebase:firebase-database:11.4.2'
 
     // squareup
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -95,7 +97,7 @@ dependencies {
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
 
     // blankj
-    compile 'com.blankj:utilcode:1.7.1'
+    compile 'com.blankj:utilcode:1.9.8'
 
     // google
     compile 'com.google.android.gms:play-services-auth:11.4.2'
@@ -136,6 +138,8 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
+
 
 
 apply plugin: 'com.google.gms.google-services'

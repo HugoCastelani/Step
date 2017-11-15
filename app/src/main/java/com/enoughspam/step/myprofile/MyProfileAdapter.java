@@ -1,4 +1,4 @@
-package com.enoughspam.step.profile;
+package com.enoughspam.step.myprofile;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -8,10 +8,10 @@ import android.widget.LinearLayout;
 
 import com.afollestad.aesthetic.AestheticButton;
 import com.afollestad.aesthetic.AestheticCardView;
+import com.afollestad.aesthetic.AestheticProgressBar;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
-import com.blankj.utilcode.util.ScreenUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
@@ -20,6 +20,8 @@ import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.profile.ProfileFragment;
+import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -31,11 +33,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Hugo Castelani
- * Date: 14/10/17
- * Time: 20:34
+ * Date: 15/11/17
+ * Time: 11:00
  */
 
-public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
+public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
     private static final int VIEW_TYPE_TOOLBAR = -4;
 
     private ProfileFragment mFragment;
@@ -47,7 +49,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
     private Listeners.ListListener mListListener;
     private Listeners.AnswerListener mAnswerListener;
 
-    public ProfileAdapter(@NonNull final User user, @NonNull final ProfileFragment fragment) {
+    public MyProfileAdapter(@NonNull final User user, @NonNull final ProfileFragment fragment) {
         mBlockedNumbersList = new ArrayList<>();
         mUser = user;
         mFragment = fragment;
@@ -141,7 +143,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     @Override
     public void onBindHeaderViewHolder(SectionedViewHolder holder, int section, boolean expanded) {
-        final AestheticTextView blockerOrNumber = ((ItemViewHolder) holder).mBlockerOrNumber;
+        final AestheticTextView blockerOrNumber = ((MyProfileAdapter.ItemViewHolder) holder).mBlockerOrNumber;
 
         if (section == 0) {
             final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, 0);
@@ -160,8 +162,8 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
-        if (holder instanceof ItemViewHolder) {
-            final ItemViewHolder viewHolder = (ItemViewHolder) holder;
+        if (holder instanceof MyProfileAdapter.ItemViewHolder) {
+            final MyProfileAdapter.ItemViewHolder viewHolder = (MyProfileAdapter.ItemViewHolder) holder;
 
             final Phone phone = mBlockedNumbersList.get(section - 1).getPhoneList().get(relativePosition);
 
@@ -183,7 +185,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
         } else {
 
-            final ToolbarViewHolder viewHolder = (ToolbarViewHolder) holder;
+            final MyProfileAdapter.ToolbarViewHolder viewHolder = (MyProfileAdapter.ToolbarViewHolder) holder;
 
             viewHolder.mUsername.setText("@" + mUser.getUsername());
 
@@ -199,7 +201,10 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
             // init user photo and progress bar actions
             Picasso.with(mFragment.getContext()).load(mUser.getPicURL()).into(viewHolder.mUserPic, new Callback() {
-                @Override public void onSuccess() {}
+                @Override
+                public void onSuccess() {
+                    AnimUtils.fadeOutFadeIn(viewHolder.mUserPicProgressBar, viewHolder.mUserPic);
+                }
 
                 @Override public void onError() {
                     mFragment.showSnackbar(R.string.profile_error_user_pic);
@@ -261,25 +266,15 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
     public SectionedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_TOOLBAR:
-                if (ScreenUtils.isTablet() || ScreenUtils.isLandscape()) {
-                    return new ToolbarViewHolder(
-                            LayoutInflater.from(parent.getContext()).inflate(
-                                    R.layout.profile_item_toolbar_landscape, parent, false));
-
-                } else {
-
-                    return new ToolbarViewHolder(
-                            LayoutInflater.from(parent.getContext()).inflate(
-                                    R.layout.profile_item_toolbar_portrait, parent, false));
-                }
-
+                return new MyProfileAdapter.ToolbarViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(
+                                R.layout.profile_item_toolbar_portrait, parent, false));
             case VIEW_TYPE_HEADER:
-                return new ItemViewHolder(
+                return new MyProfileAdapter.ItemViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.preference_category, parent, false));
-
             default:
-                return new ItemViewHolder(
+                return new MyProfileAdapter.ItemViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.main_item_number, parent, false));
         }
@@ -301,6 +296,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     protected static class ToolbarViewHolder extends SectionedViewHolder {
         final CircleImageView mUserPic;
+        final AestheticProgressBar mUserPicProgressBar;
         final AestheticTextView mUsername;
         final AestheticTextView mSocialMedia;
         final AestheticButton mButton;
@@ -308,6 +304,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
         public ToolbarViewHolder(View itemView) {
             super(itemView);
             mUserPic = (CircleImageView) itemView.findViewById(R.id.profile_circle_view);
+            mUserPicProgressBar = (AestheticProgressBar) itemView.findViewById(R.id.profile_progress_bar);
             mUsername = (AestheticTextView) itemView.findViewById(R.id.profile_user_name);
             mSocialMedia = (AestheticTextView) itemView.findViewById(R.id.profile_social_media);
             mButton = (AestheticButton) itemView.findViewById(R.id.profile_delete_account);

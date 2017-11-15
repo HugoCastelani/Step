@@ -1,6 +1,7 @@
 package com.enoughspam.step.util.decorator;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -12,17 +13,23 @@ import android.view.View;
 
 public class LeftRightOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int mIdealMargin;
+    private final Integer mIdealMargin;
+    private final Integer mToolbarPosition;
 
-    public LeftRightOffsetItemDecoration(int idealMargin) {
+    public LeftRightOffsetItemDecoration(@NonNull final Integer idealMargin,
+                                         @NonNull final Integer toolbarPosition) {
         mIdealMargin = idealMargin;
+        mToolbarPosition = toolbarPosition;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        outRect.left = mIdealMargin;
-        outRect.right = mIdealMargin;
+        final Integer position = parent.getChildAdapterPosition(view);
+        if (position != mToolbarPosition) {
+            outRect.left = mIdealMargin;
+            outRect.right = mIdealMargin;
+        }
     }
 }

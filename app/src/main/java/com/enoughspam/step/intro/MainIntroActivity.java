@@ -25,7 +25,7 @@ public class MainIntroActivity extends IntroActivity {
         Aesthetic.attach(this);
         super.onCreate(savedInstanceState);
 
-        Utils.init(this);
+        Utils.init(getApplication());
         DAOHandler.init(getBaseContext());
 
         if (Aesthetic.isFirstTime()) initAesthetic();

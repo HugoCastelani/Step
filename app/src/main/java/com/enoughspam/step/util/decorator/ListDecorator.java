@@ -1,6 +1,5 @@
 package com.enoughspam.step.util.decorator;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
@@ -16,43 +15,37 @@ import com.enoughspam.step.util.MarginUtils;
 
 public class ListDecorator {
 
-    private static Context mContext;
-
     private ListDecorator() {
         throw new UnsupportedOperationException("You can't instantiate me.");
     }
 
-    public static void init(@NonNull final Context context) {
-        mContext = context.getApplicationContext();
-    }
-
-    public static void addAdaptableMargins(@NonNull final RecyclerView recyclerView) {
-        MarginUtils.init(mContext);
+    public static void addAdaptableMargins(@NonNull final RecyclerView recyclerView,
+                                           @NonNull final Integer toolbarPosition) {
         RecyclerView.ItemDecoration decoration = null;
 
-        // TODO: isTablet method must be replaced with proper UtilCode's method
-        if (MarginUtils.isTablet()) {
+        if (ScreenUtils.isTablet()) {
 
             if (ScreenUtils.isPortrait())
-                decoration = new LeftRightOffsetItemDecoration(MarginUtils.getFabAlignMargin());
+                decoration = new LeftRightOffsetItemDecoration(
+                        MarginUtils.getFabAlignMargin(), toolbarPosition);
             else
-                decoration = new LeftRightOffsetItemDecoration(MarginUtils.getTenPercentageMargin());
+                decoration = new LeftRightOffsetItemDecoration(
+                        MarginUtils.getTenPercentageMargin(), toolbarPosition);
 
         } else {
 
             if (ScreenUtils.isLandscape())
-                decoration = new LeftRightOffsetItemDecoration(MarginUtils.getFabAlignMargin());
+                decoration = new LeftRightOffsetItemDecoration(
+                        MarginUtils.getFabAlignMargin(), toolbarPosition);
         }
 
         if (decoration != null) recyclerView.addItemDecoration(decoration);
     }
 
     public static void addAdaptableMargins(@NonNull final ListView listView) {
-        MarginUtils.init(mContext);
         int padding = -1;
 
-        // TODO: isTablet method must be replaced with proper UtilCode's method
-        if (MarginUtils.isTablet()) {
+        if (ScreenUtils.isTablet()) {
             if (ScreenUtils.isPortrait()) padding = MarginUtils.getFabAlignMargin();
             else padding = MarginUtils.getTenPercentageMargin();
 

@@ -24,7 +24,7 @@ public class SplashScreenActivity extends AbstractActivity {
         setContentView(R.layout.splash_screen_activity);
 
         DAOHandler.init(getBaseContext());
-        Utils.init(getBaseContext());
+        Utils.init(getApplication());
 
         new AsyncTask<Void, Void, Void>() {
             @Override

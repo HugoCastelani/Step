@@ -30,7 +30,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <receiver android:name=".call.PhoneCallReceiver">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PHONE_STATE" />
@@ -42,16 +41,15 @@
             android:name=".main.MainActivity"
             android:label="@string/main_activity_label"
             android:theme="@style/AppTheme" />
-
-        <activity android:name=".search.SearchActivity"
+        <activity
+            android:name=".search.SearchActivity"
             android:label="@string/main_activity_label"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".main.MainActivity">
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
-
         <activity
             android:name=".intro.MainIntroActivity"
             android:screenOrientation="portrait"
@@ -62,7 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/settings_activity_label"
@@ -72,19 +69,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
-
         <activity
             android:name=".addnumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".main.MainActivity">
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enoughspam.step.main.MainActivity" />
         </activity>
-
-        <activity android:name=".intro.SplashScreenActivity" android:theme="@style/AppTheme" />
-        <activity android:name=".profile.ProfileActivity" android:theme="@style/AppTheme" />
+        <activity
+            android:name=".intro.SplashScreenActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -17,19 +17,11 @@
         android:src="@drawable/ic_arrow_back"
         android:onClick="onBackPressed"/>
 
-    <com.afollestad.aesthetic.AestheticProgressBar
-        android:id="@+id/profile_progress_bar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"/>
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_circle_view"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:elevation="8dp"
-        android:visibility="gone"/>
+        android:elevation="8dp"/>
 
     <com.afollestad.aesthetic.AestheticTextView
         android:id="@+id/profile_user_name"

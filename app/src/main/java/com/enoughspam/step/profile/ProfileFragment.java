@@ -16,7 +16,9 @@ import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.myprofile.MyProfileAdapter;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
@@ -78,17 +80,19 @@ public class ProfileFragment extends Fragment {
         // init recycler view
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.profile_recycler_view);
 
-        final ProfileAdapter adapter = new ProfileAdapter(mUser, this);
+        if (mUser.getKey().equals(LUserDAO.get().getThisUserKey())) {
+            mRecyclerView.setAdapter(new MyProfileAdapter(mUser, this));
+        } else {
+            mRecyclerView.setAdapter(new ProfileAdapter(mUser, this));
+        }
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
                 mRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(adapter);
 
-        ListDecorator.init(getContext());
-        ListDecorator.addAdaptableMargins(mRecyclerView);
+        ListDecorator.addAdaptableMargins(mRecyclerView, 1);
 
 
         // init place holder image view

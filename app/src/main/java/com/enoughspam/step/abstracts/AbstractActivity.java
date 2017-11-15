@@ -8,7 +8,6 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
 import com.blankj.utilcode.util.ConvertUtils;
-import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.util.ThemeHandler;
 
@@ -28,8 +27,6 @@ public abstract class AbstractActivity extends AestheticActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Utils.init(this);
 
         if (Aesthetic.isFirstTime()) initAesthetic();
         else updateTheme();

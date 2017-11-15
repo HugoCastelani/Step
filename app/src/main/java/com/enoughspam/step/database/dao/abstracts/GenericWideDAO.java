@@ -49,17 +49,17 @@ public abstract class GenericWideDAO<T> {
         });
     }
 
-    public abstract GenericWideDAO create(@NonNull final T t,
+    public abstract GenericWideDAO<T> create(@NonNull final T t,
                                           @NonNull final Listeners.AnswerListener listener);
 
-    public abstract GenericWideDAO update(@NonNull final T t,
+    public abstract GenericWideDAO<T> update(@NonNull final T t,
                                           @NonNull final Listeners.AnswerListener listener);
 
-    public abstract GenericWideDAO delete(@NonNull final String key1,
+    public abstract GenericWideDAO<T> delete(@NonNull final String key1,
                                           @NonNull final Listeners.AnswerListener listener);
 
-    public abstract GenericWideDAO delete(@NonNull final String key1, @NonNull final String key2,
+    public abstract GenericWideDAO<T> delete(@NonNull final String key1, @NonNull final String key2,
                                           @NonNull final Listeners.AnswerListener listener);
 
-    public abstract GenericWideDAO sync(@NonNull final Listeners.AnswerListener listener);
+    public abstract GenericWideDAO<T> sync(@NonNull final Listeners.AnswerListener listener);
 }

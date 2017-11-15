@@ -66,8 +66,7 @@ public class MainFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        ListDecorator.init(getContext());
-        ListDecorator.addAdaptableMargins(mRecyclerView);
+        ListDecorator.addAdaptableMargins(mRecyclerView, -1);
 
         // init place holder image view
         mPlaceHolder = (ImageView) view.findViewById(R.id.main_place_holder);
