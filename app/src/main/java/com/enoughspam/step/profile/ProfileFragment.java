@@ -61,14 +61,14 @@ public class ProfileFragment extends Fragment {
     private void initViews() {
         // init progress dialog
         mAddingProgressDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.profile_following)
+                .title(R.string.profile_adding_following)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)
                 .build();
 
         mRemovingProgressDialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.profile_removing_friend)
+                .title(R.string.profile_remove_following)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)

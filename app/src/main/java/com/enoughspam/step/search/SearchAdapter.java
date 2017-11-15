@@ -2,13 +2,10 @@ package com.enoughspam.step.search;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.wide.UserDAO;
@@ -16,12 +13,11 @@ import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
+import com.enoughspam.step.viewholder.ProfileViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Hugo Castelani
@@ -29,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Time: 23:09
  */
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
     final SearchActivity mActivity;
 
     final ArrayList<User> userList;
@@ -107,14 +103,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.search_item_profile, parent, false);
-        return new SearchAdapter.MyViewHolder(view);
+        return new ProfileViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(ProfileViewHolder holder, int position) {
         final User user = userList.get(position);
 
         Picasso.with(holder.mUsername.getContext()).load(user.getPicURL())
@@ -139,20 +135,5 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     @Override
     public int getItemCount() {
         return userList.size();
-    }
-
-    protected static class MyViewHolder extends RecyclerView.ViewHolder {
-        final CardView mCardView;
-        final ProgressBar mProgressBar;
-        final CircleImageView mUserPic;
-        final TextView mUsername;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            mCardView = (CardView) itemView.findViewById(R.id.search_item_profile_card);
-            mProgressBar = (ProgressBar) itemView.findViewById(R.id.search_item_profile_progress_bar);
-            mUserPic = (CircleImageView) itemView.findViewById(R.id.search_item_profile_user_pic);
-            mUsername = (TextView) itemView.findViewById(R.id.search_item_profile_username);
-        }
     }
 }

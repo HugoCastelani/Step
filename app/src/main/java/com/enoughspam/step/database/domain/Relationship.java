@@ -17,22 +17,22 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Relationship {
-    private String followedKey;
+    private String followingKey;
     private String followerKey;
 
     public Relationship() {}
 
-    public Relationship(@NonNull final String followedKey, @NonNull final String followerKey) {
-        setFollowedKey(followedKey);
+    public Relationship(@NonNull final String followingKey, @NonNull final String followerKey) {
+        setFollowingKey(followingKey);
         setFollowerKey(followerKey);
     }
 
-    public String getFollowedKey() {
-        return followedKey;
+    public String getFollowingKey() {
+        return followingKey;
     }
 
-    public void setFollowedKey(@NonNull final String followedKey) {
-        this.followedKey = followedKey;
+    public void setFollowingKey(@NonNull final String followingKey) {
+        this.followingKey = followingKey;
     }
 
     public String getFollowerKey() {
@@ -43,31 +43,31 @@ public class Relationship {
         this.followerKey = followerKey;
     }
 
-    private User followedUser;
+    private User followingUser;
     private User followerUser;
 
-    public void setFollowedUser(@NonNull final User followedUser) {
-        this.followedUser = followedUser;
+    public void setFollowingUser(@NonNull final User followingUser) {
+        this.followingUser = followingUser;
 
-        final String key = followedUser.getKey();
+        final String key = followingUser.getKey();
         if (key != null && !key.isEmpty()) {
-            setFollowedKey(key);
+            setFollowingKey(key);
         }
     }
 
     @Exclude
-    public User getFollowedUser(@Nullable final Listeners.UserListener listener) {
-        if (followedUser == null) {
+    public User getFollowingUser(@Nullable final Listeners.UserListener listener) {
+        if (followingUser == null) {
             if (listener == null) {
-                followedUser = LUserDAO.get().findByColumn(LUserDAO.key, followedKey);
+                followingUser = LUserDAO.get().findByColumn(LUserDAO.key, followingKey);
 
             } else {
 
-                UserDAO.get().findByKey(followedKey, new Listeners.UserListener() {
+                UserDAO.get().findByKey(followingKey, new Listeners.UserListener() {
                     @Override
                     public void onUserRetrieved(@NonNull User retrievedUser) {
-                        followedUser = retrievedUser;
-                        listener.onUserRetrieved(followedUser);
+                        followingUser = retrievedUser;
+                        listener.onUserRetrieved(followingUser);
                     }
 
                     @Override
@@ -80,11 +80,11 @@ public class Relationship {
         } else {
 
             if (listener != null) {
-                listener.onUserRetrieved(followedUser);
+                listener.onUserRetrieved(followingUser);
             }
         }
 
-        return followedUser;
+        return followingUser;
     }
 
     public void setFollowerUser(@NonNull final User followerUser) {

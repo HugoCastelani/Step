@@ -49,12 +49,12 @@ public class LRelationshipDAO extends GenericLocalDAO<Relationship> {
 
     @Override
     public LRelationshipDAO create(@NonNull final Relationship relationship) {
-        if (findByIDs(relationship.getFollowedKey(), relationship.getFollowerKey()) == null) {
+        if (findByIDs(relationship.getFollowingKey(), relationship.getFollowerKey()) == null) {
 
-            LUserDAO.get().clone(relationship.getFollowedUser(null));    // user was already set
+            LUserDAO.get().clone(relationship.getFollowingUser(null));    // user was already set
             ContentValues values = new ContentValues();
 
-            values.put(USER_FOLLOWED_KEY, relationship.getFollowedKey());
+            values.put(USER_FOLLOWED_KEY, relationship.getFollowingKey());
             values.put(USER_FOLLOWER_KEY, relationship.getFollowerKey());
 
             DAOHandler.getLocalDatabase().insert(table, null, values);

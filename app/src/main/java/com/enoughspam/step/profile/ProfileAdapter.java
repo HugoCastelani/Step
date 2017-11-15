@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.afollestad.aesthetic.AestheticButton;
-import com.afollestad.aesthetic.AestheticCardView;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
@@ -21,13 +20,13 @@ import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.Listeners;
+import com.enoughspam.step.viewholder.SimplePhoneHeaderViewHolder;
+import com.enoughspam.step.viewholder.ToolbarViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Hugo Castelani
@@ -81,7 +80,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
                     }
 
                     if (i == mBlockedNumbersList.size()) {    // user isn't in list
-                        final List<Phone> newPhoneList = new ArrayList<>();
+                        final ArrayList<Phone> newPhoneList = new ArrayList<>();
                         newPhoneList.add(userPhone.getPhone(null));
 
                         mBlockedNumbersList.add(new PhoneSection(
@@ -141,7 +140,7 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     @Override
     public void onBindHeaderViewHolder(SectionedViewHolder holder, int section, boolean expanded) {
-        final AestheticTextView blockerOrNumber = ((ItemViewHolder) holder).mBlockerOrNumber;
+        final AestheticTextView blockerOrNumber = ((SimplePhoneHeaderViewHolder) holder).mBlockerOrNumber;
 
         if (section == 0) {
             final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, 0);
@@ -160,8 +159,8 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
-        if (holder instanceof ItemViewHolder) {
-            final ItemViewHolder viewHolder = (ItemViewHolder) holder;
+        if (holder instanceof SimplePhoneHeaderViewHolder) {
+            final SimplePhoneHeaderViewHolder viewHolder = (SimplePhoneHeaderViewHolder) holder;
 
             final Phone phone = mBlockedNumbersList.get(section - 1).getPhoneList().get(relativePosition);
 
@@ -274,43 +273,17 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
                 }
 
             case VIEW_TYPE_HEADER:
-                return new ItemViewHolder(
+                return new SimplePhoneHeaderViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.preference_category, parent, false));
 
             default:
-                return new ItemViewHolder(
+                return new SimplePhoneHeaderViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.main_item_number, parent, false));
         }
     }
 
     private void showBottomSheet() {
-    }
-
-    protected static class ItemViewHolder extends SectionedViewHolder {
-        final AestheticCardView mCardView;
-        final AestheticTextView mBlockerOrNumber;
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-            mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
-            mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
-        }
-    }
-
-    protected static class ToolbarViewHolder extends SectionedViewHolder {
-        final CircleImageView mUserPic;
-        final AestheticTextView mUsername;
-        final AestheticTextView mSocialMedia;
-        final AestheticButton mButton;
-
-        public ToolbarViewHolder(View itemView) {
-            super(itemView);
-            mUserPic = (CircleImageView) itemView.findViewById(R.id.profile_circle_view);
-            mUsername = (AestheticTextView) itemView.findViewById(R.id.profile_user_name);
-            mSocialMedia = (AestheticTextView) itemView.findViewById(R.id.profile_social_media);
-            mButton = (AestheticButton) itemView.findViewById(R.id.profile_delete_account);
-        }
     }
 }

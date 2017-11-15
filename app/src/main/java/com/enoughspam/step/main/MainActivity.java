@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.enoughspam.step.R;
 import com.enoughspam.step.abstracts.AbstractActivity;
 import com.enoughspam.step.addnumber.AddNumberActivity;
+import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.search.SearchActivity;
 import com.enoughspam.step.settings.SettingsActivity;
@@ -137,7 +138,7 @@ public class MainActivity extends AbstractActivity {
 
                 case 3:
                     final Intent intent2 = new Intent(MainActivity.this, ProfileActivity.class);
-                    intent2.putExtra("user_key", "-Kwk6q46QWGzxvgi_OW4");
+                    intent2.putExtra("user", LUserDAO.get().getThisUser());
                     startActivityForResult(intent2, REQUEST_CODE_ACCOUNT);
                     break;
             }

@@ -46,8 +46,8 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
 
                 final ArrayList<String> keyList = new ArrayList<>();
 
-                UserFollowerDAO.get().getUserFollowersList(
-                        userPhone.getUserKey(),
+                UserFollowerDAO.get().getUserKeyList(
+                        userPhone.getUserKey(), UserFollowerDAO.NODE_FOLLOWERS,
 
                         new Listeners.ListListener<String>() {
                             @Override

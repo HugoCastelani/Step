@@ -196,9 +196,9 @@
     <!-- profile activity -->
     <string name="profile_activity_label">Meu perfil</string>
     <string name="profile_follow">Seguir</string>
-    <string name="profile_following">Adicionando à lista dos seguidos</string>
+    <string name="profile_adding_following">Adicionando à lista dos seguidos</string>
     <string name="profile_unfollow">Deixar de seguir</string>
-    <string name="profile_removing_friend">Removendo da lista de seguidos</string>
+    <string name="profile_remove_following">Removendo da lista de seguidos</string>
     <string name="profile_delete_account">Deletar conta</string>
     <string name="profile_signed_via_google">Logado via Google+</string>
     <string name="profile_signed_via_facebook">Logado via Facebook</string>
@@ -206,6 +206,9 @@
     <string name="profile_error_user_pic">Não foi possível baixar a foto do usuário</string>
     <string name="profile_error_add_user">Não foi possível seguir o usuário</string>
     <string name="profile_error_remove_user">Não foi possível deixar de seguir o usuário</string>
+
+    <string name="profile_followers">Seguidores</string>
+    <string name="profile_following">Seguindo</string>
 
     <!-- color picker dialog -->
     <string name="select_color">Selecione uma cor</string>
