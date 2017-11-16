@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
 
     private MaterialDialog mAddingProgressDialog;
     private MaterialDialog mRemovingProgressDialog;
+    private MaterialDialog mDeletingProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +70,13 @@ public class ProfileFragment extends Fragment {
 
         mRemovingProgressDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.profile_remove_following)
+                .content(R.string.please_wait)
+                .cancelable(false)
+                .progress(true, 0)
+                .build();
+
+        mDeletingProgressDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.profile_deleting_account)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)
@@ -143,6 +151,16 @@ public class ProfileFragment extends Fragment {
 
     public ProfileFragment hideRemovingProgressDialog() {
         mRemovingProgressDialog.hide();
+        return this;
+    }
+
+    public ProfileFragment showDeletingProgressDialog() {
+        mDeletingProgressDialog.show();
+        return this;
+    }
+
+    public ProfileFragment hideDeletingProgressDialog() {
+        mDeletingProgressDialog.hide();
         return this;
     }
 

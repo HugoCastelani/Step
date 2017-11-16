@@ -8,17 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.aesthetic.AestheticCardView;
-import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.ItemCoord;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
-import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
 import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.Listeners;
+import com.enoughspam.step.viewholder.SimplePhoneHeaderViewHolder;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ import java.util.List;
  * Time: 23:05
  */
 
-public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyViewHolder> {
+public class MainAdapter extends SectionedRecyclerViewAdapter<SimplePhoneHeaderViewHolder> {
 
     private final List<PhoneSection> mBlockedNumbersList;
     private final MainFragment mFragment;
@@ -56,7 +54,15 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         if (phoneList.isEmpty()) {
             mBlockedNumbersList.remove(coord.section());
             notifyItemRemoved(absolutePosition - 1);
-            mFragment.showPlaceHolder();
+
+            Integer i;
+            for (i = 0; i < mBlockedNumbersList.size(); i++) {
+                if (!mBlockedNumbersList.get(i).getPhoneList().isEmpty()) {
+                    break;
+                }
+            }
+
+            if (i == mBlockedNumbersList.size()) mFragment.showPlaceHolder();
         }
 
         Snackbar.make(mFragment.getView(), resources.getString(R.string.removed_number), Snackbar.LENGTH_LONG)
@@ -98,15 +104,15 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
     }
 
     @Override
-    public void onBindHeaderViewHolder(MyViewHolder holder, int section, boolean expanded) {
+    public void onBindHeaderViewHolder(SimplePhoneHeaderViewHolder holder, int section, boolean expanded) {
         holder.mBlockerOrNumber.setText(mBlockedNumbersList.get(section).getUsername());
     }
 
     @Override
-    public void onBindFooterViewHolder(MyViewHolder holder, int section) {}
+    public void onBindFooterViewHolder(SimplePhoneHeaderViewHolder holder, int section) {}
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int section, int relativePosition, int absolutePosition) {
+    public void onBindViewHolder(SimplePhoneHeaderViewHolder holder, int section, int relativePosition, int absolutePosition) {
         final Phone phone = mBlockedNumbersList.get(section).getPhoneList().get(relativePosition);
 
         final int countryCode = phone.getArea().getState().getCountry().getCode();
@@ -118,9 +124,7 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
         formattedNumber.append(" " + areaCode);
         formattedNumber.append(" " + number);
 
-        // swipe is only allowed for user's numbers
-        if (section == 0) holder.mIsSwipeable = true;
-
+        holder.mIsSwipeable = true;
         holder.mBlockerOrNumber.setText(formattedNumber);
 
         holder.mCardView.setOnLongClickListener(view -> {
@@ -130,14 +134,14 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SimplePhoneHeaderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final int layout;
         switch (viewType) {
-            case VIEW_TYPE_HEADER:
-                layout = R.layout.preference_category;
-                break;
             case VIEW_TYPE_ITEM:
                 layout = R.layout.main_item_number;
+                break;
+            case VIEW_TYPE_HEADER:
+                layout = R.layout.preference_category;
                 break;
             default:
                 layout = R.layout.main_item_number;
@@ -146,22 +150,9 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<MainAdapter.MyView
 
         final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
 
-        return new MyViewHolder(view);
+        return new SimplePhoneHeaderViewHolder(view);
     }
 
     private void showBottomSheet() {
-    }
-
-    public static class MyViewHolder extends SectionedViewHolder {
-        final AestheticCardView mCardView;
-        final AestheticTextView mBlockerOrNumber;
-        public boolean mIsSwipeable;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
-            mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
-            mIsSwipeable = false;
-        }
     }
 }

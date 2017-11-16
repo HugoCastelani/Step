@@ -23,6 +23,7 @@ import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
+import com.enoughspam.step.viewholder.SimplePhoneHeaderViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +88,8 @@ public class MainFragment extends Fragment {
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                if (viewHolder instanceof MainAdapter.MyViewHolder
-                        && ((MainAdapter.MyViewHolder) viewHolder).mIsSwipeable) {
+                if (viewHolder instanceof SimplePhoneHeaderViewHolder
+                    && ((SimplePhoneHeaderViewHolder) viewHolder).mIsSwipeable) {
                     return super.getSwipeDirs(recyclerView, viewHolder);
                 } else {
                     return 0;

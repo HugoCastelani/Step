@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.afollestad.aesthetic.AestheticTextView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.database.dao.local.LUserDAO;
+import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.domain.UserSection;
@@ -19,6 +23,7 @@ import com.enoughspam.step.profile.ProfileActivity;
 import com.enoughspam.step.profile.ProfileFragment;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
+import com.enoughspam.step.util.ThemeHandler;
 import com.enoughspam.step.viewholder.ProfileViewHolder;
 import com.enoughspam.step.viewholder.SimplePhoneHeaderViewHolder;
 import com.enoughspam.step.viewholder.ToolbarViewHolder;
@@ -210,7 +215,44 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
                 }
             });
 
-            viewHolder.mButton.setVisibility(View.GONE);
+            viewHolder.mButton.setText(mFragment.getResources().getString(R.string.profile_delete_account));
+            viewHolder.mButton.setOnClickListener(view ->
+                new MaterialDialog.Builder(mFragment.getContext())
+                    .title(R.string.profile_delete_account_title)
+                    .content(R.string.profile_delete_account_description)
+                    .positiveText(R.string.yes_button)
+                    .negativeText(R.string.cancel_button)
+                    .positiveColor(ThemeHandler.getAccent())
+                    .negativeColor(ThemeHandler.getAccent())
+                    .onPositive((dialog, which) -> {
+                        mFragment.showDeletingProgressDialog();
+
+                        final Listeners.AnswerListener answerListener = new Listeners.AnswerListener() {
+                            Integer count = 0;
+
+                            @Override
+                            public void onAnswerRetrieved() {
+                                if (++count == 2) {
+                                    AppUtils.exitApp();
+                                } else if (count == 1) {
+                                    UserDAO.get().delete(LUserDAO.get().getThisUserKey(), this);
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+                                mFragment.hideDeletingProgressDialog();
+                                new MaterialDialog.Builder(mFragment.getContext())
+                                        .title(R.string.profile_delete_account_error_title)
+                                        .content(R.string.profile_delete_account_error_description)
+                                        .build().show();
+                            }
+                        };
+
+                        UserFollowerDAO.get().deleteAllOfUser(LUserDAO.get().getThisUserKey(), answerListener);
+                    })
+                    .build().show()
+            );
         }
     }
 

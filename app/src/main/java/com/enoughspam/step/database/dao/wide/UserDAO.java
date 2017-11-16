@@ -91,6 +91,20 @@ public class UserDAO extends GenericWideDAO<User> {
         isNodeValid(node, retrievedBoolean -> {
             if (retrievedBoolean) {
 
+                //UserFollowerDAO.get().delete()
+
+                UserPhoneDAO.get().deleteOfUser(userKey, new Listeners.AnswerListener() {
+                    @Override
+                    public void onAnswerRetrieved() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
                 getReference().child(userKey).removeValue()
                         .addOnFailureListener(e -> listener.onError())
                         .addOnSuccessListener(aVoid -> {

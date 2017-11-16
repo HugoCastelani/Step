@@ -16,10 +16,12 @@ import com.enoughspam.step.R;
 public final class SimplePhoneHeaderViewHolder extends SectionedViewHolder {
     public final AestheticCardView mCardView;
     public final AestheticTextView mBlockerOrNumber;
+    public Boolean mIsSwipeable;
 
     public SimplePhoneHeaderViewHolder(View itemView) {
         super(itemView);
         mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
         mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
+        mIsSwipeable = false;
     }
 }

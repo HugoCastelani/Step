@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -32,8 +33,9 @@
         android:theme="@style/AppTheme">
         <receiver android:name=".call.PhoneCallReceiver">
             <intent-filter android:priority="100">
-                <action android:name="android.intent.action.PHONE_STATE" />
-                <action android:name="android.provider.Telephony.SMS_SENT" />
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.provider.Telephony.SMS_SENT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 

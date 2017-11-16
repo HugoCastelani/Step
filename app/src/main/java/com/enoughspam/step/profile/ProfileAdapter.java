@@ -240,11 +240,15 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
         button.setOnClickListener(view -> {
             mFragment.showRemovingProgressDialog();
 
-            UserFollowerDAO.get().delete(mUser.getKey(), new Listeners.AnswerListener() {
+            final Listeners.AnswerListener answerListener = new Listeners.AnswerListener() {
+                Integer count = 0;
+
                 @Override
                 public void onAnswerRetrieved() {
-                    setButtonAsAddable(button);
-                    mFragment.hideRemovingProgressDialog();
+                    if (++count == 2) {
+                        setButtonAsAddable(button);
+                        mFragment.hideRemovingProgressDialog();
+                    }
                 }
 
                 @Override
@@ -252,13 +256,22 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
                     mFragment.hideRemovingProgressDialog();
                     mFragment.showSnackbar(R.string.profile_error_remove_user);
                 }
-            });
+            };
+
+            UserPhoneDAO.get().deleteOfUser(mUser.getKey(), answerListener);
+
+            UserFollowerDAO.get().delete(mUser.getKey(), answerListener);
         });
     }
 
     @Override
     public SectionedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case VIEW_TYPE_ITEM:
+                return new SimplePhoneHeaderViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(
+                                R.layout.main_item_number, parent, false));
+
             case VIEW_TYPE_TOOLBAR:
                 if (ScreenUtils.isTablet() || ScreenUtils.isLandscape()) {
                     return new ToolbarViewHolder(
