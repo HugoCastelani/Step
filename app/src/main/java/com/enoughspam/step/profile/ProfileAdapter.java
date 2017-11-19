@@ -175,6 +175,8 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
 
             viewHolder.mBlockerOrNumber.setText(formattedNumber);
 
+            viewHolder.mIsSwipeable = false;
+
             viewHolder.mCardView.setOnLongClickListener(view -> {
                 showBottomSheet();
                 return true;

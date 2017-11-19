@@ -21,6 +21,7 @@ public final class ProfileViewHolder extends SectionedViewHolder {
     public final ProgressBar mProgressBar;
     public final CircleImageView mUserPic;
     public final TextView mUsername;
+    public Boolean mIsSwipeable;
 
     public ProfileViewHolder(View itemView) {
         super(itemView);
@@ -28,5 +29,6 @@ public final class ProfileViewHolder extends SectionedViewHolder {
         mProgressBar = (ProgressBar) itemView.findViewById(R.id.search_item_profile_progress_bar);
         mUserPic = (CircleImageView) itemView.findViewById(R.id.search_item_profile_user_pic);
         mUsername = (TextView) itemView.findViewById(R.id.search_item_profile_username);
+        mIsSwipeable = false;
     }
 }

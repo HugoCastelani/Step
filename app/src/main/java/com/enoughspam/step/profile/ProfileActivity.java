@@ -15,6 +15,8 @@ import com.enoughspam.step.database.domain.User;
  */
 
 public class ProfileActivity extends AbstractActivity {
+    private Boolean mRanOnRestart = false;
+
     private User mUser;
 
     protected User getUser() {
@@ -49,6 +51,22 @@ public class ProfileActivity extends AbstractActivity {
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.profile_fragment_container, profileFragment, "profileFragmentTag");
             fragmentTransaction.commit();
+        }
+    }
+
+    // both methods below work to reload activity when user opens another ProfileActivity
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mRanOnRestart = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mRanOnRestart) {
+            recreate();
         }
     }
 

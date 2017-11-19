@@ -225,11 +225,6 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
         return instance;
     }
 
-    private UserPhoneDAO deletePhoneFromFollowers() {
-
-        return instance;
-    }
-
     @Override
     public UserPhoneDAO delete(@NonNull String key1, @NonNull String key2,
                                @NonNull Listeners.AnswerListener listener) {
@@ -237,20 +232,20 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                 "parameter instead.");
     }
 
-    public UserPhoneDAO deleteOfUser(@NonNull final String userKey,
+    public UserPhoneDAO deleteOfUser(@NonNull final String targetUserKey,
                                      @NonNull final Listeners.AnswerListener listener) {
 
         isNodeValid(node, retrievedBoolean -> {
             if (retrievedBoolean) {
 
-                final Query query = getReference().orderByChild("userKey").equalTo(userKey);
+                final Query query = getReference().orderByChild("userKey").equalTo(targetUserKey);
 
                 final ChildEventListener childEventListener = new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         getReference().child(dataSnapshot.getKey()).removeValue()
                                 .addOnSuccessListener(aVoid ->
-                                    LUserPhoneDAO.get().delete(userKey, null)
+                                    LUserPhoneDAO.get().delete(targetUserKey, null)
                                 );
                     }
 
@@ -259,6 +254,8 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                     @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 };
+
+                query.addChildEventListener(childEventListener);
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -270,8 +267,6 @@ public class UserPhoneDAO extends GenericWideDAO<UserPhone> {
 
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 });
-
-                query.addChildEventListener(childEventListener);
 
             } else listener.onError();
         });

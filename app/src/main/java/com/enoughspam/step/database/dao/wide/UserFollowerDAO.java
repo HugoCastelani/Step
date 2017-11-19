@@ -12,6 +12,7 @@ import com.enoughspam.step.util.Listeners;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -371,6 +372,7 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
         return instance;
     }
 
+    @IgnoreExtraProperties
     private static final class InnerUser {
         private String userKey;
 

@@ -126,6 +126,8 @@ public class MainActivity extends AbstractActivity {
         mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(1).withName(R.string.settings_activity_label).withIcon(settingsDraw));
         mNavDrawer.addItem(new PrimaryDrawerItem().withIdentifier(2).withName(R.string.profile_activity_label).withIcon(profileDraw));
 
+        mNavDrawer.setSelection(0);
+
         // navigation drawer actions
         mNavDrawer.setOnDrawerItemClickListener((view, position, drawerItem) -> {
             switch (position) {
@@ -179,8 +181,6 @@ public class MainActivity extends AbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_ACCOUNT:
-                break;
             default: recreate();
         }
         super.onActivityResult(requestCode, resultCode, data);

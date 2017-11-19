@@ -6,6 +6,8 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import com.enoughspam.step.myprofile.MyProfileAdapter;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
+import com.enoughspam.step.viewholder.ProfileViewHolder;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,8 +40,10 @@ public class ProfileFragment extends Fragment {
     private View view;
 
     private User mUser;
+    private Boolean mIsMyProfile;
 
     private AestheticRecyclerView mRecyclerView;
+    private MyProfileAdapter mMyProfileAdapter;
     private ProgressBar mProgressBar;
     private ImageView mPlaceHolder;
 
@@ -53,6 +58,8 @@ public class ProfileFragment extends Fragment {
         mActivity = ((ProfileActivity) getActivity());
         mUser = mActivity.getUser();
 
+        mIsMyProfile = mUser.getKey().equals(LUserDAO.get().getThisUserKey());
+
         initViews();
         initActions();
 
@@ -61,21 +68,21 @@ public class ProfileFragment extends Fragment {
 
     private void initViews() {
         // init progress dialog
-        mAddingProgressDialog = new MaterialDialog.Builder(getActivity())
+        mAddingProgressDialog = new MaterialDialog.Builder(mActivity)
                 .title(R.string.profile_adding_following)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)
                 .build();
 
-        mRemovingProgressDialog = new MaterialDialog.Builder(getActivity())
+        mRemovingProgressDialog = new MaterialDialog.Builder(mActivity)
                 .title(R.string.profile_remove_following)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)
                 .build();
 
-        mDeletingProgressDialog = new MaterialDialog.Builder(getActivity())
+        mDeletingProgressDialog = new MaterialDialog.Builder(mActivity)
                 .title(R.string.profile_deleting_account)
                 .content(R.string.please_wait)
                 .cancelable(false)
@@ -88,8 +95,9 @@ public class ProfileFragment extends Fragment {
         // init recycler view
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.profile_recycler_view);
 
-        if (mUser.getKey().equals(LUserDAO.get().getThisUserKey())) {
-            mRecyclerView.setAdapter(new MyProfileAdapter(mUser, this));
+        if (mIsMyProfile) {
+            mMyProfileAdapter = new MyProfileAdapter(mUser, this);
+            mRecyclerView.setAdapter(mMyProfileAdapter);
         } else {
             mRecyclerView.setAdapter(new ProfileAdapter(mUser, this));
         }
@@ -105,6 +113,34 @@ public class ProfileFragment extends Fragment {
 
         // init place holder image view
         mPlaceHolder = (ImageView) view.findViewById(R.id.profile_place_holder);
+    }
+
+    private void initActions() {
+        if (mIsMyProfile) {
+            final ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    mMyProfileAdapter.removeItem(viewHolder.getAdapterPosition());
+                }
+
+                @Override
+                public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    if (viewHolder instanceof ProfileViewHolder
+                        && ((ProfileViewHolder) viewHolder).mIsSwipeable) {
+                        return super.getSwipeDirs(recyclerView, viewHolder);
+                    } else {
+                        return 0;
+                    }
+                }
+            };
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }
     }
 
     public void showSnackbar(@StringRes final int message) {
@@ -162,12 +198,5 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment hideDeletingProgressDialog() {
         mDeletingProgressDialog.hide();
         return this;
-    }
-
-    private void initActions() {
-        /*if (isPhoneSectionListEmpty()) {
-            mRecyclerView.setVisibility(View.GONE);
-            mPlaceHolder.setVisibility(View.VISIBLE);
-        }*/
     }
 }

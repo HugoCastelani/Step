@@ -1,7 +1,10 @@
 package com.enoughspam.step.myprofile;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +17,11 @@ import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.enoughspam.step.R;
+import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
+import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.domain.UserSection;
 import com.enoughspam.step.profile.ProfileActivity;
@@ -47,27 +52,21 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
     private ArrayList<UserSection> mUserSectionList;
 
     private Listeners.ListListener<User> mFollowerListListener;
-    private Listeners.ListListener<User> mFollowedListListener;
+    private Listeners.ListListener<User> mFollowingListListener;
 
     private Listeners.AnswerListener mAnswerListener;
 
     public MyProfileAdapter(@NonNull final User user, @NonNull final ProfileFragment fragment) {
+        mUser = user;
+        mFragment = fragment;
+
         mUserSectionList = new ArrayList<>();
 
         final String followers = fragment.getResources().getString(R.string.profile_followers);
         mUserSectionList.add(new UserSection(followers, new ArrayList<>()));
 
-        final String following = fragment.getResources().getString(R.string.profile_following);
-        mUserSectionList.add(new UserSection(following, new ArrayList<>()));
-
-        mUser = user;
-        mFragment = fragment;
-
         UserFollowerDAO.get().getUserList(mUser.getKey(), UserFollowerDAO.NODE_FOLLOWERS,
                 getFollowerListListener(), getAnswerListener());
-
-        UserFollowerDAO.get().getUserList(mUser.getKey(), UserFollowerDAO.NODE_FOLLOWING,
-                getFollowedListListener(), getAnswerListener());
     }
 
     private Listeners.ListListener getFollowerListListener() {
@@ -85,9 +84,9 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
         return mFollowerListListener;
     }
 
-    private Listeners.ListListener getFollowedListListener() {
-        if (mFollowedListListener == null) {
-            mFollowedListListener = new Listeners.ListListener<User>() {
+    private Listeners.ListListener getFollowingListListener() {
+        if (mFollowingListListener == null) {
+            mFollowingListListener = new Listeners.ListListener<User>() {
                 @Override
                 public void onItemAdded(@NonNull final User user) {
                     mUserSectionList.get(1).addUser(user);
@@ -97,7 +96,7 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
             };
         }
 
-        return mFollowedListListener;
+        return mFollowingListListener;
     }
 
     private Listeners.AnswerListener getAnswerListener() {
@@ -107,7 +106,15 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
                 @Override
                 public void onAnswerRetrieved() {
-                    if (++count == 2) {
+                    if (++count == 1) {
+                        final String following = mFragment.getResources().getString(R.string.profile_following);
+                        mUserSectionList.add(new UserSection(following, new ArrayList<>()));
+
+                        UserFollowerDAO.get().getUserList(mUser.getKey(), UserFollowerDAO.NODE_FOLLOWING,
+                                getFollowingListListener(), getAnswerListener());
+
+                    } else if (count == 2) {
+
                         if (mUserSectionList.get(0).getUserList().isEmpty() &&
                             mUserSectionList.get(1).getUserList().isEmpty()) {
                             mFragment.showPlaceHolder();
@@ -125,6 +132,66 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
         }
 
         return mAnswerListener;
+    }
+
+    public void removeItem(@NonNegative final int absolutePosition) {
+        final Integer section = 1;
+        final Integer position = getRelativePosition(absolutePosition).relativePos();
+        final ArrayList<User> userList = mUserSectionList.get(section).getUserList();
+
+        final Resources resources = mFragment.getContext().getResources();
+
+        // store information for undo case
+        User removedUser = userList.get(position);
+        UserSection removedPhoneSection = mUserSectionList.get(section);
+
+        userList.remove(removedUser);
+        notifyItemRemoved(absolutePosition);
+
+        // remove header when there's no item
+        if (userList.isEmpty()) {
+            mUserSectionList.remove(section);
+            notifyItemRemoved(absolutePosition - 1);
+            // absolutePosition - 1 because removed item is, obviously, last item
+
+            if (mUserSectionList.get(0).getUserList().isEmpty()) {
+                mFragment.showPlaceHolder();
+            }
+        }
+
+        Snackbar.make(mFragment.getView(), resources.getString(R.string.removed_number), Snackbar.LENGTH_LONG)
+                .setAction(resources.getString(R.string.undo), view -> {
+                    // add items to adapter and list again
+                    mFragment.showRecyclerView();
+                    userList.add(position, removedUser);
+                    notifyItemInserted(absolutePosition);
+
+                    if (!mUserSectionList.contains(removedPhoneSection)) {
+                        mUserSectionList.add(section, removedPhoneSection);
+                        notifyItemInserted(absolutePosition - 1);
+                    }
+                })
+                .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        if (event != DISMISS_EVENT_ACTION) {    // if equals, it has just undone
+                            // finally remove from database
+                            UserPhoneDAO.get().deleteOfUser(removedUser.getKey(), new Listeners.AnswerListener() {
+                                @Override
+                                public void onAnswerRetrieved() {
+                                    UserFollowerDAO.get().delete(removedUser.getKey(), new Listeners.AnswerListener() {
+                                        @Override public void onAnswerRetrieved() {}
+                                        @Override public void onError() {}
+                                    });
+                                }
+
+                                @Override public void onError() {}
+                            });
+                        }
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -181,6 +248,8 @@ public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedView
 
                         @Override public void onError() {}
                     });
+
+            viewHolder.mIsSwipeable = section > 1;
 
             viewHolder.mCardView.setOnClickListener(view -> {
                 final Intent intent = new Intent(mFragment.getActivity(), ProfileActivity.class);

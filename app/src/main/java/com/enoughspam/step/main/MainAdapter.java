@@ -115,13 +115,28 @@ public class MainAdapter extends SectionedRecyclerViewAdapter<SimplePhoneHeaderV
     public void onBindViewHolder(SimplePhoneHeaderViewHolder holder, int section, int relativePosition, int absolutePosition) {
         final Phone phone = mBlockedNumbersList.get(section).getPhoneList().get(relativePosition);
 
-        final int countryCode = phone.getArea().getState().getCountry().getCode();
-        final int areaCode = phone.getArea().getCode();
-        final long number = phone.getNumber();
-
         final StringBuilder formattedNumber = new StringBuilder(50);
-        formattedNumber.append("+" + countryCode);
-        formattedNumber.append(" " + areaCode);
+
+        int countryCode;
+        int areaCode;
+        long number;
+
+        if (phone.getCountry() == null) {
+            countryCode = phone.getArea().getState().getCountry().getCode();
+            areaCode = phone.getArea().getCode();
+            number = phone.getNumber();
+
+            formattedNumber.append("+" + countryCode);
+            formattedNumber.append(" " + areaCode);
+
+        } else {
+
+            countryCode = phone.getCountry().getCode();
+            number = phone.getNumber();
+
+            formattedNumber.append("+" + countryCode);
+        }
+
         formattedNumber.append(" " + number);
 
         holder.mIsSwipeable = true;
