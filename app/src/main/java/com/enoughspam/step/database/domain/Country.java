@@ -19,7 +19,7 @@ public class Country extends Domain {
 
     public Country() {}
 
-    public Country(@NonNegative final String key, @NonNegative final Integer code,
+    public Country(@NonNull final String key, @NonNegative @NonNull final Integer code,
                    @NonNull final String name, @NonNull final String iso,
                    @NonNull final String mask) {
         super(key);
@@ -33,7 +33,7 @@ public class Country extends Domain {
         return code;
     }
 
-    public void setCode(@NonNegative final Integer code) {
+    public void setCode(@NonNegative @NonNull final Integer code) {
         this.code = code;
     }
 

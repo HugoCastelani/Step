@@ -15,6 +15,24 @@ android {
         }
         vectorDrawables.useSupportLibrary = true
     }
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/view_holder_item',
+                    'src/main/res/layouts/splash_screen',
+                    'src/main/res/layouts/settings',
+                    'src/main/res/layouts/search',
+                    'src/main/res/layouts/profile',
+                    'src/main/res/layouts/notification',
+                    'src/main/res/layouts/main',
+                    'src/main/res/layouts/lonely_layout',
+                    'src/main/res/layouts/intro',
+                    'src/main/res/layouts/add_number',
+                    'src/main/res/layouts',
+                    'src/main/res'
+            ]
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -47,7 +65,7 @@ dependencies {
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
 
     // blankj
-    compile 'com.blankj:utilcode:1.7.1'
+    compile 'com.blankj:utilcode:1.9.8'
 
     // google
     compile 'com.google.android.gms:play-services-auth:11.4.2'
@@ -138,8 +156,5 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
-
-
-
 
 apply plugin: 'com.google.gms.google-services'

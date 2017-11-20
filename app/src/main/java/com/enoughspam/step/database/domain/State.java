@@ -2,7 +2,6 @@ package com.enoughspam.step.database.domain;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.abstracts.Domain;
 import com.google.firebase.database.Exclude;
@@ -19,8 +18,8 @@ public class State extends Domain {
 
     public State() {}
 
-    public State(@NonNull final String key, @NonNegative final String name,
-                 @NonNegative final String countryKey) {
+    public State(@NonNull final String key, @NonNull final String name,
+                 @NonNull final String countryKey) {
         super(key);
         setName(name);
         setCountryKey(countryKey);

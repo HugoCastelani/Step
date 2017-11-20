@@ -16,7 +16,7 @@ import com.google.firebase.database.Exclude;
  */
 
 public class Phone extends Domain {
-    private long number;
+    private Long number;
     private String areaKey;
     private String countryKey;
 
@@ -25,7 +25,7 @@ public class Phone extends Domain {
 
     public Phone() {}
 
-    public Phone(@NonNegative final long number, @NonNull final String areaKey,
+    public Phone(@NonNegative @NonNull final Long number, @NonNull final String areaKey,
                  @NonNull final String countryKey) {
         setNumber(number);
         setAreaKey(areaKey);
@@ -33,7 +33,7 @@ public class Phone extends Domain {
         setNumberACKey();
     }
 
-    public Phone(@NonNull final String key, @NonNegative final long number,
+    public Phone(@NonNull final String key, @NonNegative @NonNull final Long number,
                  @NonNull final String areaKey, @NonNull final String countryKey) {
         super(key);
         setNumber(number);
@@ -42,11 +42,11 @@ public class Phone extends Domain {
         setNumberACKey();
     }
 
-    public long getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
@@ -90,7 +90,7 @@ public class Phone extends Domain {
      * @return: returns a phone if it exists or null if it doesn't exist
      */
     public static Phone generateObject(@NonNull String number, @NonNull final String iso) {
-        final long numberL = Long.parseLong(number);
+        final Long numberL = Long.parseLong(number);
         if (numberL <= 0) return null;    // a number can't be <= 0
 
         // any 0 left from country's code was removed

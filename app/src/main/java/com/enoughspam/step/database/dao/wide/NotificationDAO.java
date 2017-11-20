@@ -2,7 +2,6 @@ package com.enoughspam.step.database.dao.wide;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
@@ -144,7 +143,7 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
     }
 
     @Override
-    public NotificationDAO delete(@NonNegative final String phoneKey,
+    public NotificationDAO delete(@NonNull final String phoneKey,
                                   @NonNull final Listeners.AnswerListener listener) {
 
         isNodeValid(userNode, retrievedBoolean -> {
@@ -174,8 +173,8 @@ public class NotificationDAO extends GenericWideDAO<UserPhone> {
     }
 
     @Override @Deprecated
-    public NotificationDAO delete(@NonNegative final String notifiedKey,
-                                  @NonNegative final String notifyingKey,
+    public NotificationDAO delete(@NonNull final String notifiedKey,
+                                  @NonNull final String notifyingKey,
                                   @NonNull final Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("You shouldn't do this. Call method with " +
                 "one parameter instead.");

@@ -2,7 +2,6 @@ package com.enoughspam.step.database.dao.wide;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
@@ -82,12 +81,12 @@ public class PhoneDAO extends GenericWideDAO<Phone> {
     }
 
     @Override @Deprecated
-    public PhoneDAO delete(@NonNegative String key1, @NonNull Listeners.AnswerListener listener) {
+    public PhoneDAO delete(@NonNull String key1, @NonNull Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
 
     @Override @Deprecated
-    public PhoneDAO delete(@NonNegative String key1, @NonNegative String key2,
+    public PhoneDAO delete(@NonNull String key1, @NonNull String key2,
                            @NonNull Listeners.AnswerListener listener) {
         throw new UnsupportedOperationException("You shouldn't do this.");
     }
@@ -97,7 +96,7 @@ public class PhoneDAO extends GenericWideDAO<Phone> {
         throw new UnsupportedOperationException("Support this, Hugo!");
     }
 
-    public PhoneDAO findByKey(@NonNegative final String key,
+    public PhoneDAO findByKey(@NonNull final String key,
                               @NonNull final Listeners.PhoneListener listener) {
 
         final Query query = getReference().orderByKey().equalTo(key).limitToFirst(1);

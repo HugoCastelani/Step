@@ -2,7 +2,6 @@ package com.enoughspam.step.database.dao.wide;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.User;
@@ -176,7 +175,7 @@ public class UserDAO extends GenericWideDAO<User> {
         return instance;
     }
 
-    public UserDAO findByKey(@NonNegative final String key,
+    public UserDAO findByKey(@NonNull final String key,
                              @NonNull final Listeners.UserListener listener) {
 
         isNodeValid(node, retrievedBoolean -> {

@@ -305,6 +305,8 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
                     @Override public void onCancelled(DatabaseError databaseError) {}
                 };
 
+                query.addChildEventListener(childEventListener);
+
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -316,8 +318,6 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
                 });
-
-                query.addChildEventListener(childEventListener);
 
             } else answerListener.onError();
         });

@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -31,29 +31,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".call.PhoneCallReceiver">
+        <receiver android:name=".receiver.PhoneCallReceiver">
             <intent-filter android:priority="100">
-                <action android:name="android.intent.action.PHONE_STATE"/>
-                <action android:name="android.provider.Telephony.SMS_SENT"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.provider.Telephony.SMS_SENT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/main_activity_label"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".search.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:label="@string/main_activity_label"
-            android:parentActivityName=".main.MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.enoughspam.step.main.MainActivity" />
+                android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".intro.MainIntroActivity"
+            android:name=".ui.intro.MainIntroActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -63,29 +63,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:label="@string/settings_activity_label"
             android:theme="@style/AppTheme">
             android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.enoughspam.step.main.MainActivity" />
+                android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".addnumber.AddNumberActivity"
+            android:name=".ui.addnumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
-            android:parentActivityName=".main.MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.enoughspam.step.main.MainActivity" />
+                android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".intro.SplashScreenActivity"
+            android:name=".ui.intro.SplashScreenActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".ui.profile.ProfileActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".ui.notification.NotificationActivity"></activity>
     </application>
 
 </manifest>

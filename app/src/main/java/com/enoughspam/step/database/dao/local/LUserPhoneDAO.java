@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.enoughspam.step.annotation.NonNegative;
 import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
 import com.enoughspam.step.database.domain.Phone;
@@ -105,7 +104,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
     }
 
     @Override @Deprecated
-    public LUserPhoneDAO delete(@NonNegative final String key) {
+    public LUserPhoneDAO delete(@NonNull final String key) {
         throw new UnsupportedOperationException("You shouldn't do this. Call overloaded method" +
                 " with two parameters instead.");
     }
@@ -150,7 +149,7 @@ public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
         return userPhone;
     }
 
-    public ArrayList<Phone> getPhoneList(@NonNegative final String key) {
+    public ArrayList<Phone> getPhoneList(@NonNull final String key) {
         final Cursor cursor = DAOHandler.getLocalDatabase().query(
                 table, new String[] {PHONE_KEY},
                 USER_KEY + " = ? AND " + IS_PROPERTY + " = ?",

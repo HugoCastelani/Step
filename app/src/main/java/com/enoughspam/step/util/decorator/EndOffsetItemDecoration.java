@@ -1,6 +1,7 @@
 package com.enoughspam.step.util.decorator;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,7 +17,7 @@ public class EndOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOffsetPx;
 
-    public EndOffsetItemDecoration(@NonNegative final int offsetPx) {
+    public EndOffsetItemDecoration(@NonNegative @NonNull final Integer offsetPx) {
         mOffsetPx = offsetPx;
     }
 
