@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,10 +70,8 @@ public final class PermissionIntroFragment extends SlideFragment {
 
                         } else {
 
-                            Snackbar.make(getView(),
-                                    getResources().getString(R.string.all_permissions_required),
-                                    Snackbar.LENGTH_SHORT)
-                                    .show();
+                            ((MainIntroActivity) getActivity())
+                                    .createSnackbar(R.string.all_permissions_required).show();
                         }
                     });
         }

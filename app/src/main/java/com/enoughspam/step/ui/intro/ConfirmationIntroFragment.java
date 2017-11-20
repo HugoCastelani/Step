@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +45,7 @@ public final class ConfirmationIntroFragment extends SlideFragment {
             } else {
 
                 messageCode.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                Snackbar.make(view, getResources().getString(R.string.invalid_code_error),
-                        Snackbar.LENGTH_LONG).show();
+                ((MainIntroActivity) getActivity()).createSnackbar(R.string.invalid_code_error).show();
             }
         });
 

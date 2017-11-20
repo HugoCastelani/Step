@@ -2,8 +2,6 @@ package com.enoughspam.step.ui.profile;
 
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -25,9 +23,6 @@ import com.enoughspam.step.ui.viewholder.UserViewHolder;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Hugo Castelani
@@ -60,7 +55,9 @@ public final class ProfileFragment extends AbstractFragment {
 
         mIsMyProfile = mUser.getKey().equals(LUserDAO.get().getThisUserKey());
 
-        init();
+        initViews();
+        initActions();
+
         return view;
     }
 
@@ -141,23 +138,6 @@ public final class ProfileFragment extends AbstractFragment {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
         }
-    }
-
-    public void showSnackbar(@StringRes final int message) {
-        Snackbar.make(mActivity.findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
-    }
-
-    public void showSnackAndClose(@StringRes final int message) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mActivity.onBackPressed();
-            }
-        }, Snackbar.LENGTH_LONG);
-
-        Snackbar.make(mActivity.findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 
     public ProfileFragment showRecyclerView() {

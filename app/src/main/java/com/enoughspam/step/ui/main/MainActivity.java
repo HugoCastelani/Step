@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.abstracts.SnackbarTrigger;
 import com.enoughspam.step.ui.addnumber.AddNumberActivity;
 import com.enoughspam.step.ui.profile.ProfileActivity;
 import com.enoughspam.step.ui.search.SearchActivity;
@@ -32,7 +32,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
  * Time: 21:30
  */
 
-public final class MainActivity extends AbstractActivity {
+public final class MainActivity extends AbstractActivity implements SnackbarTrigger {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
     private static final int REQUEST_CODE_ADD_NUMBER = 3;
@@ -53,15 +53,13 @@ public final class MainActivity extends AbstractActivity {
         initViews();
         initActions();
         initFragment();
-        initNavDrawer();
     }
 
     @Override
     protected void initViews() {
         mFab = (FloatingActionButton) findViewById(R.id.ma_fab);
-        mSnackbar = Snackbar.make(findViewById(R.id.content),
-                getResources().getString(R.string.press_back_again),
-                BaseTransientBottomBar.LENGTH_LONG);
+        mSnackbar = createSnackbar(R.string.press_back_again);
+        initNavDrawer();
     }
 
     @Override
@@ -190,10 +188,7 @@ public final class MainActivity extends AbstractActivity {
     protected void onResume() {
         super.onResume();
         if (mFragment.isPhoneSectionListEmpty()) {
-            Snackbar.make(findViewById(R.id.content),
-                    getResources().getString(R.string.no_registered_number),
-                    BaseTransientBottomBar.LENGTH_LONG)
-                    .show();
+            createSnackbar(R.string.no_registered_number).show();
         }
     }
 }

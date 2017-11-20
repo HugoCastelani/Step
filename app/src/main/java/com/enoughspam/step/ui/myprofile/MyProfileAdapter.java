@@ -47,6 +47,7 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
     private static final int VIEW_TYPE_TOOLBAR = -4;
 
     private ProfileFragment mFragment;
+    private ProfileActivity mActivity;
     private User mUser;
 
     private ArrayList<UserSection> mUserSectionList;
@@ -59,6 +60,7 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
     public MyProfileAdapter(@NonNull final User user, @NonNull final ProfileFragment fragment) {
         mUser = user;
         mFragment = fragment;
+        mActivity = (ProfileActivity) fragment.getActivity();
 
         mUserSectionList = new ArrayList<>();
 
@@ -126,7 +128,7 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
 
                 @Override
                 public void onError() {
-                    mFragment.showSnackAndClose(R.string.something_went_wrong);
+                    mActivity.createSnackbarAndClose(R.string.something_went_wrong).show();
                 }
             };
         }
@@ -280,7 +282,7 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
                 @Override public void onSuccess() {}
 
                 @Override public void onError() {
-                    mFragment.showSnackbar(R.string.profile_error_user_pic);
+                    mActivity.createSnackbar(R.string.profile_error_user_pic).show();
                 }
             });
 

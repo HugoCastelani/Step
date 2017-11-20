@@ -2,11 +2,16 @@ package com.enoughspam.step.ui.abstracts;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 import com.afollestad.aesthetic.AestheticToolbar;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.util.ThemeHandler;
@@ -20,7 +25,7 @@ import static android.os.Build.VERSION_CODES.M;
  * Time: 19:09
  */
 
-public abstract class AbstractActivity extends AestheticActivity {
+public abstract class AbstractActivity extends AestheticActivity implements SnackbarTrigger {
 
     private AestheticToolbar mToolbar;
 
@@ -44,6 +49,36 @@ public abstract class AbstractActivity extends AestheticActivity {
     abstract protected void initActions();
 
     abstract protected void initFragment();
+
+    @Override
+    public Snackbar createSnackbar(final @NonNull @StringRes Integer message) {
+        return buildSnackbar(getResources().getString(message));
+    }
+
+    @Override
+    public Snackbar createSnackbar(final @NonNull String message) {
+        return buildSnackbar(message);
+    }
+
+    @NonNull
+    public Snackbar buildSnackbar(final @NonNull String message) {
+        return Snackbar.make(findViewById(R.id.content), message, Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public Snackbar createSnackbarAndClose(final @NonNull @StringRes Integer message) {
+        final Snackbar snackbar = createSnackbar(message);
+
+        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                ActivityUtils.finishActivity(AbstractActivity.this);
+            }
+        });
+
+        return snackbar;
+    }
 
     @Nullable
     protected AestheticToolbar getToolbar() {

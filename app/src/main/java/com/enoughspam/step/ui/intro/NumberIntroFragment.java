@@ -2,8 +2,6 @@ package com.enoughspam.step.ui.intro;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +26,12 @@ public final class NumberIntroFragment extends SlideFragment {
     private boolean mCanGoForward = false;
 
     private View view;
+    private MainIntroActivity mActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_number, container, false);
+        mActivity = (MainIntroActivity) getActivity();
 
         initFragment();
 
@@ -109,23 +109,18 @@ public final class NumberIntroFragment extends SlideFragment {
                                 }
 
                                 @Override public void error() {
-                                    showSnackbar(R.string.something_went_wrong);
+                                    mActivity.createSnackbar(R.string.something_went_wrong).show();
                                 }
                             }, false);
 
                         }
 
                         @Override public void onError() {
-                            showSnackbar(R.string.something_went_wrong);
+                            mActivity.createSnackbar(R.string.something_went_wrong).show();
                         }
                     })
 
                 ).show();
-    }
-
-    private void showSnackbar(@StringRes final int message) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 
     private void sendMessage() {

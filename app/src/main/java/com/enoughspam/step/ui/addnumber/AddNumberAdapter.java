@@ -171,7 +171,7 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
 
                         @Override
                         public void onError() {
-                            mActivity.showSnackAndClose(R.string.adding_number_error);
+                            mActivity.createSnackbarAndClose(R.string.adding_number_error).show();
                         }
                     };
 

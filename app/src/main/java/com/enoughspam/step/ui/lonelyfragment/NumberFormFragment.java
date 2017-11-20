@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.local.LAreaDAO;
 import com.enoughspam.step.database.dao.local.LCountryDAO;
@@ -24,12 +27,13 @@ import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.ui.abstracts.AbstractFragment;
+import com.enoughspam.step.ui.abstracts.SnackbarTrigger;
 import com.enoughspam.step.ui.addnumber.AddNumberFragment;
 import com.enoughspam.step.ui.intro.NumberIntroFragment;
 import com.enoughspam.step.ui.intro.util.AutoItemSelectorTextWatcher;
 import com.enoughspam.step.ui.intro.util.FormHandler;
-import com.enoughspam.step.util.LocationUtils;
 import com.enoughspam.step.util.ThemeHandler;
+import com.enoughspam.step.util.blankj.LocationUtils;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.List;
@@ -40,9 +44,10 @@ import java.util.List;
  * Time: 11:54
  */
 
-public final class NumberFormFragment extends AbstractFragment {
+public final class NumberFormFragment extends AbstractFragment implements SnackbarTrigger {
+
     private View view;
-    private Fragment parentFragment;
+    private Fragment mFragment;
 
     private LinearLayout mParentView;
     private Spinner mSpinner;
@@ -54,15 +59,18 @@ public final class NumberFormFragment extends AbstractFragment {
     private String mCountryCode;
     private String mPhoneNumber;
     private String mMergePhoneNumber;
-    private String mError;
+    private Integer mError;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.number_form_layout, container, false);
-        parentFragment = getParentFragment();
 
-        init();
+        mFragment = getParentFragment();
+
+        initViews();
+        initActions();
+
         return view;
     }
 
@@ -111,8 +119,8 @@ public final class NumberFormFragment extends AbstractFragment {
                         for (i = 0; i < mSpinnerList.size(); i++) {
                             if (mSpinnerList.get(i).contains(countryName)) {
                                 mSpinner.setSelection(i);
-                                if (parentFragment instanceof AddNumberFragment) {
-                                    ((AddNumberFragment) parentFragment).showRecyclerView();
+                                if (mFragment instanceof AddNumberFragment) {
+                                    ((AddNumberFragment) mFragment).showRecyclerView();
                                 }
                                 return;
                             }
@@ -149,14 +157,14 @@ public final class NumberFormFragment extends AbstractFragment {
 
     public void validateNumber() {
         mParentView.requestFocus();
-        mError = "";
+        mError = -1;
 
         // country CODE edittext input treatment
         mCountryCode = mCountryCodeEditText.getText().toString();
 
         if (mCountryCode.isEmpty()) {
             mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            mError = getResources().getString(R.string.empty_input_error);
+            mError = R.string.empty_input_error;
         }
 
         // phone edittext input treatment
@@ -165,15 +173,15 @@ public final class NumberFormFragment extends AbstractFragment {
 
         if (mPhoneNumber.isEmpty()) {
             mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            if (mError.isEmpty()) {
-                mError = getResources().getString(R.string.empty_input_error);
+            if (mError == -1) {
+                mError = R.string.empty_input_error;
             } else {
-                mError = getResources().getString(R.string.empty_inputs_error);
+                mError = R.string.empty_inputs_error;
             }
         }
 
-        if (!mError.isEmpty()) {
-            Snackbar.make(view, mError, Snackbar.LENGTH_LONG).show();
+        if (mError != -1) {
+            createSnackbar(mError).show();
             return;
         }
 
@@ -190,7 +198,7 @@ public final class NumberFormFragment extends AbstractFragment {
                         mPhoneNumber.substring(0, spaceIndex));
 
                 if (area == null) {
-                    mError = getResources().getString(R.string.area_code_error);
+                    mError = R.string.area_code_error;
                     mPhoneNumberEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
                 } else {
@@ -204,26 +212,56 @@ public final class NumberFormFragment extends AbstractFragment {
                 phone = new Phone(phoneNumberL, "-1", country.getKey());
             }
 
-            if (mError.isEmpty()) {
+            if (mError == -1) {
                 confirmNumber(phone);
             }
 
         } else {
 
             mCountryCodeEditText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            mError = getResources().getString(R.string.country_code_error);
+            mError = R.string.country_code_error;
         }
 
-        if (!mError.isEmpty()) {
-            Snackbar.make(view, mError, Snackbar.LENGTH_LONG).show();
+        if (mError != -1) {
+            createSnackbar(mError).show();
         }
     }
 
     private void confirmNumber(@NonNull final Phone phone) {
-        if (parentFragment instanceof NumberIntroFragment) {
-            ((NumberIntroFragment) parentFragment).confirmNumber(phone);
+        if (mFragment instanceof NumberIntroFragment) {
+            ((NumberIntroFragment) mFragment).confirmNumber(phone);
         } else {
-            ((AddNumberFragment) parentFragment).confirmNumber(phone);
+            ((AddNumberFragment) mFragment).confirmNumber(phone);
         }
+    }
+
+    @Override
+    public Snackbar createSnackbar(final @NonNull @StringRes Integer message) {
+        return buildSnackbar(getResources().getString(message));
+    }
+
+    @Override
+    public Snackbar createSnackbar(final @NonNull String message) {
+        return buildSnackbar(message);
+    }
+
+    @NonNull
+    public Snackbar buildSnackbar(final @NonNull String message) {
+        return Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public Snackbar createSnackbarAndClose(final @NonNull @StringRes Integer message) {
+        final Snackbar snackbar = createSnackbar(message);
+
+        snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                ActivityUtils.finishActivity(getActivity());
+            }
+        });
+
+        return snackbar;
     }
 }

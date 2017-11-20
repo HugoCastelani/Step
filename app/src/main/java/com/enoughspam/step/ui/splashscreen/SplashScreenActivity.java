@@ -3,7 +3,6 @@ package com.enoughspam.step.ui.splashscreen;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.Utils;
@@ -56,9 +55,7 @@ public final class SplashScreenActivity extends AbstractActivity {
 
                     }, 2000);
 
-                    Snackbar.make(findViewById(android.R.id.content),
-                            getResources().getString(R.string.splash_screen_no_internet_connection),
-                            2000).show();
+                    createSnackbar(R.string.splash_screen_no_internet_connection).show();
                 }
 
                 return null;

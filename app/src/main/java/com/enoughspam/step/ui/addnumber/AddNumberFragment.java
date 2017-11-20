@@ -63,7 +63,9 @@ public final class AddNumberFragment extends AbstractFragment {
         view = inflater.inflate(R.layout.add_number_fragment, container, false);
         mActivity = (AddNumberActivity) getActivity();
 
-        init();
+        initViews();
+        initActions();
+
         return view;
     }
 
@@ -176,7 +178,7 @@ public final class AddNumberFragment extends AbstractFragment {
 
                             @Override
                             public void onError() {
-                                mActivity.showSnackAndClose(R.string.something_went_wrong);
+                                mActivity.createSnackbarAndClose(R.string.something_went_wrong);
                             }
                         });
                 })
@@ -226,7 +228,7 @@ public final class AddNumberFragment extends AbstractFragment {
 
             @Override
             public void onError() {
-                mActivity.showSnackAndClose(R.string.something_went_wrong);
+                mActivity.createSnackbarAndClose(R.string.something_went_wrong);
             }
         });
     }

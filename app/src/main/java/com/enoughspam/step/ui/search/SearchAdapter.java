@@ -94,7 +94,7 @@ public final class SearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
                 @Override
                 public void onError() {
-                    mActivity.showSnackbar(R.string.something_went_wrong);
+                    mActivity.createSnackbar(R.string.something_went_wrong).show();
                 }
             };
         }

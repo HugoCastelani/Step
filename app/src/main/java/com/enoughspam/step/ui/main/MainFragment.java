@@ -47,7 +47,9 @@ public final class MainFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.main_fragment, container, false);
 
-        init();
+        initViews();
+        initActions();
+
         return view;
     }
 

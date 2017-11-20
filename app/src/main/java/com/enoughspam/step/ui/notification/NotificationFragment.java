@@ -22,7 +22,10 @@ public final class NotificationFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.notification_fragment, container, false);
-        init();
+
+        initViews();
+        initActions();
+
         return view;
     }
 

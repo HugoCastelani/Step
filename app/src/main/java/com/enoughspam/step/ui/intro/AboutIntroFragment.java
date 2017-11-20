@@ -1,8 +1,6 @@
 package com.enoughspam.step.ui.intro;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +12,6 @@ import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Hugo Castelani
@@ -47,7 +42,8 @@ public final class AboutIntroFragment extends SlideFragment {
                 }
 
                 @Override public void onError() {
-                    showSnackAndClose(R.string.something_went_wrong);
+                    ((MainIntroActivity) getActivity())
+                            .createSnackbarAndClose(R.string.something_went_wrong).show();
                 }
             };
 
@@ -59,18 +55,6 @@ public final class AboutIntroFragment extends SlideFragment {
         }
 
         return view;
-    }
-
-    private void showSnackAndClose(@StringRes final Integer message) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                getActivity().finishAndRemoveTask();
-            }
-        }, 3000);
-
-        Snackbar.make(getActivity().findViewById(android.R.id.content),
-                getResources().getString(message), 3000).show();
     }
 
     @Override

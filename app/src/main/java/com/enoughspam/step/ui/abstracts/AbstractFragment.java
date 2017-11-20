@@ -9,11 +9,6 @@ import android.support.v4.app.Fragment;
  */
 
 public abstract class AbstractFragment extends Fragment {
-    protected void init() {
-        initViews();
-        initActions();
-    }
-
     abstract protected void initViews();
 
     abstract protected void initActions();

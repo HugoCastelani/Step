@@ -1,4 +1,4 @@
-package com.enoughspam.step.util;
+package com.enoughspam.step.util.blankj;
 
 import android.content.Intent;
 import android.location.Address;

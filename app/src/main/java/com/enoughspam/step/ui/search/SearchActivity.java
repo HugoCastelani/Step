@@ -2,8 +2,6 @@ package com.enoughspam.step.ui.search;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -120,10 +118,5 @@ public final class SearchActivity extends AbstractActivity {
         if (mRecyclerView.getVisibility() != View.VISIBLE) {
             mRecyclerView.setVisibility(View.VISIBLE);
         }
-    }
-
-    public void showSnackbar(@StringRes final int message) {
-        Snackbar.make(findViewById(android.R.id.content), getResources().getString(message),
-                Snackbar.LENGTH_LONG).show();
     }
 }

@@ -1,9 +1,7 @@
 package com.enoughspam.step.ui.addnumber;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -16,8 +14,6 @@ import com.enoughspam.step.util.Listeners;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class AddNumberActivity extends AbstractActivity {
 
@@ -84,7 +80,7 @@ public final class AddNumberActivity extends AbstractActivity {
                 
                 @Override
                 public void onError() {
-                    showSnack(R.string.adding_number_error);
+                    createSnackbar(R.string.adding_number_error).show();
                     mutualAction();
                 }
 
@@ -147,22 +143,5 @@ public final class AddNumberActivity extends AbstractActivity {
 
     public void hideFAB() {
         mFAB.hide();
-    }
-
-    public void showSnack(@StringRes final int message) {
-        Snackbar.make(findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
-    }
-
-    public void showSnackAndClose(@StringRes final int message) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                onBackPressed();
-            }
-        }, Snackbar.LENGTH_LONG);
-
-        Snackbar.make(findViewById(android.R.id.content),
-                getResources().getString(message), Snackbar.LENGTH_LONG).show();
     }
 }

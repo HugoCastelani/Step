@@ -38,6 +38,8 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
     private static final int VIEW_TYPE_TOOLBAR = -4;
 
     private ProfileFragment mFragment;
+    private ProfileActivity mActivity;
+
     private User mUser;
     private Boolean isFollowing;
 
@@ -50,6 +52,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
         mBlockedNumbersList = new ArrayList<>();
         mUser = user;
         mFragment = fragment;
+        mActivity = (ProfileActivity) fragment.getActivity();
 
         UserFollowerDAO.get().exists(mUser, new Listeners.ObjectListener<Boolean>() {
             @Override
@@ -59,7 +62,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
 
             @Override
             public void onError() {
-                mFragment.showSnackAndClose(R.string.profile_error_loading_user);
+                mActivity.createSnackbarAndClose(R.string.profile_error_loading_user).show();
             }
         });
 
@@ -122,7 +125,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
 
                 @Override
                 public void onError() {
-                    mFragment.showSnackAndClose(R.string.something_went_wrong);
+                    mActivity.createSnackbarAndClose(R.string.something_went_wrong).show();
                 }
             };
         }
@@ -214,7 +217,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                 @Override public void onSuccess() {}
 
                 @Override public void onError() {
-                    mFragment.showSnackbar(R.string.profile_error_user_pic);
+                    mActivity.createSnackbar(R.string.profile_error_user_pic).show();
                 }
             });
 
@@ -242,7 +245,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                 @Override
                 public void onError() {
                     mFragment.hideAddingProgressDialog();
-                    mFragment.showSnackbar(R.string.profile_error_add_user);
+                    mActivity.createSnackbar(R.string.profile_error_add_user).show();
                 }
             });
         });
@@ -267,7 +270,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                 @Override
                 public void onError() {
                     mFragment.hideRemovingProgressDialog();
-                    mFragment.showSnackbar(R.string.profile_error_remove_user);
+                    mActivity.createSnackbar(R.string.profile_error_remove_user).show();
                 }
             };
 
