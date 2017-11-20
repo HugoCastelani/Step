@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.settings.preferences;
+package com.enoughspam.step.ui.settings.preference;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -46,15 +46,15 @@ public class ExpandablePreference extends Preference {
     public void onBindView(View view) {
         super.onBindView(view);
 
-        mExpand = (ImageView) view.findViewById(R.id.preference_expand_drawable);
+        mExpand = (ImageView) view.findViewById(R.id.pe_drawable);
         mExpand.setColorFilter(ThemeHandler.getSecondaryText(), PorterDuff.Mode.SRC_IN);
 
-        mExpandableLayout = (ExpandableLayout) view.findViewById(R.id.preference_expandable_layout);
+        mExpandableLayout = (ExpandableLayout) view.findViewById(R.id.pe_layout);
         mExpandableLayout.setOnStartShowingListener(expandableLayout -> rotateExpand());
         mExpandableLayout.setOnStartHidingListener(expandableLayout -> rotateExpand());
 
         final AestheticRecyclerView recyclerView = (AestheticRecyclerView)
-                view.findViewById(R.id.preference_expandable_recycler_view);
+                view.findViewById(R.id.pe_recycler_view);
 
         final ExpandablePreferenceAdapter adapter = new ExpandablePreferenceAdapter(view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext(),

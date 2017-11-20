@@ -23,6 +23,7 @@ import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.domain.Area;
 import com.enoughspam.step.database.domain.Country;
 import com.enoughspam.step.database.domain.Phone;
+import com.enoughspam.step.ui.abstracts.AbstractFragment;
 import com.enoughspam.step.ui.addnumber.AddNumberFragment;
 import com.enoughspam.step.ui.intro.NumberIntroFragment;
 import com.enoughspam.step.ui.intro.util.AutoItemSelectorTextWatcher;
@@ -39,7 +40,7 @@ import java.util.List;
  * Time: 11:54
  */
 
-public class NumberFormFragment extends Fragment {
+public class NumberFormFragment extends AbstractFragment {
     private View view;
     private Fragment parentFragment;
 
@@ -61,21 +62,21 @@ public class NumberFormFragment extends Fragment {
         view = inflater.inflate(R.layout.number_form_layout, container, false);
         parentFragment = getParentFragment();
 
-        initViews();
-        initActions();
-
+        init();
         return view;
     }
 
-    private void initViews() {
-        mParentView = (LinearLayout) view.findViewById(R.id.number_form_parent);
-        mSpinner = (Spinner) view.findViewById(R.id.number_form_spinner);
-        mCountryCodeEditText = (EditText) view.findViewById(R.id.number_form_country_code);
-        mPhoneNumberEditText = (EditText) view.findViewById(R.id.number_form_phone);
-        mSendMessage = (ImageView) view.findViewById(R.id.number_form_go);
+    @Override
+    protected void initViews() {
+        mParentView = (LinearLayout) view.findViewById(R.id.nfl_content);
+        mSpinner = (Spinner) view.findViewById(R.id.nfl_spinner);
+        mCountryCodeEditText = (EditText) view.findViewById(R.id.nfl_country_code);
+        mPhoneNumberEditText = (EditText) view.findViewById(R.id.nfl_phone);
+        mSendMessage = (ImageView) view.findViewById(R.id.nfl_go);
     }
 
-    private void initActions() {
+    @Override
+    protected void initActions() {
         final FormHandler handler = new FormHandler(mSpinner, mCountryCodeEditText, mPhoneNumberEditText);
         final AutoItemSelectorTextWatcher textWatcher = new AutoItemSelectorTextWatcher(handler);
 

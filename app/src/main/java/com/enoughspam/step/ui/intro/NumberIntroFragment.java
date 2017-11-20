@@ -44,7 +44,7 @@ public class NumberIntroFragment extends SlideFragment {
         if (numberFormFragment == null) {
             numberFormFragment = new NumberFormFragment();
             final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.number_form_fragment_container, numberFormFragment, "numberFormFragmentTag");
+            fragmentTransaction.replace(R.id.ifn_fragment_container, numberFormFragment, "numberFormFragmentTag");
             fragmentTransaction.commit();
         }
     }

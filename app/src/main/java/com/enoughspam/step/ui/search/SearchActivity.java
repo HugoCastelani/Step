@@ -37,16 +37,16 @@ public class SearchActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        mEditText = (EditText) findViewById(R.id.search_edit_text);
+        mEditText = (EditText) findViewById(R.id.sa_edit_text);
         mEditText.requestFocus();
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        mClearIcon = (ImageView) findViewById(R.id.search_clear_icon);
-        mProgressBar = (LinearLayout) findViewById(R.id.search_progress_bar);
-        mProgressBar = (LinearLayout) findViewById(R.id.search_progress_bar);
-        mNoResults = (LinearLayout) findViewById(R.id.search_no_results);
-        mRecyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);
+        mClearIcon = (ImageView) findViewById(R.id.sa_clear_icon);
+        mProgressBar = (LinearLayout) findViewById(R.id.sa_progress_bar);
+        mProgressBar = (LinearLayout) findViewById(R.id.sa_progress_bar);
+        mNoResults = (LinearLayout) findViewById(R.id.sa_no_results);
+        mRecyclerView = (RecyclerView) findViewById(R.id.sa_recycler_view);
     }
 
     @Override

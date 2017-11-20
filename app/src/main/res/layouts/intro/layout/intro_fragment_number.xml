@@ -38,7 +38,7 @@
             android:textColor="?android:textColorPrimary"/>
 
         <LinearLayout
-            android:id="@+id/number_form_fragment_container"
+            android:id="@+id/ifn_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/baseline"

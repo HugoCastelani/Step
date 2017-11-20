@@ -91,7 +91,7 @@ public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expandable
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            description = (AestheticTextView) itemView.findViewById(R.id.preference_expandable_item_text_view);
+            description = (AestheticTextView) itemView.findViewById(R.id.pe_item_text_view);
         }
     }
 }

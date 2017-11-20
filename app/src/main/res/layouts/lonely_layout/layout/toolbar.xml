@@ -7,10 +7,10 @@
     android:theme="@style/AppTheme.AppBarOverlay">
 
     <com.afollestad.aesthetic.AestheticToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 </android.support.design.widget.AppBarLayout>

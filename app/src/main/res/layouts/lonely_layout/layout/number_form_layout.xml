@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/number_form_parent"
+    android:id="@+id/nfl_content"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -10,7 +10,7 @@
     android:focusableInTouchMode="true">
 
     <com.afollestad.aesthetic.AestheticSpinner
-        android:id="@+id/number_form_spinner"
+        android:id="@+id/nfl_spinner"
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_weight="0.03"/>
 
         <com.afollestad.aesthetic.AestheticEditText
-            android:id="@+id/number_form_country_code"
+            android:id="@+id/nfl_country_code"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_marginRight="@dimen/baseline_half_half"
@@ -48,7 +48,7 @@
             android:layout_weight="0.2"/>
 
         <com.afollestad.aesthetic.AestheticEditText
-            android:id="@+id/number_form_phone"
+            android:id="@+id/nfl_phone"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_marginRight="@dimen/baseline_half_half"
@@ -60,7 +60,7 @@
             android:layout_weight="0.75"/>
 
         <com.afollestad.aesthetic.AestheticImageView
-            android:id="@+id/number_form_go"
+            android:id="@+id/nfl_go"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

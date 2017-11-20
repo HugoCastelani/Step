@@ -30,7 +30,7 @@ public class PermissionIntroFragment extends SlideFragment {
 
         mRxPermissions = new RxPermissions(getActivity());
 
-        mButton = (AestheticButton) view.findViewById(R.id.intro_permission_button);
+        mButton = (AestheticButton) view.findViewById(R.id.ifp_button);
         mButton.setOnClickListener(v -> onRequestButtonClick());
 
         return view;

@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.UserPhone;
 import com.enoughspam.step.domain.Call;
+import com.enoughspam.step.ui.abstracts.AbstractFragment;
 import com.enoughspam.step.ui.addnumber.extra.CustomLinearLayoutManager;
 import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
@@ -40,7 +40,7 @@ import java.util.List;
  * Time: 19:15
  */
 
-public class AddNumberFragment extends Fragment {
+public class AddNumberFragment extends AbstractFragment {
 
     private AddNumberActivity mActivity;
 
@@ -61,17 +61,17 @@ public class AddNumberFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.add_number_fragment, container, false);
-
         mActivity = (AddNumberActivity) getActivity();
-        initViews();
 
+        init();
         return view;
     }
 
-    private void initViews() {
-        mProgressBar = (ProgressBar) view.findViewById(R.id.add_number_progress_bar);
+    @Override
+    protected void initViews() {
+        mProgressBar = (ProgressBar) view.findViewById(R.id.anf_progress_bar);
 
-        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.add_number_recycler_view);
+        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.anf_recycler_view);
 
         mAdapter = new AddNumberAdapter(getCallList(), this);
         mLayoutManager = new CustomLinearLayoutManager(mRecyclerView.getContext(),
@@ -83,6 +83,9 @@ public class AddNumberFragment extends Fragment {
 
         ListDecorator.addAdaptableMargins(mRecyclerView, -1);
     }
+
+    @Override
+    protected void initActions() {}
 
     private List<Call> getCallList() {
         Uri calls = Uri.parse("content://call_log/calls");

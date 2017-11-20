@@ -2,7 +2,6 @@
 <com.afollestad.aesthetic.AestheticCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/add_number_item_call_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="58dp"
@@ -12,7 +11,7 @@
     android:clickable="true">
 
     <LinearLayout
-        android:id="@+id/number_form_fragment_container"
+        android:id="@+id/inf_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"/>

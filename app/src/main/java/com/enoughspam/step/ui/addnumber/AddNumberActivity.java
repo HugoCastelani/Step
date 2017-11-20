@@ -64,7 +64,7 @@ public class AddNumberActivity extends AbstractActivity {
                 .cancelable(false)
                 .build();
 
-        mFAB = (FloatingActionButton) findViewById(R.id.add_number_fab);
+        mFAB = (FloatingActionButton) findViewById(R.id.ana_fab);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class AddNumberActivity extends AbstractActivity {
         if (mAddNumberFragment == null) {
             mAddNumberFragment = new AddNumberFragment();
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.add_number_fragment_container, mAddNumberFragment, "addNumberFragmentTag");
+            fragmentTransaction.replace(R.id.ana_fragment_container, mAddNumberFragment, "addNumberFragmentTag");
             fragmentTransaction.commit();
         }
     }

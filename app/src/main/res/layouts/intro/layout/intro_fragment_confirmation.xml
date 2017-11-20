@@ -9,7 +9,7 @@
     tools:context=".ui.intro.PermissionIntroFragment">
 
     <LinearLayout
-        android:id="@+id/intro_confirmation_parent"
+        android:id="@+id/ifc_parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="@dimen/baseline"
@@ -49,7 +49,7 @@
             android:weightSum="1">
 
             <com.afollestad.aesthetic.AestheticEditText
-                android:id="@+id/intro_confirmation_code"
+                android:id="@+id/ifc_code"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:inputType="number"
@@ -59,7 +59,7 @@
                 android:layout_weight=".50"/>
 
             <com.afollestad.aesthetic.AestheticImageView
-                android:id="@+id/intro_confirmation_go"
+                android:id="@+id/ifc_go"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

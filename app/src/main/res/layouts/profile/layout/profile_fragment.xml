@@ -6,21 +6,21 @@
     tools:context=".ui.profile.ProfileFragment">
 
     <com.afollestad.aesthetic.AestheticProgressBar
-        android:id="@+id/profile_progress_bar"
+        android:id="@+id/pf_progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
     <com.afollestad.aesthetic.AestheticRecyclerView
-        android:id="@+id/profile_recycler_view"
+        android:id="@+id/pf_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/profile_place_holder"
+        android:id="@+id/pf_place_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/baseline_6x"

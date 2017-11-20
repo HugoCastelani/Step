@@ -20,7 +20,7 @@ public final class PhoneHeaderViewHolder extends SectionedViewHolder {
 
     public PhoneHeaderViewHolder(View itemView) {
         super(itemView);
-        mCardView = (AestheticCardView) itemView.findViewById(R.id.main_item_number_card);
+        mCardView = (AestheticCardView) itemView.findViewById(R.id.ip_card);
         mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
         mIsSwipeable = false;
     }

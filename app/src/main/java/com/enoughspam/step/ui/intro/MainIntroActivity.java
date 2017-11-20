@@ -9,6 +9,7 @@ import com.afollestad.aesthetic.Aesthetic;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
+import com.enoughspam.step.ui.splashscreen.SplashScreenActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 

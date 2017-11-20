@@ -23,9 +23,9 @@ public final class ToolbarViewHolder extends SectionedViewHolder {
 
     public ToolbarViewHolder(View itemView) {
         super(itemView);
-        mUserPic = (CircleImageView) itemView.findViewById(R.id.profile_circle_view);
-        mUsername = (AestheticTextView) itemView.findViewById(R.id.profile_user_name);
-        mSocialMedia = (AestheticTextView) itemView.findViewById(R.id.profile_social_media);
-        mButton = (AestheticButton) itemView.findViewById(R.id.profile_delete_account);
+        mUserPic = (CircleImageView) itemView.findViewById(R.id.ipt_pic);
+        mUsername = (AestheticTextView) itemView.findViewById(R.id.ipt_username);
+        mSocialMedia = (AestheticTextView) itemView.findViewById(R.id.ipt_social_media);
+        mButton = (AestheticButton) itemView.findViewById(R.id.ipt_delete_account);
     }
 }

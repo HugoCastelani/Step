@@ -33,9 +33,9 @@ public class AboutIntroFragment extends SlideFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_about, container, false);
 
-        final LinearLayout beforeLoadLayout = view.findViewById(R.id.intro_about_before_load);
-        final LinearLayout errorLayout = view.findViewById(R.id.intro_about_error);
-        final LinearLayout afterLoadLayout = view.findViewById(R.id.intro_about_after_load);
+        final LinearLayout beforeLoadLayout = view.findViewById(R.id.ifa_before_load);
+        final LinearLayout errorLayout = view.findViewById(R.id.ifa_error);
+        final LinearLayout afterLoadLayout = view.findViewById(R.id.ifa_after_load);
 
         if (NetworkUtils.isConnected()) {
             Listeners.AnswerListener listener = new Listeners.AnswerListener() {

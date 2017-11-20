@@ -24,7 +24,7 @@ public class NumberFormViewHolder extends SectionedViewHolder {
         if (numberFormFragment == null) {
             numberFormFragment = new NumberFormFragment();
             final FragmentTransaction fragmentTransaction = fragment.getChildFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.number_form_fragment_container, numberFormFragment, "numberFormFragmentTag");
+            fragmentTransaction.replace(R.id.inf_fragment_container, numberFormFragment, "numberFormFragmentTag");
             fragmentTransaction.commit();
         }
     }

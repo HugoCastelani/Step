@@ -2,7 +2,7 @@
 <com.afollestad.aesthetic.AestheticCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/search_item_profile_card"
+    android:id="@+id/iu_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="62dp"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <com.afollestad.aesthetic.AestheticProgressBar
-            android:id="@+id/search_item_profile_progress_bar"
+            android:id="@+id/iu_progress_bar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +25,7 @@
             style="?android:attr/progressBarStyle"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/search_item_profile_user_pic"
+            android:id="@+id/iu_pic"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,13 +33,13 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <com.afollestad.aesthetic.AestheticTextView
-            android:id="@+id/search_item_profile_username"
+            android:id="@+id/iu_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/search_item_profile_user_pic"
+            app:layout_constraintStart_toEndOf="@+id/iu_pic"
             android:paddingLeft="64dp"
             android:textColor="?android:textColorPrimary"
             android:textSize="18sp"/>

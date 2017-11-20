@@ -26,9 +26,9 @@ public class ConfirmationIntroFragment extends SlideFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.intro_fragment_confirmation, container, false);
 
-        final LinearLayout parentView = (LinearLayout) view.findViewById(R.id.intro_confirmation_parent);
-        final AestheticEditText messageCode = (AestheticEditText) view.findViewById(R.id.intro_confirmation_code);
-        final AestheticImageView confirm = (AestheticImageView) view.findViewById(R.id.intro_confirmation_go);
+        final LinearLayout parentView = (LinearLayout) view.findViewById(R.id.ifc_parent);
+        final AestheticEditText messageCode = (AestheticEditText) view.findViewById(R.id.ifc_code);
+        final AestheticImageView confirm = (AestheticImageView) view.findViewById(R.id.ifc_go);
 
         confirm.setOnClickListener(v -> {
             parentView.requestFocus();

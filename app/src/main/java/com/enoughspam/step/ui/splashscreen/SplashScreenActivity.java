@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.intro;
+package com.enoughspam.step.ui.splashscreen;
 
 import android.content.Intent;
 import android.os.AsyncTask;

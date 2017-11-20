@@ -22,8 +22,8 @@ public class PhoneContactViewHolder extends SectionedViewHolder {
 
     public PhoneContactViewHolder(View itemView) {
         super(itemView);
-        mCardView = (AestheticCardView) itemView.findViewById(R.id.add_number_item_call_card);
-        mParent = (LinearLayout) itemView.findViewById(R.id.add_number_item_call_parent);
+        mCardView = (AestheticCardView) itemView.findViewById(R.id.ipc_card);
+        mParent = (LinearLayout) itemView.findViewById(R.id.icp_parent);
         mSectionOrName = (AestheticTextView) itemView.findViewById(android.R.id.title);
         mNumber = (AestheticTextView) itemView.findViewById(android.R.id.summary);
     }

@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.settings.preferences;
+package com.enoughspam.step.ui.settings.preference;
 
 import android.content.Context;
 import android.preference.Preference;
@@ -50,7 +50,7 @@ public class ColorPreference extends Preference {
 
     private void invalidateColor() {
         if (mView != null) {
-            final CircleView circle = (CircleView) mView.findViewById(R.id.circle);
+            final CircleView circle = (CircleView) mView.findViewById(R.id.pc_circle);
             if (mColor != 0) {
                 circle.setBackgroundColor(mColor);
             } else {

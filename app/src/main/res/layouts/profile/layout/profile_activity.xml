@@ -8,7 +8,7 @@
     tools:context=".ui.profile.ProfileActivity">
 
     <FrameLayout
-        android:id="@+id/profile_fragment_container"
+        android:id="@+id/pa_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

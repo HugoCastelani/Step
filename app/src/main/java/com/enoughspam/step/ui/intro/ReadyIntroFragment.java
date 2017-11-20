@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.enoughspam.step.R;
+import com.enoughspam.step.ui.splashscreen.SplashScreenActivity;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 public class ReadyIntroFragment extends SlideFragment {

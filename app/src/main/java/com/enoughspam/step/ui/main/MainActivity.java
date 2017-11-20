@@ -58,7 +58,7 @@ public class MainActivity extends AbstractActivity {
 
     @Override
     protected void initViews() {
-        mFab = (FloatingActionButton) findViewById(R.id.main_fab);
+        mFab = (FloatingActionButton) findViewById(R.id.ma_fab);
         mSnackbar = Snackbar.make(findViewById(R.id.content),
                 getResources().getString(R.string.press_back_again),
                 BaseTransientBottomBar.LENGTH_LONG);
@@ -88,7 +88,7 @@ public class MainActivity extends AbstractActivity {
         if (mFragment == null) {
             mFragment = new MainFragment();
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.main_fragment_container, mFragment, "mainFragmentTag");
+            fragmentTransaction.replace(R.id.ma_fragment_container, mFragment, "mainFragmentTag");
             fragmentTransaction.commit();
         }
     }

@@ -6,13 +6,13 @@
     tools:context=".ui.main.MainFragment">
 
     <com.afollestad.aesthetic.AestheticRecyclerView
-        android:id="@+id/main_recycler_view"
+        android:id="@+id/mf_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
 
     <ImageView
-        android:id="@+id/main_place_holder"
+        android:id="@+id/mf_place_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/baseline_6x"

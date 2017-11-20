@@ -81,7 +81,7 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.intro.SplashScreenActivity"
+            android:name=".ui.splashscreen.SplashScreenActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.profile.ProfileActivity"

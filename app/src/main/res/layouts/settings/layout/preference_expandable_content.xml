@@ -6,7 +6,7 @@
     android:clickable="false">
 
     <com.afollestad.aesthetic.AestheticRecyclerView
-        android:id="@+id/preference_expandable_recycler_view"
+        android:id="@+id/pe_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

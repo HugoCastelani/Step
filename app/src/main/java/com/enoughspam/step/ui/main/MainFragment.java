@@ -1,7 +1,6 @@
 package com.enoughspam.step.ui.main;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -21,6 +20,7 @@ import com.enoughspam.step.database.dao.local.LRelationshipDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.ui.abstracts.AbstractFragment;
 import com.enoughspam.step.ui.viewholder.PhoneHeaderViewHolder;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 22:00
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends AbstractFragment {
     private View view;
 
     private AestheticRecyclerView mRecyclerView;
@@ -47,15 +47,14 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.main_fragment, container, false);
 
-        initViews();
-        initActions();
-
+        init();
         return view;
     }
 
-    private void initViews() {
+    @Override
+    protected void initViews() {
         // init recycler view
-        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.main_recycler_view);
+        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.mf_recycler_view);
 
         mPhoneSectionList = getBlockedNumberList();
         mAdapter = new MainAdapter(mPhoneSectionList, this);
@@ -70,10 +69,11 @@ public class MainFragment extends Fragment {
         ListDecorator.addAdaptableMargins(mRecyclerView, -1);
 
         // init place holder image view
-        mPlaceHolder = (ImageView) view.findViewById(R.id.main_place_holder);
+        mPlaceHolder = (ImageView) view.findViewById(R.id.mf_place_holder);
     }
 
-    private void initActions() {
+    @Override
+    protected void initActions() {
         // init recycler view's actions
         final ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override

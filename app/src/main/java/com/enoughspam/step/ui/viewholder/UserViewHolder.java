@@ -25,10 +25,10 @@ public final class UserViewHolder extends SectionedViewHolder {
 
     public UserViewHolder(View itemView) {
         super(itemView);
-        mCardView = (CardView) itemView.findViewById(R.id.search_item_profile_card);
-        mProgressBar = (ProgressBar) itemView.findViewById(R.id.search_item_profile_progress_bar);
-        mUserPic = (CircleImageView) itemView.findViewById(R.id.search_item_profile_user_pic);
-        mUsername = (TextView) itemView.findViewById(R.id.search_item_profile_username);
+        mCardView = (CardView) itemView.findViewById(R.id.iu_card);
+        mProgressBar = (ProgressBar) itemView.findViewById(R.id.iu_progress_bar);
+        mUserPic = (CircleImageView) itemView.findViewById(R.id.iu_pic);
+        mUsername = (TextView) itemView.findViewById(R.id.iu_username);
         mIsSwipeable = false;
     }
 }

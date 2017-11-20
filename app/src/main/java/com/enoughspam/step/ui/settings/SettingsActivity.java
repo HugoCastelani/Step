@@ -44,7 +44,7 @@ public class SettingsActivity extends AbstractActivity
         if (fragment == null) {
             fragment = new SettingsFragment();
             final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.settings_fragment_container, fragment, "settingsFragmentTag");
+            fragmentTransaction.replace(R.id.sa_fragment_container, fragment, "settingsFragmentTag");
             fragmentTransaction.commit();
         }
     }

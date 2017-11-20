@@ -49,7 +49,7 @@ public class ProfileActivity extends AbstractActivity {
         if (profileFragment == null) {
             profileFragment = new ProfileFragment();
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.profile_fragment_container, profileFragment, "profileFragmentTag");
+            fragmentTransaction.replace(R.id.pa_fragment_container, profileFragment, "profileFragmentTag");
             fragmentTransaction.commit();
         }
     }

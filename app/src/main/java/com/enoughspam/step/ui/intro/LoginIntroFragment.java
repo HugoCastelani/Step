@@ -47,7 +47,7 @@ public class LoginIntroFragment extends SlideFragment implements
     }
 
     private void initViews() {
-        mGoogleButton = (SignInButton) view.findViewById(R.id.intro_google_button);
+        mGoogleButton = (SignInButton) view.findViewById(R.id.ifl_google_button);
 
         mGoogleButtonText = (TextView) mGoogleButton.getChildAt(0);
         mGoogleButtonText.setText(R.string.sign_in_google);

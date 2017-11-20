@@ -4,7 +4,6 @@ package com.enoughspam.step.ui.profile;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -20,6 +19,7 @@ import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.ui.abstracts.AbstractFragment;
 import com.enoughspam.step.ui.myprofile.MyProfileAdapter;
 import com.enoughspam.step.ui.viewholder.UserViewHolder;
 import com.enoughspam.step.util.AnimUtils;
@@ -35,7 +35,7 @@ import java.util.TimerTask;
  * Time: 16:20
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends AbstractFragment {
     private ProfileActivity mActivity;
     private View view;
 
@@ -60,13 +60,12 @@ public class ProfileFragment extends Fragment {
 
         mIsMyProfile = mUser.getKey().equals(LUserDAO.get().getThisUserKey());
 
-        initViews();
-        initActions();
-
+        init();
         return view;
     }
 
-    private void initViews() {
+    @Override
+    protected void initViews() {
         // init progress dialog
         mAddingProgressDialog = new MaterialDialog.Builder(mActivity)
                 .title(R.string.profile_adding_following)
@@ -90,10 +89,10 @@ public class ProfileFragment extends Fragment {
                 .build();
 
         // init progress bar
-        mProgressBar = (ProgressBar) view.findViewById(R.id.profile_progress_bar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.pf_progress_bar);
 
         // init recycler view
-        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.profile_recycler_view);
+        mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.pf_recycler_view);
 
         if (mIsMyProfile) {
             mMyProfileAdapter = new MyProfileAdapter(mUser, this);
@@ -112,10 +111,11 @@ public class ProfileFragment extends Fragment {
 
 
         // init place holder image view
-        mPlaceHolder = (ImageView) view.findViewById(R.id.profile_place_holder);
+        mPlaceHolder = (ImageView) view.findViewById(R.id.pf_place_holder);
     }
 
-    private void initActions() {
+    @Override
+    protected void initActions() {
         if (mIsMyProfile) {
             final ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
