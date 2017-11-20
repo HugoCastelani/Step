@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 17:01
  */
 
-public class UserDAO extends GenericWideDAO<User> {
+public final class UserDAO extends GenericWideDAO<User> {
     private static UserDAO instance;
 
     @Override
@@ -40,38 +40,46 @@ public class UserDAO extends GenericWideDAO<User> {
     public UserDAO create(@NonNull final User user,
                           @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                exists(user, new Listeners.UserListener() {
-                    @Override
-                    public void onUserRetrieved(@NonNull User retrievedUser) {
-                        if (retrievedUser != null) {
-                            LUserDAO.get().create(retrievedUser);
-                            listener.onAnswerRetrieved();
+                    exists(user, new Listeners.ObjectListener<User>() {
+                        @Override
+                        public void onObjectRetrieved(@NonNull User retrievedUser) {
+                            if (retrievedUser != null) {
+                                LUserDAO.get().create(retrievedUser);
+                                listener.onAnswerRetrieved();
 
-                        } else {
+                            } else {
 
-                            final DatabaseReference cumbuca = getReference().push();
+                                final DatabaseReference cumbuca = getReference().push();
 
-                            user.setKey(cumbuca.getKey());
+                                user.setKey(cumbuca.getKey());
 
-                            cumbuca.setValue(user)
-                                    .addOnFailureListener(e -> listener.onError())
-                                    .addOnSuccessListener(aVoid -> {
-                                        LUserDAO.get().create(user);
-                                        listener.onAnswerRetrieved();
-                                    });
+                                cumbuca.setValue(user)
+                                        .addOnFailureListener(e -> listener.onError())
+                                        .addOnSuccessListener(aVoid -> {
+                                            LUserDAO.get().create(user);
+                                            listener.onAnswerRetrieved();
+                                        });
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError() {
-                        listener.onError();
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            listener.onError();
+                        }
+                    });
 
-            } else listener.onError();
+                }
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
@@ -87,31 +95,25 @@ public class UserDAO extends GenericWideDAO<User> {
     public UserDAO delete(@NonNull final String userKey,
                           @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                //UserFollowerDAO.get().delete()
+                    getReference().child(userKey).removeValue()
+                            .addOnFailureListener(e -> listener.onError())
+                            .addOnSuccessListener(aVoid -> {
+                                LUserDAO.get().delete(userKey);
+                                listener.onAnswerRetrieved();
+                            });
 
-                UserPhoneDAO.get().deleteOfUser(userKey, new Listeners.AnswerListener() {
-                    @Override
-                    public void onAnswerRetrieved() {
+                } else listener.onError();
+            }
 
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
-
-                getReference().child(userKey).removeValue()
-                        .addOnFailureListener(e -> listener.onError())
-                        .addOnSuccessListener(aVoid -> {
-                            LUserDAO.get().delete(userKey);
-                            listener.onAnswerRetrieved();
-                        });
-
-            } else listener.onError();
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
@@ -130,77 +132,95 @@ public class UserDAO extends GenericWideDAO<User> {
     }
 
     public UserDAO exists(@NonNull final User user,
-                          @NonNull final Listeners.UserListener listener) {
+                          @NonNull final Listeners.ObjectListener<User> listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = getReference().orderByChild("socialKey").equalTo(user.getSocialKey());
+                    final Query query = getReference().orderByChild("socialKey").equalTo(user.getSocialKey());
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
-                            dataSnapshot.getChildren().iterator().hasNext()) {
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                                    dataSnapshot.getChildren().iterator().hasNext()) {
 
-                            query.limitToFirst(1).addChildEventListener(new ChildEventListener() {
-                                @Override
-                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                    listener.onUserRetrieved(dataSnapshot.getValue(User.class));
-                                    query.removeEventListener(this);
-                                }
+                                query.limitToFirst(1).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        listener.onObjectRetrieved(dataSnapshot.getValue(User.class));
+                                        query.removeEventListener(this);
+                                    }
 
-                                @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                                @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                                @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                                @Override public void onCancelled(DatabaseError databaseError) {}
-                            });
+                                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onCancelled(DatabaseError databaseError) {}
+                                });
 
-                        } else {
+                            } else {
 
-                            listener.onUserRetrieved(null);
+                                listener.onObjectRetrieved(null);
+                            }
+
+                            query.removeEventListener(this);
                         }
 
-                        query.removeEventListener(this);
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            query.removeEventListener(this);
+                        }
+                    });
 
-                    @Override public void onCancelled(DatabaseError databaseError) {
-                        query.removeEventListener(this);
-                    }
-                });
+                } else listener.onError();
+            }
 
-            } else listener.onError();
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
     }
 
     public UserDAO findByKey(@NonNull final String key,
-                             @NonNull final Listeners.UserListener listener) {
+                             @NonNull final Listeners.ObjectListener<User> listener) {
 
-        isNodeValid(node, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = getReference().orderByKey().equalTo(key);
+                    final Query query = getReference().orderByKey().equalTo(key);
 
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final User user = dataSnapshot.getValue(User.class);
-                        listener.onUserRetrieved(user);
-                        query.removeEventListener(this);
-                    }
+                    query.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            final User user = dataSnapshot.getValue(User.class);
+                            listener.onObjectRetrieved(user);
+                            query.removeEventListener(this);
+                        }
 
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
-                    @Override public void onCancelled(DatabaseError databaseError) {
-                        query.removeEventListener(this);
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            query.removeEventListener(this);
+                        }
+                    });
 
-            } else listener.onError();
+                } else listener.onError();
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
@@ -210,45 +230,55 @@ public class UserDAO extends GenericWideDAO<User> {
                                     @NonNull final Listeners.ListListener<User> listListener,
                                     @NonNull final Listeners.AnswerListener answerListener) {
 
-        isNodeValid(node, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = getReference().orderByChild("username");
+                    final Query query = getReference().orderByChild("username");
 
-                final ChildEventListener childEventListener = new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final User user = dataSnapshot.getValue(User.class);
+                    final ChildEventListener childEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            final User user = dataSnapshot.getValue(User.class);
 
-                        if (user.getUsername().toLowerCase().startsWith(username.toLowerCase())) {
-                            listListener.onItemAdded(user);
+                            if (user.getUsername().toLowerCase().startsWith(username.toLowerCase())) {
+                                listListener.onItemAdded(user);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        listListener.onItemRemoved(dataSnapshot.getValue(User.class));
-                    }
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            listListener.onItemRemoved(dataSnapshot.getValue(User.class));
+                        }
 
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                };
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    };
 
-                query.addChildEventListener(childEventListener);
+                    query.addChildEventListener(childEventListener);
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        answerListener.onAnswerRetrieved();
-                        query.removeEventListener(childEventListener);
-                        query.removeEventListener(this);
-                    }
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            answerListener.onAnswerRetrieved();
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
 
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
 
-            } else answerListener.onError();
+                } else answerListener.onError();
+            }
+
+            @Override
+            public void onError() {
+                answerListener.onError();
+            }
         });
 
         return instance;

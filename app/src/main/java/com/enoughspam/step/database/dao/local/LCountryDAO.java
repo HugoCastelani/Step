@@ -14,7 +14,7 @@ import com.enoughspam.step.database.domain.Country;
  * Time: 16:59
  */
 
-public class LCountryDAO extends GenericHybridDAO<Country> {
+public final class LCountryDAO extends GenericHybridDAO<Country> {
     private static LCountryDAO instance;
 
     public static final String CODE = "code";

@@ -13,7 +13,7 @@ import com.enoughspam.step.annotation.NonNegative;
  * Time: 02:10
  */
 
-public class EndOffsetItemDecoration extends RecyclerView.ItemDecoration {
+public final class EndOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mOffsetPx;
 

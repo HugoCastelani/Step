@@ -12,7 +12,7 @@ import com.blankj.utilcode.util.Utils;
  * Time: 01:50
  */
 
-public class MarginUtils {
+public final class MarginUtils {
 
     private MarginUtils() {
         throw new UnsupportedOperationException("You can't instantiate me.");

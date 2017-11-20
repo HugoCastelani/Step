@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Time: 21:41
  */
 
-public class AnimUtils {
+public final class AnimUtils {
     public static void fadeOutFadeIn(@NonNull final View fadeOutView, @NonNull final View fadeInView) {
         final AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
         final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);

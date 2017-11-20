@@ -17,7 +17,7 @@ import com.enoughspam.step.util.Listeners;
  * Time: 22:30
  */
 
-public class LUserDAO extends GenericLocalDAO<User> {
+public final class LUserDAO extends GenericLocalDAO<User> {
     private static LUserDAO instance;
 
     public static final String SOCIAL_KEY = "social_key";
@@ -107,9 +107,9 @@ public class LUserDAO extends GenericLocalDAO<User> {
     public LUserDAO loadLocally(@NonNull final String userKey,
                                 @NonNull final Listeners.AnswerListener listener) {
         if (findByColumn(LUserDAO.key, userKey) == null) {
-            UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
+            UserDAO.get().findByKey(userKey, new Listeners.ObjectListener<User>() {
                 @Override
-                public void onUserRetrieved(@NonNull User retrievedUser) {
+                public void onObjectRetrieved(@NonNull User retrievedUser) {
                     create(retrievedUser);
                     listener.onAnswerRetrieved();
                 }

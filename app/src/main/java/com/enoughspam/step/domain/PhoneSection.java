@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Time: 23:31
  */
 
-public class PhoneSection {
+public final class PhoneSection {
     private String username;
     private ArrayList<Phone> phoneList;
 

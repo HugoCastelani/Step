@@ -12,7 +12,7 @@ import com.google.firebase.database.Exclude;
  * Time: 13:12
  */
 
-public class State extends Domain {
+public final class State extends Domain {
     private String name;
     private String countryKey;
 

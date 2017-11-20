@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.ui.abstracts.AbstractActivity;
 
-public class SettingsActivity extends AbstractActivity
+public final class SettingsActivity extends AbstractActivity
         implements ColorChooserDialog.ColorCallback {
 
     @Override

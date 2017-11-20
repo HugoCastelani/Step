@@ -10,7 +10,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.ui.splashscreen.SplashScreenActivity;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
-public class ReadyIntroFragment extends SlideFragment {
+public final class ReadyIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
 

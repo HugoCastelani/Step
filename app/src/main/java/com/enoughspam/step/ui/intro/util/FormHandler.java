@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 15:02
  */
 
-public class FormHandler {
+public final class FormHandler {
     final private Spinner mSpinner;
     final private EditText mCountryCodeEditText;
     private EditText mPhoneNumberEditText;

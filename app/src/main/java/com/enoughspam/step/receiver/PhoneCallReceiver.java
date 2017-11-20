@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * Time: 16:41
  */
 
-public class PhoneCallReceiver extends BroadcastReceiver {
+public final class PhoneCallReceiver extends BroadcastReceiver {
     private Context mContext;
     private Intent mIntent;
     private TelephonyManager mTelephonyManager;

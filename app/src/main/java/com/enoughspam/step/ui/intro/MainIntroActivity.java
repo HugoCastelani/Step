@@ -17,7 +17,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import static android.os.Build.VERSION_CODES.M;
 
-public class MainIntroActivity extends IntroActivity {
+public final class MainIntroActivity extends IntroActivity {
 
     private static final String KEY_ALL_SET = "intro_all_set";
 

@@ -14,7 +14,7 @@ import com.enoughspam.step.database.domain.Area;
  * Time: 15:10
  */
 
-public class LAreaDAO extends GenericHybridDAO<Area> {
+public final class LAreaDAO extends GenericHybridDAO<Area> {
     private static LAreaDAO instance;
 
     public static final String CODE = "code";

@@ -22,7 +22,7 @@ import java.util.List;
  * Time: 14:34
  */
 
-public class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
+public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
     private View mView;
 
     private List<String> mDescriptionStringList;

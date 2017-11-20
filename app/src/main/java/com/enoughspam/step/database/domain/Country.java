@@ -11,7 +11,7 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  * Time: 17:26
  */
 
-public class Country extends Domain {
+public final class Country extends Domain {
     private Integer code;
     private String name;
     private String iso;

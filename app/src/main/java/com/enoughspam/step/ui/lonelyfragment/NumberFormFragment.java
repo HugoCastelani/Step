@@ -40,7 +40,7 @@ import java.util.List;
  * Time: 11:54
  */
 
-public class NumberFormFragment extends AbstractFragment {
+public final class NumberFormFragment extends AbstractFragment {
     private View view;
     private Fragment parentFragment;
 

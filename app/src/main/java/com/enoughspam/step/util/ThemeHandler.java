@@ -8,7 +8,7 @@ import com.afollestad.aesthetic.Aesthetic;
  * Time: 15:32
  */
 
-public class ThemeHandler {
+public final class ThemeHandler {
     private ThemeHandler() {}
 
     private static boolean sIsDark;

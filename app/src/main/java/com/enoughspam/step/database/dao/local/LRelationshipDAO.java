@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Time: 23:14
  */
 
-public class LRelationshipDAO extends GenericLocalDAO<Relationship> {
+public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
     private static LRelationshipDAO instance;
 
     public static final String USER_FOLLOWED_KEY = "user_followed_key";

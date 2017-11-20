@@ -35,16 +35,16 @@ public abstract class GenericWideDAO<T> {
     }
 
     protected void isNodeValid(@NonNull final String node,
-                               @NonNull final Listeners.BooleanListener listener) {
+                               @NonNull final Listeners.ObjectListener<Boolean> listener) {
         DAOHandler.getFirebaseDatabase(null).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onBooleanRetrieved(dataSnapshot.hasChild(node));
+                listener.onObjectRetrieved(dataSnapshot.hasChild(node));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                listener.onBooleanRetrieved(false);
+                listener.onObjectRetrieved(false);
             }
         });
     }

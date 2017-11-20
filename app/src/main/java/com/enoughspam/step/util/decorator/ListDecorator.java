@@ -13,7 +13,7 @@ import com.enoughspam.step.util.MarginUtils;
  * Time: 14:39
  */
 
-public class ListDecorator {
+public final class ListDecorator {
 
     private ListDecorator() {
         throw new UnsupportedOperationException("You can't instantiate me.");

@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.enoughspam.step.R;
 import com.enoughspam.step.ui.abstracts.AbstractActivity;
 
-public class SearchActivity extends AbstractActivity {
+public final class SearchActivity extends AbstractActivity {
     EditText mEditText;
     ImageView mClearIcon;
     LinearLayout mProgressBar;

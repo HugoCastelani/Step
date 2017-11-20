@@ -10,7 +10,7 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  * Time: 13:28
  */
 
-public class Description extends Domain {
+public final class Description extends Domain {
     private String description;
     private String treatmentKey;
 

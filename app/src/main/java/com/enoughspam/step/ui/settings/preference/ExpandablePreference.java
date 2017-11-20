@@ -21,7 +21,7 @@ import com.enoughspam.step.util.ThemeHandler;
  * Time: 23:37
  */
 
-public class ExpandablePreference extends Preference {
+public final class ExpandablePreference extends Preference {
 
     public ExpandablePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AddNumberActivity extends AbstractActivity {
+public final class AddNumberActivity extends AbstractActivity {
 
     private MaterialDialog mNumberProgressDialog;
     private MaterialDialog mNumbersProgressDialog;

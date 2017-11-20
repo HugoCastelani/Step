@@ -10,7 +10,7 @@ import com.enoughspam.step.database.domain.Phone;
  * Time: 22:34
  */
 
-public class Call {
+public final class Call {
     private String name;
     private Phone phone;
 

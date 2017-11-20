@@ -24,7 +24,7 @@ import java.util.TimerTask;
  * Time: 10:38
  */
 
-public class AboutIntroFragment extends SlideFragment {
+public final class AboutIntroFragment extends SlideFragment {
     private View view;
 
     private Boolean mCanGoForward = false;

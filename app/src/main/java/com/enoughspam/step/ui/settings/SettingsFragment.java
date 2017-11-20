@@ -30,7 +30,7 @@ import static android.os.Build.VERSION_CODES.M;
  * Time: 21:16
  */
 
-public class SettingsFragment extends PreferenceFragment {
+public final class SettingsFragment extends PreferenceFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){

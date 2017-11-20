@@ -40,7 +40,7 @@ import java.util.List;
  * Time: 19:15
  */
 
-public class AddNumberFragment extends AbstractFragment {
+public final class AddNumberFragment extends AbstractFragment {
 
     private AddNumberActivity mActivity;
 
@@ -186,9 +186,9 @@ public class AddNumberFragment extends AbstractFragment {
     protected void saveNumber(@NonNull final Phone phone,
                               @NonNull final Listeners.AnswerListener listener) {
 
-        PhoneDAO.get().create(phone, new Listeners.PhoneListener() {
+        PhoneDAO.get().create(phone, new Listeners.ObjectListener<Phone>() {
             @Override
-            public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+            public void onObjectRetrieved(@NonNull Phone retrievedPhone) {
                 UserPhoneDAO.get().create(
                         new UserPhone(LUserDAO.get().getThisUserKey(),
                                 retrievedPhone.getKey(), false, false),

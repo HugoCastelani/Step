@@ -16,7 +16,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.ui.intro.util.MessageCodeHandler;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
-public class ConfirmationIntroFragment extends SlideFragment {
+public final class ConfirmationIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
 

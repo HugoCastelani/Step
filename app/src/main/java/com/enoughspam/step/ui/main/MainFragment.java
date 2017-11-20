@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 22:00
  */
 
-public class MainFragment extends AbstractFragment {
+public final class MainFragment extends AbstractFragment {
     private View view;
 
     private AestheticRecyclerView mRecyclerView;

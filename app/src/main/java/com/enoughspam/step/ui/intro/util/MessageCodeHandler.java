@@ -22,7 +22,7 @@ import javax.crypto.spec.DESKeySpec;
  * Time: 23:29
  */
 
-public class MessageCodeHandler {
+public final class MessageCodeHandler {
     public static String sCode;
     public static String sPassword;
 

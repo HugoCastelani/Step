@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  * Time: 12:35
  */
 
-public class CustomLinearLayoutManager extends LinearLayoutManager {
+public final class CustomLinearLayoutManager extends LinearLayoutManager {
     private boolean mIsScrollEnabled = true;
 
     public CustomLinearLayoutManager(Context context) {

@@ -13,7 +13,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 
 @IgnoreExtraProperties
-public class Notification {
+public final class Notification {
     private String phoneKey;
     private String notifiedKey;
     private String notifyingKey;

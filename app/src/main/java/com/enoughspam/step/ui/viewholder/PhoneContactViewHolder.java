@@ -14,7 +14,7 @@ import com.enoughspam.step.R;
  * Time: 22:10
  */
 
-public class PhoneContactViewHolder extends SectionedViewHolder {
+public final class PhoneContactViewHolder extends SectionedViewHolder {
     public final AestheticCardView mCardView;
     public final LinearLayout mParent;
     public final AestheticTextView mSectionOrName;

@@ -15,7 +15,7 @@ import com.google.firebase.database.Exclude;
  * Time: 17:05
  */
 
-public class Phone extends Domain {
+public final class Phone extends Domain {
     private Long number;
     private String areaKey;
     private String countryKey;

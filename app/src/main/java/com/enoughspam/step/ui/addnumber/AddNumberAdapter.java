@@ -23,7 +23,7 @@ import java.util.List;
  * Time: 21:33
  */
 
-public class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
+public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
 
     private static final int VIEW_TYPE_FORM = -4;
 

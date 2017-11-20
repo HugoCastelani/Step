@@ -11,7 +11,7 @@ import com.enoughspam.step.ui.abstracts.AbstractActivity;
  * Time: 23:35
  */
 
-public class NotificationActivity extends AbstractActivity {
+public final class NotificationActivity extends AbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

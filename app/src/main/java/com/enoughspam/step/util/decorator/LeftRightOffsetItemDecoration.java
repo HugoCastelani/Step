@@ -11,7 +11,7 @@ import android.view.View;
  * Time: 02:45
  */
 
-public class LeftRightOffsetItemDecoration extends RecyclerView.ItemDecoration {
+public final class LeftRightOffsetItemDecoration extends RecyclerView.ItemDecoration {
 
     private final Integer mIdealMargin;
     private final Integer mToolbarPosition;

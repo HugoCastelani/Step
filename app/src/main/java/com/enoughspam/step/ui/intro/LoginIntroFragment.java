@@ -22,7 +22,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
-public class LoginIntroFragment extends SlideFragment implements
+public final class LoginIntroFragment extends SlideFragment implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final int GOOGLE_SIGN_IN = 3;

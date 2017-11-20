@@ -15,7 +15,7 @@ import com.enoughspam.step.util.Listeners;
  * Time: 18:52
  */
 
-public class LNotificationDAO extends GenericLocalDAO<Notification> {
+public final class LNotificationDAO extends GenericLocalDAO<Notification> {
     private static LNotificationDAO instance;
 
     public static final String PHONE_KEY = "phone_key";

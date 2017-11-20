@@ -14,7 +14,7 @@ import com.enoughspam.step.database.domain.State;
  * Time: 13:59
  */
 
-public class LStateDAO extends GenericHybridDAO<State> {
+public final class LStateDAO extends GenericHybridDAO<State> {
     private static LStateDAO instance;
 
     private static final String NAME = "name";

@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * Time: 15:46
  */
 
-public class UserFollowerDAO extends GenericWideDAO<User> {
+public final class UserFollowerDAO extends GenericWideDAO<User> {
     private static UserFollowerDAO instance;
 
     public static final String NODE_FOLLOWERS = "/followers";
@@ -48,59 +48,73 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
     public UserFollowerDAO create(@NonNull final User targetUser,
                                   @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(userNode, isValid -> {
-            if (isValid) {
+        isNodeValid(userNode, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                exists(targetUser, doesExist -> {
+                    exists(targetUser, new Listeners.ObjectListener<Boolean>() {
+                        @Override
+                        public void onObjectRetrieved(@NonNull Boolean doesExist) {
+                            if (!doesExist) {
+                                final Listeners.AnswerListener successListener = new Listeners.AnswerListener() {
+                                    Integer count = 0;
 
-                    if (!doesExist) {
-                        final Listeners.AnswerListener successListener = new Listeners.AnswerListener() {
-                            Integer count = 0;
+                                    @Override
+                                    public void onAnswerRetrieved() {
+                                        if (++count == 2) {
+                                            final User thisUser = LUserDAO.get().getThisUser();
+                                            final Relationship relationship = new Relationship(targetUser.getKey(),
+                                                    thisUser.getKey());
 
-                            @Override
-                            public void onAnswerRetrieved() {
-                                if (++count == 2) {
-                                    final User thisUser = LUserDAO.get().getThisUser();
-                                    final Relationship relationship = new Relationship(targetUser.getKey(),
-                                            thisUser.getKey());
+                                            relationship.setFollowingUser(targetUser);
+                                            relationship.setFollowerUser(thisUser);
 
-                                    relationship.setFollowingUser(targetUser);
-                                    relationship.setFollowerUser(thisUser);
+                                            LRelationshipDAO.get().create(relationship);
 
-                                    LRelationshipDAO.get().create(relationship);
+                                            UserPhoneDAO.get().createOfUser(targetUser, listener);
+                                        }
+                                    }
 
-                                    UserPhoneDAO.get().createOfUser(targetUser, listener);
-                                }
+                                    @Override
+                                    public void onError() {
+                                        listener.onError();
+                                    }
+                                };
+
+                                getReference().push().setValue(new InnerUser(targetUser.getKey()))
+                                        .addOnFailureListener(e -> listener.onError())
+                                        .addOnSuccessListener(aVoid ->
+                                                successListener.onAnswerRetrieved()
+                                        );
+
+                                // ADD YOUR KEY TO OTHER USER
+                                DAOHandler.getFirebaseDatabase("users/" + targetUser.getKey() + NODE_FOLLOWERS)
+                                        .push().setValue(new InnerUser(LUserDAO.get().getThisUserKey()))
+                                        .addOnFailureListener(e -> listener.onError())
+                                        .addOnSuccessListener(aVoid ->
+                                                successListener.onAnswerRetrieved()
+                                        );
+
+                            } else {
+
+                                listener.onAnswerRetrieved();
                             }
+                        }
 
-                            @Override
-                            public void onError() {
-                                listener.onError();
-                            }
-                        };
+                        @Override
+                        public void onError() {
+                            listener.onError();
+                        }
+                    });
 
-                        getReference().push().setValue(new InnerUser(targetUser.getKey()))
-                                .addOnFailureListener(e -> listener.onError())
-                                .addOnSuccessListener(aVoid ->
-                                    successListener.onAnswerRetrieved()
-                                );
+                } else listener.onError();
+            }
 
-                        // ADD YOUR KEY TO OTHER USER
-                        DAOHandler.getFirebaseDatabase("users/" + targetUser.getKey() + NODE_FOLLOWERS)
-                                .push().setValue(new InnerUser(LUserDAO.get().getThisUserKey()))
-                                .addOnFailureListener(e -> listener.onError())
-                                .addOnSuccessListener(aVoid ->
-                                        successListener.onAnswerRetrieved()
-                                );
-
-                    } else {
-
-                        listener.onAnswerRetrieved();
-                    }
-
-                });
-
-            } else listener.onError();
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
@@ -116,41 +130,49 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
     public UserFollowerDAO delete(@NonNull String targetKey,
                                   @NonNull final Listeners.AnswerListener listener) {
 
-        isNodeValid(userNode, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(userNode, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = getReference().orderByChild("userKey").equalTo(targetKey);
+                    final Query query = getReference().orderByChild("userKey").equalTo(targetKey);
 
-                final ChildEventListener childEventListener = new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        getReference().child(dataSnapshot.getKey()).removeValue()
-                                .addOnFailureListener(e -> listener.onError())
-                                .addOnSuccessListener(aVoid ->
-                                        LRelationshipDAO.get().delete(targetKey)
-                                );
-                    }
+                    final ChildEventListener childEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            getReference().child(dataSnapshot.getKey()).removeValue()
+                                    .addOnFailureListener(e -> listener.onError())
+                                    .addOnSuccessListener(aVoid ->
+                                            LRelationshipDAO.get().delete(targetKey)
+                                    );
+                        }
 
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                };
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    };
 
-                query.addChildEventListener(childEventListener);
+                    query.addChildEventListener(childEventListener);
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        UserPhoneDAO.get().deleteOfUser(targetKey, listener);
-                        query.removeEventListener(childEventListener);
-                        query.removeEventListener(this);
-                    }
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            UserPhoneDAO.get().deleteOfUser(targetKey, listener);
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
 
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                });
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    });
 
-            } else listener.onError();
+                } else listener.onError();
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;
@@ -186,41 +208,50 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
             @Override
             public void onItemAdded(@NonNull String userKey) {
                 final String thisUserNode = "users/" + userKey;
-                isNodeValid(thisUserNode, retrievedBoolean -> {
-                    if (retrievedBoolean) {
 
-                        final Query query = DAOHandler.getFirebaseDatabase(thisUserNode)
-                                .orderByChild("userKey").equalTo(thisUserKey);
+                isNodeValid(thisUserNode, new Listeners.ObjectListener<Boolean>() {
+                    @Override
+                    public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                        if (retrievedBoolean) {
 
-                        final ChildEventListener childEventListener = new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                final String key = dataSnapshot.getRef().toString()
-                                        .replaceFirst("https://enough-spam-ed0f2.firebaseio.com/", "");
+                            final Query query = DAOHandler.getFirebaseDatabase(thisUserNode)
+                                    .orderByChild("userKey").equalTo(thisUserKey);
 
-                                DAOHandler.getFirebaseDatabase(key).removeValue();
-                            }
+                            final ChildEventListener childEventListener = new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    final String key = dataSnapshot.getRef().toString()
+                                            .replaceFirst("https://enough-spam-ed0f2.firebaseio.com/", "");
 
-                            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                            @Override public void onCancelled(DatabaseError databaseError) {}
-                        };
+                                    DAOHandler.getFirebaseDatabase(key).removeValue();
+                                }
 
-                        query.addChildEventListener(childEventListener);
+                                @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                @Override public void onCancelled(DatabaseError databaseError) {}
+                            };
 
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                listener.onAnswerRetrieved();
-                                query.removeEventListener(childEventListener);
-                                query.removeEventListener(this);
-                            }
+                            query.addChildEventListener(childEventListener);
 
-                            @Override public void onCancelled(DatabaseError databaseError) {}
-                        });
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    listener.onAnswerRetrieved();
+                                    query.removeEventListener(childEventListener);
+                                    query.removeEventListener(this);
+                                }
 
-                    } else listener.onError();
+                                @Override public void onCancelled(DatabaseError databaseError) {}
+                            });
+
+                        } else listener.onError();
+                    }
+
+                    @Override
+                    public void onError() {
+                        listener.onError();
+                    }
                 });
             }
 
@@ -235,32 +266,40 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
     }
 
     public UserFollowerDAO exists(@NonNull final User friend,
-                                  @NonNull final Listeners.BooleanListener listener) {
+                                  @NonNull final Listeners.ObjectListener<Boolean> listener) {
 
-        isNodeValid(userNode, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(userNode, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = getReference().orderByChild("userKey").equalTo(friend.getKey());
+                    final Query query = getReference().orderByChild("userKey").equalTo(friend.getKey());
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
-                                dataSnapshot.getChildren().iterator().hasNext()) {
-                            listener.onBooleanRetrieved(true);
-                        } else {
-                            listener.onBooleanRetrieved(false);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                                    dataSnapshot.getChildren().iterator().hasNext()) {
+                                listener.onObjectRetrieved(true);
+                            } else {
+                                listener.onObjectRetrieved(false);
+                            }
+
+                            query.removeEventListener(this);
                         }
 
-                        query.removeEventListener(this);
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            exists(friend, listener);
+                        }
+                    });
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        exists(friend, listener);
-                    }
-                });
+                } else listener.onError();
+            }
 
+            @Override
+            public void onError() {
+                listener.onError();
             }
         });
 
@@ -286,40 +325,48 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
 
         String userNode = "users/" + userKey;
 
-        isNodeValid(userNode, retrievedBoolean -> {
-            if (retrievedBoolean) {
+        isNodeValid(userNode, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-                final Query query = DAOHandler.getFirebaseDatabase(userNode + node).orderByKey();
+                    final Query query = DAOHandler.getFirebaseDatabase(userNode + node).orderByKey();
 
-                final ChildEventListener childEventListener = new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        listListener.onItemAdded(
-                                dataSnapshot.getValue(InnerUser.class).getUserKey()
-                        );
-                    }
+                    final ChildEventListener childEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            listListener.onItemAdded(
+                                    dataSnapshot.getValue(InnerUser.class).getUserKey()
+                            );
+                        }
 
-                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override public void onCancelled(DatabaseError databaseError) {}
-                };
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    };
 
-                query.addChildEventListener(childEventListener);
+                    query.addChildEventListener(childEventListener);
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        answerListener.onAnswerRetrieved();
-                        query.removeEventListener(childEventListener);
-                        query.removeEventListener(this);
-                    }
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            answerListener.onAnswerRetrieved();
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
 
-            } else answerListener.onError();
+                } else answerListener.onError();
+            }
+
+            @Override
+            public void onError() {
+                answerListener.onError();
+            }
         });
 
         return instance;
@@ -350,9 +397,9 @@ public class UserFollowerDAO extends GenericWideDAO<User> {
 
                     for (final String key : keyList) {
 
-                        UserDAO.get().findByKey(key, new Listeners.UserListener() {
+                        UserDAO.get().findByKey(key, new Listeners.ObjectListener<User>() {
                             @Override
-                            public void onUserRetrieved(@NonNull User retrievedUser) {
+                            public void onObjectRetrieved(@NonNull User retrievedUser) {
                                 listListener.onItemAdded(retrievedUser);
                                 if (++completed[0] == keyList.size()) {
                                     answerListener.onAnswerRetrieved();

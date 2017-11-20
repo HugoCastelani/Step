@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
  * Time: 09:20
  */
 
-public class PhoneDAO extends GenericWideDAO<Phone> {
+public final class PhoneDAO extends GenericWideDAO<Phone> {
     private static PhoneDAO instance;
 
     @Override
@@ -41,14 +41,15 @@ public class PhoneDAO extends GenericWideDAO<Phone> {
                 " with phone listener instead.");
     }
 
-    public PhoneDAO create(@NonNull final Phone phone, @NonNull final Listeners.PhoneListener listener) {
+    public PhoneDAO create(@NonNull final Phone phone,
+                           @NonNull final Listeners.ObjectListener<Phone> listener) {
 
-        exists(phone, new Listeners.PhoneListener() {
+        exists(phone, new Listeners.ObjectListener<Phone>() {
             @Override
-            public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+            public void onObjectRetrieved(@NonNull Phone retrievedPhone) {
                 if (retrievedPhone != null) {
                     LPhoneDAO.get().create(retrievedPhone);
-                    listener.onPhoneRetrieved(retrievedPhone);
+                    listener.onObjectRetrieved(retrievedPhone);
 
                 } else {
 
@@ -60,7 +61,7 @@ public class PhoneDAO extends GenericWideDAO<Phone> {
                             .addOnFailureListener(e -> listener.onError())
                             .addOnSuccessListener(aVoid -> {
                                 LPhoneDAO.get().create(phone);
-                                listener.onPhoneRetrieved(phone);
+                                listener.onObjectRetrieved(phone);
                             });
                 }
             }
@@ -97,67 +98,95 @@ public class PhoneDAO extends GenericWideDAO<Phone> {
     }
 
     public PhoneDAO findByKey(@NonNull final String key,
-                              @NonNull final Listeners.PhoneListener listener) {
+                              @NonNull final Listeners.ObjectListener<Phone> listener) {
 
-        final Query query = getReference().orderByKey().equalTo(key).limitToFirst(1);
-
-        final ChildEventListener childEventListener = new ChildEventListener() {
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                listener.onPhoneRetrieved(dataSnapshot.getValue(Phone.class));
-            }
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
 
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        };
+                    final Query query = getReference().orderByKey().equalTo(key).limitToFirst(1);
 
-        query.addChildEventListener(childEventListener);
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                query.removeEventListener(childEventListener);
-                query.removeEventListener(this);
-            }
-
-            @Override public void onCancelled(DatabaseError databaseError) {}
-        });
-
-        return instance;
-    }
-
-    public PhoneDAO exists(@NonNull final Phone phone,
-                           @NonNull final Listeners.PhoneListener listener) {
-
-        final Query query = getReference().orderByChild("numberACKey").equalTo(phone.getNumberACKey());
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
-                        dataSnapshot.getChildren().iterator().hasNext()) {
-
-                    query.limitToFirst(1).addChildEventListener(new ChildEventListener() {
+                    final ChildEventListener childEventListener = new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            listener.onPhoneRetrieved(dataSnapshot.getValue(Phone.class));
-                            query.removeEventListener(this);
+                            listener.onObjectRetrieved(dataSnapshot.getValue(Phone.class));
                         }
 
                         @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                         @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
                         @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                         @Override public void onCancelled(DatabaseError databaseError) {}
+                    };
+
+                    query.addChildEventListener(childEventListener);
+
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
+
+                        @Override public void onCancelled(DatabaseError databaseError) {}
                     });
 
-                } else listener.onPhoneRetrieved(null);
-
-                query.removeEventListener(this);
+                } else listener.onError();
             }
 
-            @Override public void onCancelled(DatabaseError databaseError) {}
+            @Override
+            public void onError() {
+                listener.onError();
+            }
+        });
+
+        return instance;
+    }
+
+    public PhoneDAO exists(@NonNull final Phone phone,
+                           @NonNull final Listeners.ObjectListener<Phone> listener) {
+
+        isNodeValid(node, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                if (retrievedBoolean) {
+
+                    final Query query = getReference().orderByChild("numberACKey").equalTo(phone.getNumberACKey());
+
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
+                                    dataSnapshot.getChildren().iterator().hasNext()) {
+
+                                query.limitToFirst(1).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        listener.onObjectRetrieved(dataSnapshot.getValue(Phone.class));
+                                        query.removeEventListener(this);
+                                    }
+
+                                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onCancelled(DatabaseError databaseError) {}
+                                });
+
+                            } else listener.onObjectRetrieved(null);
+
+                            query.removeEventListener(this);
+                        }
+
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    });
+
+                } else listener.onError();
+            }
+
+            @Override
+            public void onError() {
+                listener.onError();
+            }
         });
 
         return instance;

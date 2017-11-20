@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Time: 11:00
  */
 
-public class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
+public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
     private static final int VIEW_TYPE_TOOLBAR = -4;
 
     private ProfileFragment mFragment;

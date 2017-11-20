@@ -16,7 +16,7 @@ import com.enoughspam.step.util.Listeners;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SplashScreenActivity extends AbstractActivity {
+public final class SplashScreenActivity extends AbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

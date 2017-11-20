@@ -14,7 +14,7 @@ import com.enoughspam.step.ui.abstracts.AbstractActivity;
  * Time: 15:30
  */
 
-public class ProfileActivity extends AbstractActivity {
+public final class ProfileActivity extends AbstractActivity {
     private Boolean mRanOnRestart = false;
 
     private User mUser;

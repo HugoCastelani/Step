@@ -12,7 +12,7 @@ import com.enoughspam.step.database.dao.local.LCountryDAO;
  * Time: 13:18
  */
 
-public class AutoItemSelectorTextWatcher implements TextWatcher {
+public final class AutoItemSelectorTextWatcher implements TextWatcher {
     final private FormHandler mHandler;
     private boolean mPaused;
 

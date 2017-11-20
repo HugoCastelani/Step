@@ -22,7 +22,7 @@ import java.util.List;
  * Time: 18:25
  */
 
-public class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
+public final class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
     private static LUserPhoneDAO instance;
 
     public static final String USER_KEY = "user_key";

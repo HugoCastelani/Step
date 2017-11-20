@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * wide database and let them available to a faster experience
  */
 
-public class LocalDatabaseHelper extends SQLiteOpenHelper {
+public final class LocalDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "local.db";
     public static final int VERSION = 18;
 

@@ -32,7 +32,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
  * Time: 21:30
  */
 
-public class MainActivity extends AbstractActivity {
+public final class MainActivity extends AbstractActivity {
 
     private static final int REQUEST_CODE_SETTINGS = 2;
     private static final int REQUEST_CODE_ADD_NUMBER = 3;

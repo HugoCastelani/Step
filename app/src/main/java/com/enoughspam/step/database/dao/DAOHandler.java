@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Time: 13:07
  */
 
-public class DAOHandler {
+public final class DAOHandler {
     private static Context sContext;
 
     private static FirebaseDatabase sFirebaseDatabase;

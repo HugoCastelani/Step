@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 20:34
  */
 
-public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
+public final class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
     private static final int VIEW_TYPE_TOOLBAR = -4;
 
     private ProfileFragment mFragment;
@@ -51,7 +51,18 @@ public class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHo
         mUser = user;
         mFragment = fragment;
 
-        UserFollowerDAO.get().exists(mUser, retrievedBoolean -> isFollowing = retrievedBoolean);
+        UserFollowerDAO.get().exists(mUser, new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
+                isFollowing = retrievedBoolean;
+            }
+
+            @Override
+            public void onError() {
+                mFragment.showSnackAndClose(R.string.profile_error_loading_user);
+            }
+        });
+
         UserPhoneDAO.get().getUserPhoneList(user.getKey(), getListListener(), getAnswerListener());
     }
 

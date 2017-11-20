@@ -16,7 +16,7 @@ import com.enoughspam.step.util.Listeners;
  * Time: 18:11
  */
 
-public class LPhoneDAO extends GenericLocalDAO<Phone> {
+public final class LPhoneDAO extends GenericLocalDAO<Phone> {
     private static LPhoneDAO instance;
 
     public static final String NUMBER = "number";
@@ -113,9 +113,9 @@ public class LPhoneDAO extends GenericLocalDAO<Phone> {
     public LPhoneDAO loadLocally(@NonNull final String phoneKey,
                                  @NonNull final Listeners.AnswerListener listener) {
         if (findByColumn(LPhoneDAO.key, phoneKey) == null) {
-            PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
+            PhoneDAO.get().findByKey(phoneKey, new Listeners.ObjectListener<Phone>() {
                 @Override
-                public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                public void onObjectRetrieved(@NonNull Phone retrievedPhone) {
                     create(retrievedPhone);
                     listener.onAnswerRetrieved();
                 }

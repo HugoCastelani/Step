@@ -10,7 +10,7 @@ import com.enoughspam.step.database.domain.abstracts.Domain;
  * Time: 17:02
  */
 
-public class User extends Domain {
+public final class User extends Domain {
     private String socialKey;
     private String username;
     private String picURL;

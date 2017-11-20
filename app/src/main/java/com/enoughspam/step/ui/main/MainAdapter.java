@@ -26,7 +26,7 @@ import java.util.List;
  * Time: 23:05
  */
 
-public class MainAdapter extends SectionedRecyclerViewAdapter<PhoneHeaderViewHolder> {
+public final class MainAdapter extends SectionedRecyclerViewAdapter<PhoneHeaderViewHolder> {
 
     private final List<PhoneSection> mBlockedNumbersList;
     private final MainFragment mFragment;

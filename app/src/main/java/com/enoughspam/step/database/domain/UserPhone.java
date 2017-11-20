@@ -18,7 +18,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 
 @IgnoreExtraProperties
-public class UserPhone {
+public final class UserPhone {
     private String userKey;
     private String phoneKey;
     private boolean isProperty;
@@ -81,18 +81,18 @@ public class UserPhone {
     }
 
     @Exclude
-    public User getUser(@Nullable final Listeners.UserListener listener) {
+    public User getUser(@Nullable final Listeners.ObjectListener<User> listener) {
         if (user == null) {
             if (listener == null) {
                 user = LUserDAO.get().findByColumn(LUserDAO.key, userKey);
 
             } else {
 
-                UserDAO.get().findByKey(userKey, new Listeners.UserListener() {
+                UserDAO.get().findByKey(userKey, new Listeners.ObjectListener<User>() {
                     @Override
-                    public void onUserRetrieved(@NonNull User retrievedUser) {
+                    public void onObjectRetrieved(@NonNull User retrievedUser) {
                         user = retrievedUser;
-                        listener.onUserRetrieved(user);
+                        listener.onObjectRetrieved(user);
                     }
 
                     @Override
@@ -105,7 +105,7 @@ public class UserPhone {
         } else {
 
             if (listener != null) {
-                listener.onUserRetrieved(user);
+                listener.onObjectRetrieved(user);
             }
         }
 
@@ -124,18 +124,18 @@ public class UserPhone {
     }
 
     @Exclude
-    public Phone getPhone(@Nullable final Listeners.PhoneListener listener) {
+    public Phone getPhone(@Nullable final Listeners.ObjectListener<Phone> listener) {
         if (phone == null) {
             if (listener == null) {
                 phone = LPhoneDAO.get().findByColumn(LUserDAO.key, userKey);
 
             } else {
 
-                PhoneDAO.get().findByKey(phoneKey, new Listeners.PhoneListener() {
+                PhoneDAO.get().findByKey(phoneKey, new Listeners.ObjectListener<Phone>() {
                     @Override
-                    public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                    public void onObjectRetrieved(@NonNull Phone retrievedPhone) {
                         phone = retrievedPhone;
-                        listener.onPhoneRetrieved(phone);
+                        listener.onObjectRetrieved(phone);
                     }
 
                     @Override public void onError() {listener.onError();}
@@ -145,7 +145,7 @@ public class UserPhone {
         } else {
 
             if (listener != null) {
-                listener.onPhoneRetrieved(phone);
+                listener.onObjectRetrieved(phone);
             }
         }
 

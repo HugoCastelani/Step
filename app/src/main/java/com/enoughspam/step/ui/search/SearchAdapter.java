@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Time: 23:09
  */
 
-public class SearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
+public final class SearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
     final SearchActivity mActivity;
 
     final ArrayList<User> userList;

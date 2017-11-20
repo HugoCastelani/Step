@@ -16,7 +16,7 @@ import com.enoughspam.step.R;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-public class PermissionIntroFragment extends SlideFragment {
+public final class PermissionIntroFragment extends SlideFragment {
 
     private RxPermissions mRxPermissions;
     private AestheticButton mButton;

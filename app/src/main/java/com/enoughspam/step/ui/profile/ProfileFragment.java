@@ -35,7 +35,7 @@ import java.util.TimerTask;
  * Time: 16:20
  */
 
-public class ProfileFragment extends AbstractFragment {
+public final class ProfileFragment extends AbstractFragment {
     private ProfileActivity mActivity;
     private View view;
 

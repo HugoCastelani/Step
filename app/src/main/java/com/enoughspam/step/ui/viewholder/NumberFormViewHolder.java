@@ -14,7 +14,7 @@ import com.enoughspam.step.ui.lonelyfragment.NumberFormFragment;
  * Time: 22:13
  */
 
-public class NumberFormViewHolder extends SectionedViewHolder {
+public final class NumberFormViewHolder extends SectionedViewHolder {
     public NumberFormViewHolder(View itemView, Fragment fragment) {
         super(itemView);
 

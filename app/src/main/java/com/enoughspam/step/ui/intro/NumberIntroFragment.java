@@ -23,7 +23,7 @@ import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 
 import java.util.Random;
 
-public class NumberIntroFragment extends SlideFragment {
+public final class NumberIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
 
@@ -80,9 +80,9 @@ public class NumberIntroFragment extends SlideFragment {
                 .negativeText(R.string.cancel_button)
                 .onPositive((dialog, which) ->
 
-                    PhoneDAO.get().create(phone, new Listeners.PhoneListener() {
+                    PhoneDAO.get().create(phone, new Listeners.ObjectListener<Phone>() {
                         @Override
-                        public void onPhoneRetrieved(@NonNull Phone retrievedPhone) {
+                        public void onObjectRetrieved(@NonNull Phone retrievedPhone) {
 
                             final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(),
                                     retrievedPhone.getKey(), true, false);

@@ -15,7 +15,7 @@ import com.enoughspam.step.ui.abstracts.AbstractFragment;
  * Time: 23:36
  */
 
-public class NotificationFragment extends AbstractFragment {
+public final class NotificationFragment extends AbstractFragment {
     View view;
 
     @Override

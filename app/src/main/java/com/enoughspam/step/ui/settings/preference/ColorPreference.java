@@ -15,7 +15,7 @@ import com.enoughspam.step.R;
  * Time: 19:20
  */
 
-public class ColorPreference extends Preference {
+public final class ColorPreference extends Preference {
 
     public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
