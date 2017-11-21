@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.abstracts;
+package com.enoughspam.step.ui.intangible;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;

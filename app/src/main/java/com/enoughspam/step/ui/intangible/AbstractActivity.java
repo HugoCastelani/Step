@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.abstracts;
+package com.enoughspam.step.ui.intangible;
 
 import android.os.Build;
 import android.os.Bundle;

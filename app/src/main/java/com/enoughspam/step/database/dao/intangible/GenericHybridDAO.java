@@ -1,4 +1,4 @@
-package com.enoughspam.step.database.dao.abstracts;
+package com.enoughspam.step.database.dao.intangible;
 
 import android.support.annotation.NonNull;
 

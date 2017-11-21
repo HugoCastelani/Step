@@ -1,4 +1,4 @@
-package com.enoughspam.step.ui.abstracts;
+package com.enoughspam.step.ui.intangible;
 
 import android.support.v4.app.Fragment;
 
