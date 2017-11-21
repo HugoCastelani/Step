@@ -86,7 +86,15 @@
         <activity
             android:name=".ui.profile.ProfileActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.notification.NotificationActivity"></activity>
+        <activity
+            android:name=".ui.notification.NotificationActivity"
+            android:label="@string/notification_activity_label"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

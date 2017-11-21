@@ -216,6 +216,9 @@
     <string name="profile_delete_account_error_title">Erro ao deletar sua conta</string>
     <string name="profile_delete_account_error_description">Seria um milagre do deus anti-spam?</string>
 
+    <!-- notification activity -->
+    <string name="notification_activity_label">Notificações</string>
+
     <!-- color picker dialog -->
     <string name="select_color">Selecione uma cor</string>
     <string name="custom_button">Personalizar</string>

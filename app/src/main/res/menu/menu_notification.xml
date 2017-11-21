@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.notification.NotificationActivity">
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_search"
+        android:id="@+id/action_add_all"
+        android:icon="@drawable/ic_add_all"
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_notifications"
-        android:icon="@drawable/ic_notifications"
+        android:id="@+id/action_clear_all"
+        android:icon="@drawable/ic_clear_all"
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always"/>
