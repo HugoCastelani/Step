@@ -17,10 +17,9 @@ import com.blankj.utilcode.util.ConvertUtils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.ui.abstracts.AbstractFragment;
+import com.enoughspam.step.ui.intangible.AsynchronousContentFragment;
 import com.enoughspam.step.ui.myprofile.MyProfileAdapter;
 import com.enoughspam.step.ui.viewholder.UserViewHolder;
-import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
 
@@ -30,17 +29,14 @@ import com.enoughspam.step.util.decorator.ListDecorator;
  * Time: 16:20
  */
 
-public final class ProfileFragment extends AbstractFragment {
+public final class ProfileFragment extends AsynchronousContentFragment {
     private ProfileActivity mActivity;
     private View view;
 
     private User mUser;
     private Boolean mIsMyProfile;
 
-    private AestheticRecyclerView mRecyclerView;
     private MyProfileAdapter mMyProfileAdapter;
-    private ProgressBar mProgressBar;
-    private ImageView mPlaceHolder;
 
     private MaterialDialog mAddingProgressDialog;
     private MaterialDialog mRemovingProgressDialog;
@@ -138,16 +134,6 @@ public final class ProfileFragment extends AbstractFragment {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
         }
-    }
-
-    public ProfileFragment showRecyclerView() {
-        AnimUtils.fadeOutFadeIn(mProgressBar, mRecyclerView);
-        return this;
-    }
-
-    public ProfileFragment showPlaceHolder() {
-        AnimUtils.fadeOutFadeIn(mProgressBar, mPlaceHolder);
-        return this;
     }
 
     public ProfileFragment showAddingProgressDialog() {

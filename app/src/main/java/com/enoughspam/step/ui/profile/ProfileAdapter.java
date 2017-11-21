@@ -7,26 +7,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.afollestad.aesthetic.AestheticButton;
-import com.afollestad.aesthetic.AestheticTextView;
-import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.enoughspam.step.R;
-import com.enoughspam.step.database.dao.DAOHandler;
 import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
 import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
-import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.database.domain.UserPhone;
-import com.enoughspam.step.domain.PhoneSection;
+import com.enoughspam.step.ui.intangible.UsersNumbersAdapter;
 import com.enoughspam.step.ui.viewholder.PhoneHeaderViewHolder;
 import com.enoughspam.step.ui.viewholder.ToolbarViewHolder;
 import com.enoughspam.step.util.Listeners;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -34,25 +26,15 @@ import java.util.List;
  * Time: 20:34
  */
 
-public final class ProfileAdapter extends SectionedRecyclerViewAdapter<SectionedViewHolder> {
+public final class ProfileAdapter extends UsersNumbersAdapter {
     private static final int VIEW_TYPE_TOOLBAR = -4;
-
-    private ProfileFragment mFragment;
-    private ProfileActivity mActivity;
 
     private User mUser;
     private Boolean isFollowing;
 
-    private List<PhoneSection> mBlockedNumbersList;
-
-    private Listeners.ListListener mListListener;
-    private Listeners.AnswerListener mAnswerListener;
-
     public ProfileAdapter(@NonNull final User user, @NonNull final ProfileFragment fragment) {
-        mBlockedNumbersList = new ArrayList<>();
+        super(fragment);
         mUser = user;
-        mFragment = fragment;
-        mActivity = (ProfileActivity) fragment.getActivity();
 
         UserFollowerDAO.get().exists(mUser, new Listeners.ObjectListener<Boolean>() {
             @Override
@@ -69,78 +51,18 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
         UserPhoneDAO.get().getUserPhoneList(user.getKey(), getListListener(), getAnswerListener());
     }
 
-    private Listeners.ListListener getListListener() {
-        if (mListListener == null) {
-            mListListener = new Listeners.ListListener<UserPhone>() {
-                final String sPrefix = DAOHandler.getContext().getResources().getString(R.string.numbers_prefix);
-                final String sSuffix = DAOHandler.getContext().getResources().getString(R.string.numbers_suffix);
-
-                @Override
-                public void onItemAdded(@NonNull UserPhone userPhone) {
-                    String newPhoneSectionUsername;
-                    if (sPrefix.isEmpty()) {
-                        newPhoneSectionUsername = userPhone.getUser(null).getUsername() + sSuffix;
-                    } else {
-                        newPhoneSectionUsername = sPrefix + userPhone.getUser(null).getUsername();
-                    }
-
-                    int i;
-                    for (i = 0; i < mBlockedNumbersList.size(); i++) {
-                        final PhoneSection phoneSection = mBlockedNumbersList.get(i);
-                        if (phoneSection.getUsername().equals(newPhoneSectionUsername)) {
-                            phoneSection.addPhone(userPhone.getPhone(null));
-                            break;
-                        }
-                    }
-
-                    if (i == mBlockedNumbersList.size()) {    // user isn't in list
-                        final ArrayList<Phone> newPhoneList = new ArrayList<>();
-                        newPhoneList.add(userPhone.getPhone(null));
-
-                        mBlockedNumbersList.add(new PhoneSection(
-                                newPhoneSectionUsername,
-                                newPhoneList
-                        ));
-                    }
-                }
-
-                @Override public void onItemRemoved(@NonNull UserPhone userPhone) {}
-            };
-        }
-
-        return mListListener;
-    }
-
-    private Listeners.AnswerListener getAnswerListener() {
-        if (mAnswerListener == null) {
-            mAnswerListener = new Listeners.AnswerListener() {
-                @Override
-                public void onAnswerRetrieved() {
-                    if (mBlockedNumbersList.isEmpty()) {
-                        mFragment.showPlaceHolder();
-                    } else {
-                        mFragment.showRecyclerView();
-                    }
-                }
-
-                @Override
-                public void onError() {
-                    mActivity.createSnackbarAndClose(R.string.something_went_wrong).show();
-                }
-            };
-        }
-
-        return mAnswerListener;
-    }
+    @Override protected void removeItemFromDatabase(@NonNull String phoneKey) {}
 
     @Override
     public int getSectionCount() {
-        return mBlockedNumbersList.size() + 1;
+        return super.getSectionCount() + 1;
     }
 
     @Override
     public int getItemCount(int section) {
-        return section == 0 ? 1 : mBlockedNumbersList.get(section - 1).getPhoneList().size();
+        if (section == 0) return 1;
+        else return super.getItemCount(section - 1);
+        // we're sending section - 1 because toolbar takes one section
     }
 
     @Override
@@ -154,47 +76,18 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
 
     @Override
     public void onBindHeaderViewHolder(SectionedViewHolder holder, int section, boolean expanded) {
-        final AestheticTextView blockerOrNumber = ((PhoneHeaderViewHolder) holder).mBlockerOrNumber;
-
         if (section == 0) {
             final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, 0);
-            blockerOrNumber.setLayoutParams(layoutParams);
-
+            ((PhoneHeaderViewHolder) holder).mBlockerOrNumber.setLayoutParams(layoutParams);
         } else {
-
-            blockerOrNumber.setText(
-                    mBlockedNumbersList.get(section - 1).getUsername()
-            );
+            super.onBindHeaderViewHolder(holder, section - 1, expanded);
         }
     }
 
     @Override
-    public void onBindFooterViewHolder(SectionedViewHolder holder, int section) {}
-
-    @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
         if (holder instanceof PhoneHeaderViewHolder) {
-            final PhoneHeaderViewHolder viewHolder = (PhoneHeaderViewHolder) holder;
-
-            final Phone phone = mBlockedNumbersList.get(section - 1).getPhoneList().get(relativePosition);
-
-            final int countryCode = phone.getArea().getState().getCountry().getCode();
-            final int areaCode = phone.getArea().getCode();
-            final long number = phone.getNumber();
-
-            final StringBuilder formattedNumber = new StringBuilder(50);
-            formattedNumber.append("+" + countryCode);
-            formattedNumber.append(" " + areaCode);
-            formattedNumber.append(" " + number);
-
-            viewHolder.mBlockerOrNumber.setText(formattedNumber);
-
-            viewHolder.mIsSwipeable = false;
-
-            viewHolder.mCardView.setOnLongClickListener(view -> {
-                showBottomSheet();
-                return true;
-            });
+            super.onBindViewHolder(holder, section - 1, relativePosition, absolutePosition);
 
         } else {
 
@@ -230,21 +123,30 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
         }
     }
 
+    @Override
+    protected Boolean isSwipeable() {
+        return false;
+    }
+
+    @Override protected void onClick() {}
+
+    @Override protected void onLongClick() {}
+
     private void setButtonAsAddable(@NonNull final AestheticButton button) {
         button.setText(mFragment.getResources().getString(R.string.profile_follow));
         button.setOnClickListener(view -> {
-            mFragment.showAddingProgressDialog();
+            ((ProfileFragment) mFragment).showAddingProgressDialog();
 
             UserFollowerDAO.get().create(mUser, new Listeners.AnswerListener() {
                 @Override
                 public void onAnswerRetrieved() {
                     setButtonAsRemovable(button);
-                    mFragment.hideAddingProgressDialog();
+                    ((ProfileFragment) mFragment).hideAddingProgressDialog();
                 }
 
                 @Override
                 public void onError() {
-                    mFragment.hideAddingProgressDialog();
+                    ((ProfileFragment) mFragment).hideAddingProgressDialog();
                     mActivity.createSnackbar(R.string.profile_error_add_user).show();
                 }
             });
@@ -254,7 +156,7 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
     private void setButtonAsRemovable(@NonNull final AestheticButton button) {
         button.setText(mFragment.getResources().getString(R.string.profile_unfollow));
         button.setOnClickListener(view -> {
-            mFragment.showRemovingProgressDialog();
+            ((ProfileFragment) mFragment).showRemovingProgressDialog();
 
             final Listeners.AnswerListener answerListener = new Listeners.AnswerListener() {
                 Integer count = 0;
@@ -263,13 +165,13 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                 public void onAnswerRetrieved() {
                     if (++count == 2) {
                         setButtonAsAddable(button);
-                        mFragment.hideRemovingProgressDialog();
+                        ((ProfileFragment) mFragment).hideRemovingProgressDialog();
                     }
                 }
 
                 @Override
                 public void onError() {
-                    mFragment.hideRemovingProgressDialog();
+                    ((ProfileFragment) mFragment).hideRemovingProgressDialog();
                     mActivity.createSnackbar(R.string.profile_error_remove_user).show();
                 }
             };
@@ -288,6 +190,11 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.item_phone, parent, false));
 
+            case VIEW_TYPE_HEADER:
+                return new PhoneHeaderViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(
+                                R.layout.preference_category, parent, false));
+
             case VIEW_TYPE_TOOLBAR:
                 if (ScreenUtils.isTablet() || ScreenUtils.isLandscape()) {
                     return new ToolbarViewHolder(
@@ -301,18 +208,10 @@ public final class ProfileAdapter extends SectionedRecyclerViewAdapter<Sectioned
                                     R.layout.item_profile_toolbar_portrait, parent, false));
                 }
 
-            case VIEW_TYPE_HEADER:
-                return new PhoneHeaderViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(
-                                R.layout.preference_category, parent, false));
-
             default:
                 return new PhoneHeaderViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(
                                 R.layout.item_phone, parent, false));
         }
-    }
-
-    private void showBottomSheet() {
     }
 }
