@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.enoughspam.step.R;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
 
 public final class SearchActivity extends AbstractActivity {
     EditText mEditText;

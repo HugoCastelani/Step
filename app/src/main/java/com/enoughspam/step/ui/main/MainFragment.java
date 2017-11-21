@@ -20,13 +20,12 @@ import com.enoughspam.step.database.dao.local.LRelationshipDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.domain.PhoneSection;
-import com.enoughspam.step.ui.abstracts.AbstractFragment;
+import com.enoughspam.step.ui.intangible.AbstractFragment;
 import com.enoughspam.step.ui.viewholder.PhoneHeaderViewHolder;
 import com.enoughspam.step.util.decorator.EndOffsetItemDecoration;
 import com.enoughspam.step.util.decorator.ListDecorator;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Hugo Castelani
@@ -39,7 +38,7 @@ public final class MainFragment extends AbstractFragment {
 
     private AestheticRecyclerView mRecyclerView;
     private MainAdapter mAdapter;
-    private List<PhoneSection> mPhoneSectionList;
+    private ArrayList<PhoneSection> mPhoneSectionList;
 
     private ImageView mPlaceHolder;
 
@@ -108,8 +107,8 @@ public final class MainFragment extends AbstractFragment {
         }
     }
 
-    private List<PhoneSection> getBlockedNumberList() {
-        final List<PhoneSection> phoneSectionList = new ArrayList<>();
+    private ArrayList<PhoneSection> getBlockedNumberList() {
+        final ArrayList<PhoneSection> phoneSectionList = new ArrayList<>();
 
         // user's numbers
         phoneSectionList.add(new PhoneSection(

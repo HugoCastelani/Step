@@ -4,18 +4,19 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.aesthetic.AestheticFab;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.local.LUserDAO;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
-import com.enoughspam.step.ui.abstracts.SnackbarTrigger;
 import com.enoughspam.step.ui.addnumber.AddNumberActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
+import com.enoughspam.step.ui.intangible.SnackbarTrigger;
+import com.enoughspam.step.ui.notification.NotificationActivity;
 import com.enoughspam.step.ui.profile.ProfileActivity;
 import com.enoughspam.step.ui.search.SearchActivity;
 import com.enoughspam.step.ui.settings.SettingsActivity;
@@ -38,8 +39,9 @@ public final class MainActivity extends AbstractActivity implements SnackbarTrig
     private static final int REQUEST_CODE_ADD_NUMBER = 3;
     private static final int REQUEST_CODE_ACCOUNT = 4;
     private static final int REQUEST_CODE_SEARCH = 5;
+    private static final int REQUEST_CODE_NOTIFICATION = 6;
 
-    private FloatingActionButton mFab;
+    private AestheticFab mFAB;
     private Snackbar mSnackbar;
     private Drawer mNavDrawer;
     private MainFragment mFragment;
@@ -57,14 +59,14 @@ public final class MainActivity extends AbstractActivity implements SnackbarTrig
 
     @Override
     protected void initViews() {
-        mFab = (FloatingActionButton) findViewById(R.id.ma_fab);
+        mFAB = (AestheticFab) findViewById(R.id.ma_fab);
         mSnackbar = createSnackbar(R.string.press_back_again);
         initNavDrawer();
     }
 
     @Override
     protected void initActions() {
-        mFab.setOnClickListener(fab -> {
+        mFAB.setOnClickListener(fab -> {
             final Intent intent = new Intent(MainActivity.this, AddNumberActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ADD_NUMBER);
         });
@@ -159,6 +161,10 @@ public final class MainActivity extends AbstractActivity implements SnackbarTrig
             case R.id.action_search:
                 final Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SEARCH);
+                return true;
+            case R.id.action_notifications:
+                final Intent intent2 = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivityForResult(intent2, REQUEST_CODE_NOTIFICATION);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

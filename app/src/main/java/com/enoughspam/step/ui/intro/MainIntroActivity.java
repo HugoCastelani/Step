@@ -14,7 +14,7 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.ui.abstracts.SnackbarTrigger;
+import com.enoughspam.step.ui.intangible.SnackbarTrigger;
 import com.enoughspam.step.ui.splashscreen.SplashScreenActivity;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;

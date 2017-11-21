@@ -2,7 +2,7 @@ package com.enoughspam.step.database.dao.wide;
 
 import android.support.annotation.NonNull;
 
-import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
+import com.enoughspam.step.database.dao.intangible.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.util.Listeners;

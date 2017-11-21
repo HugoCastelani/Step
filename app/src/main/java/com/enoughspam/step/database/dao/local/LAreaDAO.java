@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.abstracts.GenericHybridDAO;
+import com.enoughspam.step.database.dao.intangible.GenericHybridDAO;
 import com.enoughspam.step.database.domain.Area;
 
 /**

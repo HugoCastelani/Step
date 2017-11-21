@@ -3,7 +3,7 @@ package com.enoughspam.step.database.dao.wide;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
+import com.enoughspam.step.database.dao.intangible.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LRelationshipDAO;
 import com.enoughspam.step.database.dao.local.LUserDAO;
 import com.enoughspam.step.database.domain.Relationship;
@@ -336,7 +336,7 @@ public final class UserFollowerDAO extends GenericWideDAO<User> {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             listListener.onItemAdded(
-                                    dataSnapshot.getValue(InnerUser.class).getUserKey()
+                                    dataSnapshot.child("userKey").getValue(String.class)
                             );
                         }
 
@@ -376,7 +376,7 @@ public final class UserFollowerDAO extends GenericWideDAO<User> {
                                        @NonNull final Listeners.ListListener<User> listListener,
                                        @NonNull final Listeners.AnswerListener answerListener) {
 
-        final int[] completed = new int[] {0};
+        final Integer[] completed = new Integer[] {0};
         final ArrayList<String> keyList = new ArrayList<>();
 
         getUserKeyList(userKey, node, new Listeners.ListListener<String>() {

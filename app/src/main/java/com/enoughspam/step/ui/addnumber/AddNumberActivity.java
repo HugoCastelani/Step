@@ -1,14 +1,14 @@
 package com.enoughspam.step.ui.addnumber;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 
+import com.afollestad.aesthetic.AestheticFab;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
 import com.enoughspam.step.util.Listeners;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -19,7 +19,7 @@ public final class AddNumberActivity extends AbstractActivity {
 
     private MaterialDialog mNumberProgressDialog;
     private MaterialDialog mNumbersProgressDialog;
-    private FloatingActionButton mFAB;
+    private AestheticFab mFAB;
     private AddNumberFragment mAddNumberFragment;
 
     @Override
@@ -60,7 +60,7 @@ public final class AddNumberActivity extends AbstractActivity {
                 .cancelable(false)
                 .build();
 
-        mFAB = (FloatingActionButton) findViewById(R.id.ana_fab);
+        mFAB = (AestheticFab) findViewById(R.id.ana_fab);
     }
 
     @Override

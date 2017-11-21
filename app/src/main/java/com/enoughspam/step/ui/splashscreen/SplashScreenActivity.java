@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.Utils;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
 import com.enoughspam.step.ui.main.MainActivity;
 import com.enoughspam.step.util.Listeners;
 

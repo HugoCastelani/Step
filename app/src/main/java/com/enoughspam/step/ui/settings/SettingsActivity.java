@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.enoughspam.step.R;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
 
 public final class SettingsActivity extends AbstractActivity
         implements ColorChooserDialog.ColorCallback {

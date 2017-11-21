@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
+import com.enoughspam.step.database.dao.intangible.GenericLocalDAO;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.database.domain.Relationship;
 import com.enoughspam.step.database.domain.User;

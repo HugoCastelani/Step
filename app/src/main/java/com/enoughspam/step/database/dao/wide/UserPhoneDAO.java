@@ -3,7 +3,7 @@ package com.enoughspam.step.database.dao.wide;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.abstracts.GenericWideDAO;
+import com.enoughspam.step.database.dao.intangible.GenericWideDAO;
 import com.enoughspam.step.database.dao.local.LPhoneDAO;
 import com.enoughspam.step.database.dao.local.LUserPhoneDAO;
 import com.enoughspam.step.database.domain.Phone;
@@ -58,20 +58,27 @@ public final class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                             @Override
                             public void onAnswerRetrieved() {
                                 getReference().push().setValue(userPhone)
-                                        .addOnFailureListener(e -> listener.error())
-                                        .addOnSuccessListener(aVoid ->
-                                            LUserPhoneDAO.get().create(userPhone, new Listeners.AnswerListener() {
-                                                @Override
-                                                public void onAnswerRetrieved() {
-                                                    listener.properlyAdded();
-                                                }
+                                    .addOnFailureListener(e -> listener.error())
+                                    .addOnSuccessListener(aVoid ->
+                                        NotificationDAO.get().create(userPhone, new Listeners.AnswerListener() {
+                                            @Override
+                                            public void onAnswerRetrieved() {
+                                                LUserPhoneDAO.get().create(userPhone, new Listeners.AnswerListener() {
+                                                    @Override
+                                                    public void onAnswerRetrieved() {
+                                                        listener.properlyAdded();
+                                                    }
 
-                                                @Override
-                                                public void onError() {
-                                                    listener.error();
-                                                }
-                                            }, force)
-                                        );
+                                                    @Override
+                                                    public void onError() {
+                                                        listener.error();
+                                                    }
+                                                }, force);
+                                            }
+
+                                            @Override public void onError() {}
+                                        })
+                                    );
                             }
 
                             @Override
@@ -103,17 +110,24 @@ public final class UserPhoneDAO extends GenericWideDAO<UserPhone> {
                                 getReference().push().setValue(userPhone)
                                         .addOnFailureListener(e -> listener.error())
                                         .addOnSuccessListener(aVoid ->
-                                            LUserPhoneDAO.get().create(userPhone, new Listeners.AnswerListener() {
+                                            NotificationDAO.get().create(userPhone, new Listeners.AnswerListener() {
                                                 @Override
                                                 public void onAnswerRetrieved() {
-                                                    listener.properlyAdded();
+                                                    LUserPhoneDAO.get().create(userPhone, new Listeners.AnswerListener() {
+                                                        @Override
+                                                        public void onAnswerRetrieved() {
+                                                            listener.properlyAdded();
+                                                        }
+
+                                                        @Override
+                                                        public void onError() {
+                                                            listener.error();
+                                                        }
+                                                    }, force);
                                                 }
 
-                                                @Override
-                                                public void onError() {
-                                                    listener.error();
-                                                }
-                                            }, force)
+                                                @Override public void onError() {}
+                                            })
                                         );
                             }
 
@@ -457,6 +471,8 @@ public final class UserPhoneDAO extends GenericWideDAO<UserPhone> {
 
                     query.addChildEventListener(childEventListener);
 
+
+                    // REPEAT IN NOTIFICATIONDAO
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

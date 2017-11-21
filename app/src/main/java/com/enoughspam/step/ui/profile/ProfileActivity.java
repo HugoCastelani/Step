@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.User;
-import com.enoughspam.step.ui.abstracts.AbstractActivity;
+import com.enoughspam.step.ui.intangible.AbstractActivity;
 
 /**
  * Created by Hugo Castelani

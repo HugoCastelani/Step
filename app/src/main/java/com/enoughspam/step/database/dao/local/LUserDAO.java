@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.enoughspam.step.database.dao.DAOHandler;
-import com.enoughspam.step.database.dao.abstracts.GenericLocalDAO;
+import com.enoughspam.step.database.dao.intangible.GenericLocalDAO;
 import com.enoughspam.step.database.dao.wide.UserDAO;
 import com.enoughspam.step.database.domain.User;
 import com.enoughspam.step.util.Listeners;
