@@ -51,7 +51,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
     public LRelationshipDAO create(@NonNull final Relationship relationship) {
         if (findByIDs(relationship.getFollowingKey(), relationship.getFollowerKey()) == null) {
 
-            LUserDAO.get().clone(relationship.getFollowingUser(null));    // user was already set
+            LUserDAO.get().cloneUser(relationship.getFollowingUser(null));    // user was already set
             ContentValues values = new ContentValues();
 
             values.put(USER_FOLLOWED_KEY, relationship.getFollowingKey());

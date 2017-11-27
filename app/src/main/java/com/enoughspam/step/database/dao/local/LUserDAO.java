@@ -90,7 +90,7 @@ public final class LUserDAO extends GenericLocalDAO<User> {
         throw new UnsupportedOperationException("Support this, Hugo.");
     }
 
-    public LUserDAO clone(@NonNull final User user) {
+    public LUserDAO cloneUser(@NonNull final User user) {
         if (findByColumn(key, user.getKey()) == null) {
             final ContentValues values = new ContentValues();
 
@@ -110,7 +110,7 @@ public final class LUserDAO extends GenericLocalDAO<User> {
             UserDAO.get().findByKey(userKey, new Listeners.ObjectListener<User>() {
                 @Override
                 public void onObjectRetrieved(@NonNull User retrievedUser) {
-                    create(retrievedUser);
+                    cloneUser(retrievedUser);
                     listener.onAnswerRetrieved();
                 }
 

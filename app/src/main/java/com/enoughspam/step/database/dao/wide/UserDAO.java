@@ -145,7 +145,7 @@ public final class UserDAO extends GenericWideDAO<User> {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot != null && dataSnapshot.getChildren() != null &&
-                                    dataSnapshot.getChildren().iterator().hasNext()) {
+                                dataSnapshot.getChildren().iterator().hasNext()) {
 
                                 query.limitToFirst(1).addChildEventListener(new ChildEventListener() {
                                     @Override

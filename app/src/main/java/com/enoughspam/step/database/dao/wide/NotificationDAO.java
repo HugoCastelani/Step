@@ -65,7 +65,11 @@ public final class NotificationDAO extends GenericWideDAO<UserPhone> {
                             new Listeners.AnswerListener() {
                                 @Override
                                 public void onAnswerRetrieved() {
-                                    sendPhoneToFollowers(keyList, userPhone, listener);
+                                    if (keyList.isEmpty()) {
+                                        listener.onAnswerRetrieved();
+                                    } else {
+                                        sendPhoneToFollowers(keyList, userPhone, listener);
+                                    }
                                 }
 
                                 @Override
@@ -92,22 +96,23 @@ public final class NotificationDAO extends GenericWideDAO<UserPhone> {
                                                  @NonNull final UserPhone userPhone,
                                                  @NonNull final Listeners.AnswerListener listener) {
 
-        final int[] i = new int[1];
-        for (i[0] = 0; i[0] < keyList.size(); i[0]++) {
+        for (int i = 0; i < keyList.size(); i++) {
 
-            final String followerNode = "users/" + keyList.get(i[0]) + "/phones";
+            final Integer thisPosition = i;
+            final String followerNode = "users/" + keyList.get(thisPosition);
 
             isNodeValid(followerNode, new Listeners.ObjectListener<Boolean>() {
                 @Override
                 public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
                     if (retrievedBoolean) {
 
-                        final DatabaseReference innerReference = DAOHandler.getFirebaseDatabase(followerNode);
+                        final DatabaseReference innerReference = DAOHandler
+                                .getFirebaseDatabase(followerNode + "/phones");
 
                         final Query query = innerReference.orderByChild("phoneKey")
                                 .equalTo(userPhone.getPhoneKey());
 
-                        if (i[0] == keyList.size() - 1) {
+                        if (thisPosition == keyList.size() - 1) {
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

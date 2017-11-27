@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="62dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
     app:contentPadding="@dimen/activity_horizontal_margin"
     app:cardCornerRadius="0dp">
 
@@ -12,8 +14,6 @@
         android:id="@+id/ip_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
         android:orientation="vertical">
 
         <com.afollestad.aesthetic.AestheticTextView

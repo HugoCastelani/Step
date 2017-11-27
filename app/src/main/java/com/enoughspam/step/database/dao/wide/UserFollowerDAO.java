@@ -323,41 +323,60 @@ public final class UserFollowerDAO extends GenericWideDAO<User> {
                                           @NonNull final Listeners.ListListener<String> listListener,
                                           @NonNull final Listeners.AnswerListener answerListener) {
 
-        String userNode = "users/" + userKey;
+        final StringBuilder userNodeBuilder = new StringBuilder();
+        userNodeBuilder.append("users/").append(userKey);
 
-        isNodeValid(userNode, new Listeners.ObjectListener<Boolean>() {
+        isNodeValid(userNodeBuilder.toString(), new Listeners.ObjectListener<Boolean>() {
             @Override
             public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
                 if (retrievedBoolean) {
 
-                    final Query query = DAOHandler.getFirebaseDatabase(userNode + node).orderByKey();
+                    userNodeBuilder.append("/").append(node);
 
-                    final ChildEventListener childEventListener = new ChildEventListener() {
+                    isNodeValid(userNodeBuilder.toString(), new Listeners.ObjectListener<Boolean>() {
                         @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            listListener.onItemAdded(
-                                    dataSnapshot.child("userKey").getValue(String.class)
-                            );
+                        public void onObjectRetrieved(@NonNull Boolean retrievedObject) {
+                            if (retrievedBoolean) {
+
+                                final Query query = DAOHandler.getFirebaseDatabase(
+                                        userNodeBuilder.toString()).orderByKey();
+
+                                final ChildEventListener childEventListener = new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        listListener.onItemAdded(
+                                                dataSnapshot.child("userKey").getValue(String.class)
+                                        );
+                                    }
+
+                                    @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                    @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                    @Override public void onCancelled(DatabaseError databaseError) {}
+                                };
+
+                                query.addChildEventListener(childEventListener);
+
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        answerListener.onAnswerRetrieved();
+                                        query.removeEventListener(childEventListener);
+                                        query.removeEventListener(this);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {}
+                                });
+
+                            // means that user doesn't have any follower/following
+                            } else answerListener.onAnswerRetrieved();
                         }
 
-                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                        @Override public void onCancelled(DatabaseError databaseError) {}
-                    };
-
-                    query.addChildEventListener(childEventListener);
-
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            answerListener.onAnswerRetrieved();
-                            query.removeEventListener(childEventListener);
-                            query.removeEventListener(this);
+                        public void onError() {
+                            answerListener.onError();
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
                     });
 
                 } else answerListener.onError();
