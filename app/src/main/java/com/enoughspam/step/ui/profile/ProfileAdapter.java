@@ -13,6 +13,7 @@ import com.enoughspam.step.R;
 import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
 import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.database.domain.User;
+import com.enoughspam.step.domain.PhoneSection;
 import com.enoughspam.step.ui.intangible.UsersNumbersAdapter;
 import com.enoughspam.step.ui.viewholder.PhoneHeaderViewHolder;
 import com.enoughspam.step.ui.viewholder.ToolbarViewHolder;
@@ -128,9 +129,14 @@ public final class ProfileAdapter extends UsersNumbersAdapter {
         return false;
     }
 
-    @Override protected void onClick() {}
+    @Override
+    protected void onClick(@NonNull PhoneSection phoneSection, @NonNull PhoneHeaderViewHolder viewHolder) {
+    }
 
-    @Override protected void onLongClick() {}
+    @Override
+    protected boolean onLongClick(@NonNull PhoneSection phoneSection, @NonNull PhoneHeaderViewHolder viewHolder) {
+        return false;
+    }
 
     private void setButtonAsAddable(@NonNull final AestheticButton button) {
         button.setText(mFragment.getResources().getString(R.string.profile_follow));

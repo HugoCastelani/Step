@@ -142,7 +142,7 @@ public final class MainAdapter extends SectionedRecyclerViewAdapter<PhoneHeaderV
         holder.mIsSwipeable = true;
         holder.mBlockerOrNumber.setText(formattedNumber);
 
-        holder.mCardView.setOnLongClickListener(view -> {
+        holder.mParent.setOnLongClickListener(view -> {
             showBottomSheet();
             return true;
         });

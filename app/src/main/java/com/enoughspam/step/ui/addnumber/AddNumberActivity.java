@@ -3,27 +3,28 @@ package com.enoughspam.step.ui.addnumber;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.afollestad.aesthetic.AestheticFab;
-import com.afollestad.aesthetic.AestheticToolbar;
+import com.afollestad.materialcab.MaterialCab;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.ui.intangible.AbstractActivity;
-import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.List;
 
-public final class AddNumberActivity extends AbstractActivity {
+public final class AddNumberActivity extends AbstractActivity implements MaterialCab.Callback {
 
     private MaterialDialog mNumberProgressDialog;
     private MaterialDialog mNumbersProgressDialog;
     private AestheticFab mFAB;
-    private AestheticToolbar mSecondaryToolbar;
+    private MaterialCab mCAB;
     private AddNumberFragment mAddNumberFragment;
 
     @Override
@@ -65,10 +66,7 @@ public final class AddNumberActivity extends AbstractActivity {
                 .build();
 
         mFAB = (AestheticFab) findViewById(R.id.ana_fab);
-
-        mSecondaryToolbar = (AestheticToolbar) findViewById(R.id.secondary_toolbar);
-        mSecondaryToolbar.setNavigationOnClickListener(view -> warnNotSelectedViews());
-        mSecondaryToolbar.setTitle("1" + getResources().getString(R.string.selected));
+        mCAB = new MaterialCab(this, R.id.cab_stub);
     }
 
     @Override
@@ -145,25 +143,53 @@ public final class AddNumberActivity extends AbstractActivity {
         mNumbersProgressDialog.hide();
     }
 
-    public void warnSelectedViews() {
-        AnimUtils.fadeIn(mSecondaryToolbar);
-        AnimUtils.fadeOut(getToolbar());
-        mFAB.show();
-    }
-
-    public void warnNotSelectedViews() {
-        AnimUtils.fadeIn(getToolbar());
-        AnimUtils.fadeOut(mSecondaryToolbar);
-        mSecondaryToolbar.setTitle("1" + getResources().getString(R.string.selected));
-        mAddNumberFragment.getAdapter().unselectAllViews();
-        mFAB.hide();
-    }
-
     public void setSelectedItems(@NonNull final Integer selected) {
-        if (selected > 1 && !getResources().getString(R.string.selected_plural).isEmpty()) {
-            mSecondaryToolbar.setTitle(selected + getResources().getString(R.string.selected_plural));
+        if (selected > 1) {
+            if (!getResources().getString(R.string.selected_plural).isEmpty()) {
+                mCAB.setTitle(selected + getResources().getString(R.string.selected_plural));
+            } else {
+                mCAB.setTitle(selected + getResources().getString(R.string.selected));
+            }
+
+        } else if (selected == 1) {
+
+            if (mCAB.isActive()) {
+                mCAB.setTitle(selected + getResources().getString(R.string.selected));
+            } else {
+                mCAB.setTitle("1" + getResources().getString(R.string.selected));
+                mCAB.start(this);
+                mFAB.show();
+            }
+
         } else {
-            mSecondaryToolbar.setTitle(selected + getResources().getString(R.string.selected));
+
+            mCAB.finish();
+            mFAB.hide();
+        }
+    }
+
+    @Override
+    public boolean onCabCreated(MaterialCab cab, Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onCabItemClicked(MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public boolean onCabFinished(MaterialCab cab) {
+        mAddNumberFragment.getAdapter().deselectAllViews();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mCAB.isActive()) {
+            mCAB.finish();
+        } else {
+            super.onBackPressed();
         }
     }
 }

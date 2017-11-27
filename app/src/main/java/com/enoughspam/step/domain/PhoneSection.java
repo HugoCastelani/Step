@@ -15,10 +15,12 @@ import java.util.ArrayList;
 public final class PhoneSection {
     private String username;
     private ArrayList<Phone> phoneList;
+    private Boolean isSelected;
 
     public PhoneSection(@NonNull final String username, @NonNull final ArrayList<Phone> phoneList) {
         this.username = username;
         this.phoneList = phoneList;
+        this.isSelected = false;
     }
 
     public String getUsername() {
@@ -42,5 +44,13 @@ public final class PhoneSection {
     public PhoneSection addPhone(@NonNull final Phone phone) {
         phoneList.add(phone);
         return this;
+    }
+
+    public Boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(@NonNull final Boolean selected) {
+        isSelected = selected;
     }
 }

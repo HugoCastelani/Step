@@ -198,18 +198,19 @@ public abstract class UsersNumbersAdapter extends SectionedRecyclerViewAdapter<S
         viewHolder.mBlockerOrNumber.setText(formattedNumber);
 
         viewHolder.mIsSwipeable = isSwipeable();
-        viewHolder.mCardView.setOnClickListener(view -> onClick());
-        viewHolder.mCardView.setOnLongClickListener(view -> {
-            onLongClick();
-            return true;
-        });
+        viewHolder.mParent.setOnClickListener(view ->
+                onClick(mNumbersList.get(section), viewHolder));
+        viewHolder.mParent.setOnLongClickListener(view ->
+                onLongClick(mNumbersList.get(section), viewHolder));
     }
 
     protected abstract Boolean isSwipeable();
 
-    protected abstract void onClick();
+    protected abstract void onClick(@NonNull final PhoneSection phoneSection,
+                                    @NonNull final PhoneHeaderViewHolder viewHolder);
 
-    protected abstract void onLongClick();
+    protected abstract boolean onLongClick(@NonNull final PhoneSection phoneSection,
+                                           @NonNull final PhoneHeaderViewHolder viewHolder);
 
     @Override
     public SectionedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

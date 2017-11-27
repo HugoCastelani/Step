@@ -1,8 +1,10 @@
 package com.enoughspam.step.ui.viewholder;
 
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.LinearLayout;
 
-import com.afollestad.aesthetic.AestheticCardView;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.enoughspam.step.R;
@@ -14,16 +16,25 @@ import com.enoughspam.step.R;
  */
 
 public final class PhoneHeaderViewHolder extends SectionedViewHolder {
-    public final AestheticCardView mCardView;
+    public final LinearLayout mParent;
     public final AestheticTextView mBlockerOrNumber;
 
     public Boolean mIsSwipeable;
 
     public PhoneHeaderViewHolder(View itemView) {
         super(itemView);
-        mCardView = (AestheticCardView) itemView.findViewById(R.id.ip_card);
+        mParent = (LinearLayout) itemView.findViewById(R.id.ip_parent);
         mBlockerOrNumber = (AestheticTextView) itemView.findViewById(android.R.id.title);
 
         mIsSwipeable = false;
+    }
+
+    public PhoneHeaderViewHolder setSelected(@NonNull final Boolean isSelected) {
+        if (isSelected) {
+            mParent.setBackgroundColor(ContextCompat.getColor(mParent.getContext(), R.color.md_grey_200));
+        } else {
+            mParent.setBackgroundColor(ContextCompat.getColor(mParent.getContext(), R.color.md_white_1000));
+        }
+        return this;
     }
 }

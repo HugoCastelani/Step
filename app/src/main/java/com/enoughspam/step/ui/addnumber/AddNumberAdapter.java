@@ -121,7 +121,6 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
                     call.setSelected(true);
                     viewHolder.setSelected(true);
                     mSelectedViews.add(viewHolder);
-                    mActivity.warnSelectedViews();
                 }
 
                 mActivity.setSelectedItems(mSelectedViews.size());
@@ -165,15 +164,16 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
     private void onClickMutualAction(@NonNull final Call call,
                                      @NonNull final PhoneContactViewHolder viewHolder) {
         if (call.isSelected()) {
+            call.setSelected(false);
+            viewHolder.setSelected(false);
             mSelectedViews.remove(viewHolder);
 
             if (mSelectedViews.size() == 0) {
                 mSelectionMode = false;
-                mActivity.warnNotSelectedViews();
+            } else {
+                mActivity.setSelectedItems(mSelectedViews.size());
             }
 
-            call.setSelected(false);
-            viewHolder.setSelected(false);
 
         } else {
 
@@ -183,10 +183,13 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
         }
     }
 
-    public void unselectAllViews() {
+    public void deselectAllViews() {
         for (final PhoneContactViewHolder viewHolder : mSelectedViews) {
             viewHolder.setSelected(false);
         }
+
+        mSelectedViews.clear();
+        mSelectionMode = false;
 
         for (final Call call : mCallList) {
             if (call.isSelected()) {

@@ -56,8 +56,9 @@ dependencies {
 
     /*
     // aidas follestad
-    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
     compile 'com.afollestad:aesthetic:0.4.7'
+    compile 'com.afollestad:material-cab:0.1.12'
+    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
     compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
     compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
 
@@ -106,8 +107,9 @@ dependencies {
     */
 
     // aidas follestad
-    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
     compile 'com.afollestad:aesthetic:0.4.7'
+    compile 'com.afollestad:material-cab:0.1.12'
+    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
     compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
     compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
 
