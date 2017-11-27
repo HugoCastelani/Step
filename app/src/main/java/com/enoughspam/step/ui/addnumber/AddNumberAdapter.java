@@ -72,10 +72,8 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
     @Override
     public void onBindFooterViewHolder(SectionedViewHolder holder, int section) {}
 
-    boolean mSelectionMode = false;
-    int mSelectedViews = 0;
-
-    private final List<PhoneContactViewHolder> mItemList = new ArrayList<>();
+    Boolean mSelectionMode = false;
+    Integer mSelectedViews = 0;
 
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
@@ -83,13 +81,11 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
             final PhoneContactViewHolder viewHolder = ((PhoneContactViewHolder) holder);
             final Call call = mCallList.get(relativePosition);
 
-            mItemList.add(viewHolder);
-
             final StringBuilder formattedNumber = new StringBuilder(50);
 
-            int countryCode;
-            int areaCode;
-            long number;
+            Integer countryCode;
+            Integer areaCode;
+            Long number;
 
             if (call.getPhone().getCountry() == null) {
                 countryCode = call.getPhone().getArea().getState().getCountry().getCode();
@@ -112,28 +108,32 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
 
             viewHolder.mSectionOrName.setText(call.getName());
             viewHolder.mNumber.setText(formattedNumber.toString());
+            viewHolder.setSelected(call.isSelected());
 
             // actions to multiple items selection
-            viewHolder.mCardView.setOnLongClickListener(view -> {
+            viewHolder.mParent.setOnLongClickListener(view -> {
                 if (mSelectionMode) {
-                    if (viewHolder.mParent.isSelected()) {
-                        if (mSelectedViews == 1) {
+                    if (call.isSelected()) {
+                        if (--mSelectedViews == 0) {
                             mSelectionMode = false;
                             mActivity.hideFAB();
                         }
-                        viewHolder.mParent.setSelected(false);
-                        mSelectedViews--;
+
+                        call.setSelected(false);
+                        viewHolder.setSelected(false);
 
                     } else {
 
-                        viewHolder.mParent.setSelected(true);
+                        call.setSelected(true);
+                        viewHolder.setSelected(true);
                         mSelectedViews++;
                     }
 
                 } else {
 
                     mSelectionMode = true;
-                    viewHolder.mParent.setSelected(true);
+                    call.setSelected(true);
+                    viewHolder.setSelected(true);
                     mSelectedViews++;
                     mActivity.showFAB();
                 }
@@ -141,20 +141,21 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
                 return true;
             });
 
-            // actions to single item
-            viewHolder.mCardView.setOnClickListener(view -> {
+            viewHolder.mParent.setOnClickListener(view -> {
                 if (mSelectionMode) {
-                    if (viewHolder.mParent.isSelected()) {
-                        if (mSelectedViews == 1) {
+                    if (call.isSelected()) {
+                        if (--mSelectedViews == 0) {
                             mSelectionMode = false;
                             mActivity.hideFAB();
                         }
-                        viewHolder.mParent.setSelected(false);
-                        mSelectedViews--;
+
+                        call.setSelected(false);
+                        viewHolder.setSelected(false);
 
                     } else {
 
-                        viewHolder.mParent.setSelected(true);
+                        call.setSelected(true);
+                        viewHolder.setSelected(true);
                         mSelectedViews++;
                     }
 
@@ -190,9 +191,9 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
     public List<Call> getSelectedItems() {
         final List<Call> callList = new ArrayList<>();
 
-        for (int i = 0; i < mItemList.size(); i++) {
-            if (mItemList.get(i).mParent.isSelected()) {
-                callList.add(mCallList.get(i));
+        for (final Call call : mCallList) {
+            if (call.isSelected()) {
+                callList.add(call);
             }
         }
 

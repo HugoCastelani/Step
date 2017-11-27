@@ -13,10 +13,12 @@ import com.enoughspam.step.database.domain.Phone;
 public final class Call {
     private String name;
     private Phone phone;
+    private Boolean isSelected;
 
     public Call(@NonNull final String name, @NonNull final Phone phone) {
         this.name = name;
         this.phone = phone;
+        this.isSelected = false;
     }
 
     public String getName() {
@@ -33,5 +35,13 @@ public final class Call {
 
     public void setPhone(@NonNull final Phone phone) {
         this.phone = phone;
+    }
+
+    public Boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(@NonNull final Boolean selected) {
+        isSelected = selected;
     }
 }
