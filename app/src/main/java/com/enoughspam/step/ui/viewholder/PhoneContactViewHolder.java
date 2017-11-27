@@ -16,7 +16,6 @@ import com.enoughspam.step.R;
  */
 
 public final class PhoneContactViewHolder extends SectionedViewHolder {
-
     public final LinearLayout mParent;
     public final AestheticTextView mSectionOrName;
     public final AestheticTextView mNumber;

@@ -15,15 +15,10 @@ import java.util.ArrayList;
  */
 
 public final class AnimUtils {
-    public static void fadeOutFadeIn(@NonNull final View fadeOutView, @NonNull final View fadeInView) {
+    public static void fadeOut(@NonNull final View fadeOutView) {
         final AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
-        final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
-
         fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-        fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
-
         fadeOut.setDuration(200);
-        fadeIn.setDuration(200);
 
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override public void onAnimationStart(Animation animation) {}
@@ -35,6 +30,14 @@ public final class AnimUtils {
             }
         });
 
+        fadeOutView.startAnimation(fadeOut);
+    }
+
+    public static void fadeIn(@NonNull final View fadeInView) {
+        final AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
+        fadeIn.setDuration(200);
+
         fadeIn.setAnimationListener(new Animation.AnimationListener() {
             @Override public void onAnimationStart(Animation animation) {}
             @Override public void onAnimationRepeat(Animation animation) {}
@@ -45,8 +48,12 @@ public final class AnimUtils {
             }
         });
 
-        fadeOutView.startAnimation(fadeOut);
         fadeInView.startAnimation(fadeIn);
+    }
+
+    public static void fadeOutFadeIn(@NonNull final View fadeOutView, @NonNull final View fadeInView) {
+        fadeOut(fadeOutView);
+        fadeIn(fadeInView);
     }
 
     public static void fadeOutFadeIn(@NonNull final ArrayList<View> fadeOutViews,

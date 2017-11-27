@@ -1,14 +1,17 @@
 package com.enoughspam.step.ui.addnumber;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 
 import com.afollestad.aesthetic.AestheticFab;
+import com.afollestad.aesthetic.AestheticToolbar;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.enoughspam.step.R;
 import com.enoughspam.step.database.domain.Phone;
 import com.enoughspam.step.domain.Call;
 import com.enoughspam.step.ui.intangible.AbstractActivity;
+import com.enoughspam.step.util.AnimUtils;
 import com.enoughspam.step.util.Listeners;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -20,6 +23,7 @@ public final class AddNumberActivity extends AbstractActivity {
     private MaterialDialog mNumberProgressDialog;
     private MaterialDialog mNumbersProgressDialog;
     private AestheticFab mFAB;
+    private AestheticToolbar mSecondaryToolbar;
     private AddNumberFragment mAddNumberFragment;
 
     @Override
@@ -61,6 +65,10 @@ public final class AddNumberActivity extends AbstractActivity {
                 .build();
 
         mFAB = (AestheticFab) findViewById(R.id.ana_fab);
+
+        mSecondaryToolbar = (AestheticToolbar) findViewById(R.id.secondary_toolbar);
+        mSecondaryToolbar.setNavigationOnClickListener(view -> warnNotSelectedViews());
+        mSecondaryToolbar.setTitle("1" + getResources().getString(R.string.selected));
     }
 
     @Override
@@ -137,11 +145,25 @@ public final class AddNumberActivity extends AbstractActivity {
         mNumbersProgressDialog.hide();
     }
 
-    public void showFAB() {
+    public void warnSelectedViews() {
+        AnimUtils.fadeIn(mSecondaryToolbar);
+        AnimUtils.fadeOut(getToolbar());
         mFAB.show();
     }
 
-    public void hideFAB() {
+    public void warnNotSelectedViews() {
+        AnimUtils.fadeIn(getToolbar());
+        AnimUtils.fadeOut(mSecondaryToolbar);
+        mSecondaryToolbar.setTitle("1" + getResources().getString(R.string.selected));
+        mAddNumberFragment.getAdapter().unselectAllViews();
         mFAB.hide();
+    }
+
+    public void setSelectedItems(@NonNull final Integer selected) {
+        if (selected > 1 && !getResources().getString(R.string.selected_plural).isEmpty()) {
+            mSecondaryToolbar.setTitle(selected + getResources().getString(R.string.selected_plural));
+        } else {
+            mSecondaryToolbar.setTitle(selected + getResources().getString(R.string.selected));
+        }
     }
 }

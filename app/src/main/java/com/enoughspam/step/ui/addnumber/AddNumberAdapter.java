@@ -73,7 +73,7 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
     public void onBindFooterViewHolder(SectionedViewHolder holder, int section) {}
 
     Boolean mSelectionMode = false;
-    Integer mSelectedViews = 0;
+    ArrayList<PhoneContactViewHolder> mSelectedViews = new ArrayList<>();
 
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
@@ -113,51 +113,25 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
             // actions to multiple items selection
             viewHolder.mParent.setOnLongClickListener(view -> {
                 if (mSelectionMode) {
-                    if (call.isSelected()) {
-                        if (--mSelectedViews == 0) {
-                            mSelectionMode = false;
-                            mActivity.hideFAB();
-                        }
-
-                        call.setSelected(false);
-                        viewHolder.setSelected(false);
-
-                    } else {
-
-                        call.setSelected(true);
-                        viewHolder.setSelected(true);
-                        mSelectedViews++;
-                    }
+                    onClickMutualAction(call, viewHolder);
 
                 } else {
 
                     mSelectionMode = true;
                     call.setSelected(true);
                     viewHolder.setSelected(true);
-                    mSelectedViews++;
-                    mActivity.showFAB();
+                    mSelectedViews.add(viewHolder);
+                    mActivity.warnSelectedViews();
                 }
 
+                mActivity.setSelectedItems(mSelectedViews.size());
                 return true;
             });
 
             viewHolder.mParent.setOnClickListener(view -> {
                 if (mSelectionMode) {
-                    if (call.isSelected()) {
-                        if (--mSelectedViews == 0) {
-                            mSelectionMode = false;
-                            mActivity.hideFAB();
-                        }
-
-                        call.setSelected(false);
-                        viewHolder.setSelected(false);
-
-                    } else {
-
-                        call.setSelected(true);
-                        viewHolder.setSelected(true);
-                        mSelectedViews++;
-                    }
+                    onClickMutualAction(call, viewHolder);
+                    mActivity.setSelectedItems(mSelectedViews.size());
 
                 } else {
 
@@ -185,6 +159,39 @@ public final class AddNumberAdapter extends SectionedRecyclerViewAdapter<Section
                     }
                 }
             });
+        }
+    }
+
+    private void onClickMutualAction(@NonNull final Call call,
+                                     @NonNull final PhoneContactViewHolder viewHolder) {
+        if (call.isSelected()) {
+            mSelectedViews.remove(viewHolder);
+
+            if (mSelectedViews.size() == 0) {
+                mSelectionMode = false;
+                mActivity.warnNotSelectedViews();
+            }
+
+            call.setSelected(false);
+            viewHolder.setSelected(false);
+
+        } else {
+
+            call.setSelected(true);
+            viewHolder.setSelected(true);
+            mSelectedViews.add(viewHolder);
+        }
+    }
+
+    public void unselectAllViews() {
+        for (final PhoneContactViewHolder viewHolder : mSelectedViews) {
+            viewHolder.setSelected(false);
+        }
+
+        for (final Call call : mCallList) {
+            if (call.isSelected()) {
+                call.setSelected(false);
+            }
         }
     }
 

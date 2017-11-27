@@ -188,6 +188,8 @@
     <string name="adding_numbers">Adicionando os números</string>
     <string name="please_wait">Por favor, espere...</string>
     <string name="adding_number_error">Erro ao adicionar o número</string>
+    <string name="selected">\u0020selecionado</string>
+    <string name="selected_plural">\u0020selecionados</string>
 
     <!-- splash screen activity -->
     <string name="splash_screen_activity_updating">Atualizando o banco de dados...</string>

@@ -2,21 +2,28 @@
 <com.afollestad.aesthetic.AestheticCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ip_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="62dp"
     app:contentPadding="@dimen/activity_horizontal_margin"
-    app:cardCornerRadius="0dp"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true">
+    app:cardCornerRadius="0dp">
 
-    <com.afollestad.aesthetic.AestheticTextView
-        android:id="@+android:id/title"
+    <LinearLayout
+        android:id="@+id/ip_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="18sp"/>
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <com.afollestad.aesthetic.AestheticTextView
+            android:id="@+android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
 
 </com.afollestad.aesthetic.AestheticCardView>
