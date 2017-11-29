@@ -139,6 +139,9 @@ dependencies {
     // keep safe
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
+    // michael rapp
+    compile 'com.github.michael-rapp:android-bottom-sheet:1.4.3'
+
     // mike penz
     compile('com.mikepenz:materialdrawer:5.9.1@aar') {
         transitive = true
