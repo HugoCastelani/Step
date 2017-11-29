@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
     private static LRelationshipDAO instance;
 
-    public static final String USER_FOLLOWED_KEY = "user_followed_key";
+    public static final String USER_FOLLOWING_KEY = "user_following_key";
     public static final String USER_FOLLOWER_KEY = "user_follower_key";
 
     @Override
@@ -42,7 +42,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
     @Override
     public Relationship generate(@NonNull final Cursor cursor) {
         return new Relationship(
-                cursor.getString(cursor.getColumnIndex(USER_FOLLOWED_KEY)),
+                cursor.getString(cursor.getColumnIndex(USER_FOLLOWING_KEY)),
                 cursor.getString(cursor.getColumnIndex(USER_FOLLOWER_KEY))
         );
     }
@@ -54,7 +54,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
             LUserDAO.get().cloneUser(relationship.getFollowingUser(null));    // user was already set
             ContentValues values = new ContentValues();
 
-            values.put(USER_FOLLOWED_KEY, relationship.getFollowingKey());
+            values.put(USER_FOLLOWING_KEY, relationship.getFollowingKey());
             values.put(USER_FOLLOWER_KEY, relationship.getFollowerKey());
 
             DAOHandler.getLocalDatabase().insert(table, null, values);
@@ -70,7 +70,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
     @Override
     public LRelationshipDAO delete(@NonNull final String addedKey) {
         DAOHandler.getLocalDatabase().delete(
-                table, USER_FOLLOWED_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
+                table, USER_FOLLOWING_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
                 new String[] {addedKey, LUserDAO.get().getThisUserKey()});
         return instance;
     }
@@ -90,7 +90,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
                                   @NonNull final String followerKey) {
 
         final Cursor cursor = DAOHandler.getLocalDatabase().query(table, null,
-                USER_FOLLOWED_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
+                USER_FOLLOWING_KEY + " = ? AND " + USER_FOLLOWER_KEY + " = ?",
                 new String[] {followedKey, followerKey}, null, null, null);
 
         Relationship relationship = null;
@@ -106,7 +106,7 @@ public final class LRelationshipDAO extends GenericLocalDAO<Relationship> {
         final ArrayList<User> friendList = new ArrayList<>();
         while (cursor.moveToNext()) {
             friendList.add(LUserDAO.get().findByColumn(LUserDAO.key,
-                    cursor.getString(cursor.getColumnIndex(USER_FOLLOWED_KEY))
+                    cursor.getString(cursor.getColumnIndex(USER_FOLLOWING_KEY))
             ));
         }
 

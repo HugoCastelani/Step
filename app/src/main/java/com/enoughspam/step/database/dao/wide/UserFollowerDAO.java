@@ -308,7 +308,20 @@ public final class UserFollowerDAO extends GenericWideDAO<User> {
 
     @Override
     public UserFollowerDAO sync(@NonNull Listeners.AnswerListener listener) {
-        // LETS WORK THIS OUT
+        final String userKey = LUserDAO.get().getThisUserKey();
+
+        getUserKeyList(userKey, NODE_FOLLOWING, new Listeners.ListListener<String>() {
+            @Override
+            public void onItemAdded(@NonNull String followingKey) {
+                LRelationshipDAO.get().create(new Relationship(followingKey, userKey));
+            }
+
+            @Override
+            public void onItemRemoved(@NonNull String followingKey) {
+                LRelationshipDAO.get().delete(followingKey);
+            }
+        }, listener);
+
         return instance;
     }
 

@@ -9,6 +9,7 @@ import com.enoughspam.step.database.LocalDatabaseHelper;
 import com.enoughspam.step.database.dao.local.LAreaDAO;
 import com.enoughspam.step.database.dao.local.LCountryDAO;
 import com.enoughspam.step.database.dao.local.LStateDAO;
+import com.enoughspam.step.database.dao.wide.UserFollowerDAO;
 import com.enoughspam.step.database.dao.wide.UserPhoneDAO;
 import com.enoughspam.step.util.Listeners;
 import com.google.firebase.database.DatabaseReference;
@@ -80,7 +81,21 @@ public final class DAOHandler {
     }
 
     public static void syncDynamicTables(@NonNull final Listeners.AnswerListener listener) {
-        UserPhoneDAO.get().sync(listener);
+        Listeners.AnswerListener innerListener = new Listeners.AnswerListener() {
+            int count = 0;
+
+            @Override
+            public void onAnswerRetrieved() {
+                if (++count == 2) {
+                    listener.onAnswerRetrieved();
+                }
+            }
+
+            @Override public void onError() {}
+        };
+
+        UserPhoneDAO.get().sync(innerListener);
+        UserFollowerDAO.get().sync(innerListener);
     }
 
 }
