@@ -28,6 +28,7 @@
             android:id="@+id/iu_pic"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:src="@drawable/intro_3"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

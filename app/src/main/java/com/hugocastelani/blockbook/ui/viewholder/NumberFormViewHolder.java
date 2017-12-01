@@ -1,0 +1,30 @@
+package com.hugocastelani.blockbook.ui.viewholder;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
+import com.hugocastelani.blockbook.R;
+import com.hugocastelani.blockbook.ui.lonelyfragment.NumberFormFragment;
+
+/**
+ * Created by Hugo Castelani
+ * Date: 19/11/17
+ * Time: 22:13
+ */
+
+public final class NumberFormViewHolder extends SectionedViewHolder {
+    public NumberFormViewHolder(View itemView, Fragment fragment) {
+        super(itemView);
+
+        NumberFormFragment numberFormFragment = (NumberFormFragment) fragment.getChildFragmentManager()
+                .findFragmentByTag("numberFormFragmentTag");
+
+        if (numberFormFragment == null) {
+            numberFormFragment = new NumberFormFragment();
+            final FragmentTransaction fragmentTransaction = fragment.getChildFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.inf_fragment_container, numberFormFragment, "numberFormFragmentTag");
+            fragmentTransaction.commit();
+        }
+    }
+}
