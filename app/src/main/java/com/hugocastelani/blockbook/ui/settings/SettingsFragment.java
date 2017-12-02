@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.widget.ListView;
-import biz.kasual.materialnumberpicker.MaterialNumberPicker;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
@@ -19,6 +19,8 @@ import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.ui.settings.preference.ColorPreference;
 import com.hugocastelani.blockbook.util.ThemeHandler;
 import com.hugocastelani.blockbook.util.decorator.ListDecorator;
+
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -51,6 +53,17 @@ public final class SettingsFragment extends PreferenceFragment {
         switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             // isChecked returns situation before changing
             Aesthetic.get().isDark(!((SwitchPreference) preference).isChecked()).apply();
+
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.advice)
+                    .content(R.string.select_accent_color_advice_content)
+                    .backgroundColor(ThemeHandler.getBackground())
+                    .contentColor(ThemeHandler.getPrimaryText())
+                    .titleColor(ThemeHandler.getPrimaryText())
+                    .positiveText(R.string.ok_button)
+                    .positiveColor(ThemeHandler.getAccent())
+                    .show();
+
             updateTheme();
             return true;
         });
@@ -81,10 +94,17 @@ public final class SettingsFragment extends PreferenceFragment {
                         .positiveColor(ThemeHandler.getAccent())
                         .negativeText(R.string.cancel_button)
                         .negativeColor(ThemeHandler.getAccent())
-                        .onPositive(((dialog, which) ->
+                        .onPositive(((dialog, which) -> {
+                            if (ThemeHandler.isDark()) {
                                 ((SettingsActivity) getActivity()).onColorSelection(
-                                        null, ContextCompat.getColor(getActivity(), R.color.accent))
-                        ))
+                                        null, ContextCompat.getColor(getActivity(), R.color.colorAccentDark));
+
+                            } else {
+
+                                ((SettingsActivity) getActivity()).onColorSelection(
+                                        null, ContextCompat.getColor(getActivity(), R.color.accent));
+                            }
+                        }))
         );
 
         // networks preference

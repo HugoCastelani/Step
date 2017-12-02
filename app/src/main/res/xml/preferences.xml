@@ -9,8 +9,7 @@
                 android:key="theme_switch"
                 android:defaultValue="false"
                 android:title="@string/set_dark_theme"
-                android:summary="@string/set_dark_theme_substring"
-                android:enabled="false"/>
+                android:summary="@string/set_dark_theme_substring"/>
 
             <com.hugocastelani.blockbook.ui.settings.preference.ColorPreference
                 android:layout="@layout/preference_custom"
