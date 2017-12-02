@@ -6,10 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.afollestad.aesthetic.AestheticTextView;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.annotation.NonNegative;
+import com.hugocastelani.blockbook.ui.viewholder.DenunciationDescriptionViewHolder;
 import com.hugocastelani.blockbook.util.ThemeHandler;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ import java.util.List;
  * Time: 14:34
  */
 
-public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<ExpandablePreferenceAdapter.MyViewHolder> {
+public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<DenunciationDescriptionViewHolder> {
     private View mView;
 
     private List<String> mDescriptionStringList;
@@ -29,23 +30,21 @@ public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expa
 
     public ExpandablePreferenceAdapter(@NonNull final View view) {
         mView = view;
-    }
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.preference_expandable_item, parent, false);
-
         mDescriptionStringList = Arrays.asList(
                 view.getResources().getStringArray(R.array.description_list_titles));
         mTreatmentStringList = Arrays.asList(
                 view.getResources().getStringArray(R.array.treatment_list_titles));
-
-        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public DenunciationDescriptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.preference_expandable_item, parent, false);
+        return new DenunciationDescriptionViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(DenunciationDescriptionViewHolder holder, final int position) {
         final String itemText = mDescriptionStringList.get(position);
 
         holder.description.setText(itemText);
@@ -83,14 +82,5 @@ public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Expa
     @Override
     public int getItemCount() {
         return mDescriptionStringList.size();
-    }
-
-    protected static class MyViewHolder extends RecyclerView.ViewHolder {
-        final AestheticTextView description;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            description = (AestheticTextView) itemView.findViewById(R.id.pe_item_text_view);
-        }
     }
 }

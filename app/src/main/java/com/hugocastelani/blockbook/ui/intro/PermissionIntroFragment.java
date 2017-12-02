@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.afollestad.aesthetic.AestheticButton;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.hugocastelani.blockbook.R;
@@ -51,6 +52,7 @@ public final class PermissionIntroFragment extends SlideFragment {
                     .request(Manifest.permission.READ_PHONE_STATE,
                             Manifest.permission.CALL_PHONE,
                             Manifest.permission.READ_SMS,
+                            Manifest.permission.PROCESS_OUTGOING_CALLS,
                             Manifest.permission.SEND_SMS,
                             Manifest.permission.READ_CONTACTS,
                             Manifest.permission.READ_CALL_LOG,
