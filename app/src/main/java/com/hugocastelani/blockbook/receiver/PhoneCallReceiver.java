@@ -4,19 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Telephony;
-import android.telephony.SmsMessage;
+import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
-import com.android.internal.telephony.ITelephony;
-import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
-import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
-import com.hugocastelani.blockbook.database.domain.Phone;
-import com.hugocastelani.blockbook.database.domain.UserPhone;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * Created by Hugo Castelani
@@ -24,103 +15,95 @@ import java.lang.reflect.Method;
  * Time: 16:41
  */
 
-public final class PhoneCallReceiver extends BroadcastReceiver {
-    private Context mContext;
-    private Intent mIntent;
-    private TelephonyManager mTelephonyManager;
-    private AudioManager mAudioManager;
+public class PhoneCallReceiver extends BroadcastReceiver {
+    private static int lastState = TelephonyManager.CALL_STATE_IDLE;
+    private static Date callStartTime;
+    private static boolean isIncoming;
+    private static String savedNumber;
+    private static AudioManager mAudioManager;
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onReceive(Context context, Intent intent) {
-        mContext = context;
-        mIntent = intent;
-        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-        // mute until discover whether is number blocked
-        mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
-
-        switch (intent.getAction()) {
-            case "android.intent.action.PHONE_STATE":
-                handlePhoneCall();
-                break;
-            case "android.provider.Telephony.SMS_RECEIVED":
-                handleSms();
-                break;
-            default: break;
-        }
-
-        mAudioManager.setStreamMute(AudioManager.STREAM_RING, false);
-    }
-
-    private void handlePhoneCall() {
-        mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        final String number = mIntent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-        final String iso = mTelephonyManager.getNetworkCountryIso().toUpperCase();
-
-        // NullPointerException is going to be thrown if it's an outcoming call
-        final boolean isBlocked;
-        try {
-            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), "", false, false);
-            userPhone.setPhone(Phone.generateObject(number, iso));
-            isBlocked = LUserPhoneDAO.get().isBlocked(userPhone);
-        } catch (NullPointerException e) {
-            return;
-        }
-
-        // check if it's blocked
-        if (isBlocked) disconnectPhoneITelephony();
-    }
-
-    @SuppressWarnings("deprecation")
-    private void handleSms() {
-        final Bundle bundle = mIntent.getExtras();
-
-        try {
-            if (bundle != null) {
-                final Object[] pdusObject = (Object[]) bundle.get("pdus");
-
-                for (int i = 0; i < pdusObject.length; i++) {
-
-                    SmsMessage smsMessage;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        SmsMessage[] msgs = Telephony.Sms.Intents.getMessagesFromIntent(mIntent);
-                        smsMessage = msgs[0];
-
-                    } else {
-
-                        Object pdus[] = (Object[]) bundle.get("pdus");
-                        smsMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
-                    }
-
-                    String phoneNumber = smsMessage.getDisplayOriginatingAddress();
-
-                }
+        //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
+        if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
+            savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+        } else {
+            String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
+            String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            int state = 0;
+            if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
+                state = TelephonyManager.CALL_STATE_IDLE;
+            }
+            else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                state = TelephonyManager.CALL_STATE_OFFHOOK;
+            }
+            else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                state = TelephonyManager.CALL_STATE_RINGING;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            onCallStateChanged(context, state, number);
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void disconnectPhoneITelephony() {
-        try {
-            ITelephony telephonyService;
-            Class aClass = Class.forName(mTelephonyManager.getClass().getName());
-            Method method = aClass.getDeclaredMethod("getITelephony");
-            method.setAccessible(true);
-            telephonyService = (ITelephony) method.invoke(mTelephonyManager);
-            telephonyService.endCall();
+    //Derived classes should override these to respond to specific events of interest
+    protected void onIncomingCallStarted(Context context, String number, Date start){}
+    protected void onOutgoingCallStarted(Context context, String number, Date start){}
+    protected void onIncomingCallEnded(Context context, String number, Date start, Date end){}
+    protected void onOutgoingCallEnded(Context context, String number, Date start, Date end){}
+    protected void onMissedCall(Context context, String number, Date start){}
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+    //Deals with actual events
+
+    //Incoming call-  goes from IDLE to RINGING when it rings, to OFFHOOK when it's answered, to IDLE when its hung up
+    //Outgoing call-  goes from IDLE to OFFHOOK when it dials out, to IDLE when hung up
+    public void onCallStateChanged(Context context, int state, String number) {
+        if(lastState == state){
+            //No change, debounce extras
+            return;
         }
+        switch (state) {
+            case TelephonyManager.CALL_STATE_RINGING:
+                isIncoming = true;
+                callStartTime = new Date();
+                savedNumber = number;
+                onIncomingCallStarted(context, number, callStartTime);
+                break;
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+                //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
+                if(lastState != TelephonyManager.CALL_STATE_RINGING){
+                    isIncoming = false;
+                    callStartTime = new Date();
+                    onOutgoingCallStarted(context, savedNumber, callStartTime);
+                }
+                break;
+            case TelephonyManager.CALL_STATE_IDLE:
+                //Went to idle-  this is the end of a call.  What type depends on previous state(s)
+                if(lastState == TelephonyManager.CALL_STATE_RINGING){
+                    //Ring but no pickup-  a miss
+                    onMissedCall(context, savedNumber, callStartTime);
+                }
+                else if(isIncoming){
+                    onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
+                }
+                else{
+                    onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
+                }
+                break;
+        }
+        lastState = state;
+    }
+
+    @SuppressWarnings("deprecation")
+    protected PhoneCallReceiver muteDevice(@NonNull final Context context) {
+        mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
+        return this;
+    }
+
+    @SuppressWarnings("deprecation")
+    protected PhoneCallReceiver unmuteDevice(@NonNull final Context context) {
+        mAudioManager.setStreamMute(AudioManager.STREAM_RING, false);
+        return this;
     }
 }

@@ -1,0 +1,172 @@
+package com.hugocastelani.blockbook.receiver;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
+
+import com.android.internal.telephony.ITelephony;
+import com.hugocastelani.blockbook.R;
+import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
+import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
+import com.hugocastelani.blockbook.database.dao.wide.DenunciationDAO;
+import com.hugocastelani.blockbook.database.dao.wide.UserPhoneDAO;
+import com.hugocastelani.blockbook.database.domain.Denunciation;
+import com.hugocastelani.blockbook.database.domain.Phone;
+import com.hugocastelani.blockbook.database.domain.UserPhone;
+import com.hugocastelani.blockbook.util.Listeners;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
+
+/**
+ * Created by Hugo Castelani
+ * Date: 01/12/17
+ * Time: 20:06
+ */
+
+public class MyReceiver extends PhoneCallReceiver {
+    Boolean silencingCall = false;
+
+    @Override
+    protected void onIncomingCallStarted(Context context, String number, Date start) {
+        muteDevice(context);
+
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        final String iso = telephonyManager.getNetworkCountryIso().toUpperCase();
+
+        final Phone phone = Phone.generateObject(number, iso);
+
+        if (phone != null) {
+            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false);
+
+            if (LUserPhoneDAO.get().isBlocked(userPhone)) {
+                disconnectPhoneITelephony(context);
+                unmuteDevice(context);
+                return;
+            }
+
+            final Integer minDenunciationAmount = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getInt("select_denunciation_amount", -1);
+
+            DenunciationDAO.get().getDenunciations(phone.getKey(),
+
+                    new Listeners.ListListener<Denunciation>() {
+                        @Override
+                        public void onItemAdded(@NonNull Denunciation denunciation) {
+                            if (denunciation.getAmount() >= minDenunciationAmount) {
+                                final Integer action = PreferenceManager.getDefaultSharedPreferences(context)
+                                        .getInt("description_" + denunciation.getDescription(), -1);
+
+                                switch (action) {
+                                    // silence
+                                    case 0: silencingCall = true;
+                                        break;
+
+                                    // block
+                                    case 1: blockPhone(phone, context);
+                                        break;
+
+                                    default: unmuteDevice(context);
+                                }
+                            }
+                        }
+
+                        @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
+                    },
+
+                    new Listeners.AnswerListener() {
+                        @Override public void onAnswerRetrieved() {}
+                        @Override public void onError() {}
+                    }
+            );
+        }
+    }
+
+    @Override
+    protected void onIncomingCallEnded(Context context, String number, Date start, Date end) {
+        // show feedback request
+    }
+
+    @Override protected void onMissedCall(Context context, String number, Date start) {
+        if (silencingCall) {
+            unmuteDevice(context);
+        }
+    }
+
+    @Override protected void onOutgoingCallStarted(Context context, String number, Date start) {}
+    @Override protected void onOutgoingCallEnded(Context context, String number, Date start, Date end) {}
+
+    private void blockPhone(@NonNull final Phone phone, @NonNull final Context context) {
+        final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false);
+
+        UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
+                    @Override
+                    public void alreadyAdded() {
+                        UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
+                            @Override public void alreadyAdded() {}
+
+                            @Override
+                            public void properlyAdded() {
+                                sendNotification(phone, context);
+                            }
+
+                            @Override public void error() {}
+                        }, true);
+                    }
+
+                    @Override public void properlyAdded() {
+                        sendNotification(phone, context);
+                    }
+
+                    @Override public void error() {}
+                },  false
+        );
+    }
+
+    private void sendNotification(@NonNull final Phone phone, @NonNull final Context context) {
+        final String title = context.getResources().getString(R.string.properly_added_title);
+
+        final StringBuilder content = new StringBuilder();
+        content.append(context.getResources().getString(R.string.properly_added_content_1))
+                .append(phone.getNumber())
+                .append(context.getResources().getString(R.string.properly_added_content_2));
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.intro_1)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setDefaults(Notification.DEFAULT_VIBRATE);
+
+        NotificationManager manager = (NotificationManager)
+                context.getSystemService(context.NOTIFICATION_SERVICE);
+        manager.notify();
+        manager.notify(8055, builder.build());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void disconnectPhoneITelephony(@NonNull final Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            ITelephony telephonyService;
+            Class aClass = Class.forName(telephonyManager.getClass().getName());
+            Method method = aClass.getDeclaredMethod("getITelephony");
+            method.setAccessible(true);
+            telephonyService = (ITelephony) method.invoke(telephonyManager);
+            telephonyService.endCall();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}
