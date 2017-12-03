@@ -1,4 +1,4 @@
-package com.hugocastelani.blockbook.ui.lonelyfragment;
+package com.hugocastelani.blockbook.ui.lonelylayout;
 
 
 import android.graphics.Color;
@@ -12,7 +12,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+
 import com.blankj.utilcode.util.ActivityUtils;
 import com.google.android.gms.location.LocationServices;
 import com.hugocastelani.blockbook.R;
@@ -24,7 +30,7 @@ import com.hugocastelani.blockbook.database.domain.Phone;
 import com.hugocastelani.blockbook.ui.addnumber.AddNumberFragment;
 import com.hugocastelani.blockbook.ui.intangible.AbstractFragment;
 import com.hugocastelani.blockbook.ui.intangible.SnackbarTrigger;
-import com.hugocastelani.blockbook.ui.intro.NumberIntroFragment;
+import com.hugocastelani.blockbook.ui.intro.PhoneIntroFragment;
 import com.hugocastelani.blockbook.ui.intro.util.AutoItemSelectorTextWatcher;
 import com.hugocastelani.blockbook.ui.intro.util.FormHandler;
 import com.hugocastelani.blockbook.util.ThemeHandler;
@@ -38,7 +44,7 @@ import java.util.List;
  * Time: 11:54
  */
 
-public final class NumberFormFragment extends AbstractFragment implements SnackbarTrigger {
+public final class PhoneFormFragment extends AbstractFragment implements SnackbarTrigger {
 
     private View view;
     private Fragment mFragment;
@@ -75,6 +81,10 @@ public final class NumberFormFragment extends AbstractFragment implements Snackb
         mCountryCodeEditText = (EditText) view.findViewById(R.id.nfl_country_code);
         mPhoneNumberEditText = (EditText) view.findViewById(R.id.nfl_phone);
         mSendMessage = (ImageView) view.findViewById(R.id.nfl_go);
+
+        if (mFragment instanceof PhoneIntroFragment) {
+            mSendMessage.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -222,8 +232,8 @@ public final class NumberFormFragment extends AbstractFragment implements Snackb
     }
 
     private void confirmNumber(@NonNull final Phone phone) {
-        if (mFragment instanceof NumberIntroFragment) {
-            ((NumberIntroFragment) mFragment).confirmNumber(phone);
+        if (mFragment instanceof PhoneIntroFragment) {
+            ((PhoneIntroFragment) mFragment).confirmNumber(phone);
         } else {
             ((AddNumberFragment) mFragment).confirmNumber(phone);
         }
@@ -241,7 +251,7 @@ public final class NumberFormFragment extends AbstractFragment implements Snackb
 
     @NonNull
     public Snackbar buildSnackbar(final @NonNull String message) {
-        return Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG);
+        return Snackbar.make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
     }
 
     @Override

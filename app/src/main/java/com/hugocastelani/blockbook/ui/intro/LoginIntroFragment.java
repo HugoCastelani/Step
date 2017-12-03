@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -111,6 +112,12 @@ public final class LoginIntroFragment extends SlideFragment implements
         super.onDestroy();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public boolean nextSlide() {
+        mActivity.getPhoneSlide().prepareNextButton();
+        return super.nextSlide();
     }
 
     private String handleGoogleLogin(@NonNull final Intent data) {

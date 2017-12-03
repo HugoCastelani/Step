@@ -3,11 +3,11 @@ package com.hugocastelani.blockbook.ui.intro;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+
 import com.afollestad.aesthetic.Aesthetic;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.Utils;
@@ -15,23 +15,25 @@ import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.intangible.SnackbarTrigger;
 import com.hugocastelani.blockbook.ui.splashscreen.SplashScreenActivity;
+import com.orhanobut.hawk.Hawk;
+
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import static android.os.Build.VERSION_CODES.M;
 
 public final class MainIntroActivity extends IntroActivity implements SnackbarTrigger {
 
-    private static final String KEY_ALL_SET = "intro_all_set";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Aesthetic.attach(this);
         super.onCreate(savedInstanceState);
 
+        DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
-        DAOHandler.init(getBaseContext());
+        Hawk.init(getApplicationContext()).build();
 
         if (Aesthetic.isFirstTime()) initAesthetic();
 
@@ -50,7 +52,7 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
                 }
         );
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_ALL_SET, false)) {
+        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, false)) {
             final Intent intent = new Intent(this, SplashScreenActivity.class);
             startActivity(intent);
             finish();
@@ -79,7 +81,7 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
-                .fragment(new NumberIntroFragment())
+                .fragment(new PhoneIntroFragment())
                 .build());
 
         addSlide(new FragmentSlide.Builder()
@@ -93,6 +95,37 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new ReadyIntroFragment())
                 .build());
+    }
+
+    private PhoneIntroFragment mPhoneIntroFragment;
+    private ConfirmationIntroFragment mConfirmationIntroFragment;
+    private ReadyIntroFragment mReadyIntroFragment;
+
+    public MainIntroActivity setPhoneSlide(@NonNull final PhoneIntroFragment phoneIntroFragment) {
+        mPhoneIntroFragment = phoneIntroFragment;
+        return this;
+    }
+
+    public PhoneIntroFragment getPhoneSlide() {
+        return mPhoneIntroFragment;
+    }
+
+    public MainIntroActivity setConfirmationSlide(@NonNull final ConfirmationIntroFragment confirmationIntroFragment) {
+        mConfirmationIntroFragment = confirmationIntroFragment;
+        return this;
+    }
+
+    public ConfirmationIntroFragment getConfirmationSlide() {
+        return mConfirmationIntroFragment;
+    }
+
+    public MainIntroActivity setReadySlide(@NonNull final ReadyIntroFragment readyIntroFragment) {
+        mReadyIntroFragment = readyIntroFragment;
+        return this;
+    }
+
+    public ReadyIntroFragment getReadySlide() {
+        return mReadyIntroFragment;
     }
 
     private void initAesthetic() {

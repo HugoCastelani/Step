@@ -3,9 +3,10 @@ package com.hugocastelani.blockbook.ui.viewholder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.hugocastelani.blockbook.R;
-import com.hugocastelani.blockbook.ui.lonelyfragment.NumberFormFragment;
+import com.hugocastelani.blockbook.ui.lonelylayout.PhoneFormFragment;
 
 /**
  * Created by Hugo Castelani
@@ -17,13 +18,13 @@ public final class NumberFormViewHolder extends SectionedViewHolder {
     public NumberFormViewHolder(View itemView, Fragment fragment) {
         super(itemView);
 
-        NumberFormFragment numberFormFragment = (NumberFormFragment) fragment.getChildFragmentManager()
+        PhoneFormFragment phoneFormFragment = (PhoneFormFragment) fragment.getChildFragmentManager()
                 .findFragmentByTag("numberFormFragmentTag");
 
-        if (numberFormFragment == null) {
-            numberFormFragment = new NumberFormFragment();
+        if (phoneFormFragment == null) {
+            phoneFormFragment = new PhoneFormFragment();
             final FragmentTransaction fragmentTransaction = fragment.getChildFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.inf_fragment_container, numberFormFragment, "numberFormFragmentTag");
+            fragmentTransaction.replace(R.id.inf_fragment_container, phoneFormFragment, "numberFormFragmentTag");
             fragmentTransaction.commit();
         }
     }

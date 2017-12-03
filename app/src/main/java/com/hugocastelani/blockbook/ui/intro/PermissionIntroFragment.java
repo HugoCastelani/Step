@@ -22,6 +22,8 @@ public final class PermissionIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
 
+    private MainIntroActivity mActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.hugocastelani.blockbook.R;
@@ -15,35 +16,38 @@ import com.hugocastelani.blockbook.database.dao.wide.UserPhoneDAO;
 import com.hugocastelani.blockbook.database.domain.Phone;
 import com.hugocastelani.blockbook.database.domain.UserPhone;
 import com.hugocastelani.blockbook.ui.intro.util.MessageCodeHandler;
-import com.hugocastelani.blockbook.ui.lonelyfragment.NumberFormFragment;
+import com.hugocastelani.blockbook.ui.lonelylayout.PhoneFormFragment;
 import com.hugocastelani.blockbook.util.Listeners;
 
 import java.util.Random;
 
-public final class NumberIntroFragment extends SlideFragment {
+public final class PhoneIntroFragment extends SlideFragment {
 
     private boolean mCanGoForward = false;
 
     private View view;
     private MainIntroActivity mActivity;
 
+    private PhoneFormFragment mPhoneFormFragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.intro_fragment_number, container, false);
-        mActivity = (MainIntroActivity) getActivity();
+        mActivity = (MainIntroActivity) getIntroActivity();
 
+        mActivity.setPhoneSlide(this);
         initFragment();
 
         return view;
     }
 
     private void initFragment() {
-        NumberFormFragment numberFormFragment = (NumberFormFragment) getChildFragmentManager()
+        mPhoneFormFragment = (PhoneFormFragment) getChildFragmentManager()
                 .findFragmentByTag("numberFormFragmentTag");
-        if (numberFormFragment == null) {
-            numberFormFragment = new NumberFormFragment();
+        if (mPhoneFormFragment == null) {
+            mPhoneFormFragment = new PhoneFormFragment();
             final FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.ifn_fragment_container, numberFormFragment, "numberFormFragmentTag");
+            fragmentTransaction.replace(R.id.ifn_fragment_container, mPhoneFormFragment, "numberFormFragmentTag");
             fragmentTransaction.commit();
         }
     }
@@ -136,6 +140,11 @@ public final class NumberIntroFragment extends SlideFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public boolean canGoForward() {
         return mCanGoForward;
     }
@@ -143,5 +152,21 @@ public final class NumberIntroFragment extends SlideFragment {
     @Override
     public boolean canGoBackward() {
         return false;
+    }
+
+    public void prepareNextButton() {
+        mActivity.setButtonNextOnClickListener(view1 -> mPhoneFormFragment.validateNumber());
+    }
+
+    @Override
+    public boolean nextSlide() {
+        mActivity.getConfirmationSlide().prepareNextButton();
+        return super.nextSlide();
+    }
+
+    @Override
+    public boolean previousSlide() {
+        mActivity.resetButtonNextOnClickListener();
+        return super.previousSlide();
     }
 }
