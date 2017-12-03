@@ -50,7 +50,7 @@ public final class SettingsFragment extends PreferenceFragment {
         // theme switch preference
 
         final SwitchPreference themeSwitch = (SwitchPreference) findPreference("theme_switch");
-        themeSwitch.setChecked(Hawk.get(HockeyProvider.IS_DARK, false));
+        themeSwitch.setChecked(Hawk.get(HockeyProvider.IS_DARK, HockeyProvider.IS_DARK_DF));
         themeSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
             // isChecked returns situation before changing
             final Boolean isChecked = !((SwitchPreference) preference).isChecked();
@@ -134,7 +134,7 @@ public final class SettingsFragment extends PreferenceFragment {
         // theme switch preference
 
         final SwitchPreference feedbackSwitch = (SwitchPreference) findPreference("select_feedback_options");
-        feedbackSwitch.setChecked(Hawk.get(HockeyProvider.SHOW_FEEDBACK, true));
+        feedbackSwitch.setChecked(Hawk.get(HockeyProvider.SHOW_FEEDBACK, HockeyProvider.SHOW_FEEDBACK_DF));
         feedbackSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
             // isChecked returns situation before changing
             final Boolean isChecked = !((SwitchPreference) preference).isChecked();
@@ -149,7 +149,7 @@ public final class SettingsFragment extends PreferenceFragment {
             final MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
                     .minValue(5)
                     .maxValue(100)
-                    .defaultValue(Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT, 20))
+                    .defaultValue(Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT, HockeyProvider.DENUNCIATION_AMOUNT_DF))
                     .backgroundColor(ThemeHandler.getBackground())
                     .separatorColor(ThemeHandler.getSecondaryText())
                     .textColor(ThemeHandler.getPrimaryText())
@@ -172,8 +172,7 @@ public final class SettingsFragment extends PreferenceFragment {
                     .onPositive((dialog, which) ->
                             Hawk.put(HockeyProvider.DENUNCIATION_AMOUNT, numberPicker.getValue()))
                     .onNeutral((dialog, which) ->
-                            // 20 is the default value
-                            Hawk.put(HockeyProvider.DENUNCIATION_AMOUNT, 20))
+                            Hawk.put(HockeyProvider.DENUNCIATION_AMOUNT, HockeyProvider.DENUNCIATION_AMOUNT_DF))
                     .show();
 
             return true;

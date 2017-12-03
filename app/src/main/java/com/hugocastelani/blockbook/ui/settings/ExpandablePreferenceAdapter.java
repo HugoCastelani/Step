@@ -66,7 +66,7 @@ public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Denu
     }
 
     private int getSelectedTreatment(@NonNegative @NonNull final Integer selectedDescription) {
-        return Hawk.get(HockeyProvider.DESCRIPTION + selectedDescription, 0);
+        return Hawk.get(HockeyProvider.DESCRIPTION + selectedDescription, HockeyProvider.DESCRIPTION_DF);
     }
 
     private void setSelectedTreatment(@NonNegative @NonNull final Integer selectedDescription,

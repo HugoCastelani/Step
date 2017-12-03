@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.afollestad.aesthetic.AestheticFab;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
@@ -184,7 +185,11 @@ public final class MainActivity extends AbstractActivity implements SnackbarTrig
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            default: recreate();
+            case REQUEST_CODE_SETTINGS: recreate();
+                break;
+
+            default: mFragment.refreshRecyclerView();
+                mNavDrawer.setSelection(0);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

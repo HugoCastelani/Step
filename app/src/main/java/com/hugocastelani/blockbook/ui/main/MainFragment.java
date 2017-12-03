@@ -12,6 +12,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.hugocastelani.blockbook.R;
@@ -56,15 +57,13 @@ public final class MainFragment extends AbstractFragment {
         // init recycler view
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.mf_recycler_view);
 
-        mPhoneSectionList = getBlockedNumberList();
-        mAdapter = new MainAdapter(mPhoneSectionList, this);
-
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.addItemDecoration(new EndOffsetItemDecoration(ConvertUtils.dp2px(16)));
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+
+        refreshRecyclerView();
 
         ListDecorator.addAdaptableMargins(mRecyclerView, -1);
 
@@ -167,5 +166,12 @@ public final class MainFragment extends AbstractFragment {
         }
 
         return phoneCount == 0 ? true : false;
+    }
+
+    public MainFragment refreshRecyclerView() {
+        mPhoneSectionList = getBlockedNumberList();
+        mAdapter = new MainAdapter(mPhoneSectionList, this);
+        mRecyclerView.setAdapter(mAdapter);
+        return this;
     }
 }

@@ -141,6 +141,6 @@ public final class LUserDAO extends GenericLocalDAO<User> {
 
     @Nullable
     public String getThisUserKey() {
-        return Hawk.get(HockeyProvider.USER_KEY, null);
+        return Hawk.get(HockeyProvider.USER_KEY, HockeyProvider.USER_KEY_DF);
     }
 }

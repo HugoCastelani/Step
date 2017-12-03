@@ -36,64 +36,68 @@ public class MyReceiver extends PhoneCallReceiver {
 
     @Override
     protected void onIncomingCallStarted(Context context, String number, Date start) {
-        muteDevice(context);
+        final Integer[] services = Hawk.get(HockeyProvider.SERVICES, HockeyProvider.SERVICES_DF);
 
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        final String iso = telephonyManager.getNetworkCountryIso().toUpperCase();
+        // true: calls is a selected service
+        if (services[0] == 0) {
+            muteDevice(context);
 
-        if (!Hawk.isBuilt()) {
-            Hawk.init(context).build();
-        }
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String iso = telephonyManager.getNetworkCountryIso().toUpperCase();
 
-        final Phone phone = Phone.generateObject(number, iso);
+            final Phone phone = Phone.generateObject(number, iso);
 
-        if (phone != null) {
-            final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false);
+            if (phone != null) {
+                final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false);
 
-            if (LUserPhoneDAO.get().isBlocked(userPhone)) {
-                disconnectPhoneITelephony(context);
-                unmuteDevice(context);
-                return;
-            }
+                if (LUserPhoneDAO.get().isBlocked(userPhone)) {
+                    disconnectPhoneITelephony(context);
+                    unmuteDevice(context);
+                    return;
+                }
 
-            final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT, 20);
+                final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
+                        HockeyProvider.DENUNCIATION_AMOUNT_DF);
 
-            DenunciationDAO.get().getDenunciations(phone.getKey(),
+                DenunciationDAO.get().getDenunciations(phone.getKey(),
 
-                    new Listeners.ListListener<Denunciation>() {
-                        @Override
-                        public void onItemAdded(@NonNull Denunciation denunciation) {
-                            if (denunciation.getAmount() >= minDenunciationAmount) {
-                                final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
-                                        denunciation.getDescription(), 0);
+                        new Listeners.ListListener<Denunciation>() {
+                            @Override
+                            public void onItemAdded(@NonNull Denunciation denunciation) {
+                                if (denunciation.getAmount() >= minDenunciationAmount) {
+                                    final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
+                                            denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
 
-                                final Treatments treatments = new Treatments(option);
-                                switch (treatments.getOption()) {
-                                    case SILENCE: silencingCall = true;
-                                        break;
-                                    case BLOCK: blockPhone(phone, context);
-                                        break;
+                                    final Treatments treatments = new Treatments(option);
+                                    switch (treatments.getOption()) {
+                                        case SILENCE: silencingCall = true;
+                                            break;
+                                        case BLOCK: blockPhone(phone, context);
+                                            break;
 
-                                    // case DONOTHING must get in here
-                                    default: unmuteDevice(context);
+                                        // case DONOTHING must get in here
+                                        default: unmuteDevice(context);
+                                    }
                                 }
                             }
+
+                            @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
+                        },
+
+                        new Listeners.AnswerListener() {
+                            @Override public void onAnswerRetrieved() {}
+                            @Override public void onError() {}
                         }
-
-                        @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
-                    },
-
-                    new Listeners.AnswerListener() {
-                        @Override public void onAnswerRetrieved() {}
-                        @Override public void onError() {}
-                    }
-            );
+                );
+            }
         }
     }
 
     @Override
     protected void onIncomingCallEnded(Context context, String number, Date start, Date end) {
-        // show feedback request
+        if (Hawk.get(HockeyProvider.SHOW_FEEDBACK, HockeyProvider.SHOW_FEEDBACK_DF)) {
+            // show feedback dialog
+        }
     }
 
     @Override protected void onMissedCall(Context context, String number, Date start) {

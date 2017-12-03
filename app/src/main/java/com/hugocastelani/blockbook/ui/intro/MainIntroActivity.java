@@ -52,7 +52,7 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
                 }
         );
 
-        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, false)) {
+        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
             final Intent intent = new Intent(this, SplashScreenActivity.class);
             startActivity(intent);
             finish();
