@@ -76,7 +76,7 @@
     <string name="settings_activity_label">Ajustes</string>
 
     <string name="select_theme_colors">Cores do tema</string>
-    <string name="set_dark_theme">Tema escuro</string>
+    <string name="set_dark_theme">Tema escuro (em breve)</string>
     <string name="set_dark_theme_substring">Aplicar um tema escuro no aplicativo</string>
     <string name="advice">Aviso:</string>
     <string name="select_accent_color_advice_content">Alguns elementos ainda não são suportados e a interface
@@ -116,13 +116,11 @@
     <string-array name="service_list_titles">
         <item>Ligações</item>
         <item>Mensagens</item>
-        <item>Whatsapp</item>
     </string-array>
 
     <string-array name="service_list_values">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
 
     <string name="select_suspicious_treatment">Tratamento de números suspeitos</string>
@@ -135,6 +133,7 @@
     </string>
 
     <string-array name="treatment_list_titles">
+        <item>Não fazer nada</item>
         <item>Silenciar</item>
         <item>Bloquear</item>
     </string-array>
@@ -142,6 +141,7 @@
     <string-array name="treatment_list_values">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="description_list_titles">

@@ -9,14 +9,17 @@
                 android:key="theme_switch"
                 android:defaultValue="false"
                 android:title="@string/set_dark_theme"
-                android:summary="@string/set_dark_theme_substring"/>
+                android:summary="@string/set_dark_theme_substring"
+                android:enabled="false"
+                android:persistent="false"/>
 
             <com.hugocastelani.blockbook.ui.settings.preference.ColorPreference
                 android:layout="@layout/preference_custom"
                 android:widgetLayout="@layout/preference_color"
                 android:key="select_accent_color"
                 android:title="@string/select_accent_color"
-                android:summary="@string/select_accent_color_substring" />
+                android:summary="@string/select_accent_color_substring"
+                android:persistent="false"/>
 
             <com.afollestad.materialdialogs.prefs.MaterialDialogPreference
                 android:layout="@layout/preference_custom"
@@ -24,7 +27,8 @@
                 android:title="@string/restore_default_colors"
                 android:summary="@string/restore_default_colors_substring"
                 android:dialogTitle="@string/restore_default_colors_dialog"
-                android:dialogMessage="@string/restore_default_colors_dialog_substring"/>
+                android:dialogMessage="@string/restore_default_colors_dialog_substring"
+                android:persistent="false"/>
 
     </PreferenceCategory>
 
@@ -37,9 +41,9 @@
             android:key="select_networks"
             android:entries="@array/network_list_titles"
             android:entryValues="@array/network_list_values"
-            android:persistent="true"
             android:title="@string/select_database_network"
-            android:summary="@string/select_database_network_substring"/>
+            android:summary="@string/select_database_network_substring"
+            android:persistent="false"/>
 
     </PreferenceCategory>
 

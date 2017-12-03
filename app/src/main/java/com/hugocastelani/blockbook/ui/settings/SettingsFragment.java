@@ -1,13 +1,12 @@
 package com.hugocastelani.blockbook.ui.settings;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArraySet;
 import android.widget.ListView;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -16,9 +15,11 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.prefs.MaterialDialogPreference;
 import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 import com.hugocastelani.blockbook.R;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.settings.preference.ColorPreference;
 import com.hugocastelani.blockbook.util.ThemeHandler;
 import com.hugocastelani.blockbook.util.decorator.ListDecorator;
+import com.orhanobut.hawk.Hawk;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
@@ -50,19 +51,13 @@ public final class SettingsFragment extends PreferenceFragment {
         // theme switch preference
 
         final SwitchPreference switchPreference = (SwitchPreference) findPreference("theme_switch");
+        switchPreference.setChecked(Hawk.get(HockeyProvider.IS_DARK, false));
         switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             // isChecked returns situation before changing
-            Aesthetic.get().isDark(!((SwitchPreference) preference).isChecked()).apply();
+            final Boolean isChecked = !((SwitchPreference) preference).isChecked();
 
-            new MaterialDialog.Builder(getActivity())
-                    .title(R.string.advice)
-                    .content(R.string.select_accent_color_advice_content)
-                    .backgroundColor(ThemeHandler.getBackground())
-                    .contentColor(ThemeHandler.getPrimaryText())
-                    .titleColor(ThemeHandler.getPrimaryText())
-                    .positiveText(R.string.ok_button)
-                    .positiveColor(ThemeHandler.getAccent())
-                    .show();
+            Hawk.put(HockeyProvider.IS_DARK, isChecked);
+            Aesthetic.get().isDark(isChecked).apply();
 
             updateTheme();
             return true;
@@ -110,20 +105,40 @@ public final class SettingsFragment extends PreferenceFragment {
         // networks preference
 
         final MaterialMultiSelectListPreference networks = (MaterialMultiSelectListPreference) findPreference("select_networks");
-        networks.setBuilder(
-                networks.resetBuilder()
-                        .backgroundColor(ThemeHandler.getBackground())
-                        .positiveText(R.string.done_button)
-                        .positiveColor(ThemeHandler.getAccent())
-                        .negativeText(R.string.cancel_button)
-                        .negativeColor(ThemeHandler.getAccent())
+
+        final Integer[] networksIndexArray = Hawk.get(HockeyProvider.NETWORKS, new Integer[] {});
+
+        ArraySet<String> networksArraySet = new ArraySet<>();
+        for (final Integer index : networksIndexArray) {
+            networksArraySet.add(index.toString());
+        }
+
+        networks.setValues(networksArraySet);
+        networks.setBuilder(networks.resetBuilder()
+                .backgroundColor(ThemeHandler.getBackground())
+                .positiveText(R.string.done_button)
+                .positiveColor(ThemeHandler.getAccent())
+                .negativeText(R.string.cancel_button)
+                .negativeColor(ThemeHandler.getAccent())
+                .onPositive((dialog, which) -> {
+                    Integer[] indices = dialog.getSelectedIndices();
+                    Hawk.put(HockeyProvider.NETWORKS, indices);
+                })
         );
 
         // services preference
 
         final MaterialMultiSelectListPreference services = (MaterialMultiSelectListPreference) findPreference("select_services");
-        services.setBuilder(
-                services.resetBuilder()
+
+        final Integer[] servicesIndexArray = Hawk.get(HockeyProvider.NETWORKS, new Integer[] {});
+
+        ArraySet<String> servicesArraySet = new ArraySet<>();
+        for (final Integer index : servicesIndexArray) {
+            servicesArraySet.add(index.toString());
+        }
+
+        networks.setValues(servicesArraySet);
+        services.setBuilder(services.resetBuilder()
                         .backgroundColor(ThemeHandler.getBackground())
                         .positiveText(R.string.done_button)
                         .positiveColor(ThemeHandler.getAccent())
@@ -135,13 +150,10 @@ public final class SettingsFragment extends PreferenceFragment {
 
         final Preference denunciationAmount = findPreference("select_denunciation_amount");
         denunciationAmount.setOnPreferenceClickListener(preference -> {
-            final SharedPreferences sharedPreferences = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity());
-
             final MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(getActivity())
                     .minValue(5)
                     .maxValue(100)
-                    .defaultValue(sharedPreferences.getInt("select_denunciation_amount", 20))
+                    .defaultValue(Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT, 20))
                     .backgroundColor(ThemeHandler.getBackground())
                     .separatorColor(ThemeHandler.getSecondaryText())
                     .textColor(ThemeHandler.getPrimaryText())
@@ -162,11 +174,10 @@ public final class SettingsFragment extends PreferenceFragment {
                     .contentColor(ThemeHandler.getPrimaryText())
                     .titleColor(ThemeHandler.getPrimaryText())
                     .onPositive((dialog, which) ->
-                            sharedPreferences.edit().putInt(
-                                    "select_denunciation_amount", numberPicker.getValue()).apply())
+                            Hawk.put(HockeyProvider.DENUNCIATION_AMOUNT, numberPicker.getValue()))
                     .onNeutral((dialog, which) ->
-                            sharedPreferences.edit().putInt(
-                                    "select_denunciation_amount", 20).apply()) // 20 is the default value
+                            // 20 is the default value
+                            Hawk.put(HockeyProvider.DENUNCIATION_AMOUNT, 20))
                     .show();
 
             return true;

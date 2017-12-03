@@ -2,9 +2,9 @@ package com.hugocastelani.blockbook.database.dao.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.database.dao.intangible.GenericLocalDAO;
 import com.hugocastelani.blockbook.database.domain.Phone;
@@ -167,8 +167,7 @@ public final class LUserPhoneDAO extends GenericLocalDAO<UserPhone> {
     }
 
     public Phone findThisUserPhone() {
-        final String key = PreferenceManager.getDefaultSharedPreferences(DAOHandler.getContext())
-                .getString("user_key", "-1");
+        final String key = LUserDAO.get().getThisUserKey();
 
         final String[] parameters = new String[] {PHONE_KEY};
         final String select = USER_KEY + " = ? AND " + IS_PROPERTY + " = ?";

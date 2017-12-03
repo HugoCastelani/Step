@@ -3,6 +3,7 @@ package com.hugocastelani.blockbook.ui.splashscreen;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.Utils;
 import com.hugocastelani.blockbook.R;
@@ -10,6 +11,7 @@ import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;
 import com.hugocastelani.blockbook.ui.main.MainActivity;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,8 +23,9 @@ public final class SplashScreenActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen_activity);
 
-        DAOHandler.init(getBaseContext());
+        DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
+        Hawk.init(getApplicationContext()).build();
 
         new AsyncTask<Void, Void, Void>() {
             @Override

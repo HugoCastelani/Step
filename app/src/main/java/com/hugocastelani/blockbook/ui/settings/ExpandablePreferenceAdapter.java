@@ -1,6 +1,5 @@
 package com.hugocastelani.blockbook.ui.settings;
 
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +9,10 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.annotation.NonNegative;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.viewholder.DenunciationDescriptionViewHolder;
 import com.hugocastelani.blockbook.util.ThemeHandler;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,17 +67,13 @@ public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Denu
         );
     }
 
-    // send selected treatment to shared preferences
-
     private int getSelectedTreatment(@NonNegative @NonNull final Integer selectedDescription) {
-        return PreferenceManager.getDefaultSharedPreferences(mView.getContext())
-                .getInt("description_" + selectedDescription, -1);
+        return Hawk.get(HockeyProvider.DESCRIPTION + selectedDescription, 0);
     }
 
     private void setSelectedTreatment(@NonNegative @NonNull final Integer selectedDescription,
                                       @NonNegative @NonNull final Integer selectedTreatment) {
-        PreferenceManager.getDefaultSharedPreferences(mView.getContext())
-                .edit().putInt("description_" + selectedDescription, selectedTreatment).apply();
+        Hawk.put("description_" + selectedDescription, selectedTreatment);
     }
 
     @Override

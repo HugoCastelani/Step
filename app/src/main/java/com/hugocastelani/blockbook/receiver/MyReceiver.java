@@ -3,7 +3,6 @@ package com.hugocastelani.blockbook.receiver;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -17,7 +16,10 @@ import com.hugocastelani.blockbook.database.dao.wide.UserPhoneDAO;
 import com.hugocastelani.blockbook.database.domain.Denunciation;
 import com.hugocastelani.blockbook.database.domain.Phone;
 import com.hugocastelani.blockbook.database.domain.UserPhone;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
+import com.hugocastelani.blockbook.persistence.Treatments;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.orhanobut.hawk.Hawk;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,6 +41,10 @@ public class MyReceiver extends PhoneCallReceiver {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final String iso = telephonyManager.getNetworkCountryIso().toUpperCase();
 
+        if (!Hawk.isBuilt()) {
+            Hawk.init(context).build();
+        }
+
         final Phone phone = Phone.generateObject(number, iso);
 
         if (phone != null) {
@@ -50,8 +56,7 @@ public class MyReceiver extends PhoneCallReceiver {
                 return;
             }
 
-            final Integer minDenunciationAmount = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getInt("select_denunciation_amount", -1);
+            final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT, 20);
 
             DenunciationDAO.get().getDenunciations(phone.getKey(),
 
@@ -59,18 +64,17 @@ public class MyReceiver extends PhoneCallReceiver {
                         @Override
                         public void onItemAdded(@NonNull Denunciation denunciation) {
                             if (denunciation.getAmount() >= minDenunciationAmount) {
-                                final Integer action = PreferenceManager.getDefaultSharedPreferences(context)
-                                        .getInt("description_" + denunciation.getDescription(), -1);
+                                final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
+                                        denunciation.getDescription(), 0);
 
-                                switch (action) {
-                                    // silence
-                                    case 0: silencingCall = true;
+                                final Treatments treatments = new Treatments(option);
+                                switch (treatments.getOption()) {
+                                    case SILENCE: silencingCall = true;
+                                        break;
+                                    case BLOCK: blockPhone(phone, context);
                                         break;
 
-                                    // block
-                                    case 1: blockPhone(phone, context);
-                                        break;
-
+                                    // case DONOTHING must get in here
                                     default: unmuteDevice(context);
                                 }
                             }

@@ -58,16 +58,6 @@
                 android:maxLength="6"
                 android:layout_weight=".50"/>
 
-            <com.afollestad.aesthetic.AestheticImageView
-                android:id="@+id/ifc_go"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:background="?selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_arrow_forward"
-                android:layout_weight=".02"/>
-
         </LinearLayout>
 
     </LinearLayout>
