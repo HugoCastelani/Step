@@ -1,18 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.hugocastelani.blockbook"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 0
         versionName "Build Process"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-        }
         vectorDrawables.useSupportLibrary = true
     }
     sourceSets {
@@ -110,8 +107,8 @@ dependencies {
     compile 'com.afollestad:aesthetic:0.4.7'
     compile 'com.afollestad:material-cab:0.1.12'
     compile 'com.afollestad:sectioned-recyclerview:0.5.0'
-    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
-    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
+    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.6.0f'
+    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.6.0f'
 
     // azimo labs
     compile 'com.azimolabs.maskformatter:maskformatter:0.2'
@@ -120,10 +117,15 @@ dependencies {
     compile 'com.blankj:utilcode:1.9.8'
 
     // google
-    compile 'com.google.android.gms:play-services-auth:11.4.2'
-    compile 'com.google.android.gms:play-services-location:11.4.2'
-    compile 'com.google.firebase:firebase-core:11.4.2'
-    compile 'com.google.firebase:firebase-database:11.4.2'
+    compile 'com.google.android.gms:play-services-auth:11.6.2'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
+    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile 'com.google.firebase:firebase-database:11.6.2'
+
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
+    compile 'com.android.support:support-annotations:27.0.2'
+    compile 'com.android.support:design:27.0.2'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -131,7 +133,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
 
     // hein richreimer
-    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
+    compile 'com.github.HugoCastelani:material-intro:1.6.2f'
 
     // kasual business
     compile 'biz.kasual:materialnumberpicker:1.2.1'
@@ -143,9 +145,12 @@ dependencies {
     compile 'com.github.michael-rapp:android-bottom-sheet:1.4.3'
 
     // mike penz
-    compile('com.mikepenz:materialdrawer:5.9.1@aar') {
+    compile('com.mikepenz:materialdrawer:6.0.2@aar') {
         transitive = true
     }
+
+    // orhanobut
+    compile 'com.orhanobut:hawk:2.0.1'
 
     // squareup
     compile 'com.squareup.picasso:picasso:2.5.2'
