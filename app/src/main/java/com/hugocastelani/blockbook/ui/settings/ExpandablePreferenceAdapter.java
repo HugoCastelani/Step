@@ -24,13 +24,11 @@ import java.util.List;
  */
 
 public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<DenunciationDescriptionViewHolder> {
-    private View mView;
 
     private List<String> mDescriptionStringList;
     private List<String> mTreatmentStringList;
 
     public ExpandablePreferenceAdapter(@NonNull final View view) {
-        mView = view;
         mDescriptionStringList = Arrays.asList(
                 view.getResources().getStringArray(R.array.description_list_titles));
         mTreatmentStringList = Arrays.asList(
@@ -73,7 +71,7 @@ public final class ExpandablePreferenceAdapter extends RecyclerView.Adapter<Denu
 
     private void setSelectedTreatment(@NonNegative @NonNull final Integer selectedDescription,
                                       @NonNegative @NonNull final Integer selectedTreatment) {
-        Hawk.put("description_" + selectedDescription, selectedTreatment);
+        Hawk.put(HockeyProvider.DESCRIPTION + selectedDescription, selectedTreatment);
     }
 
     @Override

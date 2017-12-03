@@ -6,7 +6,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArraySet;
 import android.widget.ListView;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -50,9 +49,9 @@ public final class SettingsFragment extends PreferenceFragment {
 
         // theme switch preference
 
-        final SwitchPreference switchPreference = (SwitchPreference) findPreference("theme_switch");
-        switchPreference.setChecked(Hawk.get(HockeyProvider.IS_DARK, false));
-        switchPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        final SwitchPreference themeSwitch = (SwitchPreference) findPreference("theme_switch");
+        themeSwitch.setChecked(Hawk.get(HockeyProvider.IS_DARK, false));
+        themeSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
             // isChecked returns situation before changing
             final Boolean isChecked = !((SwitchPreference) preference).isChecked();
 
@@ -105,15 +104,6 @@ public final class SettingsFragment extends PreferenceFragment {
         // networks preference
 
         final MaterialMultiSelectListPreference networks = (MaterialMultiSelectListPreference) findPreference("select_networks");
-
-        final Integer[] networksIndexArray = Hawk.get(HockeyProvider.NETWORKS, new Integer[] {});
-
-        ArraySet<String> networksArraySet = new ArraySet<>();
-        for (final Integer index : networksIndexArray) {
-            networksArraySet.add(index.toString());
-        }
-
-        networks.setValues(networksArraySet);
         networks.setBuilder(networks.resetBuilder()
                 .backgroundColor(ThemeHandler.getBackground())
                 .positiveText(R.string.done_button)
@@ -129,22 +119,28 @@ public final class SettingsFragment extends PreferenceFragment {
         // services preference
 
         final MaterialMultiSelectListPreference services = (MaterialMultiSelectListPreference) findPreference("select_services");
-
-        final Integer[] servicesIndexArray = Hawk.get(HockeyProvider.NETWORKS, new Integer[] {});
-
-        ArraySet<String> servicesArraySet = new ArraySet<>();
-        for (final Integer index : servicesIndexArray) {
-            servicesArraySet.add(index.toString());
-        }
-
-        networks.setValues(servicesArraySet);
         services.setBuilder(services.resetBuilder()
-                        .backgroundColor(ThemeHandler.getBackground())
-                        .positiveText(R.string.done_button)
-                        .positiveColor(ThemeHandler.getAccent())
-                        .negativeText(R.string.cancel_button)
-                        .negativeColor(ThemeHandler.getAccent())
+                .backgroundColor(ThemeHandler.getBackground())
+                .positiveText(R.string.done_button)
+                .positiveColor(ThemeHandler.getAccent())
+                .negativeText(R.string.cancel_button)
+                .negativeColor(ThemeHandler.getAccent())
+                .onPositive((dialog, which) -> {
+                    Integer[] indices = dialog.getSelectedIndices();
+                    Hawk.put(HockeyProvider.SERVICES, indices);
+                })
         );
+
+        // theme switch preference
+
+        final SwitchPreference feedbackSwitch = (SwitchPreference) findPreference("select_feedback_options");
+        feedbackSwitch.setChecked(Hawk.get(HockeyProvider.SHOW_FEEDBACK, true));
+        feedbackSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+            // isChecked returns situation before changing
+            final Boolean isChecked = !((SwitchPreference) preference).isChecked();
+            Hawk.put(HockeyProvider.SHOW_FEEDBACK, isChecked);
+            return true;
+        });
 
         // denunciation amount preference
 

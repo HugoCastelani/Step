@@ -27,8 +27,7 @@
                 android:title="@string/restore_default_colors"
                 android:summary="@string/restore_default_colors_substring"
                 android:dialogTitle="@string/restore_default_colors_dialog"
-                android:dialogMessage="@string/restore_default_colors_dialog_substring"
-                android:persistent="false"/>
+                android:dialogMessage="@string/restore_default_colors_dialog_substring"/>
 
     </PreferenceCategory>
 
@@ -42,8 +41,7 @@
             android:entries="@array/network_list_titles"
             android:entryValues="@array/network_list_values"
             android:title="@string/select_database_network"
-            android:summary="@string/select_database_network_substring"
-            android:persistent="false"/>
+            android:summary="@string/select_database_network_substring"/>
 
     </PreferenceCategory>
 
@@ -71,7 +69,8 @@
             android:key="select_feedback_options"
             android:defaultValue="true"
             android:title="@string/select_feedback_options"
-            android:summary="@string/select_feedback_options_substring"/>
+            android:summary="@string/select_feedback_options_substring"
+            android:persistent="false"/>
 
         <Preference
             android:layout="@layout/preference_custom"
