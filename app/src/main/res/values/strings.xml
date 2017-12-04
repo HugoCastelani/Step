@@ -47,7 +47,9 @@
     <string name="all_permissions_required">Você deve conceder todas as permissões antes de prosseguir</string>
 
     <string name="title_3">Entre com uma rede social:</string>
-    <string name="sign_in_google">Continuar com o Google+</string>
+    <string name="sign_in_facebook">Continuar com o Facebook</string>
+    <string name="sign_in_google">Continuar com o Google</string>
+    <string name="sign_in_twitter">Continuar com o Twitter</string>
     <string name="sign_in_error">Falha no login</string>
     <string name="sign_in_error_unknown_request_code">: o código recebido da activity é desconhecido</string>
     <string name="sign_in_error_empty_id">: nenhum ID foi recebido</string>

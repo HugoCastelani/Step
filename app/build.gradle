@@ -158,6 +158,9 @@ dependencies {
     // tbruyelle
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
+    // twitter
+    compile 'com.twitter.sdk.android:twitter-core:3.1.1'
+
     // traex
     compile 'com.github.HugoCastelani:ExpandableLayout:1.4.3'
 

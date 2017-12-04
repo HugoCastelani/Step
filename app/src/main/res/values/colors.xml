@@ -27,6 +27,10 @@
 
     <color name="md_grey_850">#2E2E2E</color>
 
+    <color name="facebook_button_color">#3b5998</color>
+    <color name="google_button_color">@color/md_white_1000</color>
+    <color name="twitter_button_color">#00aced</color>
+
     <!-- google's material design colours from
     http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->
 

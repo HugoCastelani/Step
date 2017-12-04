@@ -20,18 +20,34 @@ import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.wide.UserDAO;
 import com.hugocastelani.blockbook.database.domain.User;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import retrofit2.Call;
 
 public final class LoginIntroFragment extends SlideFragment implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int GOOGLE_SIGN_IN = 3;
-    private static final int GOOGLE_CODE = 1;
+    private static final Integer GOOGLE_SIGN_IN = 3;
+    private static final Integer TWITTER_SIGN_IN = TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE;
+    private static final Integer FACEBOOK_SIGN_IN = 4;
+
+    private static final String GOOGLE_CODE = "_1";
+    private static final String FACEBOOK_CODE = "_2";
+    private static final String TWITTER_CODE = "_3";
 
     private View view;
     private MainIntroActivity mActivity;
 
     private SignInButton mGoogleButton;
     private TextView mGoogleButtonText;
+
+    private TwitterLoginButton mTwitterButton;
 
     private boolean mCanGoForward = false;
 
@@ -42,6 +58,7 @@ public final class LoginIntroFragment extends SlideFragment implements
         view = inflater.inflate(R.layout.intro_fragment_login, container, false);
         mActivity = ((MainIntroActivity) getActivity());
 
+        mActivity.setLoginSlide(this);
         initViews();
         initActions();
 
@@ -63,6 +80,9 @@ public final class LoginIntroFragment extends SlideFragment implements
                 .enableAutoManage(getActivity(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
                 .build();
+
+        mTwitterButton = (TwitterLoginButton) view.findViewById(R.id.ifl_twitter_button);
+        mTwitterButton.setCallback(handleTwitterLogin());
     }
 
     private void initActions() {
@@ -80,10 +100,12 @@ public final class LoginIntroFragment extends SlideFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        final String error;
+        String error = null;
 
         if (requestCode == GOOGLE_SIGN_IN) {
-            error = handleGoogleLogin(data);
+            handleGoogleLogin(data);
+        } else if (requestCode == TWITTER_SIGN_IN) {
+            mTwitterButton.onActivityResult(requestCode, resultCode, data);
         } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
 
         if (error != null) {
@@ -158,5 +180,47 @@ public final class LoginIntroFragment extends SlideFragment implements
             } else return getResources().getString(R.string.sign_in_error_empty_id);
 
         } else return "\n" + result.getStatus().toString();
+    }
+
+    private Callback handleTwitterLogin() {
+        return new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Call<com.twitter.sdk.android.core.models.User> user = TwitterCore.getInstance().getApiClient()
+                        .getAccountService().verifyCredentials(false, false, false);
+
+                user.enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
+                    @Override
+                    public void success(Result<com.twitter.sdk.android.core.models.User> result) {
+                        User user = new User(
+                                Long.toString(result.data.id) + TWITTER_CODE,
+                                result.data.screenName,
+                                result.data.profileImageUrl.replace("_normal", "_400x400")
+                        );
+
+                        UserDAO.get().create(user, new Listeners.AnswerListener() {
+                            @Override
+                            public void onAnswerRetrieved() {
+                                mCanGoForward = true;
+                                canGoForward();
+                                nextSlide();
+                            }
+
+                            @Override
+                            public void onError() {
+                                mActivity.createSnackbar(getResources().getString(R.string.sign_in_error)).show();
+                            }
+                        });
+                    }
+
+                    @Override public void failure(TwitterException exception) {}
+                });
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                mActivity.createSnackbar(getResources().getString(R.string.sign_in_error) + exception.getMessage()).show();
+            }
+        };
     }
 }

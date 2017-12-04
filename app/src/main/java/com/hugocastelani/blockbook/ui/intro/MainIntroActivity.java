@@ -19,6 +19,9 @@ import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.intangible.SnackbarTrigger;
 import com.hugocastelani.blockbook.ui.splashscreen.SplashScreenActivity;
 import com.orhanobut.hawk.Hawk;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
@@ -34,6 +37,12 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
         DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
         Hawk.init(getApplicationContext()).build();
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("BXM28B3SNTKx2PT9asQ75RcQU",
+                "G2S5ZzbzBsMf3qqUxivufEOGlzWtFxRu4ZWyAPMIQQmWjtb7Hm");
+
+        Twitter.initialize(new TwitterConfig.Builder(getApplicationContext())
+                .twitterAuthConfig(authConfig).build());
 
         if (Aesthetic.isFirstTime()) initAesthetic();
 
@@ -97,9 +106,19 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
                 .build());
     }
 
+    private LoginIntroFragment mLoginIntroFragment;
     private PhoneIntroFragment mPhoneIntroFragment;
     private ConfirmationIntroFragment mConfirmationIntroFragment;
     private ReadyIntroFragment mReadyIntroFragment;
+
+    public MainIntroActivity setLoginSlide(@NonNull final LoginIntroFragment loginIntroFragment) {
+        mLoginIntroFragment = loginIntroFragment;
+        return this;
+    }
+
+    public LoginIntroFragment getLoginSlide() {
+        return mLoginIntroFragment;
+    }
 
     public MainIntroActivity setPhoneSlide(@NonNull final PhoneIntroFragment phoneIntroFragment) {
         mPhoneIntroFragment = phoneIntroFragment;
@@ -190,5 +209,11 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
     protected void onPause() {
         Aesthetic.pause(this);
         super.onPause();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mLoginIntroFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
