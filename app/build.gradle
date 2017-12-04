@@ -7,8 +7,9 @@ android {
         applicationId "com.hugocastelani.blockbook"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 0
-        versionName "Build Process"
+        multiDexEnabled true
+        versionCode 1
+        versionName "0.1 alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
