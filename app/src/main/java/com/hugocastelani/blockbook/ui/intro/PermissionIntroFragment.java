@@ -60,6 +60,7 @@ public final class PermissionIntroFragment extends SlideFragment {
                             Manifest.permission.READ_CALL_LOG,
                             Manifest.permission.MODIFY_AUDIO_SETTINGS,
                             Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.INTERNET,
                             Manifest.permission.RECEIVE_BOOT_COMPLETED)
 
                     .subscribe(granted -> {

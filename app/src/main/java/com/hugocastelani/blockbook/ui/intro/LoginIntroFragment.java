@@ -8,6 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.HttpMethod;
+import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,6 +38,9 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 
 public final class LoginIntroFragment extends SlideFragment implements
@@ -35,7 +48,6 @@ public final class LoginIntroFragment extends SlideFragment implements
 
     private static final Integer GOOGLE_SIGN_IN = 3;
     private static final Integer TWITTER_SIGN_IN = TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE;
-    private static final Integer FACEBOOK_SIGN_IN = 4;
 
     private static final String GOOGLE_CODE = "_1";
     private static final String FACEBOOK_CODE = "_2";
@@ -48,10 +60,12 @@ public final class LoginIntroFragment extends SlideFragment implements
     private TextView mGoogleButtonText;
 
     private TwitterLoginButton mTwitterButton;
+    private LoginButton mFacebookButton;
 
     private boolean mCanGoForward = false;
 
     private GoogleApiClient mGoogleApiClient;
+    private CallbackManager mCallbackManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +96,8 @@ public final class LoginIntroFragment extends SlideFragment implements
                 .build();
 
         mTwitterButton = (TwitterLoginButton) view.findViewById(R.id.ifl_twitter_button);
-        mTwitterButton.setCallback(handleTwitterLogin());
+
+        mFacebookButton = (LoginButton) view.findViewById(R.id.ifl_facebook_button);
     }
 
     private void initActions() {
@@ -90,6 +105,11 @@ public final class LoginIntroFragment extends SlideFragment implements
             final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
         });
+
+        mTwitterButton.setCallback(handleTwitterLogin());
+
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, handleFacebookLogin());
     }
 
     @Override
@@ -102,7 +122,9 @@ public final class LoginIntroFragment extends SlideFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         String error = null;
 
-        if (requestCode == GOOGLE_SIGN_IN) {
+        if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == GOOGLE_SIGN_IN) {
             handleGoogleLogin(data);
         } else if (requestCode == TWITTER_SIGN_IN) {
             mTwitterButton.onActivityResult(requestCode, resultCode, data);
@@ -157,23 +179,11 @@ public final class LoginIntroFragment extends SlideFragment implements
                     photoURL = "";
                 }
 
-                User user = new User(
+                createUser(new User(
                         socialID,
                         account.getEmail().replace("@gmail.com", ""),
                         photoURL
-                );
-
-                UserDAO.get().create(user, new Listeners.AnswerListener() {
-                    @Override
-                    public void onAnswerRetrieved() {
-                        mCanGoForward = true;
-                        canGoForward();
-                        nextSlide();
-                    }
-
-                    @Override
-                    public void onError() {}
-                });
+                ));
 
                 return null;
 
@@ -192,25 +202,11 @@ public final class LoginIntroFragment extends SlideFragment implements
                 user.enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
                     @Override
                     public void success(Result<com.twitter.sdk.android.core.models.User> result) {
-                        User user = new User(
+                        createUser(new User(
                                 Long.toString(result.data.id) + TWITTER_CODE,
                                 result.data.screenName,
                                 result.data.profileImageUrl.replace("_normal", "_400x400")
-                        );
-
-                        UserDAO.get().create(user, new Listeners.AnswerListener() {
-                            @Override
-                            public void onAnswerRetrieved() {
-                                mCanGoForward = true;
-                                canGoForward();
-                                nextSlide();
-                            }
-
-                            @Override
-                            public void onError() {
-                                mActivity.createSnackbar(getResources().getString(R.string.sign_in_error)).show();
-                            }
-                        });
+                        ));
                     }
 
                     @Override public void failure(TwitterException exception) {}
@@ -222,5 +218,60 @@ public final class LoginIntroFragment extends SlideFragment implements
                 mActivity.createSnackbar(getResources().getString(R.string.sign_in_error) + exception.getMessage()).show();
             }
         };
+    }
+
+    private FacebookCallback<LoginResult> handleFacebookLogin() {
+        return new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                final AccessToken token = loginResult.getAccessToken();
+                final Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, first_name, last_name");
+
+                new GraphRequest(token, "/" + token.getUserId(), parameters,
+                        HttpMethod.GET, response -> {
+                            try {
+                                final JSONObject jsonObject = response.getJSONObject();
+
+                                final String socialKey = jsonObject.getString("id") + FACEBOOK_CODE;
+                                final String username = jsonObject.getString("first_name") +
+                                        jsonObject.getString("last_name");
+                                final String picURL = "http://graph.facebook.com/" +
+                                        jsonObject.getString("id") + "/picture?type=large";
+
+                                createUser(new User(socialKey, username, picURL));
+
+                            } catch (JSONException e) {
+
+                            }
+                        }).executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                mActivity.createSnackbar(getResources().getString(R.string.something_went_wrong)).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                mActivity.createSnackbar(getResources().getString(R.string.sign_in_error) + error.getMessage()).show();
+            }
+        };
+    }
+
+    private void createUser(@NonNull final User user) {
+        UserDAO.get().create(user, new Listeners.AnswerListener() {
+            @Override
+            public void onAnswerRetrieved() {
+                mCanGoForward = true;
+                canGoForward();
+                nextSlide();
+            }
+
+            @Override
+            public void onError() {
+                mActivity.createSnackbar(getResources().getString(R.string.sign_in_error)).show();
+            }
+        });
     }
 }

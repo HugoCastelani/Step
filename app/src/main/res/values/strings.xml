@@ -74,6 +74,15 @@
     </string>
     <string name="begin">Começar</string>
 
+    <!-- social networks data -->
+    <string name="facebook_app_name">Block8ook</string>
+    <string name="facebook_app_id">136901597012872</string>
+    <string name="fb_login_protocol_scheme">fb136901597012872</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">BXM28B3SNTKx2PT9asQ75RcQU</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">G2S5ZzbzBsMf3qqUxivufEOGlzWtFxRu4ZWyAPMIQQmWjtb7Hm</string>
+
+
     <!-- settings activity -->
     <string name="settings_activity_label">Ajustes</string>
 

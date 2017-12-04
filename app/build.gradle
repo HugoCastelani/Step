@@ -116,6 +116,10 @@ dependencies {
     // blankj
     compile 'com.blankj:utilcode:1.9.8'
 
+    // facebook
+    compile 'com.facebook.android:facebook-core:4.28.0'
+    compile 'com.facebook.android:facebook-login:4.28.0'
+
     // google
     compile 'com.google.android.gms:play-services-auth:11.6.2'
     compile 'com.google.android.gms:play-services-location:11.6.2'

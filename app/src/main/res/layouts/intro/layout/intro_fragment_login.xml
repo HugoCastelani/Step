@@ -37,6 +37,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/baseline"/>
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/ifl_facebook_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/baseline"/>
+
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/ifl_twitter_button"
         android:layout_width="wrap_content"

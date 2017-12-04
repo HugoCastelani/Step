@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import com.afollestad.aesthetic.Aesthetic;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.Utils;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.hugocastelani.blockbook.R;
@@ -20,7 +22,6 @@ import com.hugocastelani.blockbook.ui.intangible.SnackbarTrigger;
 import com.hugocastelani.blockbook.ui.splashscreen.SplashScreenActivity;
 import com.orhanobut.hawk.Hawk;
 import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -38,11 +39,12 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
         Utils.init(getApplication());
         Hawk.init(getApplicationContext()).build();
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("BXM28B3SNTKx2PT9asQ75RcQU",
-                "G2S5ZzbzBsMf3qqUxivufEOGlzWtFxRu4ZWyAPMIQQmWjtb7Hm");
+        Twitter.initialize(new TwitterConfig.Builder(getApplicationContext()).build());
 
-        Twitter.initialize(new TwitterConfig.Builder(getApplicationContext())
-                .twitterAuthConfig(authConfig).build());
+        FacebookSdk.setApplicationId(getResources().getString(R.string.facebook_app_id));
+        FacebookSdk.setApplicationName(getResources().getString(R.string.facebook_app_name));
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         if (Aesthetic.isFirstTime()) initAesthetic();
 
