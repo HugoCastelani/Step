@@ -31,7 +31,7 @@ import java.util.Date;
  * Time: 20:06
  */
 
-public class MyReceiver extends PhoneCallReceiver {
+public final class MyReceiver extends PhoneCallReceiver {
     Boolean silencingCall = false;
 
     @Override

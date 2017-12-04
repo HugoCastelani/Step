@@ -1,5 +1,6 @@
 package com.hugocastelani.blockbook.ui.myprofile;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -10,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
-import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.annotation.NonNegative;
@@ -35,6 +36,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Created by Hugo Castelani
@@ -306,7 +309,9 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
                             @Override
                             public void onAnswerRetrieved() {
                                 if (++count == 2) {
-                                    AppUtils.exitApp();
+                                    final ActivityManager manager = (ActivityManager) mFragment
+                                            .getContext().getSystemService(ACTIVITY_SERVICE);
+                                    manager.clearApplicationUserData();
                                 } else if (count == 1) {
                                     UserDAO.get().delete(LUserDAO.get().getThisUserKey(), this);
                                 }
