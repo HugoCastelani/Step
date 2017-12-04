@@ -1,6 +1,8 @@
 package com.hugocastelani.blockbook.ui.main;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -22,6 +24,8 @@ import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
 import com.hugocastelani.blockbook.domain.PhoneSection;
 import com.hugocastelani.blockbook.ui.intangible.AbstractFragment;
 import com.hugocastelani.blockbook.ui.viewholder.PhoneHeaderViewHolder;
+import com.hugocastelani.blockbook.util.AnimUtils;
+import com.hugocastelani.blockbook.util.ThemeHandler;
 import com.hugocastelani.blockbook.util.decorator.EndOffsetItemDecoration;
 import com.hugocastelani.blockbook.util.decorator.ListDecorator;
 
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 public final class MainFragment extends AbstractFragment {
     private View view;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private AestheticRecyclerView mRecyclerView;
     private MainAdapter mAdapter;
     private ArrayList<PhoneSection> mPhoneSectionList;
@@ -54,6 +59,8 @@ public final class MainFragment extends AbstractFragment {
 
     @Override
     protected void initViews() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mf_swipe_refresh_layout);
+
         // init recycler view
         mRecyclerView = (AestheticRecyclerView) view.findViewById(R.id.mf_recycler_view);
 
@@ -73,6 +80,21 @@ public final class MainFragment extends AbstractFragment {
 
     @Override
     protected void initActions() {
+        mSwipeRefreshLayout.setColorSchemeColors(ThemeHandler.getAccent());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            // delay to complete fadeOut
+            new Handler().postDelayed(() -> {
+
+                new Handler().postDelayed(() ->
+                        mSwipeRefreshLayout.setRefreshing(false), 200
+                );
+                refreshRecyclerView();
+                AnimUtils.fadeIn(mRecyclerView);
+
+            }, 200);
+            AnimUtils.fadeOut(mRecyclerView);
+        });
+
         // init recycler view's actions
         final ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override

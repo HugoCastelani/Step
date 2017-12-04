@@ -13,6 +13,7 @@
     <string name="removed_number">Número removido</string>
     <string name="search_user">Procurar por usuário...</string>
     <string name="edit">Editar</string>
+    <string name="list_refreshed">Lista atualizada</string>
 
     <!-- search activity -->
     <string name="search_activity_label">Pesquisar</string>
@@ -218,7 +219,7 @@
     <string name="profile_remove_following">Removendo da lista de seguidos</string>
     <string name="profile_delete_account">Deletar conta</string>
     <string name="profile_deleting_account">Deletando sua conta</string>
-    <string name="profile_signed_via_google">Logado via Google+</string>
+    <string name="profile_signed_via_google">Logado via Google</string>
     <string name="profile_signed_via_facebook">Logado via Facebook</string>
     <string name="profile_signed_via_twitter">Logado via Twitter</string>
     <string name="profile_error_user_pic">Não foi possível baixar a foto do usuário</string>
