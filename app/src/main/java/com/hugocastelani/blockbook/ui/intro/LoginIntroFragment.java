@@ -2,6 +2,7 @@ package com.hugocastelani.blockbook.ui.intro;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,10 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import retrofit2.Call;
 
 public final class LoginIntroFragment extends SlideFragment implements
@@ -48,9 +53,10 @@ public final class LoginIntroFragment extends SlideFragment implements
 
     private static final Integer GOOGLE_SIGN_IN = 3;
     private static final Integer TWITTER_SIGN_IN = TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE;
+    private static final Integer FACEBOOK_SIGN_IN = CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode();
 
-    private static final String GOOGLE_CODE = "_1";
-    private static final String FACEBOOK_CODE = "_2";
+    private static final String FACEBOOK_CODE = "_1";
+    private static final String GOOGLE_CODE = "_2";
     private static final String TWITTER_CODE = "_3";
 
     private View view;
@@ -122,7 +128,7 @@ public final class LoginIntroFragment extends SlideFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         String error = null;
 
-        if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
+        if (requestCode == FACEBOOK_SIGN_IN) {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == GOOGLE_SIGN_IN) {
             handleGoogleLogin(data);
@@ -236,8 +242,12 @@ public final class LoginIntroFragment extends SlideFragment implements
                                 final String socialKey = jsonObject.getString("id") + FACEBOOK_CODE;
                                 final String username = jsonObject.getString("first_name") +
                                         jsonObject.getString("last_name");
-                                final String picURL = "http://graph.facebook.com/" +
-                                        jsonObject.getString("id") + "/picture?type=large";
+
+                                String picURL = "";
+                                try {
+                                    picURL = getFinalURL("http://graph.facebook.com/" +
+                                            jsonObject.getString("id") + "/picture?type=large");
+                                } catch (IOException e) {}
 
                                 createUser(new User(socialKey, username, picURL));
 
@@ -245,6 +255,15 @@ public final class LoginIntroFragment extends SlideFragment implements
 
                             }
                         }).executeAsync();
+            }
+
+            public String getFinalURL(@NonNull final String url) throws IOException {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+                con.setInstanceFollowRedirects(false);
+                con.connect();
+                return con.getHeaderField("Location").toString();
             }
 
             @Override

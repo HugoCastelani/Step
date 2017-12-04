@@ -1,6 +1,10 @@
 package com.hugocastelani.blockbook.database.domain;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.domain.abstracts.Domain;
 
 /**
@@ -53,5 +57,15 @@ public final class User extends Domain {
 
     public void setPicURL(@NonNull final String picURL) {
         this.picURL = picURL;
+    }
+
+    @Nullable
+    public CharSequence getSocialMedia(@NonNull final Resources resources) {
+        switch (getSocialKey().charAt(getSocialKey().length() - 1)) {    // last char
+            case '1': return resources.getText(R.string.profile_signed_via_facebook);
+            case '2': return resources.getText(R.string.profile_signed_via_google);
+            case '3': return resources.getText(R.string.profile_signed_via_twitter);
+            default: return null;
+        }
     }
 }

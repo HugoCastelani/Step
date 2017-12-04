@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.afollestad.aesthetic.AestheticButton;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -96,15 +97,12 @@ public final class ProfileAdapter extends UsersNumbersAdapter {
 
             viewHolder.mUsername.setText("@" + mUser.getUsername());
 
-            CharSequence socialMedia = "";
-            switch (mUser.getSocialKey().charAt(mUser.getSocialKey().length() - 1)) {    // last char
-                case '1':    // google code
-                    socialMedia = mFragment.getResources().getText(R.string.profile_signed_via_google);
-                    break;
-                default: viewHolder.mSocialMedia.setVisibility(View.GONE);
+            CharSequence socialMedia = mUser.getSocialMedia(mFragment.getResources());
+            if (socialMedia == null) {
+                viewHolder.mSocialMedia.setVisibility(View.GONE);
+            } else {
+                viewHolder.mSocialMedia.setText(socialMedia);
             }
-
-            viewHolder.mSocialMedia.setText(socialMedia);
 
             // init user photo and progress bar actions
             if (mUser.getPicURL().isEmpty()) {

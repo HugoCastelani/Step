@@ -272,15 +272,12 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
 
             viewHolder.mUsername.setText("@" + mUser.getUsername());
 
-            CharSequence socialMedia = "";
-            switch (mUser.getSocialKey().charAt(mUser.getSocialKey().length() - 1)) {    // last char
-                case '1':    // google code
-                    socialMedia = mFragment.getResources().getText(R.string.profile_signed_via_google);
-                    break;
-                default: viewHolder.mSocialMedia.setVisibility(View.GONE);
+            CharSequence socialMedia = mUser.getSocialMedia(mFragment.getResources());
+            if (socialMedia == null) {
+                viewHolder.mSocialMedia.setVisibility(View.GONE);
+            } else {
+                viewHolder.mSocialMedia.setText(socialMedia);
             }
-
-            viewHolder.mSocialMedia.setText(socialMedia);
 
             // init user photo and progress bar actions
             Picasso.with(mFragment.getContext()).load(mUser.getPicURL()).into(viewHolder.mUserPic, new Callback() {
