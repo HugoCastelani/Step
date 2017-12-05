@@ -279,14 +279,20 @@ public final class MyProfileAdapter extends SectionedRecyclerViewAdapter<Section
                 viewHolder.mSocialMedia.setText(socialMedia);
             }
 
-            // init user photo and progress bar actions
-            Picasso.with(mFragment.getContext()).load(mUser.getPicURL()).into(viewHolder.mUserPic, new Callback() {
-                @Override public void onSuccess() {}
 
-                @Override public void onError() {
-                    mActivity.createSnackbar(R.string.profile_error_user_pic).show();
-                }
-            });
+            if (mUser.getPicURL().isEmpty()) {
+                viewHolder.mUserPic.setBackground(ContextCompat.getDrawable(mFragment.getContext(), R.drawable.intro_3));
+
+            } else {
+
+                Picasso.with(mFragment.getContext()).load(mUser.getPicURL()).into(viewHolder.mUserPic, new Callback() {
+                    @Override public void onSuccess() {}
+
+                    @Override public void onError() {
+                        mActivity.createSnackbar(R.string.profile_error_user_pic).show();
+                    }
+                });
+            }
 
             viewHolder.mButton.setText(mFragment.getResources().getString(R.string.profile_delete_account));
             viewHolder.mButton.setOnClickListener(view ->

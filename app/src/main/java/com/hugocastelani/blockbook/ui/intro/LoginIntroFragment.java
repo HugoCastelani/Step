@@ -89,7 +89,7 @@ public final class LoginIntroFragment extends SlideFragment implements
         mGoogleButton = (SignInButton) view.findViewById(R.id.ifl_google_button);
 
         mGoogleButtonText = (TextView) mGoogleButton.getChildAt(0);
-        mGoogleButtonText.setText(R.string.sign_in_google);
+        mGoogleButtonText.setText(R.string.continue_with_google);
 
         final GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestId()
@@ -134,7 +134,7 @@ public final class LoginIntroFragment extends SlideFragment implements
             handleGoogleLogin(data);
         } else if (requestCode == TWITTER_SIGN_IN) {
             mTwitterButton.onActivityResult(requestCode, resultCode, data);
-        } else error = getResources().getString(R.string.sign_in_error_unknown_request_code);
+        }
 
         if (error != null) {
             mActivity.createSnackbar(getResources().getString(R.string.sign_in_error) + error).show();
