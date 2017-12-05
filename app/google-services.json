@@ -8,25 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:509972622456:android:880ae721473ba66d",
+        "mobilesdk_app_id": "1:509972622456:android:99e2503e15702aa0",
         "android_client_info": {
-          "package_name": "com.hugocastelani.blockbook"
+          "package_name": "com.hugocastelani.ivory"
         }
       },
       "oauth_client": [
         {
-          "client_id": "509972622456-cikd9k7pdieefm4k8b46a9oltdctn783.apps.googleusercontent.com",
+          "client_id": "509972622456-2m2j4jndosu1rgk8qo2lrjsf0h7nqqra.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hugocastelani.blockbook",
-            "certificate_hash": "4dc1166eab3eb270c9188df67cb7baafa012fdad"
-          }
-        },
-        {
-          "client_id": "509972622456-dvg0k0pbcdb0nci0edupfdseqjj7790n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hugocastelani.blockbook",
+            "package_name": "com.hugocastelani.ivory",
             "certificate_hash": "126cfbf05e3c7a647d06c110a09c944bf74742a8"
           }
         },

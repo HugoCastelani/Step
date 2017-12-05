@@ -14,7 +14,7 @@
     <com.afollestad.aesthetic.AestheticImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/intro_1"
+        android:src="@drawable/ic_flat"
         android:contentDescription="@string/app_name" />
 
     <com.afollestad.aesthetic.AestheticTextView
