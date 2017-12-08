@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.hugocastelani.blockbook.util.NetworkUtils;
 
 /**
  * Created by Hugo Castelani
@@ -36,17 +37,19 @@ public abstract class GenericWideDAO<T> {
 
     protected void isNodeValid(@NonNull final String node,
                                @NonNull final Listeners.ObjectListener<Boolean> listener) {
-        DAOHandler.getFirebaseDatabase(null).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onObjectRetrieved(dataSnapshot.hasChild(node));
-            }
+        if (NetworkUtils.isConnectedToInternet()) {
+            DAOHandler.getFirebaseDatabase(null).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    listener.onObjectRetrieved(dataSnapshot.hasChild(node));
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onObjectRetrieved(false);
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    listener.onObjectRetrieved(false);
+                }
+            });
+        } else listener.onError();
     }
 
     public abstract GenericWideDAO<T> create(@NonNull final T t,

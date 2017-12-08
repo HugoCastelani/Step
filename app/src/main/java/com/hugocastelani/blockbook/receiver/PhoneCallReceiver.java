@@ -12,7 +12,6 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
 import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
@@ -25,14 +24,12 @@ import com.hugocastelani.blockbook.database.domain.UserPhone;
 import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.persistence.Treatments;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.hugocastelani.blockbook.util.NetworkUtils;
 import com.orhanobut.hawk.Hawk;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Hugo Castelani
@@ -57,6 +54,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             Hawk.init(context).build();
         }
 
+        if (!NetworkUtils.isInitialized()) {
+            NetworkUtils.init();
+        }
+
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
             savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
@@ -79,7 +80,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     Boolean silencingCall = false;
 
     //Derived classes should override these to respond to specific events of interest
-    protected void onIncomingCallStarted(Context context, String number, Date start){
+    protected void onIncomingCallStarted(Context context, String number, Date start) {
         final Integer[] services = Hawk.get(HockeyProvider.SERVICES, HockeyProvider.SERVICES_DF);
 
         // true: calls is a selected service
@@ -103,61 +104,56 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                     return;
                 }
 
-                ReactiveNetwork.checkInternetConnectivity()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(isConnectedToInternet -> {
-                            if (isConnectedToInternet) {
+                if (NetworkUtils.isConnectedToInternet()) {
 
-                                final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
-                                        HockeyProvider.DENUNCIATION_AMOUNT_DF);
-                                final Integer[] denunciationAmount = {0};
+                    final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
+                            HockeyProvider.DENUNCIATION_AMOUNT_DF);
+                    final Integer[] denunciationAmount = {0};
 
-                                DenunciationDAO.get().getDenunciations(phone.getKey(),
+                    DenunciationDAO.get().getDenunciations(phone.getKey(),
 
-                                        new Listeners.ListListener<Denunciation>() {
-                                            @Override
-                                            public void onItemAdded(@NonNull Denunciation denunciation) {
-                                                denunciationAmount[0]++;
+                            new Listeners.ListListener<Denunciation>() {
+                                @Override
+                                public void onItemAdded(@NonNull Denunciation denunciation) {
+                                    denunciationAmount[0]++;
 
-                                                if (denunciation.getAmount() >= minDenunciationAmount) {
-                                                    final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
-                                                            denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
+                                    if (denunciation.getAmount() >= minDenunciationAmount) {
+                                        final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
+                                                denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
 
-                                                    final Treatments treatments = new Treatments(option);
-                                                    switch (treatments.getOption()) {
-                                                        case SILENCE: silencingCall = true;
-                                                            break;
-                                                        case BLOCK: blockPhone(phone, context);
-                                                            break;
+                                        final Treatments treatments = new Treatments(option);
+                                        switch (treatments.getOption()) {
+                                            case SILENCE: silencingCall = true;
+                                                break;
+                                            case BLOCK: blockPhone(phone, context);
+                                                break;
 
-                                                        // case DONOTHING must get in here
-                                                        default: unmuteDevice();
-                                                    }
-                                                }
-                                            }
-
-                                            @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
-                                        },
-
-                                        new Listeners.AnswerListener() {
-                                            @Override public void onAnswerRetrieved() {
-                                                if (denunciationAmount[0] == 0) {
-                                                    unmuteDevice();
-                                                }
-                                            }
-                                            @Override public void onError() {
-                                                if (denunciationAmount[0] == 0) {
-                                                    unmuteDevice();
-                                                }
-                                            }
+                                            // case DONOTHING must get in here
+                                            default: unmuteDevice();
                                         }
-                                );
+                                    }
+                                }
 
-                            } else {
-                                unmuteDevice();
+                                @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
+                            },
+
+                            new Listeners.AnswerListener() {
+                                @Override public void onAnswerRetrieved() {
+                                    if (denunciationAmount[0] == 0) {
+                                        unmuteDevice();
+                                    }
+                                }
+                                @Override public void onError() {
+                                    if (denunciationAmount[0] == 0) {
+                                        unmuteDevice();
+                                    }
+                                }
                             }
-                        });
+                    );
+
+                } else {
+                    unmuteDevice();
+                }
             }
         }
     }

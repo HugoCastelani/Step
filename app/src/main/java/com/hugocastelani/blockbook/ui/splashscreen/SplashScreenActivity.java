@@ -8,7 +8,6 @@ import com.afollestad.aesthetic.AestheticButton;
 import com.afollestad.aesthetic.AestheticProgressBar;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.blankj.utilcode.util.Utils;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.persistence.HockeyProvider;
@@ -17,13 +16,11 @@ import com.hugocastelani.blockbook.ui.intro.MainIntroActivity;
 import com.hugocastelani.blockbook.ui.main.MainActivity;
 import com.hugocastelani.blockbook.util.AnimUtils;
 import com.hugocastelani.blockbook.util.Listeners;
+import com.hugocastelani.blockbook.util.NetworkUtils;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public final class SplashScreenActivity extends AbstractActivity {
     private AestheticTextView mTextView;
@@ -38,6 +35,7 @@ public final class SplashScreenActivity extends AbstractActivity {
         DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
         Hawk.init(getApplicationContext()).build();
+        NetworkUtils.init();
 
         initViews();
         initActions();
@@ -55,7 +53,8 @@ public final class SplashScreenActivity extends AbstractActivity {
     @Override
     protected void initActions() {
         mButton.setOnClickListener(view -> {
-            setTestingConnection();
+            AnimUtils.fadeOutFadeIn(mButton, mProgressBar);
+            mTextView.setText(getResources().getText(R.string.connecting));
 
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -70,49 +69,38 @@ public final class SplashScreenActivity extends AbstractActivity {
     protected void initFragment() {}
 
     private void testConnection() {
-        ReactiveNetwork.checkInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnectedToInternet -> {
-                    if (isConnectedToInternet) {
-                        final Integer[] listenerAmount = {1};
+        if (NetworkUtils.isConnectedToInternet()) {
+            final Integer[] listenerAmount = {1};
 
-                        Listeners.AnswerListener listener = new Listeners.AnswerListener() {
-                            int count = 0;
+            Listeners.AnswerListener listener = new Listeners.AnswerListener() {
+                int count = 0;
 
-                            @Override
-                            public void onAnswerRetrieved() {
-                                if (++count == listenerAmount[0]) {
-                                    if (listenerAmount[0] == 1) {
-                                        startMainIntroActivity();
-                                    } else {
-                                        startMainActivity();
-                                    }
-                                }
-                            }
-
-                            @Override public void onError() {}
-                        };
-
-                        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
-                            DAOHandler.syncDynamicTables(listener);
-                            listenerAmount[0] = 2;
+                @Override
+                public void onAnswerRetrieved() {
+                    if (++count == listenerAmount[0]) {
+                        if (listenerAmount[0] == 1) {
+                            startMainIntroActivity();
+                        } else {
+                            startMainActivity();
                         }
+                    }
+                }
 
-                        DAOHandler.syncStaticTables(listener);
+                @Override public void onError() {}
+            };
 
-                    } else setNoConnection();
-                });
-    }
+            if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
+                DAOHandler.syncDynamicTables(listener);
+                listenerAmount[0] = 2;
+            }
 
-    private void setTestingConnection() {
-        AnimUtils.fadeOutFadeIn(mButton, mProgressBar);
-        mTextView.setText(getResources().getText(R.string.connecting));
-    }
+            DAOHandler.syncStaticTables(listener);
 
-    private void setNoConnection() {
-        AnimUtils.fadeOutFadeIn(mProgressBar, mButton);
-        mTextView.setText(getResources().getText(R.string.no_internet_connection));
+        } else {
+
+            AnimUtils.fadeOutFadeIn(mProgressBar, mButton);
+            mTextView.setText(getResources().getText(R.string.no_internet_connection));
+        }
     }
 
     private void startMainActivity() {
