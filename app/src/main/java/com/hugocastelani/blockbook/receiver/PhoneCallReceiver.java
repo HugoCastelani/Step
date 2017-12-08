@@ -1,15 +1,38 @@
 package com.hugocastelani.blockbook.receiver;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
+import com.android.internal.telephony.ITelephony;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.hugocastelani.blockbook.R;
+import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
+import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
+import com.hugocastelani.blockbook.database.dao.wide.DenunciationDAO;
+import com.hugocastelani.blockbook.database.dao.wide.UserPhoneDAO;
+import com.hugocastelani.blockbook.database.domain.Denunciation;
+import com.hugocastelani.blockbook.database.domain.Phone;
+import com.hugocastelani.blockbook.database.domain.User;
+import com.hugocastelani.blockbook.database.domain.UserPhone;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
+import com.hugocastelani.blockbook.persistence.Treatments;
+import com.hugocastelani.blockbook.util.Listeners;
 import com.orhanobut.hawk.Hawk;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Hugo Castelani
@@ -26,6 +49,8 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Toast.makeText(context, "Entrei no onReceive", Toast.LENGTH_LONG).show();
+
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         if (!Hawk.isBuilt()) {
@@ -51,12 +76,107 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         }
     }
 
+    Boolean silencingCall = false;
+
     //Derived classes should override these to respond to specific events of interest
-    protected void onIncomingCallStarted(Context context, String number, Date start){}
+    protected void onIncomingCallStarted(Context context, String number, Date start){
+        final Integer[] services = Hawk.get(HockeyProvider.SERVICES, HockeyProvider.SERVICES_DF);
+
+        // true: calls is a selected service
+        if (services[0] == 0) {
+            muteDevice();
+
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String iso = telephonyManager.getNetworkCountryIso().toUpperCase();
+
+            final Phone phone = Phone.generateObject(number, iso);
+
+            if (phone != null) {
+                final User user = LUserDAO.get().getThisUser();
+                final UserPhone userPhone = new UserPhone(user.getKey(), phone.getKey(), false, false);
+                userPhone.setUser(user);
+                userPhone.setPhone(phone);
+
+                if (LUserPhoneDAO.get().isBlocked(userPhone)) {
+                    disconnectPhoneITelephony(context);
+                    unmuteDevice();
+                    return;
+                }
+
+                ReactiveNetwork.checkInternetConnectivity()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(isConnectedToInternet -> {
+                            if (isConnectedToInternet) {
+
+                                final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
+                                        HockeyProvider.DENUNCIATION_AMOUNT_DF);
+                                final Integer[] denunciationAmount = {0};
+
+                                DenunciationDAO.get().getDenunciations(phone.getKey(),
+
+                                        new Listeners.ListListener<Denunciation>() {
+                                            @Override
+                                            public void onItemAdded(@NonNull Denunciation denunciation) {
+                                                denunciationAmount[0]++;
+
+                                                if (denunciation.getAmount() >= minDenunciationAmount) {
+                                                    final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
+                                                            denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
+
+                                                    final Treatments treatments = new Treatments(option);
+                                                    switch (treatments.getOption()) {
+                                                        case SILENCE: silencingCall = true;
+                                                            break;
+                                                        case BLOCK: blockPhone(phone, context);
+                                                            break;
+
+                                                        // case DONOTHING must get in here
+                                                        default: unmuteDevice();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
+                                        },
+
+                                        new Listeners.AnswerListener() {
+                                            @Override public void onAnswerRetrieved() {
+                                                if (denunciationAmount[0] == 0) {
+                                                    unmuteDevice();
+                                                }
+                                            }
+                                            @Override public void onError() {
+                                                if (denunciationAmount[0] == 0) {
+                                                    unmuteDevice();
+                                                }
+                                            }
+                                        }
+                                );
+
+                            } else {
+                                unmuteDevice();
+                            }
+                        });
+            }
+        }
+    }
+
     protected void onOutgoingCallStarted(Context context, String number, Date start){}
-    protected void onIncomingCallEnded(Context context, String number, Date start, Date end){}
+
+    protected void onIncomingCallEnded(Context context, String number, Date start, Date end){
+        if (Hawk.get(HockeyProvider.SHOW_FEEDBACK, HockeyProvider.SHOW_FEEDBACK_DF)) {
+            // show feedback dialog
+        }
+    }
+
     protected void onOutgoingCallEnded(Context context, String number, Date start, Date end){}
-    protected void onMissedCall(Context context, String number, Date start){}
+
+    protected void onMissedCall(Context context, String number, Date start){
+        if (silencingCall) {
+            unmuteDevice();
+        }
+    }
 
     //Deals with actual events
 
@@ -98,14 +218,83 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     }
 
     @SuppressWarnings("deprecation")
-    protected PhoneCallReceiver muteDevice(@NonNull final Context context) {
+    protected PhoneCallReceiver muteDevice() {
         mAudioManager.setStreamMute(AudioManager.STREAM_RING, true);
         return this;
     }
 
     @SuppressWarnings("deprecation")
-    protected PhoneCallReceiver unmuteDevice(@NonNull final Context context) {
+    protected PhoneCallReceiver unmuteDevice() {
         mAudioManager.setStreamMute(AudioManager.STREAM_RING, false);
         return this;
+    }
+
+    private void blockPhone(@NonNull final Phone phone, @NonNull final Context context) {
+        final UserPhone userPhone = new UserPhone(LUserDAO.get().getThisUserKey(), phone.getKey(), false, false);
+
+        UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
+                    @Override
+                    public void alreadyAdded() {
+                        UserPhoneDAO.get().create(userPhone, new Listeners.UserPhoneAnswerListener() {
+                            @Override public void alreadyAdded() {}
+
+                            @Override
+                            public void properlyAdded() {
+                                sendNotification(phone, context);
+                            }
+
+                            @Override public void error() {}
+                        }, true);
+                    }
+
+                    @Override public void properlyAdded() {
+                        sendNotification(phone, context);
+                    }
+
+                    @Override public void error() {}
+                },  false
+        );
+    }
+
+    private void sendNotification(@NonNull final Phone phone, @NonNull final Context context) {
+        final String title = context.getResources().getString(R.string.properly_added_title);
+
+        final StringBuilder content = new StringBuilder();
+        content.append(context.getResources().getString(R.string.properly_added_content_1))
+                .append(phone.getNumber())
+                .append(context.getResources().getString(R.string.properly_added_content_2));
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.intro_1)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setDefaults(Notification.DEFAULT_VIBRATE);
+
+        NotificationManager manager = (NotificationManager)
+                context.getSystemService(context.NOTIFICATION_SERVICE);
+        manager.notify();
+        manager.notify(8055, builder.build());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void disconnectPhoneITelephony(@NonNull final Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            ITelephony telephonyService;
+            Class aClass = Class.forName(telephonyManager.getClass().getName());
+            Method method = aClass.getDeclaredMethod("getITelephony");
+            method.setAccessible(true);
+            telephonyService = (ITelephony) method.invoke(telephonyManager);
+            telephonyService.endCall();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }

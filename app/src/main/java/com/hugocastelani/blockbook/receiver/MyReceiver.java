@@ -1,30 +1,5 @@
 package com.hugocastelani.blockbook.receiver;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
-
-import com.android.internal.telephony.ITelephony;
-import com.hugocastelani.blockbook.R;
-import com.hugocastelani.blockbook.database.dao.local.LUserDAO;
-import com.hugocastelani.blockbook.database.dao.local.LUserPhoneDAO;
-import com.hugocastelani.blockbook.database.dao.wide.DenunciationDAO;
-import com.hugocastelani.blockbook.database.dao.wide.UserPhoneDAO;
-import com.hugocastelani.blockbook.database.domain.Denunciation;
-import com.hugocastelani.blockbook.database.domain.Phone;
-import com.hugocastelani.blockbook.database.domain.UserPhone;
-import com.hugocastelani.blockbook.persistence.HockeyProvider;
-import com.hugocastelani.blockbook.persistence.Treatments;
-import com.hugocastelani.blockbook.util.Listeners;
-import com.orhanobut.hawk.Hawk;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-
 /**
  * Created by Hugo Castelani
  * Date: 01/12/17
@@ -32,7 +7,7 @@ import java.util.Date;
  */
 
 public final class MyReceiver extends PhoneCallReceiver {
-    Boolean silencingCall = false;
+    /*Boolean silencingCall = false;
 
     @Override
     protected void onIncomingCallStarted(Context context, String number, Date start) {
@@ -176,5 +151,5 @@ public final class MyReceiver extends PhoneCallReceiver {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

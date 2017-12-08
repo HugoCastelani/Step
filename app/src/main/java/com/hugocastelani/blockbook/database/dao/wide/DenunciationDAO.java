@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.database.dao.intangible.GenericWideDAO;
 import com.hugocastelani.blockbook.database.domain.Denunciation;
@@ -64,22 +66,38 @@ public class DenunciationDAO extends GenericWideDAO<Denunciation> {
             public void onObjectRetrieved(@NonNull Boolean retrievedBoolean) {
                 if (retrievedBoolean) {
 
-                    DAOHandler.getFirebaseDatabase(thisNode)
-                            .orderByKey()
-                            .addChildEventListener(new ChildEventListener() {
-                                @Override
-                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                    listListener.onItemAdded(new Denunciation(
-                                            Integer.valueOf(dataSnapshot.getKey()),
-                                            dataSnapshot.getChildrenCount()
-                                    ));
-                                }
+                    final Query query = DAOHandler.getFirebaseDatabase(thisNode).orderByKey();
+                    final ChildEventListener childEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            listListener.onItemAdded(new Denunciation(
+                                    Integer.valueOf(dataSnapshot.getKey()),
+                                    dataSnapshot.getChildrenCount()
+                            ));
+                        }
 
-                                @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                                @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                                @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                                @Override public void onCancelled(DatabaseError databaseError) {}
-                            });
+                        @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                        @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                        @Override public void onCancelled(DatabaseError databaseError) {}
+                    };
+
+                    query.addChildEventListener(childEventListener);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            answerListener.onAnswerRetrieved();
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            answerListener.onAnswerRetrieved();
+                            query.removeEventListener(childEventListener);
+                            query.removeEventListener(this);
+                        }
+                    });
 
                 } answerListener.onAnswerRetrieved();
             }
