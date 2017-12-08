@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.afollestad.aesthetic.AestheticFab;
 import com.afollestad.materialcab.MaterialCab;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -13,6 +14,7 @@ import com.hugocastelani.blockbook.database.domain.Phone;
 import com.hugocastelani.blockbook.domain.Call;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;
 import com.hugocastelani.blockbook.util.Listeners;
+
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.List;

@@ -4,8 +4,10 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.hugocastelani.blockbook.R;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**

@@ -17,9 +17,7 @@ import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
-import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.intangible.SnackbarTrigger;
-import com.hugocastelani.blockbook.ui.splashscreen.SplashScreenActivity;
 import com.orhanobut.hawk.Hawk;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterConfig;
@@ -35,9 +33,9 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
         Aesthetic.attach(this);
         super.onCreate(savedInstanceState);
 
+        Hawk.init(getApplicationContext()).build();
         DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
-        Hawk.init(getApplicationContext()).build();
 
         Twitter.initialize(new TwitterConfig.Builder(getApplicationContext()).build());
 
@@ -63,18 +61,12 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
                 }
         );
 
-        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
-            final Intent intent = new Intent(this, SplashScreenActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         setButtonBackFunction(BUTTON_BACK_FUNCTION_BACK);
 
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
-                .fragment(new AboutIntroFragment())
+                .fragment(R.layout.intro_fragment_about)
                 .build());
 
         addSlide(new FragmentSlide.Builder()

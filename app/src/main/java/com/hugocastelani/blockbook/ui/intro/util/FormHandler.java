@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 import com.azimolabs.maskformatter.MaskFormatter;
 import com.hugocastelani.blockbook.database.dao.local.LCountryDAO;
 import com.hugocastelani.blockbook.database.domain.Country;

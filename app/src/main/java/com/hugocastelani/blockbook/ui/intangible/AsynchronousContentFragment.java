@@ -3,6 +3,7 @@ package com.hugocastelani.blockbook.ui.intangible;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
 import com.afollestad.aesthetic.AestheticRecyclerView;
 import com.hugocastelani.blockbook.util.AnimUtils;
 

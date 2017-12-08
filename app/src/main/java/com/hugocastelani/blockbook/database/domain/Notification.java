@@ -1,6 +1,7 @@
 package com.hugocastelani.blockbook.database.domain;
 
 import android.support.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.hugocastelani.blockbook.database.dao.local.LUserDAO;

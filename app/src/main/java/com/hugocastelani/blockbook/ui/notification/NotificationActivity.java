@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.afollestad.aesthetic.AestheticFab;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;

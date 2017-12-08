@@ -5,6 +5,7 @@ import android.preference.Preference;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
 import com.afollestad.materialdialogs.color.CircleView;
 import com.hugocastelani.blockbook.R;
 

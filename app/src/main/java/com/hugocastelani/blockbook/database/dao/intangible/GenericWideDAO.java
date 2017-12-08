@@ -1,6 +1,7 @@
 package com.hugocastelani.blockbook.database.dao.intangible;
 
 import android.support.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

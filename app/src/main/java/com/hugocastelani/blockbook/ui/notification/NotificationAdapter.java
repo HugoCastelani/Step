@@ -1,6 +1,7 @@
 package com.hugocastelani.blockbook.ui.notification;
 
 import android.support.annotation.NonNull;
+
 import com.hugocastelani.blockbook.database.dao.wide.NotificationDAO;
 import com.hugocastelani.blockbook.domain.PhoneSection;
 import com.hugocastelani.blockbook.ui.intangible.UsersNumbersAdapter;

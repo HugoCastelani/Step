@@ -1,6 +1,7 @@
 package com.hugocastelani.blockbook.domain;
 
 import android.support.annotation.NonNull;
+
 import com.hugocastelani.blockbook.database.domain.Phone;
 
 /**

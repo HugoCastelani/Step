@@ -1,22 +1,34 @@
 package com.hugocastelani.blockbook.ui.splashscreen;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 
-import com.blankj.utilcode.util.NetworkUtils;
+import com.afollestad.aesthetic.AestheticButton;
+import com.afollestad.aesthetic.AestheticProgressBar;
+import com.afollestad.aesthetic.AestheticTextView;
 import com.blankj.utilcode.util.Utils;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
+import com.hugocastelani.blockbook.persistence.HockeyProvider;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;
+import com.hugocastelani.blockbook.ui.intro.MainIntroActivity;
 import com.hugocastelani.blockbook.ui.main.MainActivity;
+import com.hugocastelani.blockbook.util.AnimUtils;
 import com.hugocastelani.blockbook.util.Listeners;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public final class SplashScreenActivity extends AbstractActivity {
+    private AestheticTextView mTextView;
+    private AestheticButton mButton;
+    private AestheticProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,42 +39,80 @@ public final class SplashScreenActivity extends AbstractActivity {
         Utils.init(getApplication());
         Hawk.init(getApplicationContext()).build();
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                if (NetworkUtils.isConnected()) {
-                    Listeners.AnswerListener listener = new Listeners.AnswerListener() {
-                        int count = 0;
+        initViews();
+        initActions();
 
-                        @Override
-                        public void onAnswerRetrieved() {
-                            if (++count == 2) {
-                                startMainActivity();
-                            }
-                        }
+        testConnection();
+    }
 
-                        @Override public void onError() {}
-                    };
+    @Override
+    protected void initViews() {
+        mTextView = (AestheticTextView) findViewById(R.id.ssa_text_view);
+        mButton = (AestheticButton) findViewById(R.id.ssa_button);
+        mProgressBar = (AestheticProgressBar) findViewById(R.id.ssa_progress_bar);
+    }
 
-                    DAOHandler.syncStaticTables(listener);
-                    DAOHandler.syncDynamicTables(listener);
+    @Override
+    protected void initActions() {
+        mButton.setOnClickListener(view -> {
+            setTestingConnection();
 
-                } else {
-
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            startMainActivity();
-                        }
-
-                    }, 2000);
-
-                    createSnackbar(R.string.splash_screen_no_internet_connection).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    testConnection();
                 }
+            }, 1000);
+        });
+    }
 
-                return null;
-            }
-        }.execute();
+    @Override
+    protected void initFragment() {}
+
+    private void testConnection() {
+        ReactiveNetwork.checkInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnectedToInternet -> {
+                    if (isConnectedToInternet) {
+                        final Integer[] listenerAmount = {1};
+
+                        Listeners.AnswerListener listener = new Listeners.AnswerListener() {
+                            int count = 0;
+
+                            @Override
+                            public void onAnswerRetrieved() {
+                                if (++count == listenerAmount[0]) {
+                                    if (listenerAmount[0] == 1) {
+                                        startMainIntroActivity();
+                                    } else {
+                                        startMainActivity();
+                                    }
+                                }
+                            }
+
+                            @Override public void onError() {}
+                        };
+
+                        if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
+                            DAOHandler.syncDynamicTables(listener);
+                            listenerAmount[0] = 2;
+                        }
+
+                        DAOHandler.syncStaticTables(listener);
+
+                    } else setNoConnection();
+                });
+    }
+
+    private void setTestingConnection() {
+        AnimUtils.fadeOutFadeIn(mButton, mProgressBar);
+        mTextView.setText(getResources().getText(R.string.connecting));
+    }
+
+    private void setNoConnection() {
+        AnimUtils.fadeOutFadeIn(mProgressBar, mButton);
+        mTextView.setText(getResources().getText(R.string.no_internet_connection));
     }
 
     private void startMainActivity() {
@@ -71,12 +121,11 @@ public final class SplashScreenActivity extends AbstractActivity {
         finish();
     }
 
-    @Override
-    protected void initViews() {}
-
-    @Override
-    protected void initActions() {}
-
-    @Override
-    protected void initFragment() {}
+    private void startMainIntroActivity() {
+        final Intent intent = new Intent(SplashScreenActivity.this, MainIntroActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getBaseContext(),
+                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
 }

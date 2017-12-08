@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;
 

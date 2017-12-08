@@ -3,6 +3,7 @@ package com.hugocastelani.blockbook.ui.profile;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.domain.User;
 import com.hugocastelani.blockbook.ui.intangible.AbstractActivity;

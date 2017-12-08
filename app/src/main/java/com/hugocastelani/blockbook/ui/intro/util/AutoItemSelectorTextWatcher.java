@@ -3,6 +3,7 @@ package com.hugocastelani.blockbook.ui.intro.util;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import com.hugocastelani.blockbook.database.dao.local.LCountryDAO;
 
 /**

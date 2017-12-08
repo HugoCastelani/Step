@@ -12,19 +12,34 @@
     tools:context=".ui.splashscreen.SplashScreenActivity">
 
     <com.afollestad.aesthetic.AestheticImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/ic_flat"
-        android:contentDescription="@string/app_name" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/baseline_4x"
+        android:layout_marginStart="@dimen/baseline_4x"
+        android:layout_marginRight="@dimen/baseline_4x"
+        android:layout_marginEnd="@dimen/baseline_4x"
+        android:gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/intro_1" />
 
     <com.afollestad.aesthetic.AestheticTextView
+        android:id="@+id/ssa_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/baseline_4x"
         android:gravity="center"
-        android:text="@string/splash_screen_activity_updating"/>
+        android:text="@string/connecting"/>
+
+    <com.afollestad.aesthetic.AestheticButton
+        android:id="@+id/ssa_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/baseline_4x"
+        android:text="@string/try_again"
+        android:visibility="gone"/>
 
     <com.afollestad.aesthetic.AestheticProgressBar
+        android:id="@+id/ssa_progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_marginTop="@dimen/baseline_4x"
         android:layout_width="wrap_content"

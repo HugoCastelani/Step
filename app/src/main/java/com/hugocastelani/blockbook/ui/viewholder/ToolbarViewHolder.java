@@ -1,10 +1,12 @@
 package com.hugocastelani.blockbook.ui.viewholder;
 
 import android.view.View;
+
 import com.afollestad.aesthetic.AestheticButton;
 import com.afollestad.aesthetic.AestheticTextView;
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.hugocastelani.blockbook.R;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**

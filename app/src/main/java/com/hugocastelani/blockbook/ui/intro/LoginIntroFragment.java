@@ -131,7 +131,7 @@ public final class LoginIntroFragment extends SlideFragment implements
         if (requestCode == FACEBOOK_SIGN_IN) {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == GOOGLE_SIGN_IN) {
-            handleGoogleLogin(data);
+            error = handleGoogleLogin(data) + "\n";
         } else if (requestCode == TWITTER_SIGN_IN) {
             mTwitterButton.onActivityResult(requestCode, resultCode, data);
         }

@@ -1,10 +1,17 @@
 package com.hugocastelani.blockbook.util.blankj;
 
 import android.content.Intent;
-import android.location.*;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+
 import com.blankj.utilcode.util.Utils;
 
 import java.io.IOException;

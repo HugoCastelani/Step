@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.hugocastelani.blockbook.R;
 import com.hugocastelani.blockbook.database.dao.wide.UserDAO;
 import com.hugocastelani.blockbook.database.domain.User;

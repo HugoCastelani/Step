@@ -2,6 +2,7 @@ package com.hugocastelani.blockbook.database.dao.intangible;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.util.Listeners;
 

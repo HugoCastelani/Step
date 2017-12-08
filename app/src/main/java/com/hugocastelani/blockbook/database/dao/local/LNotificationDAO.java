@@ -3,6 +3,7 @@ package com.hugocastelani.blockbook.database.dao.local;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+
 import com.hugocastelani.blockbook.database.dao.DAOHandler;
 import com.hugocastelani.blockbook.database.dao.intangible.GenericLocalDAO;
 import com.hugocastelani.blockbook.database.domain.Notification;
