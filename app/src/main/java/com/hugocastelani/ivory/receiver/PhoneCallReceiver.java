@@ -24,7 +24,7 @@ import com.hugocastelani.ivory.database.domain.UserPhone;
 import com.hugocastelani.ivory.persistence.HockeyProvider;
 import com.hugocastelani.ivory.persistence.Treatments;
 import com.hugocastelani.ivory.util.Listeners;
-import com.hugocastelani.ivory.util.NetworkUtils;
+import com.hugocastelani.ivory.util.NetworkObserver;
 import com.orhanobut.hawk.Hawk;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,8 +54,8 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             Hawk.init(context).build();
         }
 
-        if (!NetworkUtils.isInitialized()) {
-            NetworkUtils.init();
+        if (!NetworkObserver.isInitialized()) {
+            NetworkObserver.init();
         }
 
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
@@ -104,56 +104,61 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                     return;
                 }
 
-                if (NetworkUtils.isConnectedToInternet()) {
+                NetworkObserver.isConnectedToInternet(new Listeners.ObjectListener<Boolean>() {
+                    @Override
+                    public void onObjectRetrieved(@NonNull Boolean isConnected) {
+                        if (isConnected) {
 
-                    final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
-                            HockeyProvider.DENUNCIATION_AMOUNT_DF);
-                    final Integer[] denunciationAmount = {0};
+                            final Integer minDenunciationAmount = Hawk.get(HockeyProvider.DENUNCIATION_AMOUNT,
+                                    HockeyProvider.DENUNCIATION_AMOUNT_DF);
+                            final Integer[] denunciationAmount = {0};
 
-                    DenunciationDAO.get().getDenunciations(phone.getKey(),
+                            DenunciationDAO.get().getDenunciations(phone.getKey(),
 
-                            new Listeners.ListListener<Denunciation>() {
-                                @Override
-                                public void onItemAdded(@NonNull Denunciation denunciation) {
-                                    denunciationAmount[0]++;
+                                    new Listeners.ListListener<Denunciation>() {
+                                        @Override
+                                        public void onItemAdded(@NonNull Denunciation denunciation) {
+                                            denunciationAmount[0]++;
 
-                                    if (denunciation.getAmount() >= minDenunciationAmount) {
-                                        final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
-                                                denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
+                                            if (denunciation.getAmount() >= minDenunciationAmount) {
+                                                final Integer option = Hawk.get(HockeyProvider.DESCRIPTION +
+                                                        denunciation.getDescription(), HockeyProvider.DESCRIPTION_DF);
 
-                                        final Treatments treatments = new Treatments(option);
-                                        switch (treatments.getOption()) {
-                                            case SILENCE: silencingCall = true;
-                                                break;
-                                            case BLOCK: blockPhone(phone, context);
-                                                break;
+                                                final Treatments treatments = new Treatments(option);
+                                                switch (treatments.getOption()) {
+                                                    case SILENCE: silencingCall = true;
+                                                        break;
+                                                    case BLOCK: blockPhone(phone, context);
+                                                        break;
 
-                                            // case DONOTHING must get in here
-                                            default: unmuteDevice();
+                                                    // case DONOTHING must get in here
+                                                    default: unmuteDevice();
+                                                }
+                                            }
+                                        }
+
+                                        @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
+                                    },
+
+                                    new Listeners.AnswerListener() {
+                                        @Override public void onAnswerRetrieved() {
+                                            if (denunciationAmount[0] == 0) {
+                                                unmuteDevice();
+                                            }
+                                        }
+                                        @Override public void onError() {
+                                            if (denunciationAmount[0] == 0) {
+                                                unmuteDevice();
+                                            }
                                         }
                                     }
-                                }
+                            );
 
-                                @Override public void onItemRemoved(@NonNull Denunciation denunciation) {}
-                            },
+                        } else unmuteDevice();
+                    }
 
-                            new Listeners.AnswerListener() {
-                                @Override public void onAnswerRetrieved() {
-                                    if (denunciationAmount[0] == 0) {
-                                        unmuteDevice();
-                                    }
-                                }
-                                @Override public void onError() {
-                                    if (denunciationAmount[0] == 0) {
-                                        unmuteDevice();
-                                    }
-                                }
-                            }
-                    );
-
-                } else {
-                    unmuteDevice();
-                }
+                    @Override public void onError() {}
+                });
             }
         }
     }

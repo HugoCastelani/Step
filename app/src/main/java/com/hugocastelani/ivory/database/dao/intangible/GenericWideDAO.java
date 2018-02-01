@@ -9,7 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.hugocastelani.ivory.database.dao.DAOHandler;
 import com.hugocastelani.ivory.database.dao.local.LUserDAO;
 import com.hugocastelani.ivory.util.Listeners;
-import com.hugocastelani.ivory.util.NetworkUtils;
+import com.hugocastelani.ivory.util.NetworkObserver;
 
 /**
  * Created by Hugo Castelani
@@ -37,19 +37,28 @@ public abstract class GenericWideDAO<T> {
 
     protected void isNodeValid(@NonNull final String node,
                                @NonNull final Listeners.ObjectListener<Boolean> listener) {
-        if (NetworkUtils.isConnectedToInternet()) {
-            DAOHandler.getFirebaseDatabase(null).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    listener.onObjectRetrieved(dataSnapshot.hasChild(node));
-                }
+        NetworkObserver.isConnectedToInternet(new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean isConnected) {
+                if (isConnected) {
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    listener.onObjectRetrieved(false);
-                }
-            });
-        } else listener.onError();
+                    DAOHandler.getFirebaseDatabase(null).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            listener.onObjectRetrieved(dataSnapshot.hasChild(node));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            listener.onObjectRetrieved(false);
+                        }
+                    });
+
+                } else listener.onError();
+            }
+
+            @Override public void onError() {}
+        });
     }
 
     public abstract GenericWideDAO<T> create(@NonNull final T t,

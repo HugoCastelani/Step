@@ -2,6 +2,7 @@ package com.hugocastelani.ivory.ui.splashscreen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 
 import com.afollestad.aesthetic.AestheticButton;
@@ -16,7 +17,7 @@ import com.hugocastelani.ivory.ui.intro.MainIntroActivity;
 import com.hugocastelani.ivory.ui.main.MainActivity;
 import com.hugocastelani.ivory.util.AnimUtils;
 import com.hugocastelani.ivory.util.Listeners;
-import com.hugocastelani.ivory.util.NetworkUtils;
+import com.hugocastelani.ivory.util.NetworkObserver;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Timer;
@@ -35,7 +36,7 @@ public final class SplashScreenActivity extends AbstractActivity {
         DAOHandler.init(getApplicationContext());
         Utils.init(getApplication());
         Hawk.init(getApplicationContext()).build();
-        NetworkUtils.init();
+        NetworkObserver.init();
 
         initViews();
         initActions();
@@ -69,38 +70,45 @@ public final class SplashScreenActivity extends AbstractActivity {
     protected void initFragment() {}
 
     private void testConnection() {
-        if (NetworkUtils.isConnectedToInternet()) {
-            final Integer[] listenerAmount = {1};
+        NetworkObserver.isConnectedToInternet(new Listeners.ObjectListener<Boolean>() {
+            @Override
+            public void onObjectRetrieved(@NonNull Boolean isConnected) {
+                if (isConnected) {
 
-            Listeners.AnswerListener listener = new Listeners.AnswerListener() {
-                int count = 0;
+                    final Integer[] listenerAmount = {1};
 
-                @Override
-                public void onAnswerRetrieved() {
-                    if (++count == listenerAmount[0]) {
-                        if (listenerAmount[0] == 1) {
-                            startMainIntroActivity();
-                        } else {
-                            startMainActivity();
+                    Listeners.AnswerListener listener = new Listeners.AnswerListener() {
+                        int count = 0;
+
+                        @Override
+                        public void onAnswerRetrieved() {
+                            if (++count == listenerAmount[0]) {
+                                if (listenerAmount[0] == 1) {
+                                    startMainIntroActivity();
+                                } else {
+                                    startMainActivity();
+                                }
+                            }
                         }
+
+                        @Override public void onError() {}
+                    };
+
+                    if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
+                        DAOHandler.syncDynamicTables(listener);
+                        listenerAmount[0] = 2;
                     }
+
+                    DAOHandler.syncStaticTables(listener);
+
+                } else {
+                    AnimUtils.fadeOutFadeIn(mProgressBar, mButton);
+                    mTextView.setText(getResources().getText(R.string.no_internet_connection));
                 }
-
-                @Override public void onError() {}
-            };
-
-            if (Hawk.get(HockeyProvider.IS_INTRO_ALL_SET, HockeyProvider.IS_INTRO_ALL_SET_DF)) {
-                DAOHandler.syncDynamicTables(listener);
-                listenerAmount[0] = 2;
             }
 
-            DAOHandler.syncStaticTables(listener);
-
-        } else {
-
-            AnimUtils.fadeOutFadeIn(mProgressBar, mButton);
-            mTextView.setText(getResources().getText(R.string.no_internet_connection));
-        }
+            @Override public void onError() {}
+        });
     }
 
     private void startMainActivity() {
