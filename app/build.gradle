@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.hugocastelani.ivory"
         minSdkVersion 21
@@ -47,135 +47,155 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
     /*
-    // aidas follestad
-    compile 'com.afollestad:aesthetic:0.4.7'
-    compile 'com.afollestad:material-cab:0.1.12'
-    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
-    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.4.6b'
-    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.4.6b'
+    implementation 'com.afollestad:aesthetic:0.4.7'
+    implementation 'com.afollestad:material-cab:0.1.12'
+    implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
+    implementation 'com.github.hugocastelani.material-dialogs:core:0.9.6.0f'
+    implementation 'com.github.hugocastelani.material-dialogs:commons:0.9.6.0f'
 
     // azimo labs
-    compile 'com.azimolabs.maskformatter:maskformatter:0.2'
+    implementation 'com.azimolabs.maskformatter:maskformatter:0.2'
 
     // blankj
-    compile 'com.blankj:utilcode:1.9.8'
-
-    // google
-    compile 'com.google.android.gms:play-services-auth:11.4.2'
-    compile 'com.google.android.gms:play-services-location:11.4.2'
-    compile 'com.google.firebase:firebase-core:11.4.2'
-    compile 'com.google.firebase:firebase-database:11.4.2'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    // hdodenhof
-    compile 'de.hdodenhof:circleimageview:2.2.0'
-
-    // hein richreimer
-    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
-
-    // kasual business
-    compile 'biz.kasual:materialnumberpicker:1.2.1'
-
-    // keep safe
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-
-    // mike penz
-    compile('com.mikepenz:materialdrawer:5.9.1@aar') {
-        transitive = true
-    }
-
-    // squareup
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-    // tbruyelle
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-
-    // traex
-    compile 'com.github.HugoCastelani:ExpandableLayout:1.4.3'
-
-    // yshrsmz
-    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
-    */
-
-    // aidas follestad
-    compile 'com.afollestad:aesthetic:0.4.7'
-    compile 'com.afollestad:material-cab:0.1.12'
-    compile 'com.afollestad:sectioned-recyclerview:0.5.0'
-    compile 'com.github.HugoCastelani.material-dialogs:core:0.9.6.0f'
-    compile 'com.github.HugoCastelani.material-dialogs:commons:0.9.6.0f'
-
-    // azimo labs
-    compile 'com.azimolabs.maskformatter:maskformatter:0.2'
-
-    // blankj
-    compile 'com.blankj:utilcode:1.9.8'
+    implementation 'com.blankj:utilcode:1.9.8'
 
     // facebook
-    compile 'com.facebook.android:facebook-core:4.28.0'
-    compile 'com.facebook.android:facebook-login:4.28.0'
+    implementation "com.facebook.android:facebook-core:$facebook_tools_version"
+    implementation "com.facebook.android:facebook-login:$facebook_tools_version"
 
     // google
-    compile 'com.google.android.gms:play-services-auth:11.6.2'
-    compile 'com.google.android.gms:play-services-location:11.6.2'
-    compile 'com.google.firebase:firebase-core:11.6.2'
-    compile 'com.google.firebase:firebase-database:11.6.2'
+    implementation "com.google.android.gms:play-services-auth:$google_tools_version"
+    implementation "com.google.android.gms:play-services-location:$google_tools_version"
+    implementation "com.google.firebase:firebase-core:$google_tools_version"
+    implementation "com.google.firebase:firebase-database:$google_tools_version"
 
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:recyclerview-v7:27.0.2'
-    compile 'com.android.support:support-annotations:27.0.2'
-    compile 'com.android.support:design:27.0.2'
+    implementation "com.android.support:appcompat-v7:$build_tools_version"
+    implementation "com.android.support:recyclerview-v7:$build_tools_version"
+    implementation "com.android.support:support-annotations:$build_tools_version"
+    implementation "com.android.support:design:$build_tools_version"
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // hdodenhof
-    compile 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     // hein richreimer
-    compile 'com.github.HugoCastelani:material-intro:1.6.2f'
+    implementation 'com.github.hugocastelani:material-intro:1.6.2f'
 
     // kasual business
-    compile 'biz.kasual:materialnumberpicker:1.2.1'
+    implementation 'biz.kasual:materialnumberpicker:1.2.1'
 
     // keep safe
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
     // michael rapp
-    compile 'com.github.michael-rapp:android-bottom-sheet:1.4.3'
+    implementation 'com.github.michael-rapp:android-bottom-sheet:1.4.3'
 
     // mike penz
-    compile('com.mikepenz:materialdrawer:6.0.2@aar') {
+    implementation('com.mikepenz:materialdrawer:6.0.2@aar') {
         transitive = true
     }
 
     // orhanobut
-    compile 'com.orhanobut:hawk:2.0.1'
+    implementation 'com.orhanobut:hawk:2.0.1'
 
     // pwittchen
-    compile 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
 
     // squareup
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // tbruyelle
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
     // twitter
-    compile 'com.twitter.sdk.android:twitter-core:3.1.1'
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
 
     // traex
-    compile 'com.github.HugoCastelani:ExpandableLayout:1.4.3'
+    implementation 'com.github.hugocastelani:ExpandableLayout:1.4.3'
 
     // yshrsmz
-    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+    */
 
-    testCompile 'junit:junit:4.12'
+    // aidas follestad
+    implementation 'com.afollestad:aesthetic:0.4.7'
+    implementation 'com.afollestad:material-cab:0.1.12'
+    implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
+    implementation 'com.github.hugocastelani.material-dialogs:core:0.9.6.0f'
+    implementation 'com.github.hugocastelani.material-dialogs:commons:0.9.6.0f'
+
+    // azimo labs
+    implementation 'com.azimolabs.maskformatter:maskformatter:0.2'
+
+    // blankj
+    implementation 'com.blankj:utilcode:1.9.8'
+
+    // facebook
+    implementation "com.facebook.android:facebook-core:$facebook_tools_version"
+    implementation "com.facebook.android:facebook-login:$facebook_tools_version"
+
+    // google
+    implementation "com.google.android.gms:play-services-auth:$google_tools_version"
+    implementation "com.google.android.gms:play-services-location:$google_tools_version"
+    implementation "com.google.firebase:firebase-core:$google_tools_version"
+    implementation "com.google.firebase:firebase-database:$google_tools_version"
+
+    implementation "com.android.support:appcompat-v7:$build_tools_version"
+    implementation "com.android.support:recyclerview-v7:$build_tools_version"
+    implementation "com.android.support:support-annotations:$build_tools_version"
+    implementation "com.android.support:design:$build_tools_version"
+
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // hdodenhof
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    // hein richreimer
+    implementation 'com.github.hugocastelani:material-intro:1.6.2f'
+
+    // kasual business
+    implementation 'biz.kasual:materialnumberpicker:1.2.1'
+
+    // keep safe
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+
+    // michael rapp
+    implementation 'com.github.michael-rapp:android-bottom-sheet:1.4.3'
+
+    // mike penz
+    implementation('com.mikepenz:materialdrawer:6.0.2@aar') {
+        transitive = true
+    }
+
+    // orhanobut
+    implementation 'com.orhanobut:hawk:2.0.1'
+
+    // pwittchen
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
+
+    // squareup
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // tbruyelle
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+
+    // twitter
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
+
+    // traex
+    implementation 'com.github.hugocastelani:ExpandableLayout:1.4.3'
+
+    // yshrsmz
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+
+    testImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

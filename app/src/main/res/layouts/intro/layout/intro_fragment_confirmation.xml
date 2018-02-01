@@ -28,7 +28,7 @@
             android:layout_marginEnd="@dimen/baseline_4x"
             android:gravity="center"
             android:adjustViewBounds="true"
-            app:srcCompat="@drawable/intro_5"/>
+            app:srcCompat="@drawable/intro_confirmation"/>
 
         <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:gravity="center"
             android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
-            android:text="@string/title_5"
+            android:text="@string/title_confirmation"
             android:textColor="?android:textColorPrimary"/>
 
         <LinearLayout

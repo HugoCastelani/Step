@@ -17,7 +17,7 @@
             android:layout_marginRight="@dimen/baseline_4x"
             android:gravity="center"
             android:adjustViewBounds="true"
-            android:src="@drawable/intro_3" />
+            android:src="@drawable/intro_login" />
 
     <com.afollestad.aesthetic.AestheticTextView
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:gravity="center"
             android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
-            android:text="@string/title_3"
+            android:text="@string/title_login"
             android:textColor="?android:textColorPrimary"/>
 
     <com.google.android.gms.common.SignInButton
@@ -48,7 +48,7 @@
         facebook:com_facebook_login_text="@string/continue_with_facebook"
         style="@style/FacebookLoginButton"/>
 
-    <com.hugocastelani.blockbook.ui.intro.util.CustomTwitterLoginButton
+    <com.hugocastelani.ivory.ui.intro.util.CustomTwitterLoginButton
         android:id="@+id/ifl_twitter_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

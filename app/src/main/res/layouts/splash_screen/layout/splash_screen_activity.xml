@@ -20,7 +20,7 @@
         android:layout_marginEnd="@dimen/baseline_4x"
         android:gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/intro_1" />
+        android:src="@drawable/intro_about" />
 
     <com.afollestad.aesthetic.AestheticTextView
         android:id="@+id/ssa_text_view"

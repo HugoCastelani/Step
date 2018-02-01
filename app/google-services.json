@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "509972622456",
-    "firebase_url": "https://blockbook-283ff.firebaseio.com",
-    "project_id": "blockbook-283ff",
-    "storage_bucket": "blockbook-283ff.appspot.com"
+    "project_number": "1068270040170",
+    "firebase_url": "https://ivory-8055.firebaseio.com",
+    "project_id": "ivory-8055",
+    "storage_bucket": "ivory-8055.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:509972622456:android:99e2503e15702aa0",
+        "mobilesdk_app_id": "1:1068270040170:android:99e2503e15702aa0",
         "android_client_info": {
           "package_name": "com.hugocastelani.ivory"
         }
       },
       "oauth_client": [
         {
-          "client_id": "509972622456-2m2j4jndosu1rgk8qo2lrjsf0h7nqqra.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hugocastelani.ivory",
-            "certificate_hash": "126cfbf05e3c7a647d06c110a09c944bf74742a8"
-          }
-        },
-        {
-          "client_id": "509972622456-ia8cn9s8hklu6288l77r5ac9m67p911u.apps.googleusercontent.com",
+          "client_id": "1068270040170-nth4rc5fnnsorsf7460g1pmobfpojp9m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBEh9_dV2e0wQLmLc7wX0TiYWMgXGwVNcI"
+          "current_key": "AIzaSyDjRvTaRKmV5L_xsPfRLFjBUe8TjXmd6ZQ"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "509972622456-ia8cn9s8hklu6288l77r5ac9m67p911u.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

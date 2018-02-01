@@ -19,7 +19,7 @@
         android:layout_marginEnd="@dimen/baseline_4x"
         android:gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/intro_6" />
+        android:src="@drawable/intro_ready" />
 
     <com.afollestad.aesthetic.AestheticTextView
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:textSize="26sp"
         android:fontFamily="sans-serif-medium"
-        android:text="@string/title_6"
+        android:text="@string/title_ready"
         android:textColor="?android:textColorPrimary"/>
 
     <com.afollestad.aesthetic.AestheticTextView
@@ -37,7 +37,7 @@
         android:layout_marginTop="@dimen/baseline"
         android:gravity="center"
         android:textSize="16sp"
-        android:text="@string/description_6"
+        android:text="@string/description_ready"
         android:textColor="?android:textColorSecondary"/>
 
 </LinearLayout>

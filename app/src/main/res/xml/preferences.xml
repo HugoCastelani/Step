@@ -13,7 +13,7 @@
                 android:enabled="false"
                 android:persistent="false"/>
 
-            <com.hugocastelani.blockbook.ui.settings.preference.ColorPreference
+            <com.hugocastelani.ivory.ui.settings.preference.ColorPreference
                 android:layout="@layout/preference_custom"
                 android:widgetLayout="@layout/preference_color"
                 android:key="select_accent_color"
@@ -57,7 +57,7 @@
             android:title="@string/select_services_block"
             android:summary="@string/select_services_block_substring"/>
 
-        <com.hugocastelani.blockbook.ui.settings.preference.ExpandablePreference
+        <com.hugocastelani.ivory.ui.settings.preference.ExpandablePreference
             android:layout="@layout/preference_expandable"
             android:widgetLayout="@layout/preference_expand"
             android:key="select_suspicious_treatment"

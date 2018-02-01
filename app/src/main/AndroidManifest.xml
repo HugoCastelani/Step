@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hugocastelani.blockbook">
+    package="com.hugocastelani.ivory">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
@@ -33,7 +33,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <receiver android:name="com.hugocastelani.blockbook.receiver.PhoneCallReceiver">
+        <receiver android:name="com.hugocastelani.ivory.receiver.PhoneCallReceiver">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.provider.Telephony.SMS_SENT" />
@@ -43,42 +43,42 @@
         </receiver>
 
         <activity
-            android:name="com.hugocastelani.blockbook.ui.main.MainActivity"
+            android:name="com.hugocastelani.ivory.ui.main.MainActivity"
             android:label="@string/main_activity_label"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.hugocastelani.blockbook.ui.search.SearchActivity"
+            android:name="com.hugocastelani.ivory.ui.search.SearchActivity"
             android:label="@string/main_activity_label"
-            android:parentActivityName="com.hugocastelani.blockbook.ui.main.MainActivity"
+            android:parentActivityName="com.hugocastelani.ivory.ui.main.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hugocastelani.blockbook.ui.main.MainActivity" />
+                android:value="com.hugocastelani.ivory.ui.main.MainActivity" />
         </activity>
         <activity
-            android:name="com.hugocastelani.blockbook.ui.intro.MainIntroActivity"
+            android:name="com.hugocastelani.ivory.ui.intro.MainIntroActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name="com.hugocastelani.blockbook.ui.settings.SettingsActivity"
+            android:name="com.hugocastelani.ivory.ui.settings.SettingsActivity"
             android:label="@string/settings_activity_label"
+            android:parentActivityName="com.hugocastelani.ivory.ui.main.MainActivity"
             android:theme="@style/AppTheme">
-            android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hugocastelani.blockbook.ui.main.MainActivity" />
+                android:value="com.hugocastelani.ivory.ui.main.MainActivity" />
         </activity>
         <activity
-            android:name="com.hugocastelani.blockbook.ui.addnumber.AddNumberActivity"
+            android:name="com.hugocastelani.ivory.ui.addnumber.AddNumberActivity"
             android:label="@string/add_number_activity_label"
-            android:parentActivityName="com.hugocastelani.blockbook.ui.main.MainActivity"
+            android:parentActivityName="com.hugocastelani.ivory.ui.main.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hugocastelani.blockbook.ui.main.MainActivity" />
+                android:value="com.hugocastelani.ivory.ui.main.MainActivity" />
         </activity>
         <activity
-            android:name="com.hugocastelani.blockbook.ui.splashscreen.SplashScreenActivity"
+            android:name="com.hugocastelani.ivory.ui.splashscreen.SplashScreenActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -87,16 +87,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.hugocastelani.blockbook.ui.profile.ProfileActivity"
+            android:name="com.hugocastelani.ivory.ui.profile.ProfileActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.hugocastelani.blockbook.ui.notification.NotificationActivity"
+            android:name="com.hugocastelani.ivory.ui.notification.NotificationActivity"
             android:label="@string/notification_activity_label"
-            android:parentActivityName="com.hugocastelani.blockbook.ui.main.MainActivity"
+            android:parentActivityName="com.hugocastelani.ivory.ui.main.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hugocastelani.blockbook.ui.main.MainActivity" />
+                android:value="com.hugocastelani.ivory.ui.main.MainActivity" />
         </activity>
 
     </application>
