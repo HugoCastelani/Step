@@ -27,6 +27,13 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import static android.os.Build.VERSION_CODES.M;
 
 public final class MainIntroActivity extends IntroActivity implements SnackbarTrigger {
+    public static final Integer ABOUT_FRAGMENT_POSITION = 0;
+    public static final Integer PERMISSION_FRAGMENT_POSITION = 1;
+    public static final Integer LOGIN_FRAGMENT_POSITION = 2;
+    public static final Integer USERNAME_FRAGMENT_POSITION = 3;
+    public static final Integer PHONE_FRAGMENT_POSITION = 4;
+    public static final Integer CONFIRMATION_FRAGMENT_POSITION = 5;
+    public static final Integer READY_FRAGMENT_POSITION = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,42 +71,49 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
         setButtonBackVisible(false);
         setButtonBackFunction(BUTTON_BACK_FUNCTION_SKIP);
 
+        // about fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(R.layout.intro_fragment_about)
                 .build());
 
+        // permission fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new PermissionIntroFragment())
                 .build());
 
+        // login fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new LoginIntroFragment())
                 .build());
 
+        // username fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new UsernameIntroFragment())
                 .build());
 
+        // phone fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new PhoneIntroFragment())
                 .build());
 
+        // confirmation fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
                 .fragment(new ConfirmationIntroFragment())
                 .build());
 
+        // ready fragment
         addSlide(new FragmentSlide.Builder()
                 .background(R.color.md_grey_50)
                 .backgroundDark(R.color.md_grey_200)
@@ -109,6 +123,7 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
 
     private LoginIntroFragment mLoginIntroFragment;
     private PhoneIntroFragment mPhoneIntroFragment;
+    private UsernameIntroFragment mUsernameIntroFragment;
     private ConfirmationIntroFragment mConfirmationIntroFragment;
     private ReadyIntroFragment mReadyIntroFragment;
 
@@ -128,6 +143,15 @@ public final class MainIntroActivity extends IntroActivity implements SnackbarTr
 
     public PhoneIntroFragment getPhoneSlide() {
         return mPhoneIntroFragment;
+    }
+
+    public MainIntroActivity setUsernameSlide(@NonNull final UsernameIntroFragment usernameIntroFragment) {
+        mUsernameIntroFragment = usernameIntroFragment;
+        return this;
+    }
+
+    public UsernameIntroFragment getUsernameSlide() {
+        return mUsernameIntroFragment;
     }
 
     public MainIntroActivity setConfirmationSlide(@NonNull final ConfirmationIntroFragment confirmationIntroFragment) {

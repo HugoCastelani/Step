@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -28,9 +29,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
 import com.hugocastelani.ivory.R;
+import com.hugocastelani.ivory.database.dao.local.LUserDAO;
 import com.hugocastelani.ivory.database.dao.wide.UserDAO;
 import com.hugocastelani.ivory.database.domain.User;
 import com.hugocastelani.ivory.util.Listeners;
+import com.hugocastelani.ivory.util.ThemeHandler;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -72,6 +75,8 @@ public final class LoginIntroFragment extends SlideFragment implements
 
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mCallbackManager;
+
+    public boolean mIsFirstLogin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,7 +135,7 @@ public final class LoginIntroFragment extends SlideFragment implements
         if (requestCode == FACEBOOK_SIGN_IN) {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == GOOGLE_SIGN_IN) {
-            error = handleGoogleLogin(data) + "\n";
+            error = handleGoogleLogin(data);
         } else if (requestCode == TWITTER_SIGN_IN) {
             mTwitterButton.onActivityResult(requestCode, resultCode, data);
         }
@@ -165,7 +170,7 @@ public final class LoginIntroFragment extends SlideFragment implements
 
     @Override
     public boolean nextSlide() {
-        mActivity.getPhoneSlide().prepareNextButton();
+        mActivity.getUsernameSlide().prepareNextButton();
         return super.nextSlide();
     }
 
@@ -192,7 +197,7 @@ public final class LoginIntroFragment extends SlideFragment implements
 
                 return null;
 
-            } else return getResources().getString(R.string.sign_in_error_empty_id);
+            } else return "\n" + getResources().getString(R.string.sign_in_error_empty_id);
 
         } else return "\n" + result.getStatus().toString();
     }
@@ -278,12 +283,43 @@ public final class LoginIntroFragment extends SlideFragment implements
     }
 
     private void createUser(@NonNull final User user) {
+        // usernames tagged with "&1nv" are not valid
+        user.setUsername("&1nv" + user.getUsername());
+
         UserDAO.get().create(user, new Listeners.AnswerListener() {
             @Override
             public void onAnswerRetrieved() {
-                mCanGoForward = true;
-                canGoForward();
-                nextSlide();
+                // if it isn't first login, the user won't be
+                // created, so the username won't start with "&1nv"
+                mIsFirstLogin = LUserDAO.get().getThisUser().getUsername().startsWith("&1nv");
+
+                if (!mIsFirstLogin) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(R.string.already_registered_title)
+                            .titleColor(ThemeHandler.getPrimaryText())
+                            .content(R.string.already_registered_description)
+                            .contentColor(ThemeHandler.getPrimaryText())
+                            .backgroundColor(ThemeHandler.getBackground())
+                            .positiveText(R.string.yes_button)
+                            .positiveColor(ThemeHandler.getAccent())
+                            .negativeText(R.string.no_button)
+                            .negativeColor(ThemeHandler.getAccent())
+                            .onPositive((dialog, which) ->
+                                goToSlide(MainIntroActivity.CONFIRMATION_FRAGMENT_POSITION)
+                            )
+                            .onNegative((dialog, which) -> {
+                                mCanGoForward = true;
+                                canGoForward();
+                                nextSlide();
+                            })
+                            .show();
+
+                } else {
+
+                    mCanGoForward = true;
+                    canGoForward();
+                    nextSlide();
+                }
             }
 
             @Override

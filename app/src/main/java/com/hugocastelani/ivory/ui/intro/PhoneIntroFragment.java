@@ -140,11 +140,6 @@ public final class PhoneIntroFragment extends SlideFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public boolean canGoForward() {
         return mCanGoForward;
     }

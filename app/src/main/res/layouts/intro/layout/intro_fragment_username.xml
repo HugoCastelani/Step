@@ -37,8 +37,17 @@
             android:gravity="center"
             android:textSize="26sp"
             android:fontFamily="sans-serif-medium"
-            android:text="@string/title_confirmation"
+            android:text="@string/title_username"
             android:textColor="?android:textColorPrimary"/>
+
+        <com.afollestad.aesthetic.AestheticTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/baseline"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/description_username"
+            android:textColor="?android:textColorSecondary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,13 +58,12 @@
             android:weightSum="1">
 
             <com.afollestad.aesthetic.AestheticEditText
-                android:id="@+id/ifc_code"
+                android:id="@+id/ifu_username"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:inputType="number"
                 android:gravity="center"
                 android:imeOptions="flagNoFullscreen"
-                android:maxLength="6"
+                android:maxLength="100"
                 android:layout_weight=".50"/>
 
         </LinearLayout>

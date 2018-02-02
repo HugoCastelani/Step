@@ -243,7 +243,10 @@ public final class UserDAO extends GenericWideDAO<User> {
                             final User user = dataSnapshot.getValue(User.class);
 
                             if (user.getUsername().toLowerCase().startsWith(username.toLowerCase())) {
-                                listListener.onItemAdded(user);
+                                // usernames tagged with "&1nv" are not valid
+                                if (!user.getUsername().toLowerCase().startsWith("&1nv")) {
+                                    listListener.onItemAdded(user);
+                                }
                             }
                         }
 
