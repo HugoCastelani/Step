@@ -58,12 +58,8 @@ public final class ConfirmationIntroFragment extends SlideFragment {
         mParentView.requestFocus();
 
         if (mMessageCode.getText().toString().equals(
-                MessageCodeHandler.decryptIt(MessageCodeHandler.sCode))) {
-
+            MessageCodeHandler.decryptIt(MessageCodeHandler.sCode))) {
             Hawk.put(HockeyProvider.IS_INTRO_ALL_SET, true);
-
-            mCanGoForward = true;
-            canGoForward();
             nextSlide();
 
         } else {
@@ -79,6 +75,8 @@ public final class ConfirmationIntroFragment extends SlideFragment {
 
     @Override
     public boolean nextSlide() {
+        mCanGoForward = true;
+        canGoForward();
         mActivity.getReadySlide().prepareNextButton();
         return super.nextSlide();
     }

@@ -36,6 +36,9 @@ public final class PhoneIntroFragment extends SlideFragment {
         mActivity = (MainIntroActivity) getIntroActivity();
 
         mActivity.setPhoneSlide(this);
+
+        if (mActivity.getLoginSlide().mMustSkip) nextSlide();
+
         initFragment();
 
         return view;
@@ -106,8 +109,6 @@ public final class PhoneIntroFragment extends SlideFragment {
 
                                 private void done() {
                                     sendMessage();
-                                    mCanGoForward = true;
-                                    canGoForward();
                                     nextSlide();
                                 }
 
@@ -155,6 +156,8 @@ public final class PhoneIntroFragment extends SlideFragment {
 
     @Override
     public boolean nextSlide() {
+        mCanGoForward = true;
+        canGoForward();
         mActivity.getConfirmationSlide().prepareNextButton();
         return super.nextSlide();
     }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Time: 01:32
  */
 
-public class UsernameIntroFragment extends SlideFragment {
+final public class UsernameIntroFragment extends SlideFragment {
     private boolean mCanGoForward = false;
 
     private View view;
@@ -38,6 +38,8 @@ public class UsernameIntroFragment extends SlideFragment {
 
         mActivity = (MainIntroActivity) getIntroActivity();
         mActivity.setUsernameSlide(this);
+
+        if (mActivity.getLoginSlide().mMustSkip) nextSlide();
 
         initViews();
 
@@ -110,8 +112,6 @@ public class UsernameIntroFragment extends SlideFragment {
                                         new Listeners.AnswerListener() {
                                             @Override
                                             public void onAnswerRetrieved() {
-                                                mCanGoForward = true;
-                                                canGoForward();
                                                 nextSlide();
                                             }
 
@@ -142,6 +142,8 @@ public class UsernameIntroFragment extends SlideFragment {
 
     @Override
     public boolean nextSlide() {
+        mCanGoForward = true;
+        canGoForward();
         mActivity.getPhoneSlide().prepareNextButton();
         return super.nextSlide();
     }

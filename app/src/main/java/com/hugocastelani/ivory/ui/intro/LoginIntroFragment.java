@@ -77,6 +77,7 @@ public final class LoginIntroFragment extends SlideFragment implements
     private CallbackManager mCallbackManager;
 
     public boolean mIsFirstLogin;
+    public boolean mMustSkip = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -170,6 +171,8 @@ public final class LoginIntroFragment extends SlideFragment implements
 
     @Override
     public boolean nextSlide() {
+        mCanGoForward = true;
+        canGoForward();
         mActivity.getUsernameSlide().prepareNextButton();
         return super.nextSlide();
     }
@@ -304,22 +307,14 @@ public final class LoginIntroFragment extends SlideFragment implements
                             .positiveColor(ThemeHandler.getAccent())
                             .negativeText(R.string.no_button)
                             .negativeColor(ThemeHandler.getAccent())
-                            .onPositive((dialog, which) ->
-                                goToSlide(MainIntroActivity.CONFIRMATION_FRAGMENT_POSITION)
-                            )
-                            .onNegative((dialog, which) -> {
-                                mCanGoForward = true;
-                                canGoForward();
+                            .onPositive((dialog, which) -> {
+                                mMustSkip = true;
                                 nextSlide();
                             })
+                            .onNegative((dialog, which) -> nextSlide())
                             .show();
 
-                } else {
-
-                    mCanGoForward = true;
-                    canGoForward();
-                    nextSlide();
-                }
+                } else nextSlide();
             }
 
             @Override

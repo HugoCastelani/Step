@@ -67,9 +67,6 @@ public final class PermissionIntroFragment extends SlideFragment {
                         if (granted) {
                             mButton.setEnabled(false);
                             mButton.setText(getResources().getString(R.string.granted_permissions));
-
-                            mCanGoForward = true;
-                            canGoForward();
                             nextSlide();
 
                         } else {
@@ -79,6 +76,13 @@ public final class PermissionIntroFragment extends SlideFragment {
                         }
                     });
         }
+    }
+
+    @Override
+    public boolean nextSlide() {
+        mCanGoForward = true;
+        canGoForward();
+        return super.nextSlide();
     }
 
     @Override
